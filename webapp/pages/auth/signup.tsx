@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import { Form, Formik } from "formik";
 import InputField from "@/app/components/forminputs/InputField";
-import { useSession } from "@/app/common/context/sessionContext";
-import { NextRouter, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import * as Yup from "yup";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
-import axios, { AxiosResponse } from "axios";
-import { Object } from "lodash";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -24,12 +21,11 @@ interface serverSideProps {
   apiBase: string;
 }
 
-interface userDetail{
+interface userDetail {
   email: string;
 }
 
 function SignUp(props: serverSideProps) {
-  const { setUser } = useSession();
   const router = useRouter();
   const formSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -43,19 +39,28 @@ function SignUp(props: serverSideProps) {
   }, [router.isReady]);
 
   const handleSubmit = (values: userDetail) => {
-    axios.post('https://app.castled.io/backend/v1/users/signup', {
-      email: values.email
+    fetch('/v1/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: values.email })
     })
-    .then(res => {
-      console.log(res);
-      // router.push("/auth/verify");
-    })
-    .catch(err => console.log(err.message));
+      .then(res => {
+        router.push(
+          {
+            pathname: '/auth/verify',
+            query: { email: values.email }
+          },
+          '/auth/verify',
+        );
+      })
+      .catch(err => console.log(err.message));
   }
   return (
     <GuestLayout>
       <div className="container">
-        <div className="row py-5">
+        <div className="row py-2">
           <div className="col">
             <img src='/images/Castled-Logo.png' alt="Castled Logo" className="my-3" />
             <h2 className="mb-3">Create your Castled Account</h2>
