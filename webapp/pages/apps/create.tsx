@@ -37,7 +37,7 @@ const AppsCreate = ({ wizardStep, appBaseUrl }: AppsCreateProps) => {
       setCurWizardStep={setCurWizardStep}
       steps={{
         selectType: {
-          title: "Select App Type",
+          title: "Select Destination Type",
           description: "Which app do you own?"
         },
         configure: {

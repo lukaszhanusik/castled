@@ -66,11 +66,16 @@ const PipelineRunView = ({ pipelineRuns }: PipelineRunViewProps) => {
                     <td>{run.pipelineSyncStats.recordsSynced}</td>
                     <td>{run.pipelineSyncStats.recordsFailed}</td>
                     <td>{run.pipelineSyncStats.recordsSkipped}</td>
-                    <td>{run.createdTs && <TimeAgo date={run.createdTs} />}</td>
                     <td>
-                      {run.processedTs && renderUtils.getTimeTakenStr(
-                        (run.processedTs - run.createdTs)
+                      {run.createdTs && (
+                        <TimeAgo date={run.createdTs} minPeriod={10} />
                       )}
+                    </td>
+                    <td>
+                      {run.processedTs &&
+                        renderUtils.getTimeTakenStr(
+                          run.processedTs - run.createdTs
+                        )}
                     </td>
                     <td>
                       <Button

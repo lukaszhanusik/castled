@@ -37,7 +37,7 @@ const WarehouseCreate = ({ wizardStep, appBaseUrl }: WarehouseCreateProps) => {
       setCurWizardStep={setCurWizardStep}
       steps={{
         selectType: {
-          title: "Select Warehouse Type",
+          title: "Select Source Type",
           description: "Which warehouse do you own?"
         },
         configure: {

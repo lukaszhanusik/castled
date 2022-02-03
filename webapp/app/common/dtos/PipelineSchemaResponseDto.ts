@@ -1,20 +1,15 @@
+export interface ConnectorSchema {
+  schemaName: string;
+  fields: {
+    fieldName: string;
+    type: string;
+    optional: true;
+  }[];
+}
+
 export interface PipelineSchemaResponseDto {
-  warehouseSchema: {
-    schemaName: string;
-    fields: {
-      fieldName: string;
-      type: string;
-      optional: true;
-    }[];
-  };
-  appSchema: {
-    schemaName: string;
-    fields: {
-      fieldName: string;
-      type: string;
-      optional: true;
-    }[];
-  };
+  warehouseSchema: ConnectorSchema;
+  appSchema: ConnectorSchema;
   pkEligibles: {
     eligibles : string[],
     autoDetect : boolean

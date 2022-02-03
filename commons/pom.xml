@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commons</artifactId>
-    <version>0.2.15-alpha</version>
+    <version>0.2.16-alpha</version>
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>0.2.15-alpha</version>
+        <version>0.2.16-alpha</version>
     </parent>
 
 

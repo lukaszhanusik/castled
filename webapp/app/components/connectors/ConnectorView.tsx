@@ -11,6 +11,7 @@ import bannerNotificationService from "@/app/services/bannerNotificationService"
 import cn from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -24,7 +25,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["#", "Name", "Type", "Pipelines", "Status"];
+  const headers = ["Name", "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -54,7 +55,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={category + "s"}
+      title={`${ConnectorCategoryLabel[category]} ${category}s`}
       subTitle={undefined}
       rightBtn={{
         id: `add_${category.toLowerCase()}_button`,
@@ -81,7 +82,6 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
             <tbody>
               {connectors.map((connector, idx) => (
                 <tr key={idx}>
-                  <td>{connector.id}</td>
                   <td>
                     <Link href={`${path}/${connector.id}`}>
                       <a

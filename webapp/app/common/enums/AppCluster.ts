@@ -3,7 +3,7 @@ export enum AppCluster {
   US = "US",
 }
 
-export const AppClusterLabel: any = {
+export const AppClusterLabel: { [key in AppCluster]: string } = {
   [AppCluster.INDIA]: "India",
   [AppCluster.US]: "US",
 };

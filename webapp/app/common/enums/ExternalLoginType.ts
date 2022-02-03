@@ -2,6 +2,6 @@ export enum ExternalLoginType {
   GOOGLE = "GOOGLE",
 }
 
-export const ExternalLoginTypeLabel: any = {
+export const ExternalLoginTypeLabel: { [key in ExternalLoginType]: string } = {
   [ExternalLoginType.GOOGLE]: "Google",
 };

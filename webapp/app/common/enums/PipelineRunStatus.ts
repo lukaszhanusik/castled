@@ -4,7 +4,7 @@ export enum PipelineRunStatus {
   FAILED = "FAILED",
 }
 
-export const PipelineRunStatusLabel: any = {
+export const PipelineRunStatusLabel: { [key in PipelineRunStatus]: string } = {
   [PipelineRunStatus.PROCESSING]: "Processing",
   [PipelineRunStatus.PROCESSED]: "Completed",
   [PipelineRunStatus.FAILED]: "Failed",

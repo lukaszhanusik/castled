@@ -329,10 +329,22 @@ form {
   }
 }
 
+.doc-not-found {
+  border: 1px solid $gray-100;
+  border-radius: $border-radius;
+  padding: 3%;
+}
+
 .integrated-doc {
-  font-size: $font-size-sm;
+  font-size: $font-size-md;
   max-height: 600px;
   overflow: scroll;
+  background: $gray-000;
+  position: absolute;
+  width: 45%;
+  border-left: 1px solid $gray-200;
+  padding-left: 1rem;
+  padding-top: 0.25rem;
   h1 {
     font-size: $font-size-lg;
     font-weight: $font-weight-bold;
@@ -340,6 +352,9 @@ form {
   h2 {
     font-size: $font-size-md;
     font-weight: $font-weight-bold;
+  }
+  img {
+    width: 100%;
   }
 }
 

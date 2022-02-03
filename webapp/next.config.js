@@ -7,7 +7,9 @@ module.exports = withPWA({
     // Commenting to avoid inlining of this env variable. Will be fetched using getServerSideProps from pages where its required
     // APP_BASE_URL: process.env.APP_BASE_URL,
     API_BASE: process.env.API_BASE,
+    INTEGRATED_DOC: process.env.INTEGRATED_DOC,
     DEBUG: process.env.DEBUG,
+    DOC_APP_IMAGE_BASE_URL: process.env.DOC_APP_IMAGE_BASE_URL,
   },
   publicRuntimeConfig: {
     // Will be available on both server and client

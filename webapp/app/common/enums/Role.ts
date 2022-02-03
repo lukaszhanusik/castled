@@ -3,7 +3,7 @@ export enum Role {
 	USER = "USER",
 }
 
-export const RoleLabel: any = {
-	[Role.ADMIN]: "Admin",
-	[Role.USER]: "User",
+export const RoleLabel: { [key in Role]: string } = {
+  [Role.ADMIN]: "Admin",
+  [Role.USER]: "User",
 };

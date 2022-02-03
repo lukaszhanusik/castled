@@ -12,7 +12,7 @@ const Pipelines = () => {
   const [pipelines, setPipelines] = useState<
     PipelineResponseDto[] | undefined | null
   >();
-  const headers = ["#", "Name", "Source", "Destination", "Status"];
+  const headers = ["Name", "Source", "Destination", "Status"];
   const router = useRouter();
   useEffect(() => {
     pipelineService
@@ -61,7 +61,6 @@ const Pipelines = () => {
             <tbody>
               {pipelines.map((pipeline, idx) => (
                 <tr key={idx}>
-                  <td>{pipeline.id}</td>
                   <td>
                     <Link href={`/pipelines/${pipeline.id}`}>
                       <a>{pipeline.name}</a>

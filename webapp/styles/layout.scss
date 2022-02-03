@@ -65,6 +65,13 @@ body,
   }
 }
 
+.container-main-right-help {
+  margin: 0 auto;
+  @include media-breakpoint-up(xl) {
+    max-width: 88.88%;
+  }
+}
+
 .navbar-nav {
   .dropdown {
     img {

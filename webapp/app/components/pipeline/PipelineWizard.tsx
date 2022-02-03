@@ -88,7 +88,7 @@ const PipelineWizard = ({
           stepGroups={steps}
           steps={{
             selectType: {
-              title: "Select Warehouse Type",
+              title: "Select Source Type",
               description: "Which warehouse do you own?",
             },
             selectExisting: {
@@ -116,7 +116,7 @@ const PipelineWizard = ({
           stepGroups={steps}
           steps={{
             selectType: {
-              title: "Select App Type",
+              title: "Select Destination Type",
               description: "Which app do you wish to connect to?",
             },
             selectExisting: {

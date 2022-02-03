@@ -53,9 +53,9 @@ const renderChildren = (
 ) => {
   if (rightHelp) {
     return (
-      <div className="container-fluid container-main row">
-        <div className="col-8">{children}</div>
-        <div className="col-4">{rightHelp}</div>
+      <div className="container-fluid container-main-right-help row">
+        <div className="col-6">{children}</div>
+        <div className="col-6">{rightHelp}</div>
       </div>
     );
   } else {
