@@ -142,13 +142,13 @@ public class PipelineExecutor implements TaskExecutor {
             warehouseConnectors.get(warehouse.getType()).getDataPoller().cleanupPipelineRunResources(warehousePollContext);
             // Also add the records that failed schema mapping phase to the final stats
             pipelineSyncStats.setRecordsFailed(schemaMappedMessageInputStream.getFailedRecords() + pipelineSyncStats.getRecordsFailed());
-            this.pipelineService.markPipelineRunProcessed(pipelineRun.getId(), pipelineSyncStats);
+            this.pipelineService.markPipelineRunProcessed(pipelineRun.getId(), pipelineRun.getPipelineId(), pipelineSyncStats);
 
         } catch (Exception e) {
             if (ObjectRegistry.getInstance(AppShutdownHandler.class).isShutdownTriggered()) {
                 throw new PipelineInterruptedException();
             }
-            this.pipelineService.markPipelineRunFailed(pipelineRun.getId(), Optional.ofNullable(e.getMessage()).orElse("Unknown Error"));
+            this.pipelineService.markPipelineRunFailed(pipelineRun.getId(), pipelineRun.getPipelineId(), Optional.ofNullable(e.getMessage()).orElse("Unknown Error"));
             log.error("Pipeline run failed for pipeline {} ", pipeline.getId(), e);
             this.warehouseConnectors.get(warehouse.getType()).getDataPoller().cleanupPipelineRunResources(warehousePollContext);
             Optional.ofNullable(warehouseSyncFailureListener).ifPresent(syncFailureListener ->
@@ -171,15 +171,6 @@ public class PipelineExecutor implements TaskExecutor {
         long pipelineRunId = this.pipelineService.createPipelineRun(pipelineId);
         return this.pipelineService.getPipelineRun(pipelineRunId);
     }
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    private static class WarehouseExecutionContext {
-        private MessageInputStreamImpl messageInputStreamImpl;
-        private RecordSchema warehouseSchema;
-    }
-
 
     private WarehouseExecutionContext pollRecords(
             Warehouse warehouse, PipelineRun pipelineRun,
@@ -211,5 +202,13 @@ public class PipelineExecutor implements TaskExecutor {
             default:
                 throw new CastledRuntimeException(String.format("Invalid error type: %s", pipelineExecutionException.getPipelineError().getPipelineErrorType()));
         }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    private static class WarehouseExecutionContext {
+        private MessageInputStreamImpl messageInputStreamImpl;
+        private RecordSchema warehouseSchema;
     }
 }

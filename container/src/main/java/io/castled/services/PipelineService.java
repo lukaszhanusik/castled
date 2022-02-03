@@ -24,9 +24,11 @@ import io.castled.dtos.PipelineSchema;
 import io.castled.dtos.PipelineUpdateRequest;
 import io.castled.errors.PipelineErrorAndSample;
 import io.castled.errors.PipelineRunErrors;
+import io.castled.events.CastledEventType;
 import io.castled.events.CastledEventsClient;
 import io.castled.events.pipelineevents.PipelineEvent;
 import io.castled.events.pipelineevents.PipelineEventType;
+import io.castled.events.pipelineevents.PipelineRunEvent;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.jarvis.JarvisTaskGroup;
 import io.castled.jarvis.JarvisTaskType;
@@ -67,6 +69,11 @@ import java.util.concurrent.Future;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class PipelineService {
 
+    //just to make sure uuid starts with a character
+    private static final String UUID_PREFIX = "c";
+    private static final String ERROR_CODE = "__castled__error_code";
+    private static final String ERROR_MESSAGE = "__castled__error_message";
+    private static final String ERROR_RECORD_COUNT = "__castled__record_count";
     private final PipelineDAO pipelineDAO;
     private final PipelineCache pipelineCache;
     private final PipelineRunDAO pipelineRunDAO;
@@ -77,11 +84,6 @@ public class PipelineService {
     private final ExternalAppService externalAppService;
     private final ErrorReportsDAO errorReportsDAO;
     private final MessagePublisher messagePublisher;
-    //just to make sure uuid starts with a character
-    private static final String UUID_PREFIX = "c";
-    private static final String ERROR_CODE = "__castled__error_code";
-    private static final String ERROR_MESSAGE = "__castled__error_message";
-    private static final String ERROR_RECORD_COUNT = "__castled__record_count";
     private final ResourceAccessController resourceAccessController;
 
 
@@ -213,12 +215,14 @@ public class PipelineService {
                 new PipelineSyncStats(0, 0, 0, 0));
     }
 
-    public void markPipelineRunProcessed(Long pipelineId, PipelineSyncStats pipelineSyncStats) {
-        this.pipelineRunDAO.markProcessed(pipelineId, pipelineSyncStats);
+    public void markPipelineRunProcessed(Long pipelineRunId, Long pipelineId, PipelineSyncStats pipelineSyncStats) {
+        this.pipelineRunDAO.markProcessed(pipelineRunId, pipelineSyncStats);
+        this.castledEventsClient.publishCastledEvent(new PipelineRunEvent(pipelineId, pipelineRunId, CastledEventType.PIPELINE_RUN_COMPLETED));
     }
 
-    public void markPipelineRunFailed(Long pipelineId, String failureMessage) {
-        this.pipelineRunDAO.markFailed(pipelineId, failureMessage);
+    public void markPipelineRunFailed(Long pipelineRunId, Long pipelineId, String failureMessage) {
+        this.pipelineRunDAO.markFailed(pipelineRunId, failureMessage);
+        this.castledEventsClient.publishCastledEvent(new PipelineRunEvent(pipelineId, pipelineRunId, CastledEventType.PIPELINE_RUN_FAILED));
     }
 
     public void updateSyncStats(Long pipelineRunId, PipelineSyncStats pipelineSyncStats) {

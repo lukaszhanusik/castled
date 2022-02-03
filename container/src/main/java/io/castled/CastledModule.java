@@ -107,6 +107,8 @@ public class CastledModule extends AbstractModule {
         castledEventHandlers.addBinding(CastledEventType.APP_CREATED).to(AppCreateEventsHandler.class);
         castledEventHandlers.addBinding(CastledEventType.WAREHOUSE_CREATED).to(WarehouseCreateEventsHandler.class);
         castledEventHandlers.addBinding(CastledEventType.NEW_INSTALLATION).to(NewInstallationEventsHandler.class);
+        castledEventHandlers.addBinding(CastledEventType.PIPELINE_RUN_COMPLETED).to(PipelineRunEventsHandler.class);
+        castledEventHandlers.addBinding(CastledEventType.PIPELINE_RUN_FAILED).to(PipelineRunEventsHandler.class);
     }
 
 
