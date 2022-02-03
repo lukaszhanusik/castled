@@ -186,12 +186,15 @@ const ConnectorForm = ({
   return (
     <Formik
       key={`fields-${!!formFields}`}
-      initialValues={dynamicFormUtils.getInitialValues(formFields, "config", {
-        name: "",
-        config: {
-          type: connectorType,
-        },
-      })}
+      initialValues={
+        editConnector
+          ? dynamicFormUtils.getInitialValues(formFields, "config", editConnector)
+          : dynamicFormUtils.getInitialValues(formFields, "config", {
+            name: "",
+            config: {
+              type: connectorType,
+            },
+          })}
       validate={(values: any) =>
         dynamicFormUtils.getValidationErrors(formFields, "config", values, {
           name: yup.string().required("Required"),
