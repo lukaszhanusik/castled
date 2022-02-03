@@ -15,7 +15,7 @@ public class SnowflakeWarehouseConfig extends WarehouseConfig {
     @FormField(description = "URL Prefix https://<account_name>.snowflake-computing.com", title = "Account Name", placeholder = "e.g. ab12345.us-east-2.aws", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accountName;
 
-    @FormField(description = "Warehouse Name", title = "Warehouse Name", placeholder = "e.g. COMPUTE_WH", schema = FormFieldSchema.NUMBER, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Warehouse Name", title = "Warehouse Name", placeholder = "e.g. COMPUTE_WH", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String warehouseName;
 
     @FormField(description = "Database name", title = "Database Name", placeholder = "e.g. demo_db", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
@@ -24,7 +24,7 @@ public class SnowflakeWarehouseConfig extends WarehouseConfig {
     @FormField(description = "Database User", title = "Database User", placeholder = "e.g. db_user", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String dbUser;
 
-    @FormField(description = "Database password", title = "Database Password", placeholder = "db_password", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Database password", title = "Database Password", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String dbPassword;
 
     @FormField(description = "Schema", title = "Schema Name", placeholder = "e.g. demo_schema", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
@@ -39,7 +39,7 @@ public class SnowflakeWarehouseConfig extends WarehouseConfig {
     @FormField(description = "S3 Access Key Secret", title = "S3 Access Key Secret", placeholder = "e.g. wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accessKeySecret;
 
-    @FormField(description = "S3 Bucket Location", title = "S3 Bucket Location", placeholder = "e.g. US_EAST_1", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "S3 Bucket Location", title = "S3 Bucket Location", placeholder = "e.g. US_EAST_1", schema = FormFieldSchema.ENUM, type = FormFieldType.TEXT_BOX)
     private Regions region;
 
     public String getDbHost() {

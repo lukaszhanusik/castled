@@ -6,7 +6,7 @@ import io.castled.daos.TeamsDAO;
 import io.castled.daos.UsersDAO;
 import io.castled.dtos.UserDTO;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.models.Team;
+import io.castled.models.users.Team;
 import io.castled.models.users.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

@@ -27,6 +27,6 @@ public class BigQueryWarehouseConfig extends WarehouseConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.BQ_LOCATIONS, type = OptionsRefType.STATIC))
     private String location;
 
-    @FormField(type = FormFieldType.JSON_FILE, description = "Service Account Json File", title = "Service Account Json File", group = "service_account")
+    @FormField(type = FormFieldType.JSON_FILE, schema = FormFieldSchema.OBJECT, description = "Service Account Json File", title = "Service Account Json File", group = "service_account")
     private ServiceAccountDetails serviceAccount;
 }

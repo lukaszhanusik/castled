@@ -42,11 +42,11 @@ const InputField = ({
     <div className={className ? className : cn({ "mb-3": !isHidden })}>
       {title && !isHidden && (
         <label htmlFor={props.id || props.name} className="form-label">
-          {title}
           {required && <span className="required-icon">*</span>}
+          {title}
         </label>
       )}
-      {getInput(field, meta, onChange, props, optionsRef)}
+      {getInput(field, meta, onChange, props, optionsRef, required)}
       {loading && !isHidden && (
         <div className="spinner-border spinner-border-sm"></div>
       )}
@@ -62,7 +62,8 @@ function getInput(
   meta: FieldMetaProps<any>,
   onChange: ((value: string) => void) | undefined,
   props: any,
-  optionsRef?: string
+  optionsRef?: string,
+  required?: boolean
 ) {
   if (props.type === "textarea") {
     return (
@@ -77,6 +78,7 @@ function getInput(
           "required-field": meta.touched && meta.error,
         })}
         defaultValue={field.value}
+        required={required}
       />
     );
   } else {

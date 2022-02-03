@@ -6,5 +6,6 @@ public enum FormFieldSchema {
     DATE,
     BOOLEAN,
     ENUM,
-    OBJECT
+    OBJECT,
+    ARRAY
 }

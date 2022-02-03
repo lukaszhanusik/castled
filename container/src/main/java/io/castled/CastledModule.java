@@ -56,6 +56,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import javax.ws.rs.client.Client;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"rawTypes"})
@@ -107,6 +108,8 @@ public class CastledModule extends AbstractModule {
         castledEventHandlers.addBinding(CastledEventType.APP_CREATED).to(AppCreateEventsHandler.class);
         castledEventHandlers.addBinding(CastledEventType.WAREHOUSE_CREATED).to(WarehouseCreateEventsHandler.class);
         castledEventHandlers.addBinding(CastledEventType.NEW_INSTALLATION).to(NewInstallationEventsHandler.class);
+        castledEventHandlers.addBinding(CastledEventType.PIPELINE_RUN_COMPLETED).to(PipelineRunEventsHandler.class);
+        castledEventHandlers.addBinding(CastledEventType.PIPELINE_RUN_FAILED).to(PipelineRunEventsHandler.class);
     }
 
 
@@ -142,6 +145,10 @@ public class CastledModule extends AbstractModule {
         jedisPoolConfig.setMaxTotal(20);
         jedisPoolConfig.setMaxIdle(20);
         jedisPoolConfig.setMaxWaitMillis(TimeUtils.secondsToMillis(10));
+        if(Objects.nonNull(redisConfig.getPassword())){
+            // if add password  timeout with 60 . maybe with one conf
+            return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort(),60,redisConfig.getPassword());
+        }
         return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort());
     }
 

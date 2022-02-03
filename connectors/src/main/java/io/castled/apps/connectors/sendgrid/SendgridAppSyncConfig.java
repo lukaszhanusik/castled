@@ -13,7 +13,7 @@ import lombok.Setter;
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
 public class SendgridAppSyncConfig extends AppSyncConfig {
 
-    @FormField(title = "select sendgrid object to sync", type = FormFieldType.DROP_DOWN, group = MappingFormGroups.OBJECT,
+    @FormField(title = "select sendgrid object to sync", schema = FormFieldSchema.OBJECT, type = FormFieldType.DROP_DOWN, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 
@@ -21,7 +21,7 @@ public class SendgridAppSyncConfig extends AppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.SENDGRID_LISTS, type = OptionsRefType.DYNAMIC))
     private String listIds;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
+    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
     private AppSyncMode mode;
 }
