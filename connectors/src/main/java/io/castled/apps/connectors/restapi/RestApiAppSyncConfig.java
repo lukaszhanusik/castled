@@ -11,16 +11,10 @@ import lombok.Setter;
 @Setter
 public class RestApiAppSyncConfig extends AppSyncConfig {
 
-    @FormField(required = false, type = FormFieldType.TEXT_BOX, title = "Property Name in the input object", description = "Property name in the input object")
-    private String propertyName;
-
     @FormField(required = false,type = FormFieldType.TEXT_BOX, title = "Batch Size", description = "Batch Size")
     private Integer batchSize;
 
-    @FormField(required = false,type = FormFieldType.TEXT_BOX, title = "Parallel Invocation Count", description = "Parallel Invocation Count")
-    private Integer parallelThreads;
+    @FormField(required = false,type = FormFieldType.TEXT_BOX, title = "Parallelism", description = "Parallelism")
+    private Integer parallelism;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
-            optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
-    private AppSyncMode mode;
 }

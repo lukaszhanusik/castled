@@ -22,6 +22,7 @@ import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.ConnectException;
 import io.castled.forms.dtos.FieldOptionsDTO;
 import io.castled.forms.dtos.FormFieldsDTO;
+import io.castled.models.DataMappingType;
 import io.castled.models.users.User;
 import io.castled.oauth.OAuthAccessProvider;
 import io.castled.oauth.OAuthAccessProviderFactory;
@@ -245,7 +246,8 @@ public class ExternalAppService {
         List<ExternalApp> externalApps = this.externalAppDAO.listExternalApps(user.getTeamId());
         return Arrays.stream(ExternalAppType.values()).map(appType -> new ExternalAppTypeDTO(appType,
                 appType.title(), appType.getAccessType(), appType.logoUrl(), DocUtils.constructDocUrl(appType.docUrl()),
-                externalApps.stream().filter(externalApp -> externalApp.getType().equals(appType)).count())).collect(Collectors.toList());
+                externalApps.stream().filter(externalApp -> externalApp.getType().equals(appType)).count(),
+                appType.mappingType())).collect(Collectors.toList());
     }
 
 

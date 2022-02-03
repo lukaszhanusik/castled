@@ -3,6 +3,7 @@ package io.castled.apps;
 import com.google.common.collect.ImmutableMap;
 import io.castled.commons.models.AccessType;
 import io.castled.constants.ConnectorConstants;
+import io.castled.models.DataMappingType;
 import io.castled.oauth.OAuthServiceType;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
             .put(ConnectorConstants.TITLE, "Salesforce")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/salesforce.png")
-            .put(ConnectorConstants.DOC_URL,"getting-started/Destinations/configure-salesforce")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-salesforce")
             .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.SALESFORCE)
             .build()),
     HUBSPOT(ImmutableMap.<String, Object>builder()
@@ -61,7 +62,7 @@ public enum ExternalAppType {
     ACTIVECAMPAIGN(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "ActiveCampaign")
-            .put(ConnectorConstants.DOC_URL,"getting-started/Destinations/configure-activecampaign")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-activecampaign")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/active_campaign.png")
             .build()),
     KAFKA(ImmutableMap.<String, Object>builder()
@@ -73,7 +74,7 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Customer.io")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/customerio.png")
-            .put(ConnectorConstants.DOC_URL,"getting-started/Destinations/configure-customerio")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-customerio")
             .build()),
     GOOGLEPUBSUB(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
@@ -88,6 +89,7 @@ public enum ExternalAppType {
     RESTAPI(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Rest API")
+            .put(ConnectorConstants.MAPPING_TYPE, DataMappingType.TARGET_TEMPLATE_MAPPING)
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/restapi.png")
             .build());
 
@@ -111,6 +113,11 @@ public enum ExternalAppType {
 
     public String docUrl() {
         return (String) properties.get(ConnectorConstants.DOC_URL);
+    }
+
+    public DataMappingType mappingType() {
+        return Optional.ofNullable((DataMappingType) properties.get(ConnectorConstants.MAPPING_TYPE))
+                .orElse(DataMappingType.TARGET_FIELDS_MAPPING);
 
     }
 

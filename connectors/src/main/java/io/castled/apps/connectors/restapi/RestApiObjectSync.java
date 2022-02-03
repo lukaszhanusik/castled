@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
+import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.MessageSyncStats;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @Slf4j
-public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
+public class RestApiObjectSync extends BufferedObjectSink<Message> {
 
     private final RestApiClient restApiRestClient;
     private final RestApiErrorParser restApiErrorParser;
@@ -42,16 +43,16 @@ public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
     private final CastledOffsetListQueue<Message> requestsBuffer;
     private long lastProcessedOffset = 0;
 
-    public RestApiBufferedParallelSink(DataSinkRequest dataSinkRequest) {
-        String apiURL = ((RestApiAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiURL();
-        String apiKey = ((RestApiAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiKey();
+    public RestApiObjectSync(DataSinkRequest dataSinkRequest) {
+        String apiURL = "";
+        String apiKey = "";
         this.batchSize = Optional.ofNullable(((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getBatchSize()).orElse(1);
-        this.payloadProperty = ((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getPropertyName();
+        this.payloadProperty = "";
         this.restApiRestClient = new RestApiClient(apiURL, apiKey);
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.restApiErrorParser = ObjectRegistry.getInstance(RestApiErrorParser.class);
 
-        int parallelThreads = Optional.ofNullable(((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getParallelThreads()).orElse(1);
+        int parallelThreads = Optional.ofNullable(((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getParallelism()).orElse(1);
         this.requestsBuffer = new CastledOffsetListQueue<>(new UpsertRestApiObjectConsumer(), parallelThreads, parallelThreads, true);
     }
 
@@ -68,7 +69,6 @@ public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
         }
     }
 
-    @Override
     public MessageSyncStats getSyncStats() {
         return new MessageSyncStats(processedRecords.get(), lastProcessedOffset);
     }

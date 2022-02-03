@@ -9,6 +9,7 @@ import com.google.inject.util.Modules;
 import io.castled.apps.ConnectorsModule;
 import io.castled.commands.CastledServerCommand;
 import io.castled.jarvis.JarvisModule;
+import io.castled.migrations.MigrationsResource;
 import io.castled.models.users.User;
 import io.castled.resources.*;
 import io.castled.utils.AsciiArtUtils;
@@ -62,6 +63,9 @@ public class CastledApplication extends Application<CastledConfiguration> {
     @Inject
     private UsersResource usersResource;
 
+    @Inject
+    private MigrationsResource migrationsResource;
+
     public static void main(String[] args) throws Exception {
         new CastledApplication().run(args);
     }
@@ -102,6 +106,7 @@ public class CastledApplication extends Application<CastledConfiguration> {
         environment.jersey().register(pipelineResource);
         environment.jersey().register(pipelineRunResource);
         environment.jersey().register(usersResource);
+        environment.jersey().register(migrationsResource);
         environment.lifecycle().manage(lifecycleManager);
 
         environment.jersey().register(new AuthDynamicFeature(castledAuthFilter));

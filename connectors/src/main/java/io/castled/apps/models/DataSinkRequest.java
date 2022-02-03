@@ -5,6 +5,7 @@ import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStream;
 import io.castled.commons.streams.RecordInputStream;
+import io.castled.models.CastledDataMapping;
 import io.castled.schema.models.RecordSchema;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,5 @@ public class DataSinkRequest {
     private List<String> mappedFields;
     private RecordSchema objectSchema;
     private List<String> primaryKeys;
+    private CastledDataMapping mapping;
 }
