@@ -16,7 +16,7 @@ public @interface FormField {
 
     String placeholder() default "";
 
-    FormFieldSchema schema() default FormFieldSchema.OBJECT;
+    FormFieldSchema schema() default FormFieldSchema.STRING;
 
     FormFieldType type() default FormFieldType.TEXT_BOX;
 

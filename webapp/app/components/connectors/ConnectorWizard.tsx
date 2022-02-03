@@ -43,6 +43,10 @@ const ConnectorWizard = ({
     category === "App"
       ? pipelineWizContext.appType
       : pipelineWizContext.warehouseType;
+  if (curWizardStep === "configure" && !typeOption?.value) {
+    setCurWizardStep(undefined, "selectType");
+    return null;
+  }
   const saveTypeOption = (type: ConnectorTypeDto) => {
     if (category === "App") {
       pipelineWizContext.appType = type;

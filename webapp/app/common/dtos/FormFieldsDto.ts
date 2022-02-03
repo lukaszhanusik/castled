@@ -9,11 +9,30 @@ export interface FormFieldsDto {
   helpText?: HelpText;
   codeBlock?: CodeBlock;
   groupActivators: {
-    [key: string]: {
-      dependencies: string[];
-      condition?: string;
-    };
+    [key: string]: GroupActivator;
   };
+}
+
+export interface GroupActivator {
+  dependencies: string[];
+  condition?: string;
+}
+
+export enum FormFieldSchema {
+  STRING = "STRING",
+  NUMBER = "NUMBER",
+  DATE = "DATE",
+  BOOLEAN = "BOOLEAN",
+  ENUM = "ENUM",
+  OBJECT = "OBJECT",
+  ARRAY = "ARRAY",
+}
+
+export interface FormFieldValidation {
+  required: boolean;
+  min: number;
+  max: number;
+  regex: string;
 }
 
 export interface FormFieldMeta {
@@ -25,12 +44,8 @@ export interface FormFieldMeta {
     placeholder?: string;
     optionsRef?: string;
   };
-  validations: {
-    required: boolean;
-    min: number;
-    max: number;
-    regex: string;
-  };
+  validations: FormFieldValidation;
+  schema: FormFieldSchema;
   errorMessages?: {
     required: string;
     min: string;

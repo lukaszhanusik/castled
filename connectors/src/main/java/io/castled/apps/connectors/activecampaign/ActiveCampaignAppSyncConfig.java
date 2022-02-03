@@ -12,7 +12,7 @@ import lombok.Setter;
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
 public class ActiveCampaignAppSyncConfig extends AppSyncConfig {
 
-    @FormField(title = "Select object to sync", type = FormFieldType.DROP_DOWN, group = MappingFormGroups.OBJECT,
+    @FormField(title = "Select object to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 }

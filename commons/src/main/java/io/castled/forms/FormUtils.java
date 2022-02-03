@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
-import java.sql.Ref;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -81,7 +80,7 @@ public class FormUtils {
 
         return FormFieldDTO.builder()
                 .validations(getFieldValidations(field)).fieldProps(getFieldMeta(formField))
-                .group(formField.group()).build();
+                .group(formField.group()).schema(formField.schema()).build();
     }
 
     private static FieldValidations getFieldValidations(Field field) {

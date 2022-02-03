@@ -19,8 +19,8 @@ const InputCheckbox = ({
           type="checkbox"
           className="me-2"
         />
-        {title}
         {required && <span className="required-icon">*</span>}
+        {title}
       </label>
       {meta.touched && meta.error ? (
         <div className="error">
