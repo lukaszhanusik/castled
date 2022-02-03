@@ -1,4 +1,4 @@
-package io.castled.models;
+package io.castled.models.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

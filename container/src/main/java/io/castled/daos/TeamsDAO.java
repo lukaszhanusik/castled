@@ -3,7 +3,7 @@ package io.castled.daos;
 import io.castled.constants.TableFields;
 import io.castled.encryption.EncryptionUtils;
 import io.castled.encryption.TeamEncryptionKey;
-import io.castled.models.Team;
+import io.castled.models.users.Team;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
