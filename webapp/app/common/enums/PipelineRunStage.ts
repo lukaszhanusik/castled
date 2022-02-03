@@ -5,7 +5,7 @@ export enum PipelineRunStage {
   FAILURE_RECORDS_PROCESSED = "FAILURE_RECORDS_PROCESSED",
 }
 
-export const PipelineRunStageLabel: any = {
+export const PipelineRunStageLabel: { [key in PipelineRunStage]: string } = {
   [PipelineRunStage.RUN_TRIGGERED]: "Run Triggered",
   [PipelineRunStage.RECORDS_POLLED]: "Records Polled",
   [PipelineRunStage.RECORDS_SYNCED]: "Records Synced",

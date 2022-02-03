@@ -15,10 +15,13 @@ import Loading from "@/app/components/common/Loading";
 import classNames from "classnames";
 import {
   FieldMapping,
+  PipelineMappingType,
   PipelineMappingDto,
 } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import Placeholder from "react-bootstrap/Placeholder";
+import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
+import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -44,10 +47,9 @@ const PipelineMappingDefault = ({
   if (!pipelineWizContext) {
     return <Loading />;
   }
-  const appSchemaFields = pipelineSchema?.appSchema?.fields.map((field) => ({
-    value: field.fieldName,
-    title: field.fieldName,
-  }));
+  const appSchemaFields = pipelineMappingUtils.getSchemaFieldsAsOptions(
+    pipelineSchema?.appSchema
+  );
   const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
     const fieldMappings: FieldMapping[] = [];
     const primaryKeys: string[] = [];
@@ -69,8 +71,9 @@ const PipelineMappingDefault = ({
     };
   };
 
-  const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
-    {}) as MappingInfo;
+  const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo || {
+    type: PipelineMappingType.TARGET_TEMPLATE_MAPPING,
+  }) as MappingInfo;
   if (!appSchemaFields) {
     pipelineSchema?.warehouseSchema.fields.map(
       (field) =>
@@ -156,13 +159,14 @@ const PipelineMappingDefault = ({
                           )}
                           <Placeholder
                             as="td"
-                            className={classNames({
+                            className={classNames("my-auto", {
                               "d-none": pipelineSchema.pkEligibles.autoDetect,
                             })}
                           >
                             <InputCheckbox
                               title={undefined}
                               name={field.fieldName + ".isPrimaryKey"}
+                              className="mt-3"
                               disabled={
                                 pipelineSchema.pkEligibles.eligibles.length >
                                   0 &&

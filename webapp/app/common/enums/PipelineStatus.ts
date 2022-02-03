@@ -3,7 +3,7 @@ export enum PipelineStatus {
   FAILED = "FAILED",
 }
 
-export const PipelineStatusLabel: any = {
+export const PipelineStatusLabel: { [key in PipelineStatus]: string } = {
   [PipelineStatus.OK]: "OK",
   [PipelineStatus.FAILED]: "Failed",
 };

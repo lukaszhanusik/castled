@@ -6,7 +6,8 @@ import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaRespo
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import _ from "lodash";
 import Loading from "@/app/components/common/Loading";
-import PipelineMappingDefault from "./PipelineMappingDefault";
+import PipelineMappingDefault from "./types/PipelineMappingDefault";
+import PipelineMappingRestApi from "./types/PipelineMappingRestApi";
 
 const PipelineMapping = ({
   appBaseUrl,
@@ -39,6 +40,19 @@ const PipelineMapping = ({
   }, [pipelineWizContext?.values]);
   if (!pipelineWizContext) {
     return <Loading />;
+  }
+  if (pipelineWizContext.appType?.value === "RESTAPI") {
+    return (
+      <PipelineMappingRestApi
+        appBaseUrl={appBaseUrl}
+        curWizardStep={curWizardStep}
+        steps={steps}
+        stepGroups={stepGroups}
+        setCurWizardStep={setCurWizardStep}
+        pipelineSchema={pipelineSchema}
+        isLoading={isLoading}
+      />
+    );
   }
   return (
     <PipelineMappingDefault

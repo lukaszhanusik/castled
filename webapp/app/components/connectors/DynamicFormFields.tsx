@@ -121,6 +121,7 @@ const DynamicFormFields = ({
         setFieldValue={setFieldValue}
         deps={formFields.groupActivators[field.group]?.dependencies}
         title={field.fieldProps.title || key}
+        isClearable={true}
       />
     );
   }

@@ -4,7 +4,7 @@ export enum AppSyncMode {
   UPDATE = "UPDATE",
 }
 
-export const AppSyncModeLabel: any = {
+export const AppSyncModeLabel: { [key in AppSyncMode]: string } = {
   [AppSyncMode.INSERT]: "Insert",
   [AppSyncMode.UPSERT]: "Upsert",
   [AppSyncMode.UPDATE]: "Update",
