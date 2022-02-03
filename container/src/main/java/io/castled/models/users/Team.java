@@ -1,4 +1,4 @@
-package io.castled.models;
+package io.castled.models.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +13,4 @@ public class Team {
 
     private Long id;
     private String name;
-    private String tier;
-
 }
