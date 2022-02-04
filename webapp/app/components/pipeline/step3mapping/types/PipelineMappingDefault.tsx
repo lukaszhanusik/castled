@@ -15,13 +15,13 @@ import Loading from "@/app/components/common/Loading";
 import classNames from "classnames";
 import {
   FieldMapping,
-  PipelineMappingType,
   PipelineMappingDto,
 } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import Placeholder from "react-bootstrap/Placeholder";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
+import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 
 interface MappingInfo {
   [warehouseKey: string]: {
