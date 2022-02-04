@@ -137,8 +137,6 @@ const InputSelect = ({
               optionsLoading
             )}
             isClearable={isClearable}
-            menuPortalTarget={document?.body}
-            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
           />
           {dataFetcher && (
             <div className="col-1 my-auto">
