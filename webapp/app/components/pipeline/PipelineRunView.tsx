@@ -32,12 +32,12 @@ const PipelineRunView = ({ pipelineRuns }: PipelineRunViewProps) => {
             <thead>
               <tr>
                 <th>Run ID</th>
-                <th>Status</th>
                 <th>Synced</th>
                 <th>Failed</th>
                 <th>Skipped</th>
                 <th>Started</th>
                 <th>Time Taken</th>
+                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -62,7 +62,6 @@ const PipelineRunView = ({ pipelineRuns }: PipelineRunViewProps) => {
                 >
                   <tr key={i}>
                     <td>{run.id}</td>
-                    <td>{PipelineRunStatusLabel[run.status]}</td>
                     <td>{run.pipelineSyncStats.recordsSynced}</td>
                     <td>{run.pipelineSyncStats.recordsFailed}</td>
                     <td>{run.pipelineSyncStats.recordsSkipped}</td>
@@ -78,17 +77,31 @@ const PipelineRunView = ({ pipelineRuns }: PipelineRunViewProps) => {
                         )}
                     </td>
                     <td>
+                      <span className={"text-capitalize px-2 py-1 " +
+                        (PipelineRunStatusLabel[run.status] === "Failed"
+                          ? "failed"
+                          : PipelineRunStatusLabel[run.status] === "Completed"
+                            ? "completed"
+                            : "processing pe-4")}>
+                        {PipelineRunStatusLabel[run.status]}
+                        {
+                        (PipelineRunStatusLabel[run.status] === "Processing"
+                        && <div className='float-end dot-flashing'></div>)
+                        }
+                      </span>
+                    </td>
+                    <td>
                       <Button
                         size="sm"
-                        variant="outline-primary"
+                        variant="outline-danger"
                         className={classNames({
-                          "d-none":
+                          "px-1 d-none":
                             run.status !== PipelineRunStatus.PROCESSED ||
                             run.pipelineSyncStats.recordsFailed == 0,
                         })}
                         onClick={() => downloadErrorReport(run.id)}
                       >
-                        <IconFileDownload /> Error Report
+                        <IconFileDownload size={18}/> Error Report
                       </Button>
                     </td>
                   </tr>
