@@ -91,6 +91,12 @@ webapp:
 
   affinity: {}
 
+  apiBaseUrl: http://castled-app-service:7050/
+  apiBase: /backend
+  appBaseUrl: http://localhost:3000/
+  logLevel: INFO
+  isOss: true
+
 app:
   replicaCount: 1
 
@@ -235,7 +241,6 @@ db:
   port: 3306
   url: "jdbc:mysql://castled-db-service:3306/app?autoReconnect=true&user=user&password=user&useSSL=false&serverTimezone=UTC"
 
-
 kafka:
   replicaCount: 1
 
@@ -301,6 +306,9 @@ kafka:
   tolerations: []
 
   affinity: {}
+
+  port: 9092
+  host: castled-kafka-service
 
 zookeeper:
   replicaCount: 1
@@ -445,3 +453,87 @@ zookeeper:
   tolerations: []
 
   affinity: {}
+
+  port: 2181
+  host: castled-zookeeper-service
+
+redis:
+  replicaCount: 1
+
+  image:
+    repository: redis
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "6.2-alpine"
+
+  podAnnotations: {}
+
+  podSecurityContext:
+    {}
+    # fsGroup: 2000
+
+  securityContext:
+    {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 6379
+
+  resources:
+    {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  log:
+    persistence:
+      size: 1Gi
+      accessMode: ReadWriteOnce
+      # server.persistence.storageClass The storage class to use for the castled db volume.
+      # If defined, storageClassName: <storageClass>
+      # If set to "-", storageClassName: "", which disables dynamic provisioning
+      # If undefined (the default) or set to null, no storageClassName spec is
+      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      #   GKE, AWS & OpenStack)
+      #
+      storageClass: ""
+  data:
+    persistence:
+      size: 1Gi
+      accessMode: ReadWriteOnce
+      # server.persistence.storageClass The storage class to use for the castled db volume.
+      # If defined, storageClassName: <storageClass>
+      # If set to "-", storageClassName: "", which disables dynamic provisioning
+      # If undefined (the default) or set to null, no storageClassName spec is
+      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      #   GKE, AWS & OpenStack)
+      #
+      storageClass: ""
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  port: 6379
+  host: castled-redis-service

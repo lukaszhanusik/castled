@@ -6,24 +6,23 @@ metadata:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-1"
 data:
-  #VERSION: { { .Values.version | default .Chart.AppVersion } }
+  VERSION: {{ .Values.version | default .Chart.AppVersion }}
+  DATABASE_DB: {{ .Values.db.database }}
+  DATABASE_HOST: {{ .Values.db.host }}
+  DATABASE_PASSWORD: {{ .Values.db.password }}
+  DATABASE_PORT: {{ .Values.db.port | quote }}
+  DATABASE_URL: {{ .Values.db.url }}
+  DATABASE_USER: {{ .Values.db.user }}
 
-  DATABASE_DB: { { include ".Values.db.database" . } }
-  DATABASE_HOST: { { include ".Values.db.host" . } }
-  DATABASE_PASSWORD: { { .Values.db.password } }
-  DATABASE_PORT: { { include ".Values.db.port" . | quote } }
-  DATABASE_URL: { { include ".Values.db.url" . | quote } }
-  DATABASE_USER: { { include ".Values.db.user" . } }
+  ZOOKEEPER_PORT: {{ .Values.zookeeper.port }}
+  ZOOKEEPER_HOST: {{ .Values.zookeeper.host }}
+  KAFKA_PORT: {{ .Values.kafka.port }}
+  KAFKA_HOST: {{ .Values.kafka.host }}
+  REDIS_PORT: {{ .Values.redis.port }}
+  REDIS_HOST: {{ .Values.redis.host }}
 
-  ZOOKEEPER_PORT: { { .Values.app.zk.port } }
-  ZOOKEEPER_HOST: { { .Values.app.zk.host } }
-  KAFKA_PORT: { { .Values.app.kafka.port } }
-  KAFKA_HOST: { { .Values.app.kafka.host } }
-  REDIS_PORT: { { .Values.app.redis.port } }
-  REDIS_HOST: { { .Values.app.redis.host } }
-
-  APP_BASE_URL: { { .Values.webapp.appBase } }
-  API_BASE: { { .Values.webapp.apiBase } }
-  API_BASE_URL: { { .Values.webapp.apiBaseUrl } }
-  LOG_LEVEL: { { .Values.webapp.logLevel } }
-  IS_OSS: { { ternary "true" "false" .Values.webapp.isOss | quote } }
+  APP_BASE_URL: {{ .Values.webapp.appBase }}
+  API_BASE: {{ .Values.webapp.apiBase }}
+  API_BASE_URL: {{ .Values.webapp.apiBaseUrl }}
+  LOG_LEVEL: {{ .Values.webapp.logLevel }}
+  IS_OSS: {{ ternary "true" "false" .Values.webapp.isOss | quote }}
