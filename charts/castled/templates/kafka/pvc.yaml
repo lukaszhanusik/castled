@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "castled.fullname" . }}-kafka-vol
+  labels:
+    castled: kafka-vol
+spec:
+  accessModes:
+  - {{ .Values.kafka.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.kafka.persistence.size | quote }}
+  {{- include "common.storage.class" (dict "persistence" .Values.kafka.persistence "global" .Values.global) | nindent 2 }}
