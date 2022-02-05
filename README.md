@@ -31,7 +31,7 @@ Some of our key offerings include
 
 - **Incremental** or **Full** data syncs from your cloud data warehouse.
 - Automated failure handling and recovery.
-- **Reliability** and **Resiliance** at scale.
+- **Reliability** and **Resilience** at scale.
 - [**CFL(Castled Form Language)**](https://oss-docs.castled.io/contributing-to-castled/castled-form-language) is a Java Annotation based UI framework, which can support the most complex UI forms from backend, thereby removing the prerequisite of having a UI developer to add a new connector.
 - **Kubernetes** ready for easy deployment.
 
