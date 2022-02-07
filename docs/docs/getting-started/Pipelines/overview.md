@@ -8,7 +8,11 @@ Once the source **warehouse** and the destination **app** is configured and avai
 
 ## Quick Demo
 
+<div style={{textAlign: 'center'}}>
+
 [![](https://cdn.loom.com/sessions/thumbnails/17bd25ed06cd4ca7a7215440606e2041-with-play.gif)](https://www.loom.com/embed/17bd25ed06cd4ca7a7215440606e2041)
+
+</div>
 
 ## Steps
 
