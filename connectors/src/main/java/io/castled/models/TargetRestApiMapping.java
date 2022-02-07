@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class TargetTemplateMapping extends CastledDataMapping {
+public class TargetRestApiMapping extends CastledDataMapping {
 
     private RestMethod method;
     private String url;

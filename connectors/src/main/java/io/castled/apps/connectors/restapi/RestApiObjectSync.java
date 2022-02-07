@@ -10,7 +10,7 @@ import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
-import io.castled.models.TargetTemplateMapping;
+import io.castled.models.TargetRestApiMapping;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.Field;
 import io.castled.schema.models.Message;
@@ -44,7 +44,7 @@ public class RestApiObjectSync extends BufferedObjectSink<Message> {
     public RestApiObjectSync(DataSinkRequest dataSinkRequest) {
         RestApiAppSyncConfig restApiAppSyncConfig = (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig();
         this.batchSize = Optional.ofNullable(restApiAppSyncConfig.getBatchSize()).orElse(1);
-        this.restApiRestClient = new RestApiTemplateClient((TargetTemplateMapping) dataSinkRequest.getMapping(),
+        this.restApiRestClient = new RestApiTemplateClient((TargetRestApiMapping) dataSinkRequest.getMapping(),
                 (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig());
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.restApiErrorParser = ObjectRegistry.getInstance(RestApiErrorParser.class);

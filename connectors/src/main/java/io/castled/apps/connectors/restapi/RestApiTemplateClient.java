@@ -1,12 +1,10 @@
 package io.castled.apps.connectors.restapi;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.models.RestMethod;
-import io.castled.models.TargetTemplateMapping;
-import io.castled.utils.JsonUtils;
+import io.castled.models.TargetRestApiMapping;
 import io.castled.utils.MustacheUtils;
 import io.castled.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +22,10 @@ public class RestApiTemplateClient {
 
     public static final String CONTENT_TYPE = "Content-Type";
     private final Client client;
-    private final TargetTemplateMapping targetTemplateMapping;
+    private final TargetRestApiMapping targetTemplateMapping;
     private final RestApiAppSyncConfig restApiAppSyncConfig;
 
-    public RestApiTemplateClient(TargetTemplateMapping targetTemplateMapping, RestApiAppSyncConfig restApiAppSyncConfig) {
+    public RestApiTemplateClient(TargetRestApiMapping targetTemplateMapping, RestApiAppSyncConfig restApiAppSyncConfig) {
         this.client = ObjectRegistry.getInstance(Client.class);
         this.targetTemplateMapping = targetTemplateMapping;
         this.restApiAppSyncConfig = restApiAppSyncConfig;
