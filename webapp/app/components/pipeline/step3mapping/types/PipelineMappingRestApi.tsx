@@ -30,6 +30,8 @@ const PipelineMappingRestApi = ({
   pipelineSchema,
   isLoading,
 }: PipelineMappingRestApiProps) => {
+  console.log(curWizardStep);
+
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   const [headerKeys, setHeaderKeys] = useState<string[]>([""]);
   const { isOss } = useSession();

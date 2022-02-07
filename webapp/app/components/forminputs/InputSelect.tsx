@@ -169,6 +169,8 @@ function getOptionValues(
       .map((o) => toReactSelectOption(o));
     return selectedOptions.length ? selectedOptions[0] : emptyOption;
   } else {
+    console.log(optionsDynamic);
+
     return optionsDynamic
       .filter((o) => _.includes(field.value, o.value))
       .map((o) => toReactSelectOption(o));
