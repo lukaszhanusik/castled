@@ -7,21 +7,15 @@ metadata:
     helm.sh/hook-weight: "-1"
 data:
   VERSION: {{ .Values.version | default .Chart.AppVersion }}
-  DATABASE_DB: {{ .Values.db.database }}
-  DATABASE_HOST: {{ .Values.db.host }}
-  DATABASE_PASSWORD: {{ .Values.db.password }}
-  DATABASE_PORT: {{ .Values.db.port | quote }}
-  DATABASE_URL: {{ .Values.db.url }}
-  DATABASE_USER: {{ .Values.db.user }}
 
-  ZOOKEEPER_PORT: {{ .Values.zookeeper.port }}
+  ZOOKEEPER_PORT: {{ .Values.zookeeper.port | quote }}
   ZOOKEEPER_HOST: {{ .Values.zookeeper.host }}
-  KAFKA_PORT: {{ .Values.kafka.port }}
+  KAFKA_PORT: {{ .Values.kafka.port | quote }}
   KAFKA_HOST: {{ .Values.kafka.host }}
-  REDIS_PORT: {{ .Values.redis.port }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
   REDIS_HOST: {{ .Values.redis.host }}
 
-  APP_BASE_URL: {{ .Values.webapp.appBase }}
+  APP_BASE_URL: {{ .Values.webapp.appBaseUrl }}
   API_BASE: {{ .Values.webapp.apiBase }}
   API_BASE_URL: {{ .Values.webapp.apiBaseUrl }}
   LOG_LEVEL: {{ .Values.webapp.logLevel }}

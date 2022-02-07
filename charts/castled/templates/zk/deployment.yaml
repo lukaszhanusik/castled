@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "castled.selectorLabels" . | nindent 6 }}
+      castled: zookeeper
   template:
     metadata:
       {{- with .Values.zookeeper.podAnnotations }}
@@ -36,11 +36,11 @@ spec:
       volumes:
         - name: castled-zookeeper-log-vol
           persistentVolumeClaim:
-            claimName: castled-zookeeper-log-vol
+            claimName: {{ include "castled.fullname" . }}-zookeeper-log-vol
       volumes:
         - name: castled-zookeeper-data-vol
           persistentVolumeClaim:
-            claimName: castled-zookeeper-data-vol
+            claimName: {{ include "castled.fullname" . }}-zookeeper-data-vol
       {{- with .Values.zookeeper.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

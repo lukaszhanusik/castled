@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "castled.selectorLabels" . | nindent 6 }}
+      castled: webapp
   template:
     metadata:
       {{- with .Values.webapp.podAnnotations }}

@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "castled.selectorLabels" . | nindent 6 }}
+      castled: kafka
   template:
     metadata:
       {{- with .Values.kafka.podAnnotations }}
@@ -45,9 +45,9 @@ spec:
           resources:
             {{- toYaml .Values.kafka.resources | nindent 12 }}
       volumes:
-        - name: castled-kafka-vol
+        - name: 
           persistentVolumeClaim:
-            claimName: castled-kafka-vol
+            claimName: {{ include "castled.fullname" . }}-kafka-vol
       {{- with .Values.kafka.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "castled.selectorLabels" . | nindent 6 }}
+      castled: db
   template:
     metadata:
       {{- with .Values.db.podAnnotations }}
@@ -54,8 +54,8 @@ spec:
                   key: DATABASE_DB
       volumes:
         - name: castled-db-vol
-          persistentVolumeClaim:
-            claimName: castled-db-vol
+          persistentVolumeClaim: 
+            claimName: {{ include "castled.fullname" . }}-db-vol
       {{- with .Values.db.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

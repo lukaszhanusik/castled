@@ -8,4 +8,4 @@ spec:
     - port: 9092
       protocol: TCP
   selector:
-    castled : kafka
+    castled: kafka

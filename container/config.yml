@@ -46,9 +46,9 @@ jarvis_scheduler_config:
     org.quartz.jobStore.isClustered: true
     org.quartz.jobStore.clusterCheckinInterval: 60000
     org.quartz.dataSource.quartzDataSource.driver: com.mysql.cj.jdbc.Driver
-    org.quartz.dataSource.quartzDataSource.URL: ${APP_DATABASE_URL:-jdbc:mysql://localhost:3306/app?autoReconnect=true&user=user&password=user&useSSL=false&serverTimezone=UTC}
-    org.quartz.dataSource.quartzDataSource.user: ${APP_DATABASE_USER:-user}
-    org.quartz.dataSource.quartzDataSource.password: ${APP_DATABASE_PASSWORD:-user}
+    org.quartz.dataSource.quartzDataSource.URL: ${APP_DATABASE_URL:-jdbc:mysql://localhost:3306/app?autoReconnect=true&user=franklin&password=franklin&useSSL=false&serverTimezone=UTC}
+    org.quartz.dataSource.quartzDataSource.user: ${APP_DATABASE_USER:-franklin}
+    org.quartz.dataSource.quartzDataSource.password: ${APP_DATABASE_PASSWORD:-franklin}
     org.quartz.dataSource.quartzDataSource.maxConnections: 5
 
   schedule_overrides:
@@ -62,13 +62,13 @@ database:
   driverClass: com.mysql.cj.jdbc.Driver
 
   # the username
-  user: ${APP_DATABASE_USER:-user}
+  user: ${APP_DATABASE_USER:-franklin}
 
   # the password
-  password: ${APP_DATABASE_PASSWORD:-user}
+  password: ${APP_DATABASE_PASSWORD:-franklin}
 
   # the JDBC URL
-  url: ${APP_DATABASE_URL:-jdbc:mysql://localhost:3306/app?autoReconnect=true&user=user&password=user&useSSL=false&serverTimezone=UTC}
+  url: ${APP_DATABASE_URL:-jdbc:mysql://localhost:3306/app?autoReconnect=true&user=franklin&password=franklin&useSSL=false&serverTimezone=UTC}
 
   # any properties specific to your JDBC driver:
   properties:
@@ -123,49 +123,6 @@ jwt_auth_configuration:
 
 swagger:
   resourcePackage: io.castled
-
-# TODO: Using invalid values for follwoing configs to make dropwizrd happy. Will fix later!
-
-gcp_service_account_creds:
-  account_key: ${GCP_ACCOUNT_KEY:-xx}
-  project_id: ${GCP_PROJECT_ID:-xx}
-
-s3_application_config:
-  bucket: ${S3_BUCKET:-xx}
-  region: ${S3_BUCKET_REGION:-US_EAST_1}
-
-tunnel_configuration:
-  private_key: xx
-  pass_phrase: xx
-
-oauth_client_config:
-  SALESFORCE:
-    client_id: ${OAUTH_SALESFORCE_CLIENT_ID:-}
-    client_secret: ${OAUTH_SALESFORCE_CLIENT_SECRET:-}
-  GOOGLE:
-    client_id: ${OAUTH_GOOGLE_CLIENT_ID:-}
-    client_secret: ${OAUTH_GOOGLE_CLIENT_SECRET:-}
-  HUBSPOT:
-    client_id: ${OAUTH_HUBSPOT_CLIENT_ID:-}
-    client_secret: ${OAUTH_HUBSPOT_CLIENT_SECRET:-}
-  MICROSOFT:
-    client_id: ${OAUTH_MICROSOFT_CLIENT_ID:-}
-    client_secret: ${OAUTH_MICROSOFT_CLIENT_SECRET:-}
-  INTERCOM:
-    client_id: ${OAUTH_INTERCOM_CLIENT_ID:-}
-    client_secret: ${OAUTH_INTERCOM_CLIENT_SECRET:-}
-  MAILCHIMP:
-    client_id: ${OAUTH_MAILCHIMP_CLIENT_ID:-}
-    client_secret: ${OAUTH_MAILCHIMP_CLIENT_SECRET:-}
-
-email_configuration:
-  from: xx
-  from_name: xx
-  smtp_user: xx
-  smtp_password: xx
-  smtp_host: xx
-  smtp_port: 00
-  email_enabled: false
 
 doc_configuration:
   docUrl: https://oss-docs.castled.io
