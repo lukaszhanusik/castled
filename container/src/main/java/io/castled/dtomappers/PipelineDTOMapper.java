@@ -3,13 +3,14 @@ package io.castled.dtomappers;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalApp;
 import io.castled.apps.ExternalAppService;
+import io.castled.apps.ExternalAppType;
 import io.castled.dtos.AppDetails;
 import io.castled.dtos.PipelineDTO;
 import io.castled.dtos.PipelineRunDetails;
 import io.castled.dtos.WarehouseDetails;
 import io.castled.models.Pipeline;
-import io.castled.services.PipelineService;
 import io.castled.models.Warehouse;
+import io.castled.services.PipelineService;
 import io.castled.warehouses.WarehouseService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,13 +31,15 @@ public interface PipelineDTOMapper {
 
     default AppDetails getAppDetails(Long appId) {
         ExternalApp externalApp = ObjectRegistry.getInstance(ExternalAppService.class).getExternalApp(appId, true);
+        ExternalAppType externalAppType = ExternalAppType.valueOf(externalApp.getType().name());
         return AppDetails.builder().name(externalApp.getName())
-                .id(externalApp.getId()).type(externalApp.getType()).build();
+                .id(externalApp.getId()).type(externalApp.getType()).logoUrl(externalApp.getType().logoUrl()).build();
     }
 
     default WarehouseDetails getWarehouseDetails(Long warehouseId) {
         Warehouse warehouse = ObjectRegistry.getInstance(WarehouseService.class).getWarehouse(warehouseId, true);
-        return WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName()).type(warehouse.getType()).build();
+        return WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
+                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build();
     }
 
     default PipelineRunDetails getLastRunDetails(Pipeline pipeline) {

@@ -18,4 +18,5 @@ public class AppDetails {
     private Long id;
     private ExternalAppType type;
     private String name;
+    private String logoUrl;
 }
