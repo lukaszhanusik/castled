@@ -6,6 +6,14 @@ sidebar_position: 2
 
 With Castled Form Langauge(CFL), its really easy to write a new destination connector in Castled. Lets take the example of a Kafka connector to explain the process step by step.
 
+## Quick video on how to create a destination connector
+
+<div style={{textAlign: 'center'}}>
+
+[![](https://cdn.loom.com/sessions/thumbnails/067ecaa2377d4e5ba4a2e428c6594664-with-play.gif)](https://www.loom.com/embed/bab3f0260a404757809ac619a855855f)
+
+</div>
+
 ## Configuring the app connection
 
 Creating an app connection is a prerequisite to creating a pipeline. [AppConfig](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/AppConfig.java) class includes the connection params required to establish connection to our destination app. We have to extend the AppConfig class and mention the connection parameters in the sub class.
@@ -15,7 +23,7 @@ Creating an app connection is a prerequisite to creating a pipeline. [AppConfig]
 @Setter
 public class KafkaAppConfig extends AppConfig {
 
-    @FormField(title = "Bootstrap Servers", placeholder = "eg: host1:9092, host2:9092", 
+    @FormField(title = "Bootstrap Servers", placeholder = "eg: host1:9092, host2:9092",
     schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String bootstrapServers;
 }
@@ -41,8 +49,7 @@ public class KafkaAppSyncConfig extends AppSyncConfig {
 }
 ```
 
-As you can see here, we are using an *OptionalRef* here to fetch the list of available kafka topics from the backend. The form generated using AppSyncConfig will be shown as part of the pipeline create wizard after selecting the source and destination. 
-
+As you can see here, we are using an _OptionalRef_ here to fetch the list of available kafka topics from the backend. The form generated using AppSyncConfig will be shown as part of the pipeline create wizard after selecting the source and destination.
 
 ## ExternalAppConnector
 
@@ -109,7 +116,7 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
 
 ## DataSink
 
-Finally we have to implement the syncRecords method of the [DataSink](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/DataSink.java) interface, which does the actual data sync to the destination apis. 
+Finally we have to implement the syncRecords method of the [DataSink](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/DataSink.java) interface, which does the actual data sync to the destination apis.
 
 ```
 void syncRecords(DataSinkRequest dataSinkRequest) throws Exception;
@@ -120,7 +127,6 @@ DataSink takes a DataSinkRequest, which contains all required context about the 
 ### MessageInputStream
 
 [MessageInputStream](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/commons/streams/MessageInputStream.java) contains a stream of records which can be fetched on demand from the source using the readMessage method. Message consists of an offset(which indicates the serial no of the message in the stream) and the actual message tuple. The message tuple contains both the schema and value of each field in the message.
-
 
 ### ErrorOutputStream
 
@@ -212,17 +218,6 @@ public class KafkaDataSink implements DataSink {
 
 ```
 
-We also need to implement the *getSyncStats* method of the DataSink interface. This gives an indication of the process of the data sync. This method is called from a parallel thread to show the status of the data sink on the UI, while its in progress.
+We also need to implement the _getSyncStats_ method of the DataSink interface. This gives an indication of the process of the data sync. This method is called from a parallel thread to show the status of the data sink on the UI, while its in progress.
 
 **Thats it!! We have now built a new Kafka connector in Castled**
-
-
-
-
-    
-
-
-
-
-
-
