@@ -39,8 +39,8 @@ public interface PipelineDAO {
             " :pipeline.mapping, :pipeline.appSyncConfig, :pipeline.appId, :pipeline.warehouseId, :uuid, 'OK', 'ACTIVE', :pipeline.queryMode)")
     long createPipeline(@BindBean("pipeline") PipelineConfigDTO pipelineConfigDTO, @BindBean("user") User user, @Bind("uuid") String uuid);
 
-    @SqlUpdate("update pipelines set name =:name, schedule =:schedule where id = :id")
-    void updatePipeline(@Bind("id") Long id, @Bind("name") String name, @Bind("schedule") JobSchedule jobSchedule);
+    @SqlUpdate("update pipelines set name =:name, schedule =:schedule ,query_mode=:queryMode where id = :id")
+    void updatePipeline(@Bind("id") Long id, @Bind("name") String name, @Bind("schedule") JobSchedule jobSchedule, @Bind("queryMode") QueryMode queryMode);
 
     @SqlQuery("select * from pipelines where id = :id and is_deleted = 0")
     Pipeline getActivePipeline(@Bind("id") Long id);

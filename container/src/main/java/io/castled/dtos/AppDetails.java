@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +17,5 @@ public class AppDetails {
     private Long id;
     private ExternalAppType type;
     private String name;
+    private String logoUrl;
 }
