@@ -1,5 +1,6 @@
 package io.castled.dtos;
 
+import io.castled.models.QueryMode;
 import io.castled.models.jobschedule.JobSchedule;
 import lombok.Data;
 
@@ -8,4 +9,5 @@ public class PipelineUpdateRequest {
 
     private String name;
     private JobSchedule schedule;
+    private QueryMode queryMode;
 }
