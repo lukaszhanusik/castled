@@ -150,7 +150,7 @@ const WarehouseModel = ({
                 <IconPlayerPlay size={14} style={{ marginRight: "5px" }} />
                 {isSubmitting && <IconLoader className="spinner-icon" />}
               </Button>
-              {queryResults && queryResults.status !== "PENDING" && (
+              {queryResults && queryResults.status === "SUCCEEDED" && (
                 <Button
                   type="button"
                   className="btn btn-primary mt-2 ms-2"
