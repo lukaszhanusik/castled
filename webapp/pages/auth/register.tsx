@@ -38,6 +38,7 @@ function Register(props: serverSideProps) {
   const { setUser } = useSession();
   const router = useRouter();
   const formSchema = Yup.object().shape({
+    firstName: Yup.string().required("First Name is required"),
     password: Yup.string().required("This field is required"),
     confirmPassword: Yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
@@ -64,47 +65,48 @@ function Register(props: serverSideProps) {
           lastName: "",
           password: "",
           confirmPassword: "",
-          clusterLocation: AppCluster.US,
+          clusterLocation: undefined,
         }}
         validationSchema={formSchema}
         onSubmit={(values) => handleRegisterUser(values, setUser, router!)}
       >
         {({ values, setFieldValue, setFieldTouched }) => (
           <Form>
-            <InputField
-              type="string"
-              name="firstName"
-              title="First Name"
-              placeholder="Enter first name"
-            />
-            <InputField
-              type="string"
-              name="lastName"
-              title="Last Name"
-              placeholder="Enter last name"
-            />
+            <div className="row row-cols-2">
+              <InputField
+                type="string"
+                name="firstName"
+                title="First Name"
+                placeholder="Enter first name"
+              />
+              <InputField
+                type="string"
+                name="lastName"
+                title="Last Name"
+                placeholder="Enter last name"
+              />
+            </div>
             <InputField
               type="password"
               name="password"
               title="Password"
               placeholder="Enter password"
             />
-
             <InputField
               type="password"
               name="confirmPassword"
               title="Confirm Password"
               placeholder="Confirm password"
             />
-
             <InputSelect
-              title="Cluster Location"
+              title="Cluster Region"
               options={renderUtils.selectOptions(AppClusterLabel)}
               values={values}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               name="clusterLocation"
             />
+            <p className="text-muted mt-n3">Choose a region nearest to your warehouse region</p>
             <ButtonSubmit className="form-control" />
           </Form>
         )}
@@ -130,7 +132,7 @@ export interface RegisterForm {
   lastName: string;
   password: string;
   confirmPassword: string;
-  clusterLocation: AppCluster;
+  clusterLocation: AppCluster | undefined;
 }
 
 const handleRegisterUser = async (
@@ -146,11 +148,14 @@ const handleRegisterUser = async (
       password: registerForm.password,
       clusterLocation: registerForm.clusterLocation,
     };
+    if(formData.clusterLocation === undefined){
+      return bannerNotificationService.error("Please Select Cluster Location"); 
+    }
     registerUser(
       formData,
       ClusterLocationUrl[formData.clusterLocation] + "/backend/v1/users/register"
     ).then(async (result) => {
-      window.location.assign(ClusterLocationUrl[formData.clusterLocation]);
+      window.location.assign(ClusterLocationUrl[formData.clusterLocation!]);
     });
   }
 };
