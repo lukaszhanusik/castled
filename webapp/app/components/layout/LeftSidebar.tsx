@@ -8,10 +8,11 @@ import {
 import Link from "next/link";
 import cn from "classnames";
 import { useRouter } from "next/router";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import DropdownCaretDown from "@/app/components/bootstrap/DropdownCaretDown";
+import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 
-interface LeftSidebarProps {}
+interface LeftSidebarProps { }
 
 const sidebarLinks = [
   {
@@ -40,7 +41,7 @@ const sidebarLinks = [
   },
 ];
 const LeftSidebar = (props: LeftSidebarProps) => {
-  const { isOss } = useSession();
+  const { user, isOss } = useSession();
   const router = useRouter();
   return (
     <aside className="col d-md-block sidebar collapse">
@@ -93,6 +94,26 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                 </OverlayTrigger>
               );
             })}
+          <li className="position-absolute bottom-0 text-center">
+            {user && !isOss && (
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  id="dropdown-custom-components"
+                  className="logout-dropdown ms-2 border-0"
+                >
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${user.name}`}
+                    alt={user.name}
+                    height={44}
+                    className="rounded-circle"
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu align="end">
+                  <Dropdown.Item href="/auth/logout" className="text-primary">Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+          </li>
         </ul>
       </div>
     </aside>

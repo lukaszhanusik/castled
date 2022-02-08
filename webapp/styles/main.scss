@@ -411,3 +411,11 @@ form {
     font-size: 0.8rem;
   }
 }
+
+.logout-dropdown{
+  background-color: $gunmetal; 
+}
+
+.logout-dropdown:after{
+  content:none;
+}

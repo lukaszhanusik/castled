@@ -32,6 +32,7 @@ import { NextRouter, useRouter } from "next/router";
 import PipelineSettingsView from "@/app/components/pipeline/PipelineSettingsView";
 import { ScheduleType } from "@/app/common/enums/ScheduleType";
 import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
+import TimeAgo from "react-timeago";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const pipelineId = routerUtils.getInt(query.pipelineId);
@@ -134,7 +135,11 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2>Data sync successful!</h2>
+          <h2>Data sync successful!
+          {pipelineRuns[0].createdTs && (
+            <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
+          )}
+          </h2>
           <p>
             Go to <strong>{pipeline?.app.name}</strong> to check the data synced
           </p>

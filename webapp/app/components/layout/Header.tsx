@@ -1,8 +1,5 @@
 import { useSession } from "@/app/common/context/sessionContext";
-import { Dropdown, Nav } from "react-bootstrap";
-import DropdownCaretDown from "@/app/components/bootstrap/DropdownCaretDown";
-import SearchForm from "@/app/components/layout/SearchForm";
-import Link from "next/link";
+import { Nav } from "react-bootstrap";
 import cn from "classnames";
 import router, { useRouter } from "next/router";
 import { DebugPipelineWizContext } from "@/app/components/pipeline/DebugPipelineWizContext";
@@ -11,7 +8,7 @@ import React, { useState } from "react";
 import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
 import { StringAnyMap } from "@/app/common/utils/types";
 import buttonHandler from "@/app/common/utils/buttonHandler";
-
+import { IconPlus } from "@tabler/icons";
 export interface HeaderProps {
   title: string | JSX.Element;
   subTitle: string | JSX.Element | undefined;
@@ -43,39 +40,11 @@ const Header = ({
   stepGroups,
 }: HeaderProps) => {
   const router = useRouter();
-  const { user, isOss } = useSession();
+  const { isOss } = useSession();
 
   return (
     <>
       <header>
-        <nav className="navbar navbar-expand navbar-light">
-          <div className="container-fluid">
-            <div className="navbar-nav d-flex">
-              <SearchForm />
-            </div>
-            <ul className="navbar-nav d-flex">
-              {user && !isOss && (
-                <Dropdown align="end">
-                  <Dropdown.Toggle
-                    as={DropdownCaretDown}
-                    id="dropdown-custom-components"
-                  >
-                    <img
-                      src={`https://ui-avatars.com/api/?name=${user.name}`}
-                      alt={user.name}
-                      height={36}
-                      className="rounded-circle"
-                    />
-                    <span>{user.name}</span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu align="end">
-                    <Dropdown.Item href="/auth/logout">Logout</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
-            </ul>
-          </div>
-        </nav>
         <WizardStepsLayout
           title={title}
           steps={steps}
@@ -109,6 +78,9 @@ const Header = ({
                     )}
                     className="btn btn-primary float-end"
                   >
+                    {(rightBtn.title === "Create" 
+                    || rightBtn.title === "Add Warehouse"
+                    || rightBtn.title === "Add App")&& <IconPlus size={20} className="me-1"/>}
                     {rightBtn.title}
                   </button>
                 )}
