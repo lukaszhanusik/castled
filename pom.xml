@@ -7,7 +7,7 @@
     <groupId>io.castled</groupId>
     <artifactId>app</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.16-alpha</version>
+    <version>0.2.17-alpha</version>
     <modules>
         <module>commons</module>
         <module>jarvis</module>
@@ -311,12 +311,12 @@
             <version>4.3.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>4.2.2.RELEASE</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework/spring-core &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework</groupId>-->
+<!--            <artifactId>spring-core</artifactId>-->
+<!--            <version>4.2.2.RELEASE</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 	<profiles>
