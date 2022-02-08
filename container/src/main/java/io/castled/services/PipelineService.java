@@ -136,7 +136,7 @@ public class PipelineService {
     }
 
     public void updatePipeline(Long pipelineId, PipelineUpdateRequest pipelineUpdateRequest) {
-        this.pipelineDAO.updatePipeline(pipelineId, pipelineUpdateRequest.getName(), pipelineUpdateRequest.getSchedule());
+        this.pipelineDAO.updatePipeline(pipelineId, pipelineUpdateRequest.getName(), pipelineUpdateRequest.getSchedule(), pipelineUpdateRequest.getQueryMode());
     }
 
     public void triggerPipeline(long pipelineId, long teamId) {
