@@ -62,4 +62,5 @@ export interface ConnectorDetails {
   id: number;
   type: string;
   name: string;
+  logoUrl: string;
 }

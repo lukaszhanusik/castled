@@ -66,8 +66,22 @@ const Pipelines = () => {
                       <a>{pipeline.name}</a>
                     </Link>
                   </td>
-                  <td>{pipeline.warehouse.name}</td>
-                  <td>{pipeline.app.name}</td>
+                  <td>
+                    {/* <img
+                      src={pipeline.warehouse.logoUrl}
+                      alt={pipeline.warehouse.name}
+                      height={24}
+                    /> */}
+                    {pipeline.warehouse.name}
+                  </td>
+                  <td>
+                    {/* <img
+                      src={pipeline.app.logoUrl}
+                      alt={pipeline.app.name}
+                      height={24}
+                    /> */}
+                    {pipeline.app.name}
+                  </td>
                   <td>
                     <Badge bg={pipeline.status === "OK" ? "success" : "danger"}>
                       {pipeline.status}
