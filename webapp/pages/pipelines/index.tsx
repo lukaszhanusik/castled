@@ -40,10 +40,10 @@ const Pipelines = () => {
       rightBtn={
         pipelines?.length
           ? {
-              id: "create_pipeline_button",
-              title: "Create",
-              href: "/pipelines/create",
-            }
+            id: "create_pipeline_button",
+            title: "Create",
+            href: "/pipelines/create",
+          }
           : undefined
       }
     >
@@ -66,8 +66,24 @@ const Pipelines = () => {
                       <a>{pipeline.name}</a>
                     </Link>
                   </td>
-                  <td><img src={pipeline.warehouse.logoUrl} alt={pipeline.warehouse.name} height={36} /></td>
-                  <td><img src={pipeline.app.logoUrl} alt={pipeline.app.name} height={36} /></td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <img src={pipeline.warehouse.logoUrl} alt={pipeline.warehouse.name} height={30} />
+                      <div className="ms-2">
+                        {pipeline.warehouse.name}
+                        <h5 className="text-muted m-0">{pipeline.warehouse.type}</h5>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <img src={pipeline.app.logoUrl} alt={pipeline.app.name} height={30} />
+                      <div className="ms-2">
+                        {pipeline.app.name}
+                        <h5 className="text-muted m-0">{pipeline.app.type}</h5>
+                      </div>
+                    </div>
+                  </td>
                   <td>
                     <Badge bg={pipeline.status === "OK" ? "success" : "danger"}>
                       {pipeline.status}
