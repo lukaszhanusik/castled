@@ -102,6 +102,6 @@ We are a huge fan of the open source community and we value your contributions. 
   </a>
 </p>
 
-## :page_with_curl: ddLicense
+## :page_with_curl: License
 
 Refer our [license](https://github.com/castledio/castled/blob/main/LICENSE.md) file for queries regarding the licensing of our different modules.
