@@ -155,7 +155,7 @@ const handleRegisterUser = async (
       formData,
       ClusterLocationUrl[formData.clusterLocation] + "/backend/v1/users/register"
     ).then(async (result) => {
-      window.location.assign(ClusterLocationUrl[formData.clusterLocation]);
+      window.location.assign(ClusterLocationUrl[formData.clusterLocation!]);
     });
   }
 };
