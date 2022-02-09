@@ -15,6 +15,7 @@ import authUtils from "@/app/common/utils/authUtils";
 import buttonHandler from "@/app/common/utils/buttonHandler";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
+import eventService from "@/app/services/eventService";
 import cn from "classnames";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -38,6 +39,11 @@ const Login = (props: serverSideProps) => {
     if (router.query.failure_message) {
       bannerNotificationService.error(router.query.failure_message);
     }
+    if(router.query.gclid){
+      eventService.trackConversion(router.query.gclid);
+
+    }
+
   }, [router.isReady]);
   return (
     <GuestLayout>
