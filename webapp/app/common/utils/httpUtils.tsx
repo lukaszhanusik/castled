@@ -14,9 +14,12 @@ const getQueryParams = (url?: string) => {
   return new URLSearchParams(search);
 };
 
-const param = (params?: {
-  [key: string]: string | number | boolean | string[] | number[];
-}) => {
+const param = (
+  params?: {
+    [key: string]: string | number | boolean | string[] | number[];
+  },
+  skipQuestionMark?: boolean
+) => {
   if (!params) return "";
   const paramStr = Object.keys(params)
     .filter((k) => params[k])
@@ -30,6 +33,7 @@ const param = (params?: {
       }
     })
     .join("&");
+  if (skipQuestionMark) return paramStr;
   return paramStr.length ? "?" + paramStr : "";
 };
 

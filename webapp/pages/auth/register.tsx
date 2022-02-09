@@ -93,7 +93,20 @@ function Register(props: serverSideProps) {
             <p className="text-muted mt-n3">
               Choose a region nearest to your warehouse region
             </p>
-            <ButtonSubmit className="form-control" />
+            <ButtonSubmit className="form-control btn-lg">
+              Register
+            </ButtonSubmit>
+            <p className="mt-3 fs-4 text-muted">
+              By clicking on <strong className="text-muted">Register</strong>{" "}
+              you agree to the{" "}
+              <a href="https://castled.io/terms-of-service" target="_blank">
+                Terms of Service
+              </a>{" "}
+              and the{" "}
+              <a href="https://castled.io/privacy-policy" target="_blank">
+                Privacy Policy
+              </a>
+            </p>
           </Form>
         )}
       </Formik>

@@ -34,10 +34,14 @@ export default {
     return http.get("/v1/users/whoami");
   },
   signUp: async (request: SignUpRequestDto) => {
-    await axios.post("/v1/users/signup", httpUtils.param(request as any), {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
+    await axios.post(
+      "/v1/users/signup",
+      httpUtils.param(request as any, true),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
   },
 };
