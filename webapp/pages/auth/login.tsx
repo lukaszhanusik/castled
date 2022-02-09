@@ -47,56 +47,58 @@ const Login = (props: serverSideProps) => {
   }, [router.isReady]);
   return (
     <GuestLayout>
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
-        }}
-        onSubmit={formHandler(
-          false,
-          {
-            id: "login_form",
-            pickFieldsForEvent: ["email"],
-          },
-          authService.login,
-          () => handleLogin(setUser, router)
-        )}
-      >
-        <Form>
-          <InputField
-            type="email"
-            name="email"
-            title="Email"
-            placeholder="Enter email"
-          />
-          <InputField
-            type="password"
-            name="password"
-            title="Password"
-            placeholder="Enter password"
-          />
-          <ButtonSubmit className="form-control btn-lg" />
-        </Form>
-      </Formik>
-      <div className="mt-3 d-flex flex-row align-items-center">
-        <p className="horizontal-line">
-          <span> or </span>{" "}
-        </p>
-      </div>
-      <div className="mt-3 gap-2 text-center">
-        <Button
-          className="d-block btn-lg"
-          href={authUtils.getExternalLoginUrl(
-            props.appBaseUrl,
-            ExternalLoginType.GOOGLE,
-            router.pathname
+      <div className="p-4">
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onSubmit={formHandler(
+            false,
+            {
+              id: "login_form",
+              pickFieldsForEvent: ["email"],
+            },
+            authService.login,
+            () => handleLogin(setUser, router)
           )}
-          onClick={buttonHandler(false, { id: "login_with_google" })}
-          variant="outline-dark"
         >
-          <img src="/images/google.png" width={14} className="rounded-circle" />
-          <span className="mx-2">Login with Google</span>
-        </Button>
+          <Form>
+            <InputField
+              type="email"
+              name="email"
+              title="Email"
+              placeholder="Enter email"
+            />
+            <InputField
+              type="password"
+              name="password"
+              title="Password"
+              placeholder="Enter password"
+            />
+            <ButtonSubmit className="form-control btn-lg" />
+          </Form>
+        </Formik>
+        <div className="mt-3 d-flex flex-row align-items-center">
+          <p className="horizontal-line">
+            <span> or </span>{" "}
+          </p>
+        </div>
+        <div className="mt-3 gap-2 text-center">
+          <Button
+            className="d-block btn-lg"
+            href={authUtils.getExternalLoginUrl(
+              props.appBaseUrl,
+              ExternalLoginType.GOOGLE,
+              router.pathname
+            )}
+            onClick={buttonHandler(false, { id: "login_with_google" })}
+            variant="outline-dark"
+          >
+            <img src="/images/google.png" width={14} className="rounded-circle" />
+            <span className="mx-2">Login with Google</span>
+          </Button>
+        </div>
       </div>
     </GuestLayout>
   );
