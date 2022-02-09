@@ -3,8 +3,7 @@ import { useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 
 function Verify() {
-    const {query} = useRouter();
-    console.log(query)
+    const { query } = useRouter();
     return (
         <GuestLayout>
             <div className="container">
@@ -14,8 +13,18 @@ function Verify() {
                         <img src='/images/checkMail.png' alt='Check Mail' />
                     </div>
                     <div className="p-0 col col-12 text-center">
-                        <h3>We have sent you an email to <span className="text-danger"> {`${query.email}`} </span> <a href="/auth/signup" className="text-decoration-underline">Edit</a></h3>
-                        <h3>Click on the registration link in the email to create an account on Castled </h3>
+                        {
+                            query.email ?
+                                <>
+                                    <h3>We have sent you an email to <span className="text-danger"> {query.email} </span> <a href="/auth/signup" className="text-decoration-underline">Edit</a></h3>
+                                    <h3>Click on the registration link in the email to create an account on Castled </h3>
+                                </>
+                                :
+                                <>
+                                    <h3>We have sent you a registration link to your email address.</h3>
+                                    <h3>Please click on the link to create an account on Castled.</h3>
+                                </>
+                        }
                     </div>
                 </div>
             </div>
