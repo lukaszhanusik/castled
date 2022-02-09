@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 
 function Verify() {
-  const { query } = useRouter();
+  const router = useRouter();
   return (
     <GuestLayout>
       <div className="container">
@@ -13,14 +13,23 @@ function Verify() {
             <img src="/images/checkMail.png" alt="Check Mail" />
           </div>
           <div className="p-0 col col-12 text-center">
-            {query.email ? (
+            {router.query.email ? (
               <>
                 <h3>
                   We have sent a registration link to{" "}
-                  <span className="text-danger"> {query.email} </span>{" "}
-                  <a href="/auth/signup" className="text-decoration-underline">
+                  <span className="text-danger"> {router.query.email} </span>{" "}
+                  <span className="text-decoration-underline text-primary" id="edit-email"
+                    onClick={() => {
+                      router.push(
+                        {
+                          pathname: '/auth/signup',
+                          query: { email: router.query.email }
+                        },
+                        '/auth/signup',
+                      );
+                    }}>
                     Edit
-                  </a>
+                  </span>
                 </h3>
                 <h3>
                   Please click on the link to create an account on Castled.

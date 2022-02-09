@@ -22,7 +22,7 @@ interface serverSideProps {
 }
 
 interface userDetail {
-  email: string;
+  email: string | string[];
 }
 
 function SignUp(props: serverSideProps) {
@@ -57,6 +57,7 @@ function SignUp(props: serverSideProps) {
       })
       .catch((err) => bannerNotificationService.error(err.message));
   }
+
   return (
     <GuestLayout>
       <div className="container">
@@ -65,9 +66,15 @@ function SignUp(props: serverSideProps) {
             <img src='/images/Castled-Logo.png' alt="Castled Logo" className="my-3" />
             <h2 className="mb-3">Create your Castled Account</h2>
             <Formik
-              initialValues={{
-                email: ""
-              }}
+              initialValues={
+                router.query.email ?
+                  {
+                    email: router.query.email,
+                  }
+                  : {
+                    email: "",
+                  }
+              }
               validationSchema={formSchema}
               onSubmit={(values) => handleSubmit(values)}
             >
