@@ -30,7 +30,7 @@ const param = (params?: {
       }
     })
     .join("&");
-  return paramStr;
+  return paramStr.length ? "?" + paramStr : "";
 };
 
 export default {
@@ -39,7 +39,7 @@ export default {
   },
   getUrl: (baseUrl: string, params?: StringAnyMap) => {
     if (!params) return baseUrl;
-    return baseUrl + "?" + param(params);
+    return baseUrl + param(params);
   },
   dtoToMultipartFormData: (data: any) => {
     const formData = new FormData();
