@@ -5,6 +5,7 @@ import { AxiosResponse } from "axios";
 import { LoggedInUserDto } from "@/app/common/dtos/LoggedInUserDto";
 import { UserRegistrationResponse } from "../common/dtos/UserRegistrationResponse";
 import { ActivateUserDTO } from "../common/dtos/ActivateUserDTO";
+import { SignUpRequestDto } from "@/app/common/dtos/SignUpRequestDto";
 
 export default {
   login: (request: LoginRequestDto): Promise<AxiosResponse<void>> => {
@@ -32,4 +33,7 @@ export default {
   whoAmI: (): Promise<AxiosResponse<LoggedInUserDto>> => {
     return http.get("/v1/users/whoami");
   },
+  signUp: (request: SignUpRequestDto): Promise<AxiosResponse<void>> => {
+    return http.post("/v1/users/signup", request);
+  }
 };

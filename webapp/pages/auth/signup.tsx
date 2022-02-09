@@ -7,6 +7,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import * as Yup from "yup";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
+import authService from "@/app/services/authService";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -37,21 +38,18 @@ function SignUp(props: serverSideProps) {
   const handleSubmit = (email: string) => {
     let formData = new FormData();
     formData.append("email", email);
-    fetch('/v1/users/signup', {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => {
-        console.log(res);
-        router.push(
-          {
-            pathname: '/auth/verify-email',
-            query: { email: email }
-          },
-          '/auth/verify-email',
-        );
-      })
-      .catch((err) => bannerNotificationService.error(err.message));
+    authService.signUp('/v1/users/signup')
+      // .then(res => {
+      //   console.log(res);
+      //   router.push(
+      //     {
+      //       pathname: '/auth/verify-email',
+      //       query: { email: email }
+      //     },
+      //     '/auth/verify-email',
+      //   );
+      // })
+      // .catch((err) => bannerNotificationService.error(err.message));
   }
 
   return (
