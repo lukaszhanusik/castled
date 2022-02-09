@@ -18,31 +18,30 @@ function Verify() {
                 <h3>
                   We have sent a registration link to{" "}
                   <span className="text-danger"> {router.query.email} </span>{" "}
-                  <span className="text-decoration-underline text-primary" id="edit-email"
+                  <span
+                    className="text-decoration-underline text-primary"
+                    id="edit-email"
                     onClick={() => {
                       router.push(
                         {
-                          pathname: '/auth/signup',
-                          query: { email: router.query.email }
+                          pathname: "/auth/signup",
+                          query: { email: router.query.email },
                         },
-                        '/auth/signup',
+                        "/auth/signup"
                       );
-                    }}>
+                    }}
+                  >
                     Edit
                   </span>
                 </h3>
-                <h3>
-                  Please click on the link to create an account on Castled.
-                </h3>
+                <p>Please click on the link to create an account on Castled.</p>
               </>
             ) : (
               <>
                 <h3>
                   We have sent you a registration link to your email address.
                 </h3>
-                <h3>
-                  Please click on the link to create an account on Castled.
-                </h3>
+                <p>Please click on the link to create an account on Castled.</p>
               </>
             )}
           </div>

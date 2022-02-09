@@ -10,15 +10,9 @@ import { AppCluster, AppClusterLabel } from "@/app/common/enums/AppCluster";
 import { NextRouter, useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
-import * as Yup from "yup";
-import { Button } from "react-bootstrap";
-import { ExternalLoginType } from "@/app/common/enums/ExternalLoginType";
-import authUtils from "@/app/common/utils/authUtils";
-import buttonHandler from "@/app/common/utils/buttonHandler";
+import * as yup from "yup";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
-import { UserRegistrationResponse } from "@/app/common/dtos/UserRegistrationResponse";
-import { AxiosResponse } from "axios";
 import { ClusterLocationUrl } from "@/app/common/enums/ClusterLocation";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -37,26 +31,16 @@ interface serverSideProps {
 function Register(props: serverSideProps) {
   const { setUser } = useSession();
   const router = useRouter();
-  const formSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name is required"),
-    password: Yup.string().required("This field is required"),
-    confirmPassword: Yup.string().when("password", {
+  const formSchema = yup.object().shape({
+    firstName: yup.string().required("First Name is required"),
+    password: yup.string().required("This field is required"),
+    confirmPassword: yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
-      then: Yup.string().oneOf(
-        [Yup.ref("password")],
-        "Passwords need to match"
-      ),
+      then: yup
+        .string()
+        .oneOf([yup.ref("password")], "Passwords need to match"),
     }),
   });
-
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    if (router.query.failure_message) {
-      bannerNotificationService.error(router.query.failure_message);
-    }
-  }, [router.isReady]);
-
   return (
     <GuestLayout>
       <Formik
@@ -106,7 +90,9 @@ function Register(props: serverSideProps) {
               setFieldTouched={setFieldTouched}
               name="clusterLocation"
             />
-            <p className="text-muted mt-n3">Choose a region nearest to your warehouse region</p>
+            <p className="text-muted mt-n3">
+              Choose a region nearest to your warehouse region
+            </p>
             <ButtonSubmit className="form-control" />
           </Form>
         )}
@@ -148,18 +134,18 @@ const handleRegisterUser = async (
       password: registerForm.password,
       clusterLocation: registerForm.clusterLocation,
     };
-    if(formData.clusterLocation === undefined){
-      return bannerNotificationService.error("Please Select Cluster Location"); 
+    if (formData.clusterLocation === undefined) {
+      return bannerNotificationService.error("Please Select Cluster Location");
     }
     registerUser(
       formData,
-      ClusterLocationUrl[formData.clusterLocation] + "/backend/v1/users/register"
+      ClusterLocationUrl[formData.clusterLocation] +
+        "/backend/v1/users/register"
     ).then(async (result) => {
       window.location.assign(ClusterLocationUrl[formData.clusterLocation!]);
     });
   }
 };
-
 
 const registerUser = async (formData: any, url: string) => {
   return fetch(url, {
@@ -167,7 +153,7 @@ const registerUser = async (formData: any, url: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
     body: JSON.stringify(formData),
   });
 };

@@ -1,18 +1,22 @@
 import React, { useEffect } from "react";
 import { Form, Formik } from "formik";
 import InputField from "@/app/components/forminputs/InputField";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
-import * as Yup from "yup";
+import * as yup from "yup";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
+import authService from "@/app/services/authService";
+import { SignUpRequestDto } from "@/app/common/dtos/SignUpRequestDto";
+import formHandler from "@/app/common/utils/formHandler";
+import httpUtils from "@/app/common/utils/httpUtils";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      appBaseUrl: process.env.APP_BASE_URL
-    }
+      appBaseUrl: process.env.APP_BASE_URL,
+    },
   };
 }
 
@@ -21,62 +25,34 @@ interface serverSideProps {
   apiBase: string;
 }
 
-interface userDetail {
-  email: string | string[];
-}
-
 function SignUp(props: serverSideProps) {
   const router = useRouter();
-  const formSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
+  const formSchema = yup.object().shape({
+    email: yup.string().email("Invalid email").required("Required"),
   });
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    if (router.query.failure_message) {
-      bannerNotificationService.error(router.query.failure_message);
-    }
-  }, [router.isReady]);
-
-  const handleSubmit = (values: userDetail) => {
-    fetch('/v1/users/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email: values.email })
-    })
-      .then(res => {
-        router.push(
-          {
-            pathname: '/auth/verify-email',
-            query: { email: values.email }
-          },
-          '/auth/verify-email',
-        );
-      })
-      .catch((err) => bannerNotificationService.error(err.message));
-  }
-
   return (
     <GuestLayout>
       <div className="container">
         <div className="row py-2">
           <div className="col">
-            <img src='/images/Castled-Logo.png' alt="Castled Logo" className="my-3" />
+            <img
+              src="/images/Castled-Logo.png"
+              alt="Castled Logo"
+              className="my-3"
+            />
             <h2 className="mb-3">Create your Castled Account</h2>
             <Formik
               initialValues={
-                router.query.email ?
-                  {
-                    email: router.query.email,
-                  }
-                  : {
-                    email: "",
-                  }
+                {
+                  email: router.query.email || "",
+                } as SignUpRequestDto
               }
               validationSchema={formSchema}
-              onSubmit={(values) => handleSubmit(values)}
+              onSubmit={(values) =>
+                authService
+                  .signUp(values)
+                  .then(() => handleSignUp(values, router))
+              }
             >
               {({ values, setFieldValue, setFieldTouched }) => (
                 <Form>
@@ -86,10 +62,12 @@ function SignUp(props: serverSideProps) {
                     title="Email"
                     placeholder="Enter email"
                   />
-                  <ButtonSubmit className="form-control btn-lg" >
+                  <ButtonSubmit className="form-control btn-lg">
                     Sign Up
                   </ButtonSubmit>
-                  <h4 className="mt-3"><a href="/auth/login">Login to existing account</a></h4>
+                  <h4 className="mt-3">
+                    <a href="/auth/login">Login to existing account</a>
+                  </h4>
                 </Form>
               )}
             </Formik>
@@ -99,5 +77,10 @@ function SignUp(props: serverSideProps) {
     </GuestLayout>
   );
 }
+const handleSignUp = async (values: SignUpRequestDto, router: NextRouter) => {
+  if (process.browser) {
+    await router.push(httpUtils.getUrl("/auth/verify-email", values));
+  }
+};
 
 export default SignUp;
