@@ -1,3 +1,3 @@
 export interface SignUpRequestDto {
-    email: string;
+  email?: string;
 }
