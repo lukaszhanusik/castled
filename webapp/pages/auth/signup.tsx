@@ -49,13 +49,13 @@ function SignUp(props: serverSideProps) {
       .then(res => {
         router.push(
           {
-            pathname: '/auth/verify',
+            pathname: '/auth/verify-email',
             query: { email: values.email }
           },
-          '/auth/verify',
+          '/auth/verify-email',
         );
       })
-      .catch(err => console.log(err.message));
+      .catch((err) => bannerNotificationService.error(err.message));
   }
   return (
     <GuestLayout>
