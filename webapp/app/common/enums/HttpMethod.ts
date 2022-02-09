@@ -11,3 +11,9 @@ export const HttpMethodLabel: { [key in HttpMethod]: string } = {
   [HttpMethod.PUT]: "PUT",
   [HttpMethod.DELETE]: "DELETE",
 };
+
+export const RestApiMethodLabel: { [key: string]: string } = {
+  [HttpMethod.POST]: "POST",
+  [HttpMethod.PUT]: "PUT",
+  [HttpMethod.DELETE]: "DELETE",
+};
