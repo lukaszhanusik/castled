@@ -21,10 +21,6 @@ interface serverSideProps {
   apiBase: string;
 }
 
-interface userDetail {
-  email: string | string[];
-}
-
 function SignUp(props: serverSideProps) {
   const router = useRouter();
   const formSchema = Yup.object().shape({
@@ -38,19 +34,19 @@ function SignUp(props: serverSideProps) {
     }
   }, [router.isReady]);
 
-  const handleSubmit = (values: userDetail) => {
+  const handleSubmit = (email: string) => {
+    let formData = new FormData();
+    formData.append("email", email);
     fetch('/v1/users/signup', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email: values.email })
+      body: formData
     })
       .then(res => {
+        console.log(res);
         router.push(
           {
             pathname: '/auth/verify-email',
-            query: { email: values.email }
+            query: { email: email }
           },
           '/auth/verify-email',
         );
@@ -76,7 +72,7 @@ function SignUp(props: serverSideProps) {
                   }
               }
               validationSchema={formSchema}
-              onSubmit={(values) => handleSubmit(values)}
+              onSubmit={(values) => handleSubmit(values.email as string)}
             >
               {({ values, setFieldValue, setFieldTouched }) => (
                 <Form>
