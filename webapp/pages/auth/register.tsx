@@ -33,11 +33,12 @@ function Register(props: serverSideProps) {
   const router = useRouter();
   const formSchema = yup.object().shape({
     firstName: yup.string().required("First Name is required"),
-    password: yup.string().required("This field is required"),
+    password: yup.string().required("Password is required"),
     confirmPassword: yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
       then: yup
         .string()
+        .required("Confirm Password is required")
         .oneOf([yup.ref("password")], "Passwords need to match"),
     }),
   });
