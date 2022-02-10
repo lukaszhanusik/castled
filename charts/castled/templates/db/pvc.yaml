@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "castled.fullname" . }}-db-vol
+  labels:
+    castled: db-vol
+spec:
+  accessModes:
+  - {{ .Values.db.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.db.persistence.size | quote }}
+  {{- include "common.storage.class" (dict "persistence" .Values.db.persistence "global" .Values.global) | nindent 2 }}

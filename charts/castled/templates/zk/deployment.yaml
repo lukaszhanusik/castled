@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "castled.fullname" . }}-zookeeper
+  labels:
+    {{- include "castled.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.zookeeper.autoscaling.enabled }}
+  replicas: {{ .Values.zookeeper.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      castled: zookeeper
+  template:
+    metadata:
+      {{- with .Values.zookeeper.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        castled: zookeeper
+    spec:
+      containers:
+        - name: castled-zookeeper-container
+          image: "{{ .Values.zookeeper.image.repository }}:{{ .Values.zookeeper.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.zookeeper.image.pullPolicy }}
+          env:
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+            - name: ZOOKEEPER_TICK_TIME
+              value: "2000"
+          ports:
+            - containerPort: 2181
+          volumeMounts:
+            - name: castled-zookeeper-data-vol
+              mountPath: /var/lib/zookeeper/data
+            - name: castled-zookeeper-log-vol
+              mountPath: /var/lib/zookeeper/log
+          resources:
+            {{- toYaml .Values.zookeeper.resources | nindent 12 }}
+      volumes:
+        - name: castled-zookeeper-log-vol
+          persistentVolumeClaim:
+            claimName: {{ include "castled.fullname" . }}-zookeeper-log-vol
+        - name: castled-zookeeper-data-vol
+          persistentVolumeClaim:
+            claimName: {{ include "castled.fullname" . }}-zookeeper-data-vol
+      {{- with .Values.zookeeper.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zookeeper.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
