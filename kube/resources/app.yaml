@@ -24,6 +24,10 @@ spec:
       labels:
         castled: app
     spec:
+      volumes:
+        - name: configs
+          secret:
+            secretName: castled-configs
       containers:
         - name: castled-app-container
           image: castled/app
@@ -63,57 +67,9 @@ spec:
                 secretKeyRef:
                   name: castled-secrets
                   key: DATABASE_PASSWORD
-            - name: OAUTH_GOOGLE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_GOOGLE_CLIENT_ID
-            - name: OAUTH_GOOGLE_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_GOOGLE_CLIENT_SECRET
-
-            - name: OAUTH_HUBSPOT_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_HUBSPOT_CLIENT_ID
-            - name: OAUTH_HUBSPOT_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_HUBSPOT_CLIENT_SECRET
-            - name: OAUTH_SALESFORCE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_SALESFORCE_CLIENT_ID
-            - name: OAUTH_SALESFORCE_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_SALESFORCE_CLIENT_SECRET
-            - name: OAUTH_MICROSOFT_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_MICROSOFT_CLIENT_ID
-            - name: OAUTH_MICROSOFT_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: OAUTH_MICROSOFT_CLIENT_SECRET
-            - name: S3_BUCKET
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: S3_BUCKET
-            - name: S3_BUCKET_REGION
-              valueFrom:
-                secretKeyRef:
-                  name: castled-secrets
-                  key: S3_BUCKET_REGION
+          volumeMounts:
+            - name: configs
+              readOnly: true
+              mountPath: "/app/configs"
           ports:
             - containerPort: 7050
-

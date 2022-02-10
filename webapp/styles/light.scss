@@ -16,7 +16,9 @@ strong {
 }
 
 .bg-guest {
-  background-color: $gray-200;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
 ::-webkit-input-placeholder,

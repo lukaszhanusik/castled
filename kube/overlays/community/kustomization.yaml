@@ -8,9 +8,9 @@ bases:
 
 images:
   - name: castled/webapp
-    newTag: 0.2.17-alpha
+    newTag: 0.2.21-alpha
   - name: castled/app
-    newTag: 0.2.17-alpha
+    newTag: 0.2.21-alpha
 
 configMapGenerator:
   - name: castled-env
@@ -21,3 +21,6 @@ secretGenerator:
   - name: castled-secrets
     envs:
       - .secrets
+  - name: castled-configs
+    files:
+      - config.yml

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "castled.fullname" . }}-redis-service
+spec:
+  type: {{ .Values.redis.service.type }}
+  ports:
+    - port: 6379
+      protocol: TCP
+  selector:
+    castled: redis

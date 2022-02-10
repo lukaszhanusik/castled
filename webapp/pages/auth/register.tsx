@@ -10,15 +10,9 @@ import { AppCluster, AppClusterLabel } from "@/app/common/enums/AppCluster";
 import { NextRouter, useRouter } from "next/router";
 import GuestLayout from "@/app/components/layout/GuestLayout";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
-import * as Yup from "yup";
-import { Button } from "react-bootstrap";
-import { ExternalLoginType } from "@/app/common/enums/ExternalLoginType";
-import authUtils from "@/app/common/utils/authUtils";
-import buttonHandler from "@/app/common/utils/buttonHandler";
+import * as yup from "yup";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { GetServerSidePropsContext } from "next";
-import { UserRegistrationResponse } from "@/app/common/dtos/UserRegistrationResponse";
-import { AxiosResponse } from "axios";
 import { ClusterLocationUrl } from "@/app/common/enums/ClusterLocation";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -37,25 +31,16 @@ interface serverSideProps {
 function Register(props: serverSideProps) {
   const { setUser } = useSession();
   const router = useRouter();
-  const formSchema = Yup.object().shape({
-    password: Yup.string().required("This field is required"),
-    confirmPassword: Yup.string().when("password", {
+  const formSchema = yup.object().shape({
+    firstName: yup.string().required("First Name is required"),
+    password: yup.string().required("This field is required"),
+    confirmPassword: yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
-      then: Yup.string().oneOf(
-        [Yup.ref("password")],
-        "Passwords need to match"
-      ),
+      then: yup
+        .string()
+        .oneOf([yup.ref("password")], "Passwords need to match"),
     }),
   });
-
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    if (router.query.failure_message) {
-      bannerNotificationService.error(router.query.failure_message);
-    }
-  }, [router.isReady]);
-
   return (
     <GuestLayout>
       <Formik
@@ -64,48 +49,64 @@ function Register(props: serverSideProps) {
           lastName: "",
           password: "",
           confirmPassword: "",
-          clusterLocation: AppCluster.US,
+          clusterLocation: undefined,
         }}
         validationSchema={formSchema}
         onSubmit={(values) => handleRegisterUser(values, setUser, router!)}
       >
         {({ values, setFieldValue, setFieldTouched }) => (
           <Form>
-            <InputField
-              type="string"
-              name="firstName"
-              title="First Name"
-              placeholder="Enter first name"
-            />
-            <InputField
-              type="string"
-              name="lastName"
-              title="Last Name"
-              placeholder="Enter last name"
-            />
+            <div className="row row-cols-2">
+              <InputField
+                type="string"
+                name="firstName"
+                title="First Name"
+                placeholder="Enter first name"
+              />
+              <InputField
+                type="string"
+                name="lastName"
+                title="Last Name"
+                placeholder="Enter last name"
+              />
+            </div>
             <InputField
               type="password"
               name="password"
               title="Password"
               placeholder="Enter password"
             />
-
             <InputField
               type="password"
               name="confirmPassword"
               title="Confirm Password"
               placeholder="Confirm password"
             />
-
             <InputSelect
-              title="Cluster Location"
+              title="Cluster Region"
               options={renderUtils.selectOptions(AppClusterLabel)}
               values={values}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               name="clusterLocation"
             />
-            <ButtonSubmit className="form-control" />
+            <p className="text-muted mt-n3">
+              Choose a region nearest to your warehouse region
+            </p>
+            <ButtonSubmit className="form-control btn-lg">
+              Register
+            </ButtonSubmit>
+            <p className="mt-3 fs-4 text-muted">
+              By clicking on <strong className="text-muted">Register</strong>{" "}
+              you agree to the{" "}
+              <a href="https://castled.io/terms-of-service" target="_blank">
+                Terms of Service
+              </a>{" "}
+              and the{" "}
+              <a href="https://castled.io/privacy-policy" target="_blank">
+                Privacy Policy
+              </a>
+            </p>
           </Form>
         )}
       </Formik>
@@ -130,7 +131,7 @@ export interface RegisterForm {
   lastName: string;
   password: string;
   confirmPassword: string;
-  clusterLocation: AppCluster;
+  clusterLocation: AppCluster | undefined;
 }
 
 const handleRegisterUser = async (
@@ -146,15 +147,18 @@ const handleRegisterUser = async (
       password: registerForm.password,
       clusterLocation: registerForm.clusterLocation,
     };
+    if (formData.clusterLocation === undefined) {
+      return bannerNotificationService.error("Please Select Cluster Location");
+    }
     registerUser(
       formData,
-      ClusterLocationUrl[formData.clusterLocation] + "/backend/v1/users/register"
+      ClusterLocationUrl[formData.clusterLocation] +
+        "/backend/v1/users/register"
     ).then(async (result) => {
-      window.location.assign(ClusterLocationUrl[formData.clusterLocation]);
+      window.location.assign(ClusterLocationUrl[formData.clusterLocation!]);
     });
   }
 };
-
 
 const registerUser = async (formData: any, url: string) => {
   return fetch(url, {
@@ -162,7 +166,7 @@ const registerUser = async (formData: any, url: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
     body: JSON.stringify(formData),
   });
 };

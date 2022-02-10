@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "castled.fullname" . }}-kafka
+  labels:
+    {{- include "castled.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.kafka.autoscaling.enabled }}
+  replicas: {{ .Values.kafka.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      castled: kafka
+  template:
+    metadata:
+      {{- with .Values.kafka.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        castled: kafka
+    spec:
+      containers:
+        - name: castled-kafka-container
+          image: "{{ .Values.kafka.image.repository }}:{{ .Values.kafka.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.kafka.image.pullPolicy }}
+          env:
+            - name: KAFKA_BROKER_ID
+              value: "1"
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: ZOOKEEPER_HOST
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://castled-kafka-service:9092,PLAINTEXT_INTERNAL://localhost:29092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "PLAINTEXT"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+          ports:
+            - containerPort: 9092
+          volumeMounts:
+            - name: castled-kafka-vol
+              mountPath: /var/lib/kafka/data
+              subPath: kdata
+          resources:
+            {{- toYaml .Values.kafka.resources | nindent 12 }}
+      volumes:
+        - name: castled-kafka-vol
+          persistentVolumeClaim:
+            claimName: {{ include "castled.fullname" . }}-kafka-vol
+      {{- with .Values.kafka.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.kafka.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

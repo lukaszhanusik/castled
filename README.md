@@ -86,6 +86,22 @@ We are a huge fan of the open source community and we value your contributions. 
 
 2. Customize the mapping configuration and app configuration on the UI using our java annotation based framework. Refer the [mapping configuration](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/connectors/customerio/CustomerIOAppSyncConfig.java) and [app configuration](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/connectors/customerio/CustomerIOAppConfig.java) of our _CustomerIO_ connector for more info.
 
+- Quick video on how to write a source connector
+
+<p align="center">
+  <a href="https://www.loom.com/embed/0a875f603c3c4eb7a6e3dca63eb6998f">
+      <img style="max-width:600px;" src="https://cdn.loom.com/sessions/thumbnails/067ecaa2377d4e5ba4a2e428c6594664-with-play.gif"/>
+  </a>
+</p>
+
+- Quick video on how to write a destination connector
+
+<p align="center">
+  <a href="https://www.loom.com/embed/bab3f0260a404757809ac619a855855f">
+      <img style="max-width:600px;" src="https://cdn.loom.com/sessions/thumbnails/067ecaa2377d4e5ba4a2e428c6594664-with-play.gif"/>
+  </a>
+</p>
+
 ## :page_with_curl: License
 
 Refer our [license](https://github.com/castledio/castled/blob/main/LICENSE.md) file for queries regarding the licensing of our different modules.

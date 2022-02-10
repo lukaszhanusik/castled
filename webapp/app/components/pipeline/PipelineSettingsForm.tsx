@@ -13,7 +13,7 @@ import { QueryMode, QueryModeLabel } from "@/app/common/enums/QueryMode";
 import { PipelineSchedule } from "@/app/common/dtos/PipelineCreateRequestDto";
 import { Col, Row } from "react-bootstrap";
 import pipelineScheduleUtils from "@/app/common/utils/pipelineScheduleUtils";
-
+import * as Yup from "yup";
 export interface PipelineSettingsProps {
   initialValues: PipelineSettingsConfig;
   submitLabel: string;
@@ -59,8 +59,13 @@ function PipelineSettingsForm({
       setSubmitting
     );
   };
+
+  const formSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+  });
+
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+  <Formik initialValues={initialValues} validationSchema={formSchema} onSubmit={handleSubmit}>
       {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
         <Form>
           <InputField title="Pipeline Name" type="text" name="name" />
