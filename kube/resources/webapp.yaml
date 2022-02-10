@@ -44,5 +44,10 @@ spec:
                 configMapKeyRef:
                   name: castled-env
                   key: APP_BASE_URL
+            - name: IS_OSS
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: IS_OSS
           ports:
             - containerPort: 3000
