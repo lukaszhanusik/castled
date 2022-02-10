@@ -17,6 +17,7 @@ import bannerNotificationService from "@/app/services/bannerNotificationService"
 import { GetServerSidePropsContext } from "next";
 import eventService from "@/app/services/eventService";
 import cn from "classnames";
+import * as yup from "yup";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -43,8 +44,13 @@ const Login = (props: serverSideProps) => {
       eventService.trackConversion(router.query.gclid);
 
     }
-
   }, [router.isReady]);
+
+  const formSchema = yup.object().shape({
+    email: yup.string().email("Invalid email").required("Email is required"),
+    password: yup.string().required("Password is required"),
+  });
+
   return (
     <GuestLayout>
       <div className="p-4">
@@ -53,6 +59,7 @@ const Login = (props: serverSideProps) => {
             email: "",
             password: "",
           }}
+          validationSchema={formSchema}
           onSubmit={formHandler(
             false,
             {
