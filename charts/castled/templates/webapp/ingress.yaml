@@ -1,6 +1,6 @@
 {{- if .Values.webapp.ingress.enabled -}}
 {{- $fullName := include "castled.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
+{{- $svcPort := .Values.webapp.service.port -}}
 {{- if and .Values.webapp.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.webapp.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.webapp.ingress.annotations "kubernetes.io/ingress.class" .Values.webapp.ingress.className}}
