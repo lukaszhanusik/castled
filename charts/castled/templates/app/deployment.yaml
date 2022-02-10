@@ -20,6 +20,10 @@ spec:
       labels:
         castled: app
     spec:
+      volumes:
+        - name: configs
+          configMap:
+            name: castled-configs
       containers:
         - name: castled-app-container
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
@@ -30,6 +34,10 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
+          volumeMounts:
+            - name: configs
+              readOnly: true
+              mountPath: "/app/configs"
       {{- with .Values.app.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

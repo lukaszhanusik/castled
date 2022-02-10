@@ -52,9 +52,12 @@ spec:
                 secretKeyRef:
                   name: castled-secrets
                   key: DATABASE_DB
+          volumeMounts:
+            - name: castled-db-vol
+              mountPath: /var/lib/mysql
       volumes:
         - name: castled-db-vol
-          persistentVolumeClaim: 
+          persistentVolumeClaim:
             claimName: {{ include "castled.fullname" . }}-db-vol
       {{- with .Values.db.nodeSelector }}
       nodeSelector:

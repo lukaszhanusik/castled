@@ -24,7 +24,7 @@ spec:
         - name: castled-kafka-container
           image: "{{ .Values.kafka.image.repository }}:{{ .Values.kafka.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.kafka.image.pullPolicy }}
-        - env:
+          env:
             - name: KAFKA_BROKER_ID
               value: "1"
             - name: KAFKA_ZOOKEEPER_CONNECT
@@ -39,13 +39,17 @@ spec:
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-              value: "1"          
+              value: "1"
           ports:
             - containerPort: 9092
+          volumeMounts:
+            - name: castled-kafka-vol
+              mountPath: /var/lib/kafka/data
+              subPath: kdata
           resources:
             {{- toYaml .Values.kafka.resources | nindent 12 }}
       volumes:
-        - name: 
+        - name: castled-kafka-vol
           persistentVolumeClaim:
             claimName: {{ include "castled.fullname" . }}-kafka-vol
       {{- with .Values.kafka.nodeSelector }}

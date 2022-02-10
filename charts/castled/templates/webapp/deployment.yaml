@@ -28,11 +28,27 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          env:
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: API_BASE_URL
+            - name: API_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: API_BASE
+            - name: APP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: APP_BASE_URL
           resources:
             {{- toYaml .Values.webapp.resources | nindent 12 }}
       {{- with .Values.webapp.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.webapp.affinity }}
       affinity:
