@@ -93,6 +93,8 @@ public class FormUtils {
             case TEXT_BOX:
                 return new TextBoxProps(formField.placeholder(), formField.title(),
                         formField.description(), formField.optionsRef().value());
+            case PASSWORD:
+                return new PasswordProps(formField.title(), formField.description());
             case DROP_DOWN:
                 return getDropDownTypeFields(formField);
             case RADIO_GROUP:

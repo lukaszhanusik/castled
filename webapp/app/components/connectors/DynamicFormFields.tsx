@@ -39,6 +39,7 @@ const fieldRenderers: {
   [key in FormFieldType]: { renderer: any; props?: { [type: string]: any } };
 } = {
   TEXT_BOX: { renderer: InputField, props: { type: "text" } },
+  PASSWORD: { renderer: InputField, props: { type: "password" } },
   CHECK_BOX: { renderer: InputCheckbox },
   RADIO_GROUP: { renderer: InputSelect },
   DROP_DOWN: { renderer: InputSelect },

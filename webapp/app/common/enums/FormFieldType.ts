@@ -1,5 +1,6 @@
 export enum FormFieldType {
   TEXT_BOX = "TEXT_BOX",
+  PASSWORD = "PASSWORD",
   CHECK_BOX = "CHECK_BOX",
   RADIO_GROUP = "RADIO_GROUP",
   DROP_DOWN = "DROP_DOWN",
