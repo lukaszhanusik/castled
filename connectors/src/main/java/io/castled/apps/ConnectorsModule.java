@@ -25,6 +25,7 @@ import io.castled.apps.connectors.salesforce.SalesforceAppConnector;
 import io.castled.apps.connectors.sendgrid.SendgridAppConnector;
 import io.castled.apps.connectors.sendgrid.SendgridListsOptionsFetcher;
 import io.castled.apps.optionfetchers.AppOptionsFetcher;
+import io.castled.commons.optionfetchers.AWSRegionOptionsFetcher;
 import io.castled.forms.StaticOptionsFetcher;
 import io.castled.jdbc.JdbcConnectionType;
 import io.castled.jdbc.JdbcQueryHelper;
@@ -132,7 +133,7 @@ public class ConnectorsModule extends AbstractModule {
         MapBinder<String, StaticOptionsFetcher> staticOptionFetcher = MapBinder.newMapBinder(binder(),
                 String.class, StaticOptionsFetcher.class);
         staticOptionFetcher.addBinding(OptionsReferences.BQ_LOCATIONS).to(BQLocationsFetcher.class);
-
+        staticOptionFetcher.addBinding(OptionsReferences.AWS_REGIONS).to(AWSRegionOptionsFetcher.class);
     }
 
     private void bindIntercomObjectSinks() {

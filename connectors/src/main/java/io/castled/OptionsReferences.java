@@ -23,10 +23,13 @@ public class OptionsReferences {
 
     public static final String BQ_LOCATIONS = "BQ_LOCATIONS";
 
+    public static final String AWS_REGIONS = "AWS_REGIONS";
+
     public static final String WAREHOUSE_COLUMNS = "Warehouse Columns";
 
     public static final String CIO_PRIMARY_KEYS = "CIO Primary keys";
 
     public static final String CIO_EVENT_TYPES = "CIO Event Types";
+
 
 }

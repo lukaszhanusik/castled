@@ -49,6 +49,9 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
             if (e instanceof GoogleJsonResponseException) {
                 GoogleJsonResponseException gre = (GoogleJsonResponseException) e;
                 if (gre.getStatusCode() == 403) {
+                    if (gre.getMessage().contains("Google Sheets API has not been used")) {
+                        throw new InvalidConfigException("Google Sheets API needs to be enabled in Google Cloud Console");
+                    }
                     throw new InvalidConfigException("Service account does not sufficient privileges to access the spreadsheet");
                 }
             }
