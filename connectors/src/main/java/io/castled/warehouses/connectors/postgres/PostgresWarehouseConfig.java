@@ -23,6 +23,6 @@ public class PostgresWarehouseConfig extends TunneledWarehouseConfig {
     @FormField(description = "Database User", title = "Database User", placeholder = "e.g. db_user", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String dbUser;
 
-    @FormField(description = "Database Password", title = "Database Password", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Database Password", title = "Database Password", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
     private String dbPassword;
 }

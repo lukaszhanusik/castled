@@ -11,6 +11,7 @@ import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
 import { FieldMetaProps } from "formik";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
+import InputRadioButton from "../forminputs/InputRadioButton";
 
 export interface DynamicFormFieldsProps {
   namePrefix?: string;
@@ -39,8 +40,10 @@ const fieldRenderers: {
   [key in FormFieldType]: { renderer: any; props?: { [type: string]: any } };
 } = {
   TEXT_BOX: { renderer: InputField, props: { type: "text" } },
+  PASSWORD: { renderer: InputField, props: { type: "password" } },
   CHECK_BOX: { renderer: InputCheckbox },
-  RADIO_GROUP: { renderer: InputSelect },
+  // RADIO_GROUP: { renderer: InputSelect },
+  RADIO_GROUP: { renderer: InputRadioButton },
   DROP_DOWN: { renderer: InputSelect },
   JSON_FILE: { renderer: InputFile, props: { type: "json" } },
   TEXT_FILE: { renderer: InputFile, props: { type: "text" } },
