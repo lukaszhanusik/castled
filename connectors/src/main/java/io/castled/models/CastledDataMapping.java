@@ -15,7 +15,7 @@ import java.util.List;
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TargetFieldsMapping.class, name = "TARGET_FIELDS_MAPPING"),
-        @JsonSubTypes.Type(value = TargetTemplateMapping.class, name = "TARGET_TEMPLATE_MAPPING")})
+        @JsonSubTypes.Type(value = TargetRestApiMapping.class, name = "TARGET_REST_MAPPING")})
 public class CastledDataMapping {
 
     private List<String> primaryKeys;

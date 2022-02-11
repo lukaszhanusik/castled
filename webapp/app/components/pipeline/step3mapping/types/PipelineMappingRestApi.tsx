@@ -14,7 +14,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import { useSession } from "@/app/common/context/sessionContext";
 import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
 import formInputUtils from "@/app/common/utils/formInputUtils";
-import { HttpMethodLabel } from "@/app/common/enums/HttpMethod";
+import { RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
@@ -83,7 +83,7 @@ const PipelineMappingRestApi = ({
                     title={undefined}
                     name="method"
                     options={formInputUtils.getEnumSelectOptions(
-                      HttpMethodLabel
+                      RestApiMethodLabel
                     )}
                     deps={undefined}
                     values={values}
