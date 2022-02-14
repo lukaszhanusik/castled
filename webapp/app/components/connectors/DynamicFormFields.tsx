@@ -93,6 +93,10 @@ const DynamicFormFields = ({
     }
     const { renderer: Input, props } = fieldRenderer;
     const name = namePrefix ? `${namePrefix}.${key}` : key;
+
+    console.log(name);
+    console.log(field.validations);
+
     fields.push(
       <Input
         key={name}

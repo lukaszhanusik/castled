@@ -164,6 +164,10 @@ const getValidationErrors = (
     values,
     moreValidations
   );
+
+  console.log(formFields);
+  console.log(schema);
+
   if (!schema) return {};
   let errors: StringAnyMap = {};
   try {

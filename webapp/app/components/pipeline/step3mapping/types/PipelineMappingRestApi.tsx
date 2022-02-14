@@ -16,6 +16,7 @@ import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
 import formInputUtils from "@/app/common/utils/formInputUtils";
 import { RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
+import bannerNotificationService from "@/app/services/bannerNotificationService";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
   pipelineSchema: PipelineSchemaResponseDto | undefined;
@@ -60,6 +61,34 @@ const PipelineMappingRestApi = ({
           onSubmit={(values, { setSubmitting }) => {
             if (!pipelineWizContext.values) return setSubmitting(false);
             pipelineWizContext.values.mapping = values;
+
+            if (
+              !pipelineWizContext.values.mapping.primaryKeys ||
+              pipelineWizContext.values.mapping.primaryKeys?.length == 0
+            ) {
+              setSubmitting(false);
+              bannerNotificationService.error(
+                "Atleast one primary key should be selected"
+              );
+              return;
+            }
+
+            if (!pipelineWizContext.values.mapping.method) {
+              setSubmitting(false);
+              bannerNotificationService.error("Please select a HTTP method");
+              return;
+            }
+
+            if (!pipelineWizContext.values.mapping.url) {
+              setSubmitting(false);
+              bannerNotificationService.error("Please enter the URL");
+              return;
+            }
+
+            console.log(pipelineWizContext);
+            setSubmitting(false);
+            return;
+
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -76,11 +105,12 @@ const PipelineMappingRestApi = ({
                 isMulti
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
+                required
               />
               <Row>
                 <Col sm={3}>
                   <InputSelect
-                    title={undefined}
+                    title="Method"
                     name="method"
                     options={formInputUtils.getEnumSelectOptions(
                       RestApiMethodLabel
@@ -89,17 +119,19 @@ const PipelineMappingRestApi = ({
                     values={values}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
+                    required
                   />
                 </Col>
                 <Col sm={9}>
                   <InputField
                     name="url"
                     type="text"
-                    title={undefined}
+                    title="URL"
                     values={values}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                     inputClassName="form-control-lg"
+                    required
                   />
                 </Col>
               </Row>

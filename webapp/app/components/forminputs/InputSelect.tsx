@@ -108,7 +108,7 @@ const InputSelect = ({
       >
         {title && (
           <label htmlFor={props.id || props.name} className="form-label">
-            {required && "*"}
+            {required && <span className="required-icon">*</span>}
             {title}
           </label>
         )}
