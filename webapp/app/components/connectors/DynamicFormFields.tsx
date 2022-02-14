@@ -4,12 +4,9 @@ import InputField from "../forminputs/InputField";
 import InputFile from "../forminputs/InputFile";
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import { AxiosResponse } from "axios";
-
-import jexl from "jexl";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
-import { FieldMetaProps } from "formik";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import InputRadioButton from "../forminputs/InputRadioButton";
 
@@ -42,7 +39,6 @@ const fieldRenderers: {
   TEXT_BOX: { renderer: InputField, props: { type: "text" } },
   PASSWORD: { renderer: InputField, props: { type: "password" } },
   CHECK_BOX: { renderer: InputCheckbox },
-  // RADIO_GROUP: { renderer: InputSelect },
   RADIO_GROUP: { renderer: InputRadioButton },
   DROP_DOWN: { renderer: InputSelect },
   JSON_FILE: { renderer: InputFile, props: { type: "json" } },

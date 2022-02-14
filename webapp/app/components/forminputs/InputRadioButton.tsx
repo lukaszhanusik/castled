@@ -5,7 +5,7 @@ import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import _, { values } from "lodash";
 import { AxiosResponse } from "axios";
 import { ObjectUtils } from "@/app/common/utils/objectUtils";
-import RadioGroup from "react-native-radio-buttons-group";
+// import RadioGroup from "react-native-radio-buttons-group";
 import { Spinner } from "react-bootstrap";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import Select from "react-select";
@@ -70,8 +70,6 @@ const InputRadioButton = ({
     }
   }, [key, optionsRef, ...depValues]);
 
-  console.log("--field.value--");
-
   return (
     <div className={props.className}>
       {optionsLoading && props.hidden && (
@@ -93,11 +91,10 @@ const InputRadioButton = ({
       >
         {title && (
           <label htmlFor={props.id || props.name} className="form-label">
-            {required && "*"}
+            {required && <span className="required-icon">*</span>}
             {title}
           </label>
         )}
-
         <div className="row">
           {optionsDynamic &&
             optionsDynamic.map((item: any, index: number) => (
@@ -108,28 +105,20 @@ const InputRadioButton = ({
                     name={props.id || props.name}
                     key={item.title + index}
                     id={item.title + index}
-                    // value={item.value}
+                    value={item.value}
                     type="radio"
-                    // onChange={(v: any) => setFieldValue?.(field.name, v?.value)}
-                    onChange={(v: any) => handleRegisterUser(field.name, v?.value)}
-                    onClick={() => setFieldTouched?.(field.name, true)}
+                    onChange={() => setFieldValue?.(field.name, item.value)}
+                    onBlur={() => setFieldTouched?.(field.name, true)}
                   />
                   &nbsp;&nbsp; {item.title}
                 </label>
               </>
             ))}
         </div>
-        {meta.error ? <div className="error">{meta.error}</div> : null}
+        {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
       </div>
-
-      <div>-------------------- to remove -------------</div>
     </div>
   );
-};
-
-const handleRegisterUser =  (field:any, isValid:any) => {
-  console.log()
-  // setFieldTouched?.(field.name, true)
 };
 
 export default InputRadioButton;
