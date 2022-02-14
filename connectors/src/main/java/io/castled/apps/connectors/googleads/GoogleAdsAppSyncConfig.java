@@ -9,10 +9,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@GroupActivator(dependencies = {"accountId"}, group = "loginAccountId")
-@GroupActivator(dependencies = {"loginCustomerId"}, group = MappingFormGroups.OBJECT)
-@GroupActivator(dependencies = {"object", "loginCustomerId"}, group = MappingFormGroups.SUB_RESOURCE)
-@GroupActivator(dependencies = {"subResource"}, group = MappingFormGroups.SYNC_MODE)
+@GroupActivator(dependencies = {"accountId"}, group = GoogleAdsFormGroups.LOGIN_ACCOUNT_ID)
+@GroupActivator(dependencies = {"loginCustomerId"}, group = GoogleAdsFormGroups.OBJECT_TYPE)
+@GroupActivator(dependencies = {"objectType", "loginCustomerId"}, condition = "objectType == 'CUSTOMER_MATCH'",
+        group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE)
+
+@GroupActivator(dependencies = {"customerMatchType, objectType"}, condition = "objectType == 'CUSTOMER_MATCH' && customerMatchType != null", group = GoogleAdsFormGroups.CUSTOMER_MATCH)
+@GroupActivator(dependencies = {"objectType", "loginCustomerId"}, condition = "objectType == 'CLICK_CONVERSIONS'",
+        group = GoogleAdsFormGroups.CLICK_CONVERSIONS)
+@GroupActivator(dependencies = {"objectType", "loginCustomerId"}, condition = "objectType == 'CALL_CONVERSIONS'",
+        group = GoogleAdsFormGroups.CALL_CONVERSIONS)
+
+@GroupActivator(dependencies = {"objectType", "loginCustomerId"}, condition = "objectType == 'CALL_CONVERSIONS' || objectType == 'CLICK_CONVERSIONS'",
+        group = GoogleAdsFormGroups.ZONE_ID)
 @Getter
 @Setter
 public class GoogleAdsAppSyncConfig extends AppSyncConfig {
@@ -24,15 +33,30 @@ public class GoogleAdsAppSyncConfig extends AppSyncConfig {
     @FormField(type = FormFieldType.DROP_DOWN, title = "Auto Generated Login CustomerId", optionsRef = @OptionsRef(value = OptionsReferences.GADS_LOGIN_ACCOUNT_ID, type = OptionsRefType.DYNAMIC), group = "loginAccountId")
     private String loginCustomerId;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.OBJECT, title = "Resource", description = "Google Ads resource to sync the data",
-            group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
-    private GenericSyncObject object;
+    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.STRING, title = "Resource", description = "Google Ads resource to sync the data",
+            group = GoogleAdsFormGroups.OBJECT_TYPE, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
+    private GAdsObjectType objectType;
 
-    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Sub resource", description = "Google Ads subresource to sync the data", group = MappingFormGroups.SUB_RESOURCE,
-            optionsRef = @OptionsRef(value = OptionsReferences.SUB_RESOURCE, type = OptionsRefType.DYNAMIC))
-    private GadsSubResource subResource;
+    //customer match group
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.STRING, title = "Customer Match Type", description = "Customer Match Type", group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE,
+            optionsRef = @OptionsRef(value = OptionsReferences.CUSTOMER_MATCH_TYPE, type = OptionsRefType.STATIC))
+    private CustomerMatchType customerMatchType;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
-            optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
-    private AppSyncMode mode;
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Customer Match List Name", description = "Customer Match list", group = GoogleAdsFormGroups.CUSTOMER_MATCH,
+            optionsRef = @OptionsRef(value = OptionsReferences.GADS_SUB_RESOURCE, type = OptionsRefType.DYNAMIC))
+    private GadsCustomerMatch customerMatch;
+
+    //click conversions group
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Click Conversion Name", group = GoogleAdsFormGroups.CLICK_CONVERSIONS,
+            optionsRef = @OptionsRef(value = OptionsReferences.GADS_SUB_RESOURCE, type = OptionsRefType.DYNAMIC))
+    private GadsConversion clickConversion;
+
+    // call conversions group
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Call Conversion Name", group = GoogleAdsFormGroups.CALL_CONVERSIONS,
+            optionsRef = @OptionsRef(value = OptionsReferences.GADS_SUB_RESOURCE, type = OptionsRefType.DYNAMIC))
+    private GadsConversion callConversion;
+
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.STRING, title = "Conversion Time Zone", group = GoogleAdsFormGroups.ZONE_ID,
+            optionsRef = @OptionsRef(value = OptionsReferences.ZONE_IDS, type = OptionsRefType.STATIC))
+    private String zoneId;
 }

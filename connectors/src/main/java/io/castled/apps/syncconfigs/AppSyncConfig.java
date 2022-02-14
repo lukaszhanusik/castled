@@ -2,7 +2,6 @@ package io.castled.apps.syncconfigs;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.castled.OptionsReferences;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.connectors.activecampaign.ActiveCampaignAppSyncConfig;
 import io.castled.apps.connectors.customerio.CustomerIOAppSyncConfig;
@@ -15,10 +14,6 @@ import io.castled.apps.connectors.marketo.MarketoAppSyncConfig;
 import io.castled.apps.connectors.mixpanel.MixpanelAppSyncConfig;
 import io.castled.apps.connectors.restapi.RestApiAppSyncConfig;
 import io.castled.apps.connectors.sendgrid.SendgridAppSyncConfig;
-import io.castled.apps.models.SubResource;
-import io.castled.apps.models.SyncObject;
-import io.castled.commons.models.AppSyncMode;
-import io.castled.forms.*;
 import lombok.Getter;
 import lombok.Setter;
 

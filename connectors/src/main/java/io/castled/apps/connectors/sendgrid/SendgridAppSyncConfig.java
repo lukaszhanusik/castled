@@ -17,7 +17,7 @@ public class SendgridAppSyncConfig extends AppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 
-    @FormField(title = "Lists", type = FormFieldType.DROP_DOWN, description = "An array of Lists that this contact will be added to", group = MappingFormGroups.SUB_RESOURCE,
+    @FormField(title = "Lists", type = FormFieldType.DROP_DOWN, description = "An array of Lists that this contact will be added to", group = "listId",
             optionsRef = @OptionsRef(value = OptionsReferences.SENDGRID_LISTS, type = OptionsRefType.DYNAMIC))
     private String listIds;
 

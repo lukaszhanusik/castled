@@ -24,7 +24,7 @@ public class BigQueryWarehouseConfig extends WarehouseConfig {
     private String bucketName;
 
     @FormField(description = "Dataset location", title = "Dataset location", placeholder = "e.g US-WEST4", schema = FormFieldSchema.STRING, type = FormFieldType.DROP_DOWN,
-            optionsRef = @OptionsRef(value = OptionsReferences.BQ_LOCATIONS, type = OptionsRefType.STATIC))
+            optionsRef = @OptionsRef(value = OptionsReferences.GCP_LOCATIONS, type = OptionsRefType.STATIC))
     private String location;
 
     @FormField(type = FormFieldType.JSON_FILE, schema = FormFieldSchema.OBJECT, description = "Service Account Json File", title = "Service Account Json File", group = "service_account")

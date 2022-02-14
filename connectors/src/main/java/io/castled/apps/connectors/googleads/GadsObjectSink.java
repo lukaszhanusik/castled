@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public abstract class GadsObjectSink extends BufferedObjectSink<Message> {
-    private final ErrorOutputStream errorOutputStream;
+    protected final ErrorOutputStream errorOutputStream;
 
     protected final AtomicLong processedRecords = new AtomicLong(0);
     protected long lastProcessedMessageId = 0;
