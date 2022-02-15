@@ -79,15 +79,15 @@ const PipelineMappingRestApi = ({
               return;
             }
 
-            if (!pipelineWizContext.values.mapping.url) {
+            if (!pipelineWizContext.values.mapping.template) {
               setSubmitting(false);
-              bannerNotificationService.error("Please enter the URL");
+              bannerNotificationService.error("Body cannot be empty");
               return;
             }
 
             console.log(pipelineWizContext);
-            setSubmitting(false);
-            return;
+            // setSubmitting(false);
+            // return;
 
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
