@@ -5,13 +5,15 @@ import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import _, { values } from "lodash";
 import { AxiosResponse } from "axios";
 import { ObjectUtils } from "@/app/common/utils/objectUtils";
+// import RadioGroup from "react-native-radio-buttons-group";
 import { Spinner } from "react-bootstrap";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import Select from "react-select";
 import cn from "classnames";
 import { IconRefresh } from "@tabler/icons";
+import { stringify } from "querystring";
 
-export interface InputSelectOptions extends InputBaseProps {
+export interface InputRadioButtonOptions extends InputBaseProps {
   options: SelectOptionDto[] | undefined;
   values: any;
   dValues?: any[];
@@ -30,7 +32,7 @@ export interface InputSelectOptions extends InputBaseProps {
   loadingText?: string;
 }
 
-const InputSelect = ({
+const InputRadioButton = ({
   title,
   required,
   description,
@@ -44,7 +46,7 @@ const InputSelect = ({
   values,
   dValues,
   ...props
-}: InputSelectOptions) => {
+}: InputRadioButtonOptions) => {
   const [field, meta] = useField(props);
   const [optionsDynamic, setOptionsDynamic] = useState(options);
   const [optionsLoading, setOptionsLoading] = useState(false);
@@ -67,6 +69,7 @@ const InputSelect = ({
       setOptionsDynamic(options);
     }
   }, [key, optionsRef, ...depValues]);
+
   return (
     <div className={props.className}>
       {optionsLoading && props.hidden && (
@@ -93,48 +96,29 @@ const InputSelect = ({
           </label>
         )}
         <div className="row">
-          <Select
-            {...props}
-            options={
-              !optionsDynamic
-                ? [{ label: "Loading.." }]
-                : optionsDynamic.map((o) => ({
-                    value: o.value,
-                    label: o.title,
-                  }))
-            }
-            isClearable
-            className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
-            onChange={(v) => setFieldValue?.(field.name, v?.value)}
-            onBlur={() => setFieldTouched?.(field.name, true)}
-            value={
-              optionsLoading || !optionsDynamic
-                ? { label: "Loading..." }
-                : {
-                    value: field.value,
-                    label: optionsDynamic
-                      .filter((o) =>
-                        ObjectUtils.objectEquals(o.value, field.value)
-                      )
-                      .map((o) => o.title),
-                  }
-            }
-          />
-          
-
-          {dataFetcher && (
-            <div className="col-1 my-auto">
-              <IconRefresh
-                size={24}
-                role="button"
-                onClick={() => setKey(key + 1)}
-              />
-            </div>
-          )}
+          {optionsDynamic &&
+            optionsDynamic.map((item: any, index: number) => (
+              <>
+                <label htmlFor={item.title + index}>
+                  {" "}
+                  <input
+                    name={props.id || props.name}
+                    key={item.title + index}
+                    id={item.title + index}
+                    value={item.value}
+                    type="radio"
+                    onChange={() => setFieldValue?.(field.name, item.value)}
+                    onBlur={() => setFieldTouched?.(field.name, true)}
+                  />
+                  &nbsp;&nbsp; {item.title}
+                </label>
+              </>
+            ))}
         </div>
-        {meta.error ? <div className="error">{meta.error}</div> : null}
+        {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
       </div>
     </div>
   );
 };
-export default InputSelect;
+
+export default InputRadioButton;
