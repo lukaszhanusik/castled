@@ -8,6 +8,7 @@ import io.castled.apps.connectors.customerio.CustomerIOAppSyncConfig;
 import io.castled.apps.connectors.googleads.GoogleAdsAppSyncConfig;
 import io.castled.apps.connectors.googlepubsub.GooglePubSubAppSyncConfig;
 import io.castled.apps.connectors.googlesheets.GoogleSheetsAppSyncConfig;
+import io.castled.apps.connectors.hubspot.HubspotAppSyncConfig;
 import io.castled.apps.connectors.kafka.KafkaAppSyncConfig;
 import io.castled.apps.connectors.mailchimp.MailchimpAppSyncConfig;
 import io.castled.apps.connectors.marketo.MarketoAppSyncConfig;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = GoogleAdsAppSyncConfig.class, name = "GOOGLEADS"),
         @JsonSubTypes.Type(value = GenericObjectRadioGroupConfig.class, name = "SALESFORCE"),
-        @JsonSubTypes.Type(value = GenericObjectRadioGroupConfig.class, name = "HUBSPOT"),
+        @JsonSubTypes.Type(value = HubspotAppSyncConfig.class, name = "HUBSPOT"),
         @JsonSubTypes.Type(value = MailchimpAppSyncConfig.class, name = "MAILCHIMP"),
         @JsonSubTypes.Type(value = GenericObjectRadioGroupConfig.class, name = "INTERCOM"),
         @JsonSubTypes.Type(value = SendgridAppSyncConfig.class, name = "SENDGRID"),
