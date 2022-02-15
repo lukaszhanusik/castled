@@ -8,6 +8,7 @@ public class AppSyncConfigDTO {
     private String name;
     private Long appId;
     private Long warehouseId;
+    private Long modelId;
     private String sourceQuery;
 
     private AppSyncConfig appSyncConfig;

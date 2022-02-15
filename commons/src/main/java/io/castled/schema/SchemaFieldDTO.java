@@ -11,4 +11,5 @@ public class SchemaFieldDTO {
     private String fieldName;
     private String type;
     private boolean optional;
+    //private boolean custom;
 }

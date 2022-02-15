@@ -10,6 +10,7 @@ import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.FormUtils;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.forms.dtos.FormFieldsDTO;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 
 import javax.ws.rs.BadRequestException;
@@ -52,6 +53,11 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
     default RecordSchema enrichWarehouseASchema(AppSyncConfigDTO appSyncConfigDTO, RecordSchema warehouseSchema) {
         return warehouseSchema;
     }
+
+    default List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig){
+        return Lists.newArrayList();
+    }
+
 
     Class<MAPPINGCONFIG> getMappingConfigType();
 

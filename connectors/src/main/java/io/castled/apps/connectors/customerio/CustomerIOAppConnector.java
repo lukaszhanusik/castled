@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
-import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyEligibles;
@@ -13,8 +12,10 @@ import io.castled.commons.models.AppSyncMode;
 import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.models.FieldMapping;
-import io.castled.schema.models.Field;
-import io.castled.schema.models.RecordSchema;
+import io.castled.schema.ParameterFieldDTO;
+import io.castled.schema.SchemaFieldDTO;
+import io.castled.schema.mapping.*;
+import io.castled.schema.models.SchemaType;
 
 import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
@@ -41,6 +42,74 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
     @Override
     public ExternalAppSchema getSchema(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
         return new ExternalAppSchema(null, PrimaryKeyEligibles.autoDetect());
+    }
+
+    public List<MappingGroup> getMappingGroups(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+        String object = customerIOAppSyncConfig.getObject().getObjectName();
+        if (CustomerIOObject.EVENT.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForEventObject(config, customerIOAppSyncConfig);
+        }
+        if (CustomerIOObject.PERSON.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForPersonObject(config, customerIOAppSyncConfig);
+        }
+        return null;
+    }
+
+    private List<MappingGroup> getMappingGroupsForPersonObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+
+        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
+        List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
+        primaryKeys.add(new SchemaFieldDTO(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName(),
+                SchemaType.STRING.getDisplayName(), false));
+        primaryKeys.add(new SchemaFieldDTO(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName(),
+                SchemaType.STRING.getDisplayName(), false));
+        primaryKeyGroup.setPrimaryKeys(primaryKeys);
+        mappingGroups.add(primaryKeyGroup);
+
+        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
+        mappingGroups.add(miscellaneousFieldGroup);
+
+        return mappingGroups;
+    }
+
+    private List<MappingGroup> getMappingGroupsForEventObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+
+        ImportantParameterGroup importantParameterGroup = new ImportantParameterGroup();
+        List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
+        importantParameterGroup.setFields(importantParameters);
+        String eventType = customerIOAppSyncConfig.getEventType();
+        if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
+            importantParameters.add(new ParameterFieldDTO("Column identifying Customer.io id (customer_id) of the person",
+                    "Column identifying Customer.io id (customer_id) of the person",
+                    CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+
+            importantParameters.add(new ParameterFieldDTO("Column identifying the Event Timestamp",
+                    "Column identifying the Event Timestamp",
+                    CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+        }
+        if (CIOEventTypeEnum.TRACK_PAGE_VIEWS.getEventType().equalsIgnoreCase(eventType)) {
+
+            importantParameters.add(new ParameterFieldDTO("Column identifying the URL of the page viewed",
+                    "Column identifying the URL of the page viewed",
+                    CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+
+            importantParameters.add(new ParameterFieldDTO("Column identifying Customer.io id (customer_id) of the person",
+                    "Column identifying Customer.io id (customer_id) of the person",
+                    CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+
+            importantParameters.add(new ParameterFieldDTO("Column identifying the Event Timestamp",
+                    "Column identifying the Event Timestamp",
+                    CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+        }
+        mappingGroups.add(importantParameterGroup);
+
+        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
+        mappingGroups.add(miscellaneousFieldGroup);
+
+        return mappingGroups;
     }
 
     public List<AppSyncMode> getSyncModes(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
@@ -99,12 +168,12 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         primaryKeyFieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_ID.getFieldName());
         String eventType = Optional.ofNullable(customerIOAppSyncConfig.getEventType()).orElseThrow(() -> new BadRequestException("Event type is mandatory"));
 
-        if ("event".equalsIgnoreCase(eventType)) {
+        if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
             pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
                             .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getEventName()).orElseThrow(() -> new BadRequestException("Event Name is mandatory for Events"))))
                     .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_NAME.getFieldName()));
         }
-        if ("pageView".equalsIgnoreCase(eventType)) {
+        if (CIOEventTypeEnum.TRACK_PAGE_VIEWS.getEventType().equalsIgnoreCase(eventType)) {
             pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
                             .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getPageURL()).orElseThrow(() -> new BadRequestException("Page View is mandatory for Page View Events"))))
                     .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName()));
