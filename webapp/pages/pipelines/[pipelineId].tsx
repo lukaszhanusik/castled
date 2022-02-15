@@ -13,7 +13,9 @@ import pipelineService from "@/app/services/pipelineService";
 import cn from "classnames";
 import PipelineRunView from "@/app/components/pipeline/PipelineRunView";
 import PipelineMappingView from "@/app/components/pipeline/PipelineMappingView";
+import PipelineMappingViewRestApi from "@/app/components/pipeline/PipelineMappingViewRestApi";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
+import { PipelineResponseRestApiDto } from "@/app/common/dtos/PipelineResponseRestApiDto";
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
 import DefaultErrorPage from "next/error";
@@ -55,6 +57,11 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   const [pipeline, setPipeline] = useState<
     PipelineResponseDto | undefined | null
   >();
+
+  const [pipelineRestApi, setPipelineRestApi] = useState<
+    PipelineResponseRestApiDto | undefined | null
+  >();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pipelineRuns, setPipelineRuns] = useState<
     PipelineRunDto[] | undefined | null
@@ -63,10 +70,14 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
     pipelineService
       .getById(pipelineId)
       .then(({ data }) => {
+        if (data.app.type == "RESTAPI") {
+          setPipelineRestApi(data as PipelineResponseRestApiDto);
+        }
         setPipeline(data);
       })
       .catch(() => {
         setPipeline(null);
+        setPipelineRestApi(null);
       });
     pipelineRunsService
       .getByPipelineId(pipelineId)
@@ -94,7 +105,6 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(JSON.stringify(error.message));
         setPipelineRuns(null);
       });
   }, [reloadKey]);
@@ -153,10 +163,23 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
           <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView>
         </Tab>
         <Tab eventKey="Mapping" title="Query & Mapping">
-          <PipelineMappingView
-            sourceQuery={pipeline?.sourceQuery}
-            dataMapping={pipeline?.dataMapping}
-          ></PipelineMappingView>
+          {(() => {
+            if (pipeline && pipeline.app && pipeline.app.type == "RESTAPI") {
+              return (
+                <PipelineMappingViewRestApi
+                  sourceQuery={pipelineRestApi?.sourceQuery}
+                  dataMapping={pipelineRestApi?.dataMapping}
+                ></PipelineMappingViewRestApi>
+              );
+            } else {
+              return (
+                <PipelineMappingView
+                  sourceQuery={pipeline?.sourceQuery}
+                  dataMapping={pipeline?.dataMapping}
+                ></PipelineMappingView>
+              );
+            }
+          })()}
         </Tab>
         <Tab eventKey="Schedule" title="Schedule">
           <PipelineSettingsView
