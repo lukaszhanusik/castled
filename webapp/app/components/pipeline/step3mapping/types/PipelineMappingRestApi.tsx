@@ -17,6 +17,7 @@ import formInputUtils from "@/app/common/utils/formInputUtils";
 import { RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
+import * as yup from "yup";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
   pipelineSchema: PipelineSchemaResponseDto | undefined;
@@ -42,6 +43,16 @@ const PipelineMappingRestApi = ({
   const warehouseSchemaFields = pipelineMappingUtils.getSchemaFieldsAsOptions(
     pipelineSchema?.warehouseSchema
   );
+
+  const formValidationSchema = yup.object().shape({
+    primaryKeys: yup
+      .array()
+      .required("Atleast one primary key should be selected"),
+    method: yup.string().required("Method is required"),
+    url: yup.string().url().required("URL is required"),
+    template: yup.string().required("Body cannot be empty"),
+  });
+
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -58,37 +69,11 @@ const PipelineMappingRestApi = ({
               type: PipelineMappingType.TARGET_REST_MAPPING,
             } as PipelineMappingDto
           }
+          validationSchema={formValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
             if (!pipelineWizContext.values) return setSubmitting(false);
             pipelineWizContext.values.mapping = values;
-
-            if (
-              !pipelineWizContext.values.mapping.primaryKeys ||
-              pipelineWizContext.values.mapping.primaryKeys?.length == 0
-            ) {
-              setSubmitting(false);
-              bannerNotificationService.error(
-                "Atleast one primary key should be selected"
-              );
-              return;
-            }
-
-            if (!pipelineWizContext.values.mapping.method) {
-              setSubmitting(false);
-              bannerNotificationService.error("Please select a HTTP method");
-              return;
-            }
-
-            if (!pipelineWizContext.values.mapping.template) {
-              setSubmitting(false);
-              bannerNotificationService.error("Body cannot be empty");
-              return;
-            }
-
             console.log(pipelineWizContext);
-            // setSubmitting(false);
-            // return;
-
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -170,15 +155,15 @@ const PipelineMappingRestApi = ({
                   </Col>
                 </Row>
               ))}
-              <p>Body:</p>
               <InputField
                 name="template"
                 type="textarea"
-                title={undefined}
+                title="Body"
                 values={values}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
                 minRows={6}
+                required
               />
               <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
             </Form>
