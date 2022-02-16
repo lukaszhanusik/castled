@@ -55,7 +55,7 @@ const Header = ({
             <div className="d-flex">
               <div className="flex-grow-1">
                 <h1
-                  className={cn("title-fs fs-3", {
+                  className={cn("title-fs", {
                     "text-center": centerTitle,
                   })}
                 >
@@ -87,7 +87,7 @@ const Header = ({
               </div>
             </div>
           )}
-          {subTitle && <p className="text-center fs-4 px-5">{subTitle}</p>}
+          {subTitle && <p className="text-center text-muted px-5">{subTitle}</p>}
           {navLinks?.length && (
             <Nav variant="tabs" defaultActiveKey={navLinks[0].href}>
               {navLinks.map((navLink, i) => (

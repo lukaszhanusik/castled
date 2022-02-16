@@ -114,9 +114,12 @@ form {
     width: 100%;
     resize: none;
   }
+  input:checked{
+    filter: hue-rotate(45deg);
+  }
 }
 
-.form-top-label {
+.form-label {
   display: block;
   font-size: $font-size-sm;
   margin-bottom: 0.25rem;
