@@ -41,7 +41,7 @@ const PipelineMappingViewRestApi = ({
         className="w-100"
       />
       <hr />
-      <h3 className="mb-1 mt-3 font-weight-bold">Pipeline configuration </h3>
+
       <h4 className="mb-1 mt-4 font-weight-bold">
         Primary Keys :
         {dataMapping !== undefined &&
