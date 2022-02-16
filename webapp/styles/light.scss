@@ -34,6 +34,9 @@ label {
   font-weight: $font-weight-bold;
 }
 
+.description {
+  font-weight: $font-weight-normal;
+}
 form {
   .error {
     color: #f74c3c;
