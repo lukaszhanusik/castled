@@ -113,7 +113,7 @@ const InputRadioButton = ({
                   </div>
                   <div className="flex-column mx-4">
                     <div className="row">{item.title}</div>
-                    <div className="row description">
+                    <div className="row" style={{ fontWeight: 400 }}>
                       {item.description}
                     </div>
                   </div>
