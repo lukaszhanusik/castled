@@ -1,8 +1,6 @@
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { FieldMapping } from "@/app/common/dtos/PipelineCreateRequestDto";
-import { IconCheck } from "@tabler/icons";
-import classNames from "classnames";
 import { Col, Row, Table } from "react-bootstrap";
 
 export interface PipelineMappingViewRestApiProps {
@@ -24,11 +22,13 @@ const PipelineMappingViewRestApi = ({
   dataMapping,
 }: PipelineMappingViewRestApiProps) => {
   let headers = [];
-  if (dataMapping && dataMapping.headers && dataMapping.headers) {
+  if (dataMapping && dataMapping.headers) {
     for (let key in dataMapping.headers) {
       headers.push({ key: key, value: dataMapping.headers[key] });
     }
   }
+
+  console.log(dataMapping);
 
   return (
     <>
@@ -40,22 +40,30 @@ const PipelineMappingViewRestApi = ({
         disabled={true}
         className="w-100"
       />
+
       <hr />
 
-      <h4 className="mb-1 mt-4 font-weight-bold">
-        Primary Keys :
-        {dataMapping !== undefined &&
-          dataMapping.primaryKeys &&
-          dataMapping.primaryKeys.map((key, i) => <i>{key}</i>)}
-      </h4>
-      <h4 className="mb-1 mt-4 font-weight-bold">Mapping</h4>
+      <label className="form-label">URL</label>
+      <input
+        className="form-control"
+        value={dataMapping?.url}
+        disabled={true}
+      />
+
+      <label className="form-label">Primary Keys</label>
+      <input
+        className="form-control"
+        value={dataMapping && dataMapping.primaryKeys.map((key, i) => key)}
+        disabled={true}
+      />
+
+      <h4 className="mb-1 mt-4 font-weight-bold">Column Mapping</h4>
       {dataMapping !== undefined && dataMapping.template && (
         <TextareaAutosize
           className="w-100"
           defaultValue={dataMapping.template}
           disabled={true}
         />
-        // <textarea value={dataMapping.template} />
       )}
 
       <h4 className="mb-1 mt-4 font-weight-bold">Headers</h4>

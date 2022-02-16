@@ -78,7 +78,6 @@ function getInput(
           "required-field": meta.touched && meta.error,
         })}
         defaultValue={field.value}
-        required={required}
       />
     );
   } else {

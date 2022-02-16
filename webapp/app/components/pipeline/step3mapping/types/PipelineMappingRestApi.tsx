@@ -14,7 +14,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import { useSession } from "@/app/common/context/sessionContext";
 import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
 import formInputUtils from "@/app/common/utils/formInputUtils";
-import { RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
+import { HttpMethod, RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import * as yup from "yup";
@@ -32,8 +32,6 @@ const PipelineMappingRestApi = ({
   pipelineSchema,
   isLoading,
 }: PipelineMappingRestApiProps) => {
-  console.log(curWizardStep);
-
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   const [headerKeys, setHeaderKeys] = useState<string[]>([""]);
   const { isOss } = useSession();
@@ -44,10 +42,12 @@ const PipelineMappingRestApi = ({
     pipelineSchema?.warehouseSchema
   );
 
+  console.log(warehouseSchemaFields);
+
   const formValidationSchema = yup.object().shape({
     primaryKeys: yup
       .array()
-      .required("Atleast one primary key should be selected"),
+      .min(1, "Atleast one primary key should be selected"),
     method: yup.string().required("Method is required"),
     url: yup.string().url().required("URL is required"),
     template: yup.string().required("Body cannot be empty"),
@@ -67,13 +67,20 @@ const PipelineMappingRestApi = ({
           initialValues={
             {
               type: PipelineMappingType.TARGET_REST_MAPPING,
+              url: "",
+              method: HttpMethod.POST,
+              template: "",
+              primaryKeys: [],
+              fieldMappings: [],
+              headers: {},
             } as PipelineMappingDto
           }
           validationSchema={formValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
             if (!pipelineWizContext.values) return setSubmitting(false);
+            delete (values as any).variable;
+            console.log(values);
             pipelineWizContext.values.mapping = values;
-            console.log(pipelineWizContext);
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -112,7 +119,6 @@ const PipelineMappingRestApi = ({
                     name="url"
                     type="text"
                     title="URL"
-                    values={values}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                     inputClassName="form-control-lg"
@@ -120,7 +126,8 @@ const PipelineMappingRestApi = ({
                   />
                 </Col>
               </Row>
-              <p>Headers:</p>
+
+              <label>Headers</label>
               {headerKeys.map((headerKey, i) => (
                 <Row>
                   <Col>
@@ -151,15 +158,26 @@ const PipelineMappingRestApi = ({
                       setFieldValue={setFieldValue}
                       setFieldTouched={setFieldTouched}
                       inputClassName="form-control-md"
+                      required
                     />
                   </Col>
                 </Row>
               ))}
+
+              <InputSelect
+                title={undefined}
+                options={warehouseSchemaFields}
+                deps={undefined}
+                values={values}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                name="variable"
+              />
+
               <InputField
                 name="template"
                 type="textarea"
                 title="Body"
-                values={values}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
                 minRows={6}
