@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
-public class GenericObjectRadioGroupConfig extends AppSyncConfig {
+public class GenericObjectRadioGroupConfig extends BaseAppSyncConfig {
 
     @FormField(title = "Select object to configure", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;

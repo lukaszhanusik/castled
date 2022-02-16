@@ -3,7 +3,7 @@ package io.castled.warehouses.connectors.bigquery;
 import io.castled.OptionsReferences;
 import io.castled.commons.models.ServiceAccountDetails;
 import io.castled.forms.*;
-import io.castled.warehouses.WarehouseConfig;
+import io.castled.warehouses.BaseWarehouseConfig;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ import lombok.Setter;
         @CodeSnippet(title = "BQ User Role", ref = "bq_data_user_access"),
         @CodeSnippet(title = "GCP Storage Admin Role", ref = "gcp_storage_admin_access")})
 @GroupActivator(dependencies = {"projectId", "bucketName", "location"}, group = "service_account")
-public class BigQueryWarehouseConfig extends WarehouseConfig {
+public class BigQueryWarehouseConfig extends BaseWarehouseConfig {
 
     @FormField(description = "Project Id", title = "Project Id", placeholder = "e.g. demo-project-12345", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String projectId;

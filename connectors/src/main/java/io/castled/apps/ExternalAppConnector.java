@@ -1,5 +1,6 @@
 package io.castled.apps;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
@@ -11,6 +12,7 @@ import io.castled.forms.FormUtils;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.forms.dtos.FormFieldsDTO;
 import io.castled.schema.models.RecordSchema;
+import io.castled.utils.JsonUtils;
 
 import javax.ws.rs.BadRequestException;
 import java.util.List;
@@ -51,6 +53,14 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
 
     default RecordSchema enrichWarehouseASchema(AppSyncConfigDTO appSyncConfigDTO, RecordSchema warehouseSchema) {
         return warehouseSchema;
+    }
+
+    default CONFIG getAppConfig(JsonNode jsonNode) {
+        return JsonUtils.jsonNodeToObject(jsonNode, getAppConfigType());
+    }
+
+    default MAPPINGCONFIG getAppSyncConfig(JsonNode jsonNode) {
+        return JsonUtils.jsonNodeToObject(jsonNode, getMappingConfigType());
     }
 
     Class<MAPPINGCONFIG> getMappingConfigType();

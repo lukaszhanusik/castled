@@ -3,13 +3,13 @@ package io.castled.warehouses.connectors.snowflake;
 import com.amazonaws.regions.Regions;
 import io.castled.OptionsReferences;
 import io.castled.forms.*;
-import io.castled.warehouses.WarehouseConfig;
+import io.castled.warehouses.BaseWarehouseConfig;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SnowflakeWarehouseConfig extends WarehouseConfig {
+public class SnowflakeWarehouseConfig extends BaseWarehouseConfig {
 
     @FormField(description = "URL Prefix https://<account_name>.snowflake-computing.com", title = "Account Name", placeholder = "e.g. ab12345.us-east-2.aws", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accountName;

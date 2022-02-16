@@ -136,7 +136,8 @@ public class WarehouseService {
     }
 
     public Warehouse filterRestrictedConfigDetails(Warehouse warehouse) {
-        this.warehouseConnectors.get(warehouse.getType()).filterRestrictedConfigDetails(warehouse.getConfig());
+        WarehouseConfig warehouseConfig = this.warehouseConnectors.get(warehouse.getType()).filterRestrictedConfigDetails(warehouse.getConfig());
+        warehouse.setConfig(warehouseConfig);
         return warehouse;
     }
 
