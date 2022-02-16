@@ -21,7 +21,7 @@ public class SendgridAppSyncConfig extends AppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.SENDGRID_LISTS, type = OptionsRefType.DYNAMIC))
     private String listIds;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
+    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
     private AppSyncMode mode;
 }

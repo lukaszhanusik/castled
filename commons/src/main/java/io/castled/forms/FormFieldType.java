@@ -6,6 +6,7 @@ public enum FormFieldType {
     CHECK_BOX,
     DROP_DOWN,
     RADIO_GROUP,
+    RADIO_BOX,
     MAPPING,
     JSON_FILE,
     TEXT_FILE,

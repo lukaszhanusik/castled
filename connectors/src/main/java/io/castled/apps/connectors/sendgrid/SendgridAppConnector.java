@@ -43,11 +43,11 @@ public class SendgridAppConnector implements ExternalAppConnector<SendgridAppCon
     public Class<SendgridAppSyncConfig> getMappingConfigType() {
         return SendgridAppSyncConfig.class;
     }
-
-    @Override
-    public List<AppSyncMode> getSyncModes(SendgridAppConfig config, SendgridAppSyncConfig mappingConfig) {
-        return Lists.newArrayList(AppSyncMode.UPSERT);
-    }
+//
+//    @Override
+//    public List<AppSyncMode> getSyncModes(SendgridAppConfig config, SendgridAppSyncConfig mappingConfig) {
+//        return Lists.newArrayList(AppSyncMode.UPSERT);
+//    }
 
     @Override
     public Class<SendgridAppConfig> getAppConfigType() {
