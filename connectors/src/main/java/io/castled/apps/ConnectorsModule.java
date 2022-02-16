@@ -56,34 +56,12 @@ public class ConnectorsModule extends AbstractModule {
 
     protected void configure() {
         bindIntercomObjectSinks();
-        bindWarehouseConnectors();
         bindWarehouseOptionFetchers();
         bindAppSyncOptions();
         bindJdbcQueryHelpers();
         bindStaticOptionFetchers();
         bindWarehouseOptionFetchers();
-        bindAppConnectors();
         bindAppOptionFetchers();
-    }
-
-
-    private void bindAppConnectors() {
-        MapBinder<ExternalAppType, ExternalAppConnector> externalAppConnectorMapping = MapBinder.newMapBinder(binder(),
-                ExternalAppType.class, ExternalAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.SALESFORCE).to(SalesforceAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.HUBSPOT).to(HubspotAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.INTERCOM).to(IntercomAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLEADS).to(GoogleAdsAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.MAILCHIMP).to(MailchimpAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.SENDGRID).to(SendgridAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.ACTIVECAMPAIGN).to(ActiveCampaignAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.MARKETO).to(MarketoAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.KAFKA).to(KafkaAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.CUSTOMERIO).to(CustomerIOAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLEPUBSUB).to(GooglePubSubAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.MIXPANEL).to(MixpanelAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLE_SHEETS).to(GoogleSheetsAppConnector.class);
-        externalAppConnectorMapping.addBinding(ExternalAppType.RESTAPI).to(RestApiAppConnector.class);
     }
 
 
@@ -105,15 +83,6 @@ public class ConnectorsModule extends AbstractModule {
         queryHelpers.addBinding(JdbcConnectionType.POSTGRES).to(PostgresQueryHelper.class);
     }
 
-
-    private void bindWarehouseConnectors() {
-        MapBinder<WarehouseType, WarehouseConnector> warehouseConnectorMapBinder = MapBinder.newMapBinder(binder(),
-                WarehouseType.class, WarehouseConnector.class);
-        warehouseConnectorMapBinder.addBinding(WarehouseType.REDSHIFT).to(RedshiftConnector.class);
-        warehouseConnectorMapBinder.addBinding(WarehouseType.SNOWFLAKE).to(SnowflakeConnector.class);
-        warehouseConnectorMapBinder.addBinding(WarehouseType.BIGQUERY).to(BigQueryConnector.class);
-        warehouseConnectorMapBinder.addBinding(WarehouseType.POSTGRES).to(PostgresWarehouseConnector.class);
-    }
 
     private void bindAppSyncOptions() {
         MapBinder<String, AppSyncOptionsFetcher> optionFetchers = MapBinder.newMapBinder(binder(),
