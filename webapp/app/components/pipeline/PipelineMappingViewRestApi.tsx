@@ -41,33 +41,28 @@ const PipelineMappingViewRestApi = ({
         className="w-100"
       />
 
-      <hr />
-
-      <label className="form-label">URL</label>
+      <label className="form-label mt-3 mb-0">URL</label>
       <input
         className="form-control"
         value={dataMapping?.url}
         disabled={true}
       />
 
-      <label className="form-label">Primary Keys</label>
+      <label className="form-label mt-3 mb-0">HTTP Method</label>
+      <input
+        className="form-control"
+        value={dataMapping?.method}
+        disabled={true}
+      />
+
+      <label className="form-label mt-3 mb-0">Primary Keys</label>
       <input
         className="form-control"
         value={dataMapping && dataMapping.primaryKeys.map((key, i) => key)}
         disabled={true}
       />
 
-      <h4 className="mb-1 mt-4 font-weight-bold">Column Mapping</h4>
-      {dataMapping !== undefined && dataMapping.template && (
-        <TextareaAutosize
-          className="w-100"
-          defaultValue={dataMapping.template}
-          disabled={true}
-        />
-      )}
-
-      <h4 className="mb-1 mt-4 font-weight-bold">Headers</h4>
-
+      <h4 className="mb-0 mt-3 font-weight-bold">Headers</h4>
       <Table hover>
         <thead>
           <tr>
@@ -85,6 +80,15 @@ const PipelineMappingViewRestApi = ({
             ))}
         </tbody>
       </Table>
+
+      <h4 className="mb-0 mt-3 font-weight-bold">Column Mapping</h4>
+      {dataMapping !== undefined && dataMapping.template && (
+        <TextareaAutosize
+          className="w-100"
+          defaultValue={dataMapping.template}
+          disabled={true}
+        />
+      )}
     </>
   );
 };
