@@ -24,7 +24,7 @@ const InputField = ({
 }: InputFileProps) => {
   const [field, meta] = useField(props);
   return (
-    <div className="mb-3">
+    <div className="mb-3 card p-2">
       {title && (
         <label htmlFor={props.id || props.name} className="form-label">
           {required && <span className="required-icon">*</span>}

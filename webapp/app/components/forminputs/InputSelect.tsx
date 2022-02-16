@@ -71,7 +71,7 @@ const InputSelect = ({
     }
   }, [key, optionsRef, ...depValues]);
   return (
-    <div className={props.className}>
+    <div className={cn(props.className, "card p-2")}>
       {optionsLoading && props.hidden && (
         <div className="mb-1">
           <Spinner
@@ -91,7 +91,7 @@ const InputSelect = ({
       >
         {title && (
           <label htmlFor={props.id || props.name} className="form-label">
-            {required && "*"}
+            {required && <span className="required-icon">*</span>}
             {title}
           </label>
         )}

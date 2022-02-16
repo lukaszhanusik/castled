@@ -137,7 +137,8 @@ const WarehouseModel = ({
               name="query"
               onChange={setQuery}
               placeholder="Enter Query..."
-              className="border-0 border-bottom mono-font"
+              className="card p-2 bg-light mono-font"
+              inputClassName="bg-light"
             />
             <div className="d-flex align-items-center">
               <Button

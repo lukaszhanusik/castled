@@ -47,7 +47,7 @@ const WizardStepsLayout = ({
               >
                 <CircularProgress
                   size={25}
-                  color="#66c9be"
+                  color="#73b0ff"
                   active={step.active}
                   percentage={step.success ? 100 : step.active ? percentage : 0}
                   strokeWidth={1}

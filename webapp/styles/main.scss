@@ -117,6 +117,9 @@ form {
   input:checked{
     filter: hue-rotate(45deg);
   }
+  .card{
+    border: 1px solid $gray-200;
+  }
 }
 
 .form-label {
@@ -266,6 +269,7 @@ form {
   margin-bottom: 0.75rem;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
+  padding: 0.5rem 0.7rem;
 }
 
 .list-group-item:hover {
@@ -378,7 +382,7 @@ form {
 
 .required-icon {
   color: #f74c3c;
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .required-field {
