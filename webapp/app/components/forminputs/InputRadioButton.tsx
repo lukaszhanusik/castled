@@ -99,23 +99,31 @@ const InputRadioButton = ({
           {optionsDynamic &&
             optionsDynamic.map((item: any, index: number) => (
               <>
-                <label htmlFor={item.title + index}>
-                  {" "}
-                  <input
-                    name={props.id || props.name}
-                    key={item.title + index}
-                    id={item.title + index}
-                    value={item.value}
-                    type="radio"
-                    onChange={() => setFieldValue?.(field.name, item.value)}
-                    onBlur={() => setFieldTouched?.(field.name, true)}
-                  />
-                  &nbsp;&nbsp; {item.title}
+                <label htmlFor={item.title + index} className="d-flex py-2">
+                  <div className="flex-column align-self-center">
+                    <input
+                      name={props.id || props.name}
+                      key={item.title + index}
+                      id={item.title + index}
+                      value={item.value}
+                      type="radio"
+                      onChange={() => setFieldValue?.(field.name, item.value)}
+                      onBlur={() => setFieldTouched?.(field.name, true)}
+                    />
+                  </div>
+                  <div className="flex-column mx-4">
+                    <div className="row">{item.title}</div>
+                    <div className="row description text-muted">
+                      {item.description}
+                    </div>
+                  </div>
                 </label>
               </>
             ))}
         </div>
-        {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
+        {meta.touched && meta.error ? (
+          <div className="error">{meta.error}</div>
+        ) : null}
       </div>
     </div>
   );

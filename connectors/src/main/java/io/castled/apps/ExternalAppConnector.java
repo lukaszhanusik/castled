@@ -1,5 +1,6 @@
 package io.castled.apps;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
@@ -12,6 +13,7 @@ import io.castled.forms.dtos.FormFieldOption;
 import io.castled.forms.dtos.FormFieldsDTO;
 import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
+import io.castled.utils.JsonUtils;
 
 import javax.ws.rs.BadRequestException;
 import java.util.List;
@@ -57,7 +59,6 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
     default List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig){
         return Lists.newArrayList();
     }
-
 
     Class<MAPPINGCONFIG> getMappingConfigType();
 

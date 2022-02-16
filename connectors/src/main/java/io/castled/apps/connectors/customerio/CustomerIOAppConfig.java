@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.customerio;
 
-import io.castled.apps.AppConfig;
+import io.castled.apps.BaseAppConfig;
 import io.castled.forms.FormField;
 import io.castled.forms.FormFieldSchema;
 import io.castled.forms.FormFieldType;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerIOAppConfig extends AppConfig {
+public class CustomerIOAppConfig extends BaseAppConfig {
 
     @FormField(description = "Site Id", title = "Site Id", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String siteId;

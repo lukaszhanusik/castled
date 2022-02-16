@@ -1,9 +1,7 @@
 package io.castled.apps.connectors.googleads;
 
 import io.castled.OptionsReferences;
-import io.castled.apps.models.GenericSyncObject;
-import io.castled.apps.syncconfigs.AppSyncConfig;
-import io.castled.commons.models.AppSyncMode;
+import io.castled.apps.syncconfigs.BaseAppSyncConfig;
 import io.castled.forms.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +22,7 @@ import lombok.Setter;
         group = GoogleAdsFormGroups.ZONE_ID)
 @Getter
 @Setter
-public class GoogleAdsAppSyncConfig extends AppSyncConfig {
+public class GoogleAdsAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(type = FormFieldType.DROP_DOWN, title = "Customer Id", description = "Google customer Id from the Google ads console eg: 788-9993-09993",
             optionsRef = @OptionsRef(value = OptionsReferences.GADS_ACCOUNT_ID, type = OptionsRefType.DYNAMIC))

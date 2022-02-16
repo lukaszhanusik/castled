@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OAuthAppConfig extends AppConfig {
+public class OAuthAppConfig extends BaseAppConfig {
 
     @FormField(description = "Client id of the registered oauth app", title = "OAuth Client id", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String clientId;

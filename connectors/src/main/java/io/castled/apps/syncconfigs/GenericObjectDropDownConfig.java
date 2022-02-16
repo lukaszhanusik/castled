@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
-public class GenericObjectDropDownConfig extends AppSyncConfig {
+public class GenericObjectDropDownConfig extends BaseAppSyncConfig {
 
     @FormField(type = FormFieldType.DROP_DOWN, group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
