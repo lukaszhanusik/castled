@@ -1,5 +1,6 @@
 package io.castled.forms;
 
+import com.google.api.client.util.Lists;
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.exceptions.CastledRuntimeException;
@@ -8,14 +9,14 @@ import io.castled.utils.FileUtils;
 import io.castled.utils.ReflectionUtils;
 import io.castled.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,7 +24,7 @@ public class FormUtils {
 
     public static FormFieldsDTO getFormFields(Class<?> configClass) {
 
-        Map<String, FormFieldDTO> formFields = getFormFields(Arrays.stream(FieldUtils.getAllFields(configClass)).collect(Collectors.toList()));
+        Map<String, FormFieldDTO> formFields = getFormFieldsDTO(configClass);
 
         Map<String, GroupActivatorDTO> groupActivators = Maps.newHashMap();
         for (GroupActivator groupActivator : ReflectionUtils.getAnnotationsFromType(configClass, GroupActivator.class)) {
@@ -35,6 +36,30 @@ public class FormUtils {
         CodeBlock codeBlock = ReflectionUtils.getAnnotation(configClass, CodeBlock.class);
         HelpText helpText = ReflectionUtils.getAnnotation(configClass, HelpText.class);
         return new FormFieldsDTO(formFields, toCodeBlockDTO(codeBlock), toHelpTextDTO(helpText), groupActivators);
+    }
+
+    private static Map<String, FormFieldDTO> getFormFieldsDTO(Class<?> configClass) {
+        ParseReverse parseReverse = ReflectionUtils.getAnnotation(configClass, ParseReverse.class);
+        List<Field> orderedFields = parseReverse == null ? Arrays.stream(FieldUtils.getAllFields(configClass)).collect(Collectors.toList()) :
+                getReverseFieldsList(configClass);
+        return getFormFields(orderedFields);
+    }
+
+    public static List<Field> getReverseFieldsList(Class<?> cls) {
+        List<Class<?>> allClasses = Lists.newArrayList();
+        for (Class<?> currentClass = cls; currentClass != null; currentClass = currentClass.getSuperclass()) {
+            allClasses.add(currentClass);
+        }
+        Collections.reverse(allClasses);
+
+        List<Field> allFields = Lists.newArrayList();
+        for (Class<?> currentClass : allClasses) {
+            Field[] declaredFields = currentClass.getDeclaredFields();
+            Collections.addAll(allFields, declaredFields);
+        }
+
+        return allFields;
+
     }
 
     private static HelpTextDTO toHelpTextDTO(HelpText helpText) {
