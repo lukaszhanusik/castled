@@ -99,9 +99,11 @@ const PipelineMappingRestApi = ({
           }
           validationSchema={formValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
             if (!pipelineWizContext.values) return setSubmitting(false);
             delete (values as any).variable;
             pipelineWizContext.values.mapping = values;
+
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -193,11 +195,15 @@ const PipelineMappingRestApi = ({
                 )}
               ></Select>
 
+              {/* <label>Body</label>
               <TextareaAutosize
+                name="template"
                 ref={templateareaRef}
                 value={templateValue}
+                className="form-control"
+                minRows={6}
                 onChange={({ target }) => setTemplateValue(target.value)}
-              />
+              /> */}
 
               <InputField
                 name="template"
@@ -208,6 +214,8 @@ const PipelineMappingRestApi = ({
                 minRows={6}
                 required
                 ref={templateareaRef}
+                onChange={setTemplateValue}
+                value={templateValue}
               />
               <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
             </Form>
