@@ -27,17 +27,15 @@ import {
 import data from "./data/data.json";
 import Select from "react-select";
 import { title } from "process";
+import {MappingFieldsProps, SchemaOptions} from "./types/componentTypes"
+import MappingImportantFields from "./components/MappingImportantFields";
+import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 
 interface MappingInfo {
   [warehouseKey: string]: {
     appField: string;
     isPrimaryKey: boolean;
   };
-}
-
-interface SchemaOptions {
-  value: string;
-  label: string;
 }
 
 const PipelineMapping = ({
@@ -173,71 +171,5 @@ const PipelineMapping = ({
     </Layout>
   );
 };
-
-interface MappingFieldsProps {
-  title: string;
-  description?: string;
-  options: SchemaOptions[];
-}
-
-function MappingImportantFields({
-  title,
-  description,
-  options,
-}: MappingFieldsProps) {
-  return (
-    <div className="flex-column align-self-center">
-      <div className="flex-column mx-4">
-        <div className="row">{title}</div>
-        <div className="row description text-muted">{description}</div>
-      </div>
-      <div>
-        <Select options={options} />
-      </div>
-    </div>
-  );
-}
-
-function MappingMiscellaneousFields({
-  title,
-  description,
-  options,
-}: MappingFieldsProps) {
-  return (
-    <div className="flex-column align-self-center">
-      <div className="flex-column mx-4">
-        <div className="row">{title}</div>
-        <div className="row description text-muted">{description}</div>
-      </div>
-      <div>
-        <Table hover>
-          <thead>
-            <tr>
-              <th>Warehouse Column</th>
-              <th>App Column</th>
-            </tr>
-          </thead>
-          <tbody>
-            <MappingTableBody options={options} />
-          </tbody>
-        </Table>
-      </div>
-    </div>
-  );
-}
-
-function MappingTableBody({ options }: Pick<MappingFieldsProps, "options">) {
-  return (
-    <tr>
-      <th>
-        {/* <span>+</span> */}
-        <Select options={options} />
-      </th>
-      <th>
-        <input type="text" placeholder="Enter a field" />
-      </th>
-    </tr>
-  );
-}
 
 export default PipelineMapping;
