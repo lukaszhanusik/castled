@@ -56,6 +56,14 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
         return warehouseSchema;
     }
 
+    default CONFIG getAppConfig(JsonNode jsonNode) {
+        return JsonUtils.jsonNodeToObject(jsonNode, getAppConfigType());
+    }
+
+    default MAPPINGCONFIG getAppSyncConfig(JsonNode jsonNode) {
+        return JsonUtils.jsonNodeToObject(jsonNode, getMappingConfigType());
+    }
+
     default List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig){
         return Lists.newArrayList();
     }

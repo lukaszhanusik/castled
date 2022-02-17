@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.List;
 
 @Data
-@Builder
 @Getter
 @Setter
 public class PrimaryKeyGroup extends MappingGroup {
