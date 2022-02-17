@@ -28,8 +28,8 @@ import data from "./data/data.json";
 import Select from "react-select";
 import { title } from "process";
 import {MappingFieldsProps, SchemaOptions} from "./types/componentTypes"
-import MappingImportantFields from "./components/MappingImportantFields";
-import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
+// import MappingImportantFields from "./components/MappingImportantFields";
+// import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -147,7 +147,7 @@ const PipelineMapping = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form>
-              <div>
+              <div className="row py-4">
                 {mandatoryFields?.map((field) => (
                   <MappingImportantFields
                     title={field.title}
@@ -155,7 +155,7 @@ const PipelineMapping = ({
                   />
                 ))}
               </div>
-              <div>
+              <div className="row py-4">
                 {miscellaneousFieldGroup?.map((field) => (
                   <MappingMiscellaneousFields
                     title={field.title}
@@ -171,5 +171,78 @@ const PipelineMapping = ({
     </Layout>
   );
 };
+
+function MappingTableBody({ options }: Pick<MappingFieldsProps, "options">) {
+  const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
+  const [appSelected, setAppSelected] = useState<string>("");
+
+  const renderBody = (
+    <tr>
+      <th>
+        <Select options={options} onChange={() => setWarehouseSelected(true)} />
+      </th>
+      <th>
+        <input
+          type="text"
+          placeholder="Enter a field"
+          onChange={(e) => setAppSelected(e.target.value)}
+        />
+      </th>
+    </tr>
+  );
+  const addBody = [renderBody];
+
+  if (warehouseSelected && appSelected) {
+    addBody.push(<MappingTableBody options={options}/>);
+  }
+
+  return <>{addBody}</>;
+}
+
+function MappingMiscellaneousFields({
+  title,
+  description,
+  options,
+}: MappingFieldsProps) {
+  return (
+    <div className="flex-column align-self-center">
+      <div className="flex-column mx-4">
+        <div className="row">{title}</div>
+        <div className="row description text-muted">{description}</div>
+      </div>
+      <div>
+        <Table hover>
+          <thead>
+            <tr>
+              <th>Warehouse Column</th>
+              <th>App Column</th>
+            </tr>
+          </thead>
+          <tbody>
+            <MappingTableBody options={options} />
+          </tbody>
+        </Table>
+      </div>
+    </div>
+  );
+}
+
+function MappingImportantFields({
+  title,
+  description,
+  options,
+}: MappingFieldsProps) {
+  return (
+    <div className="flex-column align-self-center">
+      <div className="flex-column mx-4 my-2">
+        <div className="row">{title}</div>
+        <div className="row description text-muted">{description}</div>
+      </div>
+      <div>
+        <Select options={options} />
+      </div>
+    </div>
+  );
+}
 
 export default PipelineMapping;
