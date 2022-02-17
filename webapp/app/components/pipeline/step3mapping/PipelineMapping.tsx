@@ -20,12 +20,24 @@ import {
 } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import Placeholder from "react-bootstrap/Placeholder";
+import {
+  NewPipelineSchemaResponseDto,
+  MappingGroupField,
+} from "./types/newPipelineSchemaTypes";
+import data from "./data/data.json";
+import Select from "react-select";
+import { title } from "process";
 
 interface MappingInfo {
   [warehouseKey: string]: {
     appField: string;
     isPrimaryKey: boolean;
   };
+}
+
+interface SchemaOptions {
+  value: string;
+  label: string;
 }
 
 const PipelineMapping = ({
@@ -35,66 +47,86 @@ const PipelineMapping = ({
   setCurWizardStep,
 }: PipelineWizardStepProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
-  const [pipelineSchema, setPipelineSchema] = useState<
-    PipelineSchemaResponseDto | undefined
-  >();
+  const [pipelineSchema, setPipelineSchema] =
+    useState<NewPipelineSchemaResponseDto>(data);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (!pipelineWizContext.values) {
       setCurWizardStep("source", "selectType");
       return;
     }
-    pipelineService
-      .getSchemaForMapping(pipelineWizContext.values)
-      .then(({ data }) => {
-        setIsLoading(false);
-        setPipelineSchema(data);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        bannerNotificationService.error("Unable to load schemas");
-      });
+    // pipelineService
+    //   .getSchemaForMapping(pipelineWizContext.values)
+    //   .then(({ data }) => {
+    //     setIsLoading(false);
+    //     setPipelineSchema(data);
+    //   })
+    //   .catch(() => {
+    //     setIsLoading(false);
+    //     bannerNotificationService.error("Unable to load schemas");
+    //   });
   }, [pipelineWizContext?.values]);
+
   if (!pipelineWizContext) {
     return <Loading />;
   }
-  const appSchemaFields = pipelineSchema?.appSchema?.fields.map((field) => ({
-    value: field.fieldName,
-    title: field.fieldName,
-  }));
-  const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
-    const fieldMappings: FieldMapping[] = [];
-    const primaryKeys: string[] = [];
-    _.each(mappingInfo, (value, key) => {
-      if (value.appField) {
-        fieldMappings.push({
-          warehouseField: key,
-          appField: value.appField,
-          skipped: false,
-        });
-      }
-      if (value.isPrimaryKey) {
-        primaryKeys.push(value.appField);
-      }
-    });
-    return {
-      primaryKeys,
-      fieldMappings,
-    };
-  };
+
+  // const appSchemaFields = pipelineSchema?.appSchema?.fields.map((field) => ({
+  //   value: field.fieldName,
+  //   title: field.fieldName,
+  // }));
+
+  // const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
+  //   const fieldMappings: FieldMapping[] = [];
+  //   const primaryKeys: string[] = [];
+  //   _.each(mappingInfo, (value, key) => {
+  //     if (value.appField) {
+  //       fieldMappings.push({
+  //         warehouseField: key,
+  //         appField: value.appField,
+  //         skipped: false,
+  //       });
+  //     }
+  //     if (value.isPrimaryKey) {
+  //       primaryKeys.push(value.appField);
+  //     }
+  //   });
+  //   return {
+  //     primaryKeys,
+  //     fieldMappings,
+  //   };
+  // };
 
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
-  if (!appSchemaFields) {
-    pipelineSchema?.warehouseSchema.fields.map(
-      (field) =>
-        (initialMappingInfo[field.fieldName] = {
-          appField: field.fieldName,
-          isPrimaryKey: false,
-        })
-    );
-  }
+  // if (!appSchemaFields) {
+  //   pipelineSchema?.warehouseSchema.fields.map(
+  //     (field) =>
+  //       (initialMappingInfo[field.fieldName] = {
+  //         appField: field.fieldName,
+  //         isPrimaryKey: false,
+  //       })
+  //   );
+  // }
+
+  const { warehouseSchema, mappingGroups } = data;
+
+  const mandatoryFields = mappingGroups.map((fields) => {
+    return fields.type === "IMPORTANT_PARAMS" ? fields.fields : [];
+  })[0];
+
+  const miscellaneousFieldGroup = mappingGroups.filter((fields) => {
+    return fields.type === "MISCELLANEOUS_FIELDS" && fields;
+  });
+
+  const schemaOptions: SchemaOptions[] = warehouseSchema.fields.map((field) => {
+    return {
+      value: field.fieldName,
+      label: field.fieldName,
+    };
+  });
 
   return (
     <Layout
@@ -110,17 +142,6 @@ const PipelineMapping = ({
           onSubmit={(values, { setSubmitting }) => {
             if (!pipelineWizContext.values) return setSubmitting(false);
             pipelineWizContext.mappingInfo = values;
-            pipelineWizContext.values.mapping = transformMapping(values);
-            if (
-              pipelineWizContext.values.mapping.primaryKeys?.length == 0 &&
-              !pipelineSchema?.pkEligibles.autoDetect
-            ) {
-              setSubmitting(false);
-              bannerNotificationService.error(
-                "Atleast one primary key should be selected"
-              );
-              return;
-            }
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -128,101 +149,22 @@ const PipelineMapping = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form>
-              <Table hover>
-                <thead>
-                  <tr>
-                    <th>Warehouse Column</th>
-                    <th>App Column</th>
-                    {!pipelineSchema?.pkEligibles.autoDetect && (
-                      <th>Primary Key</th>
-                    )}
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pipelineSchema
-                    ? pipelineSchema.warehouseSchema.fields.map((field, i) => (
-                        <Placeholder as="tr" animation="glow" key={i}>
-                          <Placeholder as="td">{field.fieldName}</Placeholder>
-                          {appSchemaFields && (
-                            <Placeholder as="td">
-                              <InputSelect
-                                title={undefined}
-                                options={appSchemaFields}
-                                deps={undefined}
-                                values={values}
-                                setFieldValue={setFieldValue}
-                                setFieldTouched={setFieldTouched}
-                                name={field.fieldName + ".appField"}
-                              />
-                            </Placeholder>
-                          )}
-                          {!appSchemaFields && (
-                            <Placeholder as="td">
-                              <InputField
-                                type="text"
-                                title={undefined}
-                                values={values}
-                                setFieldValue={setFieldValue}
-                                setFieldTouched={setFieldTouched}
-                                name={field.fieldName + ".appField"}
-                              />
-                            </Placeholder>
-                          )}
-                          <Placeholder
-                            as="td"
-                            className={classNames({
-                              "d-none": pipelineSchema.pkEligibles.autoDetect,
-                            })}
-                          >
-                            <InputCheckbox
-                              title={undefined}
-                              name={field.fieldName + ".isPrimaryKey"}
-                              disabled={
-                                pipelineSchema.pkEligibles.eligibles.length >
-                                  0 &&
-                                (_.get(
-                                  values,
-                                  field.fieldName + ".appField"
-                                ) === undefined ||
-                                  !pipelineSchema.pkEligibles.eligibles?.includes(
-                                    _.get(values, field.fieldName).appField
-                                  ))
-                              }
-                              defaultValue={false}
-                            />
-                          </Placeholder>
-                          <Placeholder as="td">
-                            <IconTrash
-                              className={classNames({
-                                "d-none":
-                                  _.get(
-                                    values,
-                                    field.fieldName + ".appField"
-                                  ) === undefined,
-                              })}
-                              onClick={() => {
-                                setFieldValue(field.fieldName, "");
-                              }}
-                            ></IconTrash>
-                          </Placeholder>
-                        </Placeholder>
-                      ))
-                    : isLoading && (
-                        <tr>
-                          <td>
-                            <div className="linear-background"></div>
-                          </td>
-                          <td>
-                            <div className="linear-background"></div>
-                          </td>
-                          <td>
-                            <div className="linear-background"></div>
-                          </td>
-                        </tr>
-                      )}
-                </tbody>
-              </Table>
+              <div>
+                {mandatoryFields?.map((field) => (
+                  <MappingImportantFields
+                    title={field.title}
+                    options={schemaOptions}
+                  />
+                ))}
+              </div>
+              <div>
+                {miscellaneousFieldGroup?.map((field) => (
+                  <MappingMiscellaneousFields
+                    title={field.title}
+                    options={schemaOptions}
+                  />
+                ))}
+              </div>
               <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
             </Form>
           )}
@@ -231,5 +173,71 @@ const PipelineMapping = ({
     </Layout>
   );
 };
+
+interface MappingFieldsProps {
+  title: string;
+  description?: string;
+  options: SchemaOptions[];
+}
+
+function MappingImportantFields({
+  title,
+  description,
+  options,
+}: MappingFieldsProps) {
+  return (
+    <div className="flex-column align-self-center">
+      <div className="flex-column mx-4">
+        <div className="row">{title}</div>
+        <div className="row description text-muted">{description}</div>
+      </div>
+      <div>
+        <Select options={options} />
+      </div>
+    </div>
+  );
+}
+
+function MappingMiscellaneousFields({
+  title,
+  description,
+  options,
+}: MappingFieldsProps) {
+  return (
+    <div className="flex-column align-self-center">
+      <div className="flex-column mx-4">
+        <div className="row">{title}</div>
+        <div className="row description text-muted">{description}</div>
+      </div>
+      <div>
+        <Table hover>
+          <thead>
+            <tr>
+              <th>Warehouse Column</th>
+              <th>App Column</th>
+            </tr>
+          </thead>
+          <tbody>
+            <MappingTableBody options={options} />
+          </tbody>
+        </Table>
+      </div>
+    </div>
+  );
+}
+
+function MappingTableBody({ options }: Pick<MappingFieldsProps, "options">) {
+  return (
+    <tr>
+      <th>
+        {/* <span>+</span> */}
+        <Select options={options} />
+      </th>
+      <th>
+        <input type="text" placeholder="Enter a field" />
+      </th>
+    </tr>
+  );
+}
 
 export default PipelineMapping;

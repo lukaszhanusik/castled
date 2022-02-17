@@ -1,0 +1,55 @@
+{
+  "warehouseSchema":{
+     "fields":[
+        {
+           "fieldName":"id",
+           "type":"Long",
+           "optional":true
+        },
+        {
+           "fieldName":"first_name",
+           "type":"String",
+           "optional":true
+        },
+        {
+           "fieldName":"last_name",
+           "type":"String",
+           "optional":true
+        },
+        {
+           "fieldName":"email",
+           "type":"String",
+           "optional":true
+        },
+        {
+           "fieldName":"company",
+           "type":"String",
+           "optional":true
+        }
+     ]
+  },
+  "mappingGroups":[
+     {
+        "title":"",
+        "description":"",
+        "type":"IMPORTANT_PARAMS",
+        "fields":[
+           {
+              "optional":false,
+              "title":"Column identifying Customer.io id (customer_id) of the person",
+              "description":"Column identifying Customer.io id (customer_id) of the person"
+           },
+           {
+              "optional":false,
+              "title":"Column identifying the Event Timestamp",
+              "description":"Column identifying the Event Timestamp"
+           }
+        ]
+     },
+     {
+        "title":"Which column would you like to sync as custom destination fields",
+        "description":"Configure how the columns in your query results are added as custom fields in your destination object",
+        "type":"MISCELLANEOUS_FIELDS"
+     }
+  ]
+}
