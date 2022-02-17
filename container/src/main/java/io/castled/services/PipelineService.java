@@ -12,7 +12,6 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.dtos.AppSyncConfigDTO;
-import io.castled.apps.models.ExternalAppSchema;
 import io.castled.caches.PipelineCache;
 import io.castled.commons.models.PipelineSyncStats;
 import io.castled.constants.CommonConstants;
@@ -42,6 +41,7 @@ import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.PipelineUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
 import io.castled.schema.SchemaUtils;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.TimeUtils;
@@ -326,11 +326,10 @@ public class PipelineService {
                 new ThreadFactoryBuilder().setNameFormat("pipeline-schema-fetch-%d").build());
         try {
             Future<RecordSchema> warehouseSchema = executorService.submit(() -> warehouseService.fetchSchema(appSyncConfigDTO.getWarehouseId(), appSyncConfigDTO.getSourceQuery()));
-            Future<ExternalAppSchema> externalAppSchema = executorService.submit(() -> externalAppService.getObjectSchema(appSyncConfigDTO.getAppId(), appSyncConfigDTO.getAppSyncConfig()));
+            Future<List<MappingGroup>> mappingGroups = executorService.submit(() -> externalAppService.getMappingGroup(appSyncConfigDTO.getAppId(), appSyncConfigDTO.getAppSyncConfig()));
 
             return new PipelineSchema(SchemaUtils.transformToSimpleSchema(enrichWarehouseSchema(appSyncConfigDTO, warehouseSchema)),
-                    SchemaUtils.transformToSimpleSchema(externalAppSchema.get().getAppSchema()),
-                    externalAppSchema.get().getPkEligibles());
+                    mappingGroups.get());
         } finally {
             executorService.shutdownNow();
         }

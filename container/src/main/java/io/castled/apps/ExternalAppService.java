@@ -31,10 +31,10 @@ import io.castled.optionsfetchers.appsync.AppSyncOptionsFetcher;
 import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.ExternalAppUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.utils.DocUtils;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.OAuthStateStore;
-import io.castled.warehouses.WarehouseConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
@@ -187,6 +187,11 @@ public class ExternalAppService {
     public ExternalAppSchema getObjectSchema(Long appId, AppSyncConfig appSyncConfig) {
         ExternalApp externalApp = getExternalApp(appId, true);
         return this.appConnectors.get(externalApp.getType()).getSchema(externalApp.getConfig(), appSyncConfig);
+    }
+
+    public List<MappingGroup> getMappingGroup(Long appId, AppSyncConfig appSyncConfig) {
+        ExternalApp externalApp = getExternalApp(appId, true);
+        return this.appConnectors.get(externalApp.getType()).getMappingGroups(externalApp.getConfig(), appSyncConfig);
     }
 
     public List<ExternalApp> listExternalApps(Long teamId, ExternalAppType externalAppType) {
