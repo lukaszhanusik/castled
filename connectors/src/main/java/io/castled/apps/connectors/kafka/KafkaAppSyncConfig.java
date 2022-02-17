@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 public class KafkaAppSyncConfig extends BaseAppSyncConfig {
 
-    @FormField(title = "Select kafka topic", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
+    @FormField(title = "Select kafka topic", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.STRING, group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private String topic;
 }
