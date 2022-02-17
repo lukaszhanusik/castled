@@ -10,12 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DestinationFieldGroup extends MappingGroup{
+public class DestinationFieldGroup extends MappingGroup {
 
     private List<SchemaFieldDTO> mandatoryFields;
     private List<SchemaFieldDTO> optionalFields;
 
-    public DestinationFieldGroup(){
-        super("","",MappingGroupType.DESTINATION_FIELDS);
+    public DestinationFieldGroup() {
+        super("", "", MappingGroupType.DESTINATION_FIELDS);
     }
 }

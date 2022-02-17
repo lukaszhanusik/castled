@@ -1,7 +1,6 @@
 package io.castled.schema.mapping;
 
 import io.castled.schema.SchemaFieldDTO;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

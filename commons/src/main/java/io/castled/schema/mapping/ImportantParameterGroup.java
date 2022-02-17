@@ -7,8 +7,6 @@ import java.util.List;
 
 @Data
 @Builder
-@Getter
-@Setter
 @AllArgsConstructor
 public class ImportantParameterGroup extends MappingGroup{
 

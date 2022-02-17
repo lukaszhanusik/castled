@@ -9,19 +9,17 @@ import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
-import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.FieldMapping;
 import io.castled.schema.ParameterFieldDTO;
 import io.castled.schema.SchemaFieldDTO;
-import io.castled.schema.mapping.*;
+import io.castled.schema.mapping.ImportantParameterGroup;
+import io.castled.schema.mapping.MappingGroup;
+import io.castled.schema.mapping.MiscellaneousFieldGroup;
+import io.castled.schema.mapping.PrimaryKeyGroup;
 import io.castled.schema.models.SchemaType;
 
-import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -77,10 +75,10 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
     private List<MappingGroup> getMappingGroupsForEventObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
         List<MappingGroup> mappingGroups = Lists.newArrayList();
 
+
+        String eventType = customerIOAppSyncConfig.getEventType();
         ImportantParameterGroup importantParameterGroup = new ImportantParameterGroup();
         List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
-        importantParameterGroup.setFields(importantParameters);
-        String eventType = customerIOAppSyncConfig.getEventType();
         if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
             importantParameters.add(new ParameterFieldDTO("Column identifying Customer.io id (customer_id) of the person",
                     "Column identifying Customer.io id (customer_id) of the person",
@@ -104,6 +102,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     "Column identifying the Event Timestamp",
                     CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(), SchemaType.STRING.getDisplayName(), false));
         }
+        importantParameterGroup.setFields(importantParameters);
         mappingGroups.add(importantParameterGroup);
 
         MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
@@ -132,7 +131,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         return CustomerIOAppConfig.class;
     }
 
-    public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
+/*    public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
         CustomerIOAppSyncConfig customerIOAppSyncConfig = (CustomerIOAppSyncConfig) pipelineConfig.getAppSyncConfig();
         String objectName = ((CustomerIOAppSyncConfig) pipelineConfig.getAppSyncConfig()).getObject().getObjectName();
 
@@ -143,9 +142,9 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
             enrichPipelineConfigForPersonObject(pipelineConfig, customerIOAppSyncConfig);
         }
         return pipelineConfig;
-    }
+    }*/
 
-    private void enrichPipelineConfigForPersonObject(PipelineConfigDTO pipelineConfig, CustomerIOAppSyncConfig customerIOAppSyncConfig) throws BadRequestException {
+/*    private void enrichPipelineConfigForPersonObject(PipelineConfigDTO pipelineConfig, CustomerIOAppSyncConfig customerIOAppSyncConfig) throws BadRequestException {
         String pk = Optional.ofNullable(customerIOAppSyncConfig.getPrimaryKey()).orElseThrow(() -> new BadRequestException("Primary key for the Destination App Record is mandatory"));
         String personIdentifier = Optional.ofNullable(customerIOAppSyncConfig.getPersonIdentifier()).orElseThrow(() -> new BadRequestException("Column uniquely identifying the Person Records is mandatory"));
 
@@ -186,5 +185,5 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         pipelineConfig.getMapping().getFieldMappings().stream()
                 .filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(customerIOAppSyncConfig.getEventTimestamp()))
                 .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName()));
-    }
+    }*/
 }
