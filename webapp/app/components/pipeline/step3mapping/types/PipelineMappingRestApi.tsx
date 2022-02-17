@@ -1,13 +1,13 @@
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import Layout from "@/app/components/layout/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
-import { Col, Row, Table } from "react-bootstrap";
+import { Col, Row, Table, Form } from "react-bootstrap";
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import Loading from "@/app/components/common/Loading";
 import { PipelineMappingDto } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
@@ -16,12 +16,19 @@ import pipelineMappingUtils from "@/app/common/utils/pipelineMappingUtils";
 import formInputUtils from "@/app/common/utils/formInputUtils";
 import { HttpMethod, RestApiMethodLabel } from "@/app/common/enums/HttpMethod";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
-import bannerNotificationService from "@/app/services/bannerNotificationService";
 import * as yup from "yup";
+import TextareaAutosize from "react-textarea-autosize";
+import Select from "react-select";
+import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
   pipelineSchema: PipelineSchemaResponseDto | undefined;
   isLoading: boolean;
+}
+
+export interface ReactSelectOption {
+  value: any;
+  label: string;
 }
 
 const PipelineMappingRestApi = ({
@@ -42,7 +49,10 @@ const PipelineMappingRestApi = ({
     pipelineSchema?.warehouseSchema
   );
 
-  console.log(warehouseSchemaFields);
+  const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
+    value: o.value,
+    label: o.title,
+  });
 
   const formValidationSchema = yup.object().shape({
     primaryKeys: yup
@@ -52,6 +62,18 @@ const PipelineMappingRestApi = ({
     url: yup.string().url().required("URL is required"),
     template: yup.string().required("Body cannot be empty"),
   });
+
+  let templateareaRef = useRef<HTMLTextAreaElement>(null);
+  const [templateValue, setTemplateValue] = useState("");
+
+  const onFieldSelect = (event: ReactSelectOption) => {
+    formInputUtils.insertTextInInput(
+      templateareaRef,
+      "{{" + event.value + "}}",
+      templateValue,
+      setTemplateValue
+    );
+  };
 
   return (
     <Layout
@@ -79,7 +101,6 @@ const PipelineMappingRestApi = ({
           onSubmit={(values, { setSubmitting }) => {
             if (!pipelineWizContext.values) return setSubmitting(false);
             delete (values as any).variable;
-            console.log(values);
             pipelineWizContext.values.mapping = values;
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
@@ -164,14 +185,18 @@ const PipelineMappingRestApi = ({
                 </Row>
               ))}
 
-              <InputSelect
-                title={undefined}
-                options={warehouseSchemaFields}
-                deps={undefined}
-                values={values}
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-                name="variable"
+              <Select
+                size="sm"
+                onChange={(e: any) => onFieldSelect(e)}
+                options={warehouseSchemaFields?.map((option) =>
+                  toReactSelectOption(option)
+                )}
+              ></Select>
+
+              <TextareaAutosize
+                ref={templateareaRef}
+                value={templateValue}
+                onChange={({ target }) => setTemplateValue(target.value)}
               />
 
               <InputField
@@ -182,6 +207,7 @@ const PipelineMappingRestApi = ({
                 setFieldTouched={setFieldTouched}
                 minRows={6}
                 required
+                ref={templateareaRef}
               />
               <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
             </Form>
