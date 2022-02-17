@@ -3,9 +3,11 @@ package io.castled.apps.connectors.googlesheets;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ClearValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.common.collect.Lists;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.models.QueryMode;
 import io.castled.schema.models.Message;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -24,8 +26,14 @@ public class GoogleSheetsDataSink implements DataSink {
         GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig = (GoogleSheetsAppSyncConfig) dataSinkRequest.getAppSyncConfig();
 
         Sheets sheetsService = GoogleSheetUtils.getSheets(googleSheetsAppConfig.getServiceAccount());
-        List<SheetRow> sheetRows = GoogleSheetUtils.getRows(sheetsService, GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
-                googleSheetsAppSyncConfig.getObject().getObjectName());
+
+        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD) {
+            sheetsService.spreadsheets().values().clear(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
+                    new ClearValuesRequest()).execute();
+        }
+        List<SheetRow> sheetRows = dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD ? Lists.newArrayList() :
+                GoogleSheetUtils.getRows(sheetsService, GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
+                        googleSheetsAppSyncConfig.getObject().getObjectName());
 
         this.googleSheetsObjectSink = new GoogleSheetsObjectSink(googleSheetsAppConfig, googleSheetsAppSyncConfig, sheetsService,
                 sheetRows, dataSinkRequest.getPrimaryKeys(), dataSinkRequest.getMappedFields(), dataSinkRequest.getErrorOutputStream());
