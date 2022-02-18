@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 @Data
 public class CastledDataMapping {
 
@@ -23,9 +25,9 @@ public class CastledDataMapping {
                 .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
     }
 
-    public Map<String, String> warehouseAppMapping() {
+    public Map<String, List<String>> warehouseAppMapping() {
         return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(Collectors.toMap(FieldMapping::getWarehouseField, FieldMapping::getAppField));
+                .collect(groupingBy(FieldMapping::getWarehouseField,mapping(FieldMapping::getAppField,toList())));
     }
 
     public void addAdditionalMappings(List<FieldMapping> additionalMappings){

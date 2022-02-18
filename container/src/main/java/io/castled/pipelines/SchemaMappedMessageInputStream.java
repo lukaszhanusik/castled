@@ -10,6 +10,7 @@ import io.castled.schema.models.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,13 +20,13 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
     private final MessageInputStream messageInputStream;
     private final SchemaMapper schemaMapper;
     private final Map<String, String> targetSourceMapping;
-    private final Map<String, String> sourceTargetMapping;
+    private final Map<String, List<String>> sourceTargetMapping;
     private final ErrorOutputStream errorOutputStream;
     @Getter
     private long failedRecords = 0;
 
     public SchemaMappedMessageInputStream(RecordSchema targetSchema, MessageInputStream messageInputStream,
-                                          Map<String, String> targetSourceMapping, Map<String, String> sourceTargetMapping, ErrorOutputStream errorOutputStream) {
+                                          Map<String, String> targetSourceMapping, Map<String, List<String>> sourceTargetMapping, ErrorOutputStream errorOutputStream) {
         this.targetSchema = targetSchema;
         this.messageInputStream = messageInputStream;
         this.schemaMapper = ObjectRegistry.getInstance(SchemaMapper.class);
@@ -74,10 +75,8 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
     private Message mapMessageFromSourceSchema(Message message) {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (Field field : message.getRecord().getFields()) {
-            String targetField = sourceTargetMapping.get(field.getName());
-            if (targetField != null) {
-                recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue());
-            }
+            List<String> targetFields = sourceTargetMapping.get(field.getName());
+            targetFields.stream().forEach( targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
         }
         return new Message(message.getOffset(), recordBuilder.build());
     }

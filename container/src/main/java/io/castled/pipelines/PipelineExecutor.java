@@ -113,10 +113,10 @@ public class PipelineExecutor implements TaskExecutor {
             SchemaMappedRecordOutputStream schemaMappedRecordOutputStream =
                     new SchemaMappedRecordOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
                             PipelineUtils.getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
-                            pipeline.getDataMapping().warehouseAppMapping());
+                            pipeline.getDataMapping().appWarehouseMapping());
 
             ErrorOutputStream sinkErrorOutputStream = new ErrorOutputStream(schemaMappedRecordOutputStream,
-                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(), pipeline.getDataMapping().warehouseAppMapping()));
+                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(), pipeline.getDataMapping().appWarehouseMapping()));
 
             log.info("App Sync started for pipeline {}", pipeline.getName());
 
