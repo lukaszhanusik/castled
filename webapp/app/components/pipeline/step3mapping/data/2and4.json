@@ -30,19 +30,19 @@
   },
   "mappingGroups":[
      {
-        "title":"",
-        "description":"",
-        "type":"IMPORTANT_PARAMS",
-        "fields":[
+        "title":"How to match Source Record to Destination Object",
+        "description":"Identify a column in the source record which will help uniquely identify the destination object field",
+        "type":"PRIMARY_KEYS",
+        "primaryKeys":[
            {
-              "optional":false,
-              "title":"Column identifying Customer.io id (customer_id) of the person",
-              "description":"Column identifying Customer.io id (customer_id) of the person"
+              "fieldName":"id",
+              "type":"String",
+              "optional":false
            },
            {
-              "optional":false,
-              "title":"Column identifying the Event Timestamp",
-              "description":"Column identifying the Event Timestamp"
+              "fieldName":"email",
+              "type":"String",
+              "optional":false
            }
         ]
      },

@@ -6,11 +6,14 @@ export default function MappingMiscellaneousFields({
   title,
   description,
   options,
+  setFieldValue,
+  setFieldTouched,
+  fieldName,
 }: MappingFieldsProps) {
   return (
     <div className="flex-column align-self-center">
       <div className="flex-column mx-4">
-        <div className="row">{title}</div>
+        <div className="row py-2 font-weight-bold">{title}</div>
         <div className="row description text-muted">{description}</div>
       </div>
       <div>
@@ -22,7 +25,13 @@ export default function MappingMiscellaneousFields({
             </tr>
           </thead>
           <tbody>
-            <MappingTableBody options={options} />
+            <MappingTableBody
+              options={options}
+              title={undefined}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              fieldName={fieldName}
+            />
           </tbody>
         </Table>
       </div>
