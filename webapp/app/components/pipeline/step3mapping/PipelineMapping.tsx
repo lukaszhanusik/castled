@@ -113,6 +113,8 @@ const PipelineMapping = ({
     );
   }
 
+  console.log(pipelineSchema)
+
   const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
     (field) => ({
       value: field.fieldName,
@@ -137,6 +139,10 @@ const PipelineMapping = ({
   });
 
   // SECTION - 3 - Other fields to match the destination object
+  const sectionThreeFields = mappingGroups.filter((fields) => {
+    return fields.type === "DESTINATION_FIELDS" && fields;
+  });
+
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const sectionFourFields = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
@@ -209,7 +215,10 @@ const PipelineMapping = ({
                       title={field.title}
                       description={field.description}
                     >
-                      <MappingMiscellaneousFields options={appSchemaOptions} />
+                      <MappingMiscellaneousFields
+                        options={appSchemaOptions}
+                        type={"input"}
+                      />
                     </WarehouseColumn>
                   ))}
               </div>

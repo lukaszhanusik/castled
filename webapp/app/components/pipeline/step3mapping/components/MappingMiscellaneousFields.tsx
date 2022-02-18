@@ -1,15 +1,17 @@
 import { useState } from "react";
 import Select from "react-select";
+import { StringLiteralLike } from "typescript";
 import { MappingFieldsProps } from "../types/componentTypes";
 
 type MappingFieldsOptions = Pick<MappingFieldsProps, "options">;
-interface AddColumn extends MappingFieldsOptions {
-  addColumn?: (value: any) => void;
+interface RowType extends MappingFieldsOptions {
+  type: string;
 }
 
 export default function MappingMiscellaneousFields({
   options,
-}: MappingFieldsOptions) {
+  type
+}: RowType) {
   const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
 
   const renderBody = (
@@ -18,18 +20,29 @@ export default function MappingMiscellaneousFields({
         <Select options={options} onChange={() => setWarehouseSelected(true)} />
       </th>
       <th>
-        <input
-          type="text"
-          placeholder="Enter a field"
-          className="form-control p-2"
-        />
+        {type === "select" ? (
+          <Select
+            options={options}
+            onChange={() => setWarehouseSelected(true)}
+          />
+        ) : (
+          <input
+            type="text"
+            placeholder="Enter a field"
+            className="form-control p-2"
+          />
+        )}
       </th>
     </tr>
   );
   const addBody = [renderBody];
 
-  if (warehouseSelected) {
-    addBody.push(<MappingMiscellaneousFields options={options} />);
+  if (warehouseSelected && type === "select") {
+    addBody.push(<MappingMiscellaneousFields options={options} type={'select'}/>);
+  }
+
+  if (warehouseSelected && type !== "select") {
+    addBody.push(<MappingMiscellaneousFields options={options} type={'input'}/>);
   }
 
   return <>{addBody}</>;
