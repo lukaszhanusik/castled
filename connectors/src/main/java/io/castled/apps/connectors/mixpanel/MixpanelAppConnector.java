@@ -5,23 +5,18 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
-import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
-import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.FieldMapping;
-import io.castled.schema.models.FieldSchema;
-import io.castled.schema.models.RecordSchema;
-import org.apache.commons.collections.CollectionUtils;
+import io.castled.schema.ParameterFieldDTO;
+import io.castled.schema.SchemaFieldDTO;
+import io.castled.schema.mapping.*;
+import io.castled.schema.models.SchemaType;
 
-import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -46,14 +41,14 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
     public List<AppSyncMode> getSyncModes(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
         String object = mixpanelAppSyncConfig.getObject().getObjectName();
-        if(MixpanelObject.EVENT.getName().equalsIgnoreCase(object)) {
+        if (MixpanelObject.EVENT.getName().equalsIgnoreCase(object)) {
             return Lists.newArrayList(AppSyncMode.INSERT);
         }
-        if(MixpanelObject.USER_PROFILE.getName().equalsIgnoreCase(object) ||
+        if (MixpanelObject.USER_PROFILE.getName().equalsIgnoreCase(object) ||
                 MixpanelObject.GROUP_PROFILE.getName().equalsIgnoreCase(object)) {
             return Lists.newArrayList(AppSyncMode.UPSERT);
         }
-        return Lists.newArrayList(AppSyncMode.INSERT,AppSyncMode.UPSERT,AppSyncMode.UPDATE);
+        return Lists.newArrayList(AppSyncMode.INSERT, AppSyncMode.UPSERT, AppSyncMode.UPDATE);
     }
 
     public Class<MixpanelAppSyncConfig> getMappingConfigType() {
@@ -65,6 +60,88 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         return MixpanelAppConfig.class;
     }
 
+    public List<MappingGroup> getMappingGroups(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+        String object = mixpanelAppSyncConfig.getObject().getObjectName();
+        if (MixpanelObject.EVENT.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForEventObject(config, mixpanelAppSyncConfig);
+        }
+        if (MixpanelObject.USER_PROFILE.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForUserProfileObject(config, mixpanelAppSyncConfig);
+        }
+        if (MixpanelObject.GROUP_PROFILE.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForGroupProfileObject(config, mixpanelAppSyncConfig);
+        }
+        return null;
+    }
+
+    private List<MappingGroup> getMappingGroupsForGroupProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+
+        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
+        List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
+        primaryKeys.add(new SchemaFieldDTO(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName(),
+                SchemaType.STRING.getDisplayName(), false));
+        primaryKeyGroup.setPrimaryKeys(primaryKeys);
+        mappingGroups.add(primaryKeyGroup);
+
+        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
+        mappingGroups.add(miscellaneousFieldGroup);
+
+        return mappingGroups;
+    }
+
+    private List<MappingGroup> getMappingGroupsForUserProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+
+        //Primary Key Section
+        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
+        List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
+        primaryKeys.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName(),
+                SchemaType.STRING.getDisplayName(), false));
+        primaryKeyGroup.setPrimaryKeys(primaryKeys);
+        mappingGroups.add(primaryKeyGroup);
+
+        //Destination field group
+        DestinationFieldGroup destinationFieldGroup = new DestinationFieldGroup();
+        List<SchemaFieldDTO> optionalFields = Lists.newArrayList();
+        optionalFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName(), SchemaType.STRING.getDisplayName(), true));
+        optionalFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName(), SchemaType.STRING.getDisplayName(), true));
+        destinationFieldGroup.setOptionalFields(optionalFields);
+        List<SchemaFieldDTO> mandatoryFields = Lists.newArrayList();
+        mandatoryFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+        destinationFieldGroup.setMandatoryFields(mandatoryFields);
+        mappingGroups.add(destinationFieldGroup);
+
+        //Misc group
+        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
+        mappingGroups.add(miscellaneousFieldGroup);
+
+        return mappingGroups;
+    }
+
+    private List<MappingGroup> getMappingGroupsForEventObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+
+        //Important params group
+        ImportantParameterGroup importantParameterGroup = new ImportantParameterGroup();
+        List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
+        importantParameters.add(new ParameterFieldDTO("Column identifying the user associated with the event",
+                "Column identifying the user associated with the event",
+                MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName(), SchemaType.STRING.getDisplayName(), false));
+        importantParameters.add(new ParameterFieldDTO("Column identifying Event Timestamp",
+                "If not mentioned system will default to the message processing time",
+                MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(), SchemaType.TIMESTAMP.getDisplayName(), true));
+        importantParameterGroup.setFields(importantParameters);
+        mappingGroups.add(importantParameterGroup);
+
+        //Misc group
+        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
+        mappingGroups.add(miscellaneousFieldGroup);
+
+        return mappingGroups;
+    }
+/*
     public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
         MixpanelAppSyncConfig mixpanelAppSyncConfig = (MixpanelAppSyncConfig) pipelineConfig.getAppSyncConfig();
         String objectName = ((MixpanelAppSyncConfig)pipelineConfig.getAppSyncConfig()).getObject().getObjectName();
@@ -174,5 +251,5 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         CollectionUtils.addIgnoreNull(reservedFields,mixpanelAppSyncConfig.getEventTimeStamp());
         CollectionUtils.addIgnoreNull(reservedFields,mixpanelAppSyncConfig.getDistinctIDForEvent());
         return reservedFields;
-    }
+    }*/
 }
