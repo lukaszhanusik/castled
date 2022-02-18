@@ -132,27 +132,11 @@ const PipelineMapping = ({
   });
 
   // SECTION - 2 - Primary Keys to match the destination object
-
   const sectionTwoFields = mappingGroups.filter((fields) => {
     return fields.type === "PRIMARY_KEYS" && fields;
-  })[0];
+  });
 
-  /*
-  UNABLE TO USE MAP BECAUSE TYPESCRIPT IS CONSISTENLY 
-  YELLING FOR IT TO BE UNDEFINED. Maybe some internal bug of <TS />
-  Will fix later. For now, a basic for-loop is working.
-  */
-  const sectionTwoRowComponent: JSX.Element[] = [];
-
-  for (let item of sectionTwoFields.primaryKeys!) {
-    sectionTwoRowComponent.push(
-      <MappingTableBody
-        options={appSchemaOptions}
-        onlyOptions={appSchemaPrimaryKeysFilter(item)}
-      />
-    );
-  }
-
+  // SECTION - 3 - Other fields to match the destination object
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const sectionFourFields = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
@@ -200,15 +184,23 @@ const PipelineMapping = ({
               </div>
               {/* SECOND Section - PRIMARY KEYS*/}
               <div className="row py-2">
-                {sectionTwoFields && (
-                  <WarehouseColumn
-                    title={sectionTwoFields.title}
-                    description={sectionTwoFields.description}
-                  >
-                    {sectionTwoRowComponent}
-                  </WarehouseColumn>
-                )}
+                {sectionTwoFields.length > 0 &&
+                  sectionTwoFields.map((field) => (
+                    <WarehouseColumn
+                      title={field.title}
+                      description={field.description}
+                    >
+                      {field.primaryKeys!.map((key) => (
+                        <MappingTableBody
+                          options={appSchemaOptions}
+                          onlyOptions={appSchemaPrimaryKeysFilter(key)}
+                        />
+                      ))}
+                    </WarehouseColumn>
+                  ))}
               </div>
+              {/* THIRD Section - DESTINATION_FIELDS*/}
+
               {/* FOURTH Section - MISCELLANEOUS_FIELDS*/}
               <div className="row py-2">
                 {sectionFourFields.length > 0 &&

@@ -50,6 +50,30 @@
         "title":"Which column would you like to sync as custom destination fields",
         "description":"Configure how the columns in your query results are added as custom fields in your destination object",
         "type":"MISCELLANEOUS_FIELDS"
-     }
+     },
+     {
+      "title":"",
+      "description":"",
+      "type":"DESTINATION_FIELDS",
+      "mandatoryFields":[
+         {
+            "fieldName":"email",
+            "type":"String",
+            "optional":false
+         }
+      ],
+      "optionalFields":[
+         {
+            "fieldName":"first_name",
+            "type":"String",
+            "optional":true
+         },
+         {
+            "fieldName":"last_name",
+            "type":"String",
+            "optional":true
+         }
+      ]
+   }
   ]
 }
