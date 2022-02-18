@@ -63,6 +63,7 @@ const PipelineMapping = ({
     value: field.fieldName,
     title: field.fieldName,
   }));
+  
   const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
     const fieldMappings: FieldMapping[] = [];
     const primaryKeys: string[] = [];

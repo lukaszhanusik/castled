@@ -20,16 +20,10 @@ import {
 } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import Placeholder from "react-bootstrap/Placeholder";
-import {
-  NewPipelineSchemaResponseDto,
-  MappingGroupField,
-} from "./types/newPipelineSchemaTypes";
-import data from "./data/data.json";
 import Select from "react-select";
-import { title } from "process";
-import {MappingFieldsProps, SchemaOptions} from "./types/componentTypes"
-// import MappingImportantFields from "./components/MappingImportantFields";
-// import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
+import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
+import MappingImportantFields from "./components/MappingImportantFields";
+import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -44,37 +38,83 @@ const PipelineMapping = ({
   stepGroups,
   setCurWizardStep,
 }: PipelineWizardStepProps) => {
+  // State management using context, which depends on sessionStorage.
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
-  const [pipelineSchema, setPipelineSchema] =
-    useState<NewPipelineSchemaResponseDto>(data);
+  const [pipelineSchema, setPipelineSchema] = useState<
+    PipelineSchemaResponseDto | undefined
+  >();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Lifecycle based on getting schema from backend to populate items
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (!pipelineWizContext.values) {
       setCurWizardStep("source", "selectType");
       return;
     }
-    // pipelineService
-    //   .getSchemaForMapping(pipelineWizContext.values)
-    //   .then(({ data }) => {
-    //     setIsLoading(false);
-    //     setPipelineSchema(data);
-    //   })
-    //   .catch(() => {
-    //     setIsLoading(false);
-    //     bannerNotificationService.error("Unable to load schemas");
-    //   });
+    /* 
+    Getting schema from the backend API call. 
+    See PipelineSchemaResponseDto for the expected response.
+    */
+    pipelineService
+      .getSchemaForMapping(pipelineWizContext.values)
+      .then(({ data }) => {
+        setIsLoading(false);
+        setPipelineSchema(data);
+      })
+      .catch(() => {
+        setIsLoading(false);
+        bannerNotificationService.error("Unable to load schemas");
+      });
   }, [pipelineWizContext?.values]);
 
   if (!pipelineWizContext) {
     return <Loading />;
   }
 
-  // const appSchemaFields = pipelineSchema?.appSchema?.fields.map((field) => ({
-  //   value: field.fieldName,
-  //   title: field.fieldName,
-  // }));
+  if (!pipelineSchema) {
+    return (
+      <Layout
+        title={steps[curWizardStep].title}
+        subTitle={steps[curWizardStep].description}
+        centerTitle={true}
+        steps={steps}
+        stepGroups={stepGroups}
+      >
+        <div>
+          <div className="table-responsive mx-auto mt-2">
+            <Table hover>
+              <tbody>
+                <tr className="pt-4 pb-4">
+                  <td>
+                    <div className="linear-background"></div>
+                  </td>
+                  <td>
+                    <div className="linear-background"></div>
+                  </td>
+                  <td>
+                    <div className="linear-background"></div>
+                  </td>
+                  <td>
+                    <div className="linear-background"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  console.log(pipelineSchema);
+
+  const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
+    (field) => ({
+      value: field.fieldName,
+      title: field.fieldName,
+    })
+  );
 
   // const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
   //   const fieldMappings: FieldMapping[] = [];
@@ -97,33 +137,20 @@ const PipelineMapping = ({
   //   };
   // };
 
+  // console.log(transformMapping(pipelineWizContext.mappingInfo))
+
+  const { warehouseSchema, mappingGroups } = pipelineSchema;
+
+  // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
-  // if (!appSchemaFields) {
-  //   pipelineSchema?.warehouseSchema.fields.map(
-  //     (field) =>
-  //       (initialMappingInfo[field.fieldName] = {
-  //         appField: field.fieldName,
-  //         isPrimaryKey: false,
-  //       })
-  //   );
-  // }
 
-  const { warehouseSchema, mappingGroups } = data;
-
-  const mandatoryFields = mappingGroups.map((fields) => {
-    return fields.type === "IMPORTANT_PARAMS" ? fields.fields : [];
-  })[0];
+  const mandatoryFields = mappingGroups.filter((fields) => {
+    return fields.type === "IMPORTANT_PARAMS" && fields.fields;
+  });
 
   const miscellaneousFieldGroup = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
-  });
-
-  const schemaOptions: SchemaOptions[] = warehouseSchema.fields.map((field) => {
-    return {
-      value: field.fieldName,
-      label: field.fieldName,
-    };
   });
 
   return (
@@ -134,7 +161,7 @@ const PipelineMapping = ({
       steps={steps}
       stepGroups={stepGroups}
     >
-      <div className="table-responsive">
+      <div className="container">
         <Formik
           initialValues={initialMappingInfo}
           onSubmit={(values, { setSubmitting }) => {
@@ -146,24 +173,34 @@ const PipelineMapping = ({
           }}
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
-            <Form>
-              <div className="row py-4">
-                {mandatoryFields?.map((field) => (
-                  <MappingImportantFields
-                    title={field.title}
-                    options={schemaOptions}
-                  />
-                ))}
+            <Form className="container">
+              <div className="row py-2">
+                {mandatoryFields.length > 0 &&
+                  mandatoryFields[0].fields?.map((field) => (
+                    <MappingImportantFields
+                      title={field.title}
+                      options={appSchemaOptions}
+                      setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                      fieldName={field.fieldName}
+                    />
+                  ))}
               </div>
-              <div className="row py-4">
-                {miscellaneousFieldGroup?.map((field) => (
-                  <MappingMiscellaneousFields
-                    title={field.title}
-                    options={schemaOptions}
-                  />
-                ))}
+              <div className="row py-2">
+                {miscellaneousFieldGroup.length > 0 &&
+                  miscellaneousFieldGroup?.map((field) => (
+                    <MappingMiscellaneousFields
+                      title={field.title}
+                      options={appSchemaOptions}
+                      setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                      fieldName={""}
+                    />
+                  ))}
               </div>
-              <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
+              <ButtonSubmit submitting={isSubmitting}>
+                TEST & CONTINUE
+              </ButtonSubmit>
             </Form>
           )}
         </Formik>
@@ -171,78 +208,5 @@ const PipelineMapping = ({
     </Layout>
   );
 };
-
-function MappingTableBody({ options }: Pick<MappingFieldsProps, "options">) {
-  const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
-  const [appSelected, setAppSelected] = useState<string>("");
-
-  const renderBody = (
-    <tr>
-      <th>
-        <Select options={options} onChange={() => setWarehouseSelected(true)} />
-      </th>
-      <th>
-        <input
-          type="text"
-          placeholder="Enter a field"
-          onChange={(e) => setAppSelected(e.target.value)}
-        />
-      </th>
-    </tr>
-  );
-  const addBody = [renderBody];
-
-  if (warehouseSelected && appSelected) {
-    addBody.push(<MappingTableBody options={options}/>);
-  }
-
-  return <>{addBody}</>;
-}
-
-function MappingMiscellaneousFields({
-  title,
-  description,
-  options,
-}: MappingFieldsProps) {
-  return (
-    <div className="flex-column align-self-center">
-      <div className="flex-column mx-4">
-        <div className="row">{title}</div>
-        <div className="row description text-muted">{description}</div>
-      </div>
-      <div>
-        <Table hover>
-          <thead>
-            <tr>
-              <th>Warehouse Column</th>
-              <th>App Column</th>
-            </tr>
-          </thead>
-          <tbody>
-            <MappingTableBody options={options} />
-          </tbody>
-        </Table>
-      </div>
-    </div>
-  );
-}
-
-function MappingImportantFields({
-  title,
-  description,
-  options,
-}: MappingFieldsProps) {
-  return (
-    <div className="flex-column align-self-center">
-      <div className="flex-column mx-4 my-2">
-        <div className="row">{title}</div>
-        <div className="row description text-muted">{description}</div>
-      </div>
-      <div>
-        <Select options={options} />
-      </div>
-    </div>
-  );
-}
 
 export default PipelineMapping;
