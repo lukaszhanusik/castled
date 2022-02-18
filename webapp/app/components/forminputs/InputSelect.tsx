@@ -105,7 +105,7 @@ const InputSelect = ({
             }
             isClearable
             className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
-            onChange={(v) => setFieldValue?.(field.name, v?.value)}
+            onChange={(v) => {setFieldValue?.(field.name, v?.value)}}
             onBlur={() => setFieldTouched?.(field.name, true)}
             value={
               optionsLoading || !optionsDynamic
