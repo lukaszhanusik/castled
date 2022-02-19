@@ -411,3 +411,12 @@ form {
     font-size: 0.8rem;
   }
 }
+
+.rh-xs-panel {
+  padding-left: 0;
+  .list-group-item {
+    margin: 0 0 0 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}

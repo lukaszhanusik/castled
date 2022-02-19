@@ -3,11 +3,11 @@ import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useRef, useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
-import { Col, Row, Table, Form } from "react-bootstrap";
+import { Button, Col, ListGroup, Row, Table } from "react-bootstrap";
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
-import { Formik } from "formik";
+import { Formik, Form } from "formik";
 import Loading from "@/app/components/common/Loading";
 import { PipelineMappingDto } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
@@ -20,6 +20,7 @@ import * as yup from "yup";
 import TextareaAutosize from "react-textarea-autosize";
 import Select from "react-select";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
+import bannerNotificationService from "@/app/services/bannerNotificationService";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
   pipelineSchema: PipelineSchemaResponseDto | undefined;
@@ -60,13 +61,14 @@ const PipelineMappingRestApi = ({
       .min(1, "Atleast one primary key should be selected"),
     method: yup.string().required("Method is required"),
     url: yup.string().url().required("URL is required"),
-    template: yup.string().required("Body cannot be empty"),
+    // template: yup.string().required("Body cannot be empty"),
   });
 
   let templateareaRef = useRef<HTMLTextAreaElement>(null);
   const [templateValue, setTemplateValue] = useState("");
 
-  const onFieldSelect = (event: ReactSelectOption) => {
+  // const onFieldSelect = (event: ReactSelectOption) => {
+  const onFieldSelect = (event: any) => {
     formInputUtils.insertTextInInput(
       templateareaRef,
       "{{" + event.value + "}}",
@@ -99,9 +101,16 @@ const PipelineMappingRestApi = ({
           }
           validationSchema={formValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            values.template = templateValue;
+
             if (!pipelineWizContext.values) return setSubmitting(false);
             delete (values as any).variable;
             pipelineWizContext.values.mapping = values;
+
+            if (!values.template) {
+              bannerNotificationService.error("Body cannot be empty");
+            }
+
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);
@@ -185,21 +194,44 @@ const PipelineMappingRestApi = ({
                 </Row>
               ))}
 
-              <Select
+              {/* <Select
                 size="sm"
                 onChange={(e: any) => onFieldSelect(e)}
                 options={warehouseSchemaFields?.map((option) =>
                   toReactSelectOption(option)
                 )}
-              ></Select>
+              ></Select> */}
 
-              <TextareaAutosize
-                ref={templateareaRef}
-                value={templateValue}
-                onChange={({ target }) => setTemplateValue(target.value)}
-              />
+              <Row>
+                <Col>
+                  <label>
+                    <span className="required-icon">*</span>
+                    Body
+                  </label>
+                  <TextareaAutosize
+                    name="template"
+                    ref={templateareaRef}
+                    value={templateValue}
+                    className="form-control"
+                    minRows={9}
+                    onChange={({ target }) => setTemplateValue(target.value)}
+                  />
+                </Col>
+                <Col className="rh-xs-panel col-md-3 mt-4">
+                  <ListGroup>
+                    {warehouseSchemaFields?.map((option, i) => (
+                      <ListGroup.Item
+                        action
+                        onClick={() => onFieldSelect(option)}
+                      >
+                        {option.value}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Col>
+              </Row>
 
-              <InputField
+              {/* <InputField
                 name="template"
                 type="textarea"
                 title="Body"
@@ -208,7 +240,17 @@ const PipelineMappingRestApi = ({
                 minRows={6}
                 required
                 ref={templateareaRef}
-              />
+                onChange={setTemplateValue}
+                value={templateValue}
+              /> */}
+              <Button
+                type="submit"
+                className="btn mt-2"
+                disabled={isSubmitting}
+                variant="outline-primary"
+              >
+                Run test
+              </Button>
               <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
             </Form>
           )}

@@ -32,6 +32,9 @@ const insertTextInInput = (
     oldValue.substring(0, selectionStart) +
     userInput +
     oldValue.substring(selectionEnd, oldValue.length);
+  // console.log(userInput);
+  // console.log(oldValue);
+  // console.log(selectionStart);
   setValue(newValue);
 };
 
