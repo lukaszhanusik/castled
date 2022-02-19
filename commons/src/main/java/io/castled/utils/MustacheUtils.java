@@ -5,6 +5,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -23,6 +24,15 @@ public class MustacheUtils {
         } catch (IOException ie) {
             log.error(String.format("Constructing payload from mustache template %s failed", payloadTemplate));
             throw ie;
+        }
+    }
+
+    public static void validatePayload(String payloadTemplate) {
+        try {
+            new DefaultMustacheFactory();
+            new DefaultMustacheFactory().compile(new StringReader(payloadTemplate), "template.output");
+        } catch (com.github.mustachejava.MustacheException e) {
+            throw new BadRequestException(e.getMessage());
         }
     }
 }

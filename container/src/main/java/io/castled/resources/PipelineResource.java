@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.dtomappers.PipelineDTOMapper;
 import io.castled.dtos.*;
+import io.castled.models.CastledDataMapping;
 import io.castled.models.Pipeline;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
@@ -111,6 +112,12 @@ public class PipelineResource {
                                              @Auth User user) {
         return this.pipelineService.listPipelines(user.getTeamId(), appId).stream()
                 .map(PipelineDTOMapper.INSTANCE::toDTO).collect(Collectors.toList());
+    }
+
+    @POST
+    public void testDataMapping(CastledDataMapping castledDataMapping,
+                                @Auth User user) {
+        this.pipelineService.testDataMapping(castledDataMapping);
     }
 
     @GET
