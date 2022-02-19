@@ -24,12 +24,12 @@
         <aws.sdk.version>1.11.784</aws.sdk.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>redshift</id>
-            <url>http://redshift-maven-repository.s3-website-us-east-1.amazonaws.com/release</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>redshift</id>-->
+<!--            <url>http://redshift-maven-repository.s3-website-us-east-1.amazonaws.com/release</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <dependencies>
         <dependency>
