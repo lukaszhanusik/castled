@@ -8,5 +8,4 @@ export interface InputBaseProps extends FieldAttributes<any> {
   inputClassName?: string;
   required?: boolean;
   onChange?: (value: string) => void;
-  innerRef?: React.RefObject<HTMLTextAreaElement> | undefined;
 }

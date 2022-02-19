@@ -24,7 +24,6 @@ const InputField = ({
   setFieldValue,
   optionsRef,
   dataFetcher,
-  innerRef,
   ...props
 }: InputFieldProps) => {
   const [field, meta] = useField(props);
