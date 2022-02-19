@@ -115,6 +115,7 @@ public class PipelineResource {
     }
 
     @POST
+    @Path("/mappings/test")
     public void testDataMapping(CastledDataMapping castledDataMapping,
                                 @Auth User user) {
         this.pipelineService.testDataMapping(castledDataMapping);
