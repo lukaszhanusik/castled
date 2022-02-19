@@ -121,7 +121,7 @@ public class HubspotRestClient {
                             SocketTimeoutException.class),
                     ((throwable, attempts) -> {
                         if (throwable instanceof NotAuthorizedException && attempts <= 1) {
-                            this.hubspotAccessConfig = accessTokenRefresher.refreshAccessConfig(oauthToken);
+                            this.hubspotAccessConfig = accessTokenRefresher.refreshAndPersistAccessConfig(oauthToken);
                             return new WaitTimeAndRetry(0, true);
                         }
                         if (throwable instanceof SocketTimeoutException && attempts <= 3) {

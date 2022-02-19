@@ -31,7 +31,7 @@ public class SalesforceAccessTokenRefresher implements AccessTokenRefresher<Sale
         this.messagePublisher = ObjectRegistry.getInstance(MessagePublisher.class);
     }
 
-    public SalesforceAccessConfig refreshAccessConfig(Long oAuthToken) {
+    public SalesforceAccessConfig refreshAndPersistAccessConfig(Long oAuthToken) {
 
         OAuthDetails oAuthDetails = this.oAuthCache.getValue(oAuthToken);
         SalesforceAccessConfig currentAccessConfig = (SalesforceAccessConfig) oAuthDetails.getAccessConfig();

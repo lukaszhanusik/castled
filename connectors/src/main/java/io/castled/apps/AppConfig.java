@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.castled.apps.connectors.activecampaign.ActiveCampaignAppConfig;
 import io.castled.apps.connectors.customerio.CustomerIOAppConfig;
+import io.castled.apps.connectors.fbcustomaudience.FbAppConfig;
 import io.castled.apps.connectors.googleads.GoogleAdsAppConfig;
 import io.castled.apps.connectors.googlepubsub.GooglePubSubAppConfig;
 import io.castled.apps.connectors.googlesheets.GoogleSheetsAppConfig;
@@ -34,7 +35,8 @@ import lombok.Getter;
         @JsonSubTypes.Type(value = GooglePubSubAppConfig.class, name = "GOOGLEPUBSUB"),
         @JsonSubTypes.Type(value = MixpanelAppConfig.class, name = "MIXPANEL"),
         @JsonSubTypes.Type(value = GoogleSheetsAppConfig.class, name = "GOOGLE_SHEETS"),
-        @JsonSubTypes.Type(value = RestApiAppConfig.class, name = "RESTAPI")
+        @JsonSubTypes.Type(value = RestApiAppConfig.class, name = "RESTAPI"),
+        @JsonSubTypes.Type(value = FbAppConfig.class, name = "FBCUSTOMAUDIENCE")
 })
 @Getter
 public abstract class AppConfig {

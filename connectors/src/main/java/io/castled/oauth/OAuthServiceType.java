@@ -7,7 +7,8 @@ public enum OAuthServiceType {
     BIGQUERY(OAuthProviderType.GOOGLE),
     HUBSPOT(OAuthProviderType.HUBSPOT),
     GADS(OAuthProviderType.GOOGLE),
-    MAILCHIMP(OAuthProviderType.MAILCHIMP);
+    MAILCHIMP(OAuthProviderType.MAILCHIMP),
+    FBCUSTOMAUDIENCE(OAuthProviderType.FACEBOOK);
 
     @Getter
     private final OAuthProviderType oAuthProviderType;

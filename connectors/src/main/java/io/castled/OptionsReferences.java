@@ -23,6 +23,8 @@ public class OptionsReferences {
     public static final String CIO_PRIMARY_KEYS = "CIO Primary keys";
     public static final String CIO_EVENT_TYPES = "CIO Event Types";
 
+    public static final String FB_ADS_ACCOUNTS = "Facebook Ad Accounts";
+
     //static options references
 
     public static final String GCP_LOCATIONS = "GCP_LOCATIONS";

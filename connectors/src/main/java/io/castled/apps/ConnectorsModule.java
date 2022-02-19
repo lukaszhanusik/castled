@@ -9,6 +9,8 @@ import io.castled.apps.connectors.activecampaign.ActiveCampaignAppConnector;
 import io.castled.apps.connectors.customerio.CIOEventTypeFetcher;
 import io.castled.apps.connectors.customerio.CIOPrimaryKeyOptionsFetcher;
 import io.castled.apps.connectors.customerio.CustomerIOAppConnector;
+import io.castled.apps.connectors.fbcustomaudience.FbAdAccountOptionsFetcher;
+import io.castled.apps.connectors.fbcustomaudience.FbCustomAudAppConnector;
 import io.castled.apps.connectors.googleads.*;
 import io.castled.apps.connectors.googlepubsub.GooglePubSubAppConnector;
 import io.castled.apps.connectors.googlesheets.GoogleSheetsAppConnector;
@@ -84,6 +86,7 @@ public class ConnectorsModule extends AbstractModule {
         externalAppConnectorMapping.addBinding(ExternalAppType.MIXPANEL).to(MixpanelAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLE_SHEETS).to(GoogleSheetsAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.RESTAPI).to(RestApiAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.FBCUSTOMAUDIENCE).to(FbCustomAudAppConnector.class);
     }
 
 
@@ -126,6 +129,7 @@ public class ConnectorsModule extends AbstractModule {
         optionFetchers.addBinding(OptionsReferences.CIO_PRIMARY_KEYS).to(CIOPrimaryKeyOptionsFetcher.class);
         optionFetchers.addBinding(OptionsReferences.CIO_EVENT_TYPES).to(CIOEventTypeFetcher.class);
         optionFetchers.addBinding(OptionsReferences.GADS_SUB_RESOURCE).to(GoogleAdsSubResourceFetcher.class);
+        optionFetchers.addBinding(OptionsReferences.FB_ADS_ACCOUNTS).to(FbAdAccountOptionsFetcher.class);
     }
 
     private void bindStaticOptionFetchers() {

@@ -32,7 +32,6 @@ public class OAuthService {
         this.oAuthCache = oAuthCache;
     }
 
-
     private OAuthState getOAuthState(String stateId) {
         try (Jedis jedis = jedisPool.getResource()) {
             String stateJson = jedis.get(OAUTH_NS + stateId);
@@ -51,5 +50,4 @@ public class OAuthService {
     public OAuthDetails getOAuthDetails(Long oAuthId) {
         return getOAuthDetails(oAuthId, false);
     }
-
 }
