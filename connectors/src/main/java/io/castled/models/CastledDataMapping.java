@@ -20,21 +20,21 @@ public class CastledDataMapping {
                 .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
     }
 
-    public Map<String, String> appWarehouseMapping() {
+    public Map<String, List<String>> appWarehouseMapping() {
         return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
+                .collect(groupingBy(FieldMapping::getAppField, mapping(FieldMapping::getWarehouseField, toList())));
     }
 
     public Map<String, List<String>> warehouseAppMapping() {
         return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(groupingBy(FieldMapping::getWarehouseField,mapping(FieldMapping::getAppField,toList())));
+                .collect(groupingBy(FieldMapping::getWarehouseField, mapping(FieldMapping::getAppField, toList())));
     }
 
-    public void addAdditionalMappings(List<FieldMapping> additionalMappings){
+    public void addAdditionalMappings(List<FieldMapping> additionalMappings) {
         fieldMappings.addAll(additionalMappings);
     }
 
-    public void addAdditionalMapping(FieldMapping additionalMapping){
+    public void addAdditionalMapping(FieldMapping additionalMapping) {
         fieldMappings.add(additionalMapping);
     }
 }

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class MixpanelAppSyncConfig extends BaseAppSyncConfig {
 
-    @FormField(title = "Select Object to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
+    @FormField(title = "Select Object to sync", type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 

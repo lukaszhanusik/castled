@@ -79,7 +79,7 @@ public class PipelineExecutor implements TaskExecutor {
         Warehouse warehouse = this.warehouseService.getWarehouse(pipeline.getWarehouseId());
         PipelineRun pipelineRun = getOrCreatePipelineRun(pipelineId);
         WarehousePollContext warehousePollContext = WarehousePollContext.builder()
-                .primaryKeys(PipelineUtils.getWarehousePrimaryKeys(pipeline)).pipelineUUID(pipeline.getUuid())
+                .primaryKeys(getWarehousePrimaryKeys(pipeline)).pipelineUUID(pipeline.getUuid())
                 .pipelineRunId(pipelineRun.getId()).warehouseConfig(warehouse.getConfig())
                 .dataEncryptionKey(encryptionManager.getEncryptionKey(warehouse.getTeamId()))
                 .queryMode(pipeline.getQueryMode())
@@ -112,11 +112,11 @@ public class PipelineExecutor implements TaskExecutor {
 
             SchemaMappedRecordOutputStream schemaMappedRecordOutputStream =
                     new SchemaMappedRecordOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
-                            PipelineUtils.getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
-                            pipeline.getDataMapping().appWarehouseMapping());
+                            getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
+                            pipeline.getDataMapping().warehouseAppMapping());
 
             ErrorOutputStream sinkErrorOutputStream = new ErrorOutputStream(schemaMappedRecordOutputStream,
-                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(), pipeline.getDataMapping().appWarehouseMapping()));
+                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(), pipeline.getDataMapping().warehouseAppMapping()));
 
             log.info("App Sync started for pipeline {}", pipeline.getName());
 
@@ -161,6 +161,10 @@ public class PipelineExecutor implements TaskExecutor {
             }
         }
         return null;
+    }
+
+    private List<String> getWarehousePrimaryKeys(Pipeline pipeline) {
+        return PipelineUtils.getWarehousePrimaryKeys(pipeline);
     }
 
     private PipelineRun getOrCreatePipelineRun(Long pipelineId) {
