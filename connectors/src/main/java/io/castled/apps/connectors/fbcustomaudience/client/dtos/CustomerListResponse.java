@@ -10,9 +10,9 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomerListResponse {
 
-    String audienceId;
-    String sessionId;
-    Integer numReceived;
-    Integer numInvalidEntries;
-    Map<String, String> invalidEntrySamples;
+    private String audienceId;
+    private String sessionId;
+    private Integer numReceived;
+    private Integer numInvalidEntries;
+    private Map<String, String> invalidEntrySamples;
 }

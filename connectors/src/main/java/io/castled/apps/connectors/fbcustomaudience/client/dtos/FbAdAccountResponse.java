@@ -10,6 +10,6 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FbAdAccountResponse {
 
-    List<AdAccount> data;
-    PagingResponse paging;
+    private List<AdAccount> data;
+    private PagingResponse paging;
 }

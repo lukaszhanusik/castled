@@ -9,7 +9,7 @@ import io.castled.forms.dtos.FormFieldOption;
 import java.util.List;
 
 @Singleton
-public class FbHashingOptionsFetcher  implements StaticOptionsFetcher  {
+public class HashingOptionsFetcher implements StaticOptionsFetcher  {
     @Override
     public List<FormFieldOption> getOptions() {
         List<FormFieldOption> formFieldOptions = Lists.newArrayList();

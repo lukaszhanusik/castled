@@ -8,5 +8,5 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FbErrorResponse {
 
-    FbError error;
+    private FbError error;
 }

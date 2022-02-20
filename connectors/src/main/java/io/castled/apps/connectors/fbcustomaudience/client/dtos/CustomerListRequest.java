@@ -10,6 +10,6 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomerListRequest {
 
-    SessionInfo session;
-    CustomerListPayload payload;
+    private SessionInfo session;
+    private CustomerListPayload payload;
 }

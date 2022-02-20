@@ -8,6 +8,6 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PagingResponse {
 
-    String previous;
-    String next;
+    private String previous;
+    private String next;
 }

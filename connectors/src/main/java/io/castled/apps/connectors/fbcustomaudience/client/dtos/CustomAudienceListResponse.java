@@ -14,6 +14,6 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomAudienceListResponse {
 
-    List<CustomAudienceResponse> data;
-    PagingResponse paging;
+    private List<CustomAudienceResponse> data;
+    private PagingResponse paging;
 }

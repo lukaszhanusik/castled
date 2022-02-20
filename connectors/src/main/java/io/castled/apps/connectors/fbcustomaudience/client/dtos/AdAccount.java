@@ -8,6 +8,6 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AdAccount {
 
-    String id;
-    String name;
+    private String id;
+    private String name;
 }

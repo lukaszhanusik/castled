@@ -10,9 +10,9 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomAudienceCreateRequest {
 
-    String name;
-    String subtype;
-    String description;
-    String customerFileSource;
-    String accessToken;
+    private String name;
+    private String subtype;
+    private String description;
+    private String customerFileSource;
+    private String accessToken;
 }

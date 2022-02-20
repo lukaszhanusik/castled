@@ -10,8 +10,8 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SessionInfo {
 
-    long sessionId;
-    int batchSeq;
-    Boolean lastBatchFlag;
-    int estimatedNumTotal;
+    private long sessionId;
+    private int batchSeq;
+    private Boolean lastBatchFlag;
+    private int estimatedNumTotal;
 }

@@ -55,6 +55,11 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
         updateStats(msgs.size(), Iterables.getLast(msgs).getOffset());
     }
 
+    @Override
+    public long getMaxBufferedObjects() {
+        return BATCH_SIZE_MAX;
+    }
+
     protected String getRowKey(Message msg) {
         // Expected format ["val1","val2","val3",...]
         String rowKey = "[";
@@ -75,13 +80,18 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
     protected List<List<String>> getData(List<Message> msgs) {
         List<List<String>> data = Lists.newArrayList();
         for (Message msg: msgs) {
-            List<String> tuple = msg.getRecord().getFields().stream()
-                    .map(field -> new AbstractMap.SimpleEntry<>(FbCustomAudienceFormatUtils.formatValue(
-                            field.getValue(), field.getName()), field.getName()))
-                    .map(val -> syncConfig.isHashingRequired()?
-                            FbCustomAudienceFormatUtils.hashValue(val.getKey(), val.getValue()) :
-                            val.getKey())
-                    .collect(Collectors.toList());
+            List<String> tuple = Lists.newArrayList();
+            if (syncConfig.isHashingRequired()) {
+                tuple = msg.getRecord().getFields().stream()
+                        .map(field -> new AbstractMap.SimpleEntry<>(FbCustomAudienceFormatUtils.formatValue(
+                                field.getValue(), field.getName()), field.getName()))
+                        .map(val -> FbCustomAudienceFormatUtils.hashValue(val.getKey(), val.getValue()))
+                        .collect(Collectors.toList());
+            } else {
+                // Already normalized and hashed
+                tuple = msg.getRecord().getFields().stream()
+                        .map(field -> (String) field.getValue()).collect(Collectors.toList());
+            }
             data.add(tuple);
         }
         return data;
@@ -96,8 +106,4 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
         return syncStats;
     }
 
-    @Override
-    public long getMaxBufferedObjects() {
-        return BATCH_SIZE_MAX;
-    }
 }

@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomAudienceResponse {
 
-    String id;
-    String name;
+    private String id;
+    private String name;
 }

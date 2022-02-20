@@ -8,9 +8,10 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FbError {
-    String message;
-    String type;
-    Integer code;
-    Integer errorSubcode;
-    String fbtraceId;
+
+    private String message;
+    private String type;
+    private Integer code;
+    private Integer errorSubcode;
+    private String fbtraceId;
 }

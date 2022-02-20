@@ -2,6 +2,7 @@ package io.castled.apps.connectors.fbcustomaudience.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.apps.connectors.fbcustomaudience.FbAccessConfig;
 import io.castled.apps.connectors.fbcustomaudience.FbAppConfig;
@@ -44,15 +45,22 @@ public class FbRestClient {
 
     public List<AdAccount> getAllAdAccounts() {
         final String FIELD_NAME = "name";
-        Response response = FbClientUtils.executeAndHandleError(() -> {
-            return this.client.target(String.format("%s/%s/adaccounts", API_ENDPOINT, USER_ID))
-                    .queryParam("fields", FIELD_NAME)
-                    .queryParam("access_token", this.oAuthDetails.getAccessConfig().getAccessToken())
-                    .request(MediaType.APPLICATION_JSON)
-                    .get();
-        });
-        FbAdAccountResponse accountResponse = response.readEntity(FbAdAccountResponse.class);
-        return accountResponse.getData();
+        String nextApiUrl = String.format("%s/%s/adaccounts", API_ENDPOINT, USER_ID);
+        List<AdAccount> adAccounts = Lists.newArrayList();
+        while (nextApiUrl != null && !nextApiUrl.isEmpty()) {
+            final String url = nextApiUrl;
+            Response response = FbClientUtils.executeAndHandleError(() -> {
+                return this.client.target(url)
+                        .queryParam("fields", FIELD_NAME)
+                        .queryParam("access_token", this.oAuthDetails.getAccessConfig().getAccessToken())
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
+            });
+            FbAdAccountResponse accountResponse = response.readEntity(FbAdAccountResponse.class);
+            adAccounts.addAll(accountResponse.getData());
+            nextApiUrl = accountResponse.getPaging().getNext();
+        }
+        return adAccounts;
     }
 
     public CustomAudienceResponse createCustomAudience(String audienceName) {

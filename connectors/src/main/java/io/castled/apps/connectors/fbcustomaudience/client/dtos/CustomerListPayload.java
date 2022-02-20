@@ -12,6 +12,6 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomerListPayload {
 
-    List<String> schema;
-    List<List<String>> data;
+    private List<String> schema;
+    private List<List<String>> data;
 }
