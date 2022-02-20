@@ -103,7 +103,7 @@ public class ExternalAppService {
 
     public URI createOAuthExternalApp(User user, OAuthAppAttributes externalAppAttributes) {
 
-        OAuthAppConfig oAuthAppConfig = externalAppAttributes.getConfig();
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig) externalAppAttributes.getConfig();
         try {
             //Optional.ofNullable(StringUtils.nullIfEmpty(externalAppAttributes.getName())).orElseThrow(()->new InvalidConfigException("Name is mandatory"));
             OAuthServiceType oAuthServiceType = externalAppAttributes.getConfig().getType().oauthServiceType();
@@ -121,7 +121,7 @@ public class ExternalAppService {
 
     public URI updateOAuthExternalApp(User user, Long appId, OAuthAppAttributes externalAppAttributes) {
 
-        OAuthAppConfig oAuthAppConfig = externalAppAttributes.getConfig();
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig) externalAppAttributes.getConfig();
         try {
             OAuthServiceType oAuthServiceType = externalAppAttributes.getConfig().getType().oauthServiceType();
             if (oAuthServiceType == null) {
@@ -198,36 +198,39 @@ public class ExternalAppService {
     public URI getAuthorizationUrl(User user, OAuthServiceType serviceType, OAuthAppAttributes oAuthAppAttributes,
                                    Long appId) throws Exception {
 
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig)oAuthAppAttributes.getConfig();
         ExternalAppOauthState externalAppOauthState = new ExternalAppOauthState(user.getId(), appId, oAuthAppAttributes);
         String stateId = ObjectRegistry.getInstance(OAuthStateStore.class).persistOAuthState(JsonUtils.objectToString(externalAppOauthState));
-        OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppAttributes.getConfig().getClientId(),
-                oAuthAppAttributes.getConfig().getClientSecret());
+        OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppConfig.getClientId(),
+                oAuthAppConfig.getClientSecret());
         OAuthAccessProvider oAuthAccessProvider = oAuthAccessProviderFactory.getAccessProvider(serviceType, oAuthClientConfig);
         return UriBuilder.fromUri(oAuthAccessProvider.getAuthorizationUrl(stateId, getRedirectUri(serviceType,
                 oAuthAppAttributes.getServerUrl()), oAuthClientConfig.getClientId())).build();
     }
 
     public URI handleAuthorizationCallback(OAuthServiceType serviceType, String stateId, String authorizationCode) {
+
         String state = ObjectRegistry.getInstance(OAuthStateStore.class).getOAuthState(stateId);
         ExternalAppOauthState externalAppOauthState = JsonUtils.jsonStringToObject(state, ExternalAppOauthState.class);
         if (externalAppOauthState == null) {
             throw new BadRequestException(String.format("Invalid state id %s", stateId));
         }
         OAuthAppAttributes oAuthAppAttributes = externalAppOauthState.getOAuthAppAttributes();
-        OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppAttributes.getConfig().getClientId(),
-                oAuthAppAttributes.getConfig().getClientSecret());
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig)oAuthAppAttributes.getConfig();
+        OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppConfig.getClientId(),
+                oAuthAppConfig.getClientSecret());
         try {
             OAuthAccessProvider oAuthAccessProvider = this.oAuthAccessProviderFactory.getAccessProvider(serviceType, oAuthClientConfig);
             Long oauthToken = oAuthAccessProvider.persistAccessConfig(authorizationCode,
                     getRedirectUri(serviceType, oAuthAppAttributes.getServerUrl()));
-            externalAppOauthState.getOAuthAppAttributes().getConfig().setOAuthToken(oauthToken);
+            oAuthAppConfig.setOAuthToken(oauthToken);
             User user = ObjectRegistry.getInstance(UsersCache.class).getValue(externalAppOauthState.getUserId());
             if (externalAppOauthState.getAppId() == null) {
-                Long appId = createExternalApp(oAuthAppAttributes.getName(), oAuthAppAttributes.getConfig(), user);
+                Long appId = createExternalApp(oAuthAppAttributes.getName(), oAuthAppConfig, user);
                 return UriBuilder.fromUri(oAuthAppAttributes.getSuccessUrl()).queryParam("id", appId).build();
             }
             updateExternalApp(externalAppOauthState.getAppId(), user.getTeamId(), oAuthAppAttributes.getName(),
-                    oAuthAppAttributes.getConfig());
+                    oAuthAppConfig);
             return UriBuilder.fromUri(oAuthAppAttributes.getSuccessUrl()).queryParam("id", externalAppOauthState.getAppId()).build();
 
         } catch (Exception e) {

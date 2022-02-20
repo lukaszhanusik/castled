@@ -7,4 +7,5 @@ export enum FormFieldType {
   JSON_FILE = "JSON_FILE",
   TEXT_FILE = "TEXT_FILE",
   HIDDEN = "HIDDEN",
+  RADIO_BOX = "RADIO_BOX",
 }

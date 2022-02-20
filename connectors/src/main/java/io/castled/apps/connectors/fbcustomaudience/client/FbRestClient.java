@@ -24,6 +24,7 @@ public class FbRestClient {
 
     private static final String API_ENDPOINT = "https://graph.facebook.com/v13.0";
     private static final String USER_ID = "me";
+    private static final long BATCH_SIZE = 10000;
 
     private final Client client;
     private final FbAppConfig appConfig;
@@ -104,6 +105,8 @@ public class FbRestClient {
         ObjectMapper objMapper =  new ObjectMapper();
         this.sessionInfo.setBatchSeq(this.sessionInfo.getBatchSeq() + 1);
         this.sessionInfo.setEstimatedNumTotal(data.size());
+        // This is only a best-effort check.
+        this.sessionInfo.setLastBatchFlag(data.size() < BATCH_SIZE);
 
         Form form = new Form();
         try {

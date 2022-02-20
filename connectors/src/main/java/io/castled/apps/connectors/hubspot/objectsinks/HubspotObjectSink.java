@@ -7,6 +7,7 @@ import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.OAuthAppConfig;
 import io.castled.apps.connectors.hubspot.HubspotErrorParser;
 import io.castled.apps.connectors.hubspot.HubspotStandardObject;
+import io.castled.apps.connectors.hubspot.HubspotSyncObject;
 import io.castled.apps.connectors.hubspot.client.HubspotRestClient;
 import io.castled.apps.connectors.hubspot.client.dtos.BatchUpdateRequest;
 import io.castled.apps.connectors.hubspot.client.dtos.ObjectUpdateRequest;
@@ -45,12 +46,12 @@ public class HubspotObjectSink extends BufferedObjectSink<ObjectIdAndMessage> {
 
     private final HubspotRestClient hubspotRestClient;
     private final ErrorOutputStream errorOutputStream;
-    private final HubspotStandardObject hubspotStandardObject;
+    private final HubspotSyncObject hubspotObject;
 
     public HubspotObjectSink(OAuthAppConfig oAuthAppConfig,
-                             ErrorOutputStream errorOutputStream, HubspotStandardObject hubspotStandardObject) {
+                             ErrorOutputStream errorOutputStream, HubspotSyncObject hubspotObject) {
 
-        this.hubspotStandardObject = hubspotStandardObject;
+        this.hubspotObject = hubspotObject;
         this.hubspotRestClient = new HubspotRestClient(oAuthAppConfig.getOAuthToken(),
                 oAuthAppConfig.getClientConfig());
         this.errorOutputStream = errorOutputStream;
@@ -73,7 +74,7 @@ public class HubspotObjectSink extends BufferedObjectSink<ObjectIdAndMessage> {
                     createObjectProperties(recordRef.getMessage().getRecord()))).collect(Collectors.toList());
             BatchUpdateRequest batchUpdateRequest = new BatchUpdateRequest(objectUpdateRequests);
             try {
-                hubspotRestClient.updateObjects(hubspotStandardObject.getObjectUrl(), batchUpdateRequest, create);
+                hubspotRestClient.updateObjects(hubspotObject.getTypeId(), batchUpdateRequest, create);
             } catch (BatchObjectException e) {
                 if (e.getBatchObjectError() == null || e.getBatchObjectError().getCategory() == null) {
                     log.error("Hubspot records update failed", e);

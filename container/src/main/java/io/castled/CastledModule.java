@@ -12,14 +12,17 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.connectors.activecampaign.ActiveCampaignAppConnector;
 import io.castled.apps.connectors.customerio.CustomerIOAppConnector;
+import io.castled.apps.connectors.fbcustomaudience.FbCustomAudAppConnector;
 import io.castled.apps.connectors.googleads.GoogleAdsAppConnector;
 import io.castled.apps.connectors.googlepubsub.GooglePubSubAppConnector;
+import io.castled.apps.connectors.googlesheets.GoogleSheetsAppConnector;
 import io.castled.apps.connectors.hubspot.HubspotAppConnector;
 import io.castled.apps.connectors.intercom.IntercomAppConnector;
 import io.castled.apps.connectors.kafka.KafkaAppConnector;
 import io.castled.apps.connectors.mailchimp.MailchimpAppConnector;
 import io.castled.apps.connectors.marketo.MarketoAppConnector;
 import io.castled.apps.connectors.mixpanel.MixpanelAppConnector;
+import io.castled.apps.connectors.restapi.RestApiAppConnector;
 import io.castled.apps.connectors.salesforce.SalesforceAppConnector;
 import io.castled.apps.connectors.sendgrid.SendgridAppConnector;
 import io.castled.configuration.DocConfiguration;
@@ -49,6 +52,12 @@ import io.castled.pipelines.PipelineExecutor;
 import io.castled.utils.TimeUtils;
 import io.castled.warehouses.QueryPreviewExecutor;
 import io.castled.warehouses.WarehouseColumnFetcher;
+import io.castled.warehouses.WarehouseConnector;
+import io.castled.warehouses.WarehouseType;
+import io.castled.warehouses.connectors.bigquery.BigQueryConnector;
+import io.castled.warehouses.connectors.postgres.PostgresWarehouseConnector;
+import io.castled.warehouses.connectors.redshift.RedshiftConnector;
+import io.castled.warehouses.connectors.snowflake.SnowflakeConnector;
 import org.jdbi.v3.core.Jdbi;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -82,6 +91,38 @@ public class CastledModule extends AbstractModule {
         bindInterceptors();
         bindAppSyncOptions();
         bindCastledEventHandlers();
+        bindAppConnectors();
+        bindWarehouseConnectors();
+
+    }
+
+    private void bindWarehouseConnectors() {
+        MapBinder<WarehouseType, WarehouseConnector> warehouseConnectorMapBinder = MapBinder.newMapBinder(binder(),
+                WarehouseType.class, WarehouseConnector.class);
+        warehouseConnectorMapBinder.addBinding(WarehouseType.REDSHIFT).to(RedshiftConnector.class);
+        warehouseConnectorMapBinder.addBinding(WarehouseType.SNOWFLAKE).to(SnowflakeConnector.class);
+        warehouseConnectorMapBinder.addBinding(WarehouseType.BIGQUERY).to(BigQueryConnector.class);
+        warehouseConnectorMapBinder.addBinding(WarehouseType.POSTGRES).to(PostgresWarehouseConnector.class);
+    }
+
+    private void bindAppConnectors() {
+        MapBinder<ExternalAppType, ExternalAppConnector> externalAppConnectorMapping = MapBinder.newMapBinder(binder(),
+                ExternalAppType.class, ExternalAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.SALESFORCE).to(SalesforceAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.HUBSPOT).to(HubspotAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.INTERCOM).to(IntercomAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLEADS).to(GoogleAdsAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.MAILCHIMP).to(MailchimpAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.SENDGRID).to(SendgridAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.ACTIVECAMPAIGN).to(ActiveCampaignAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.MARKETO).to(MarketoAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.KAFKA).to(KafkaAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.CUSTOMERIO).to(CustomerIOAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLEPUBSUB).to(GooglePubSubAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.MIXPANEL).to(MixpanelAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLE_SHEETS).to(GoogleSheetsAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.RESTAPI).to(RestApiAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.FBCUSTOMAUDIENCE).to(FbCustomAudAppConnector.class);
     }
 
     private void bindAppSyncOptions() {

@@ -11,6 +11,4 @@ public abstract class BaseWarehouseConnector<CONFIG extends WarehouseConfig> imp
         Class<CONFIG> configClass = getConfigType();
         return FormUtils.getFormFields(configClass);
     }
-
-    public abstract Class<CONFIG> getConfigType();
 }

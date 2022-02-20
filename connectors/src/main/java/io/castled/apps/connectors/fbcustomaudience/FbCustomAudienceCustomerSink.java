@@ -20,6 +20,7 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
     //  /{audience_id}/users API Limits
     private static final long BATCH_SIZE_MAX = 10000;
 
+    private final FbCustomAudAppSyncConfig syncConfig;
     private final FbRestClient fbRestClient;
     private final ErrorOutputStream errorOutputStream;
     private final AppSyncStats syncStats;
@@ -29,6 +30,7 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
 
     public FbCustomAudienceCustomerSink(FbAppConfig appConfig, FbCustomAudAppSyncConfig syncConfig,
                                         ErrorOutputStream errorOutputStream) {
+        this.syncConfig = syncConfig;
         this.fbRestClient = new FbRestClient(appConfig, syncConfig);
         this.syncStats = new AppSyncStats();
         this.errorOutputStream = errorOutputStream;
@@ -76,7 +78,9 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
             List<String> tuple = msg.getRecord().getFields().stream()
                     .map(field -> new AbstractMap.SimpleEntry<>(FbCustomAudienceFormatUtils.formatValue(
                             field.getValue(), field.getName()), field.getName()))
-                    .map(val -> FbCustomAudienceFormatUtils.hashValue(val.getKey(), val.getValue()))
+                    .map(val -> syncConfig.isHashingRequired()?
+                            FbCustomAudienceFormatUtils.hashValue(val.getKey(), val.getValue()) :
+                            val.getKey())
                     .collect(Collectors.toList());
             data.add(tuple);
         }

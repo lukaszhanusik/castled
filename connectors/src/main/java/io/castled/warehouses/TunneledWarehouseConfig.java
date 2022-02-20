@@ -14,7 +14,7 @@ import static io.castled.forms.FormGroups.TUNNEL_GROUP;
 @Getter
 @Setter
 @GroupActivator(dependencies = {"tunnelEnabled"}, group = TUNNEL_GROUP)
-public class TunneledWarehouseConfig extends WarehouseConfig {
+public class TunneledWarehouseConfig extends BaseWarehouseConfig {
 
     @FormField(required = false, description = "Enable SSH Tunnel", title = "Enable Tunnel", schema = FormFieldSchema.BOOLEAN, type = FormFieldType.CHECK_BOX)
     private boolean tunnelEnabled;

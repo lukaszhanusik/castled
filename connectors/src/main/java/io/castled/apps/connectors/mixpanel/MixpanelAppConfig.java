@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.mixpanel;
 
-import io.castled.apps.AppConfig;
+import io.castled.apps.BaseAppConfig;
 import io.castled.forms.FormField;
 import io.castled.forms.FormFieldSchema;
 import io.castled.forms.FormFieldType;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MixpanelAppConfig extends AppConfig {
+public class MixpanelAppConfig extends BaseAppConfig {
 
     @FormField(description = "Project Token", title = "Project Token", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String projectToken;

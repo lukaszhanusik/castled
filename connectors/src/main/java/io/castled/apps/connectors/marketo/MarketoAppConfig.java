@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.marketo;
 
-import io.castled.apps.AppConfig;
+import io.castled.apps.BaseAppConfig;
 import io.castled.forms.FormField;
 import io.castled.forms.FormFieldSchema;
 import io.castled.forms.FormFieldType;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MarketoAppConfig extends AppConfig  {
+public class MarketoAppConfig extends BaseAppConfig {
     @FormField(description = "Marketo Base url", title = "Base Url", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String baseUrl;
 

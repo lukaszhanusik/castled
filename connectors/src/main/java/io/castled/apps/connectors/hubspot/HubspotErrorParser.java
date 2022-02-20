@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.inject.Singleton;
 import io.castled.apps.connectors.hubspot.client.HubspotErrorCategory;
 import io.castled.apps.connectors.hubspot.client.dtos.BatchObjectError;
-import io.castled.apps.connectors.hubspot.client.dtos.RecordError;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.errors.errorclassifications.InvalidFieldValueError;
@@ -24,9 +23,6 @@ public class HubspotErrorParser {
 
     private static final Pattern INVALID_FIELD_VALUE_PATTERN = Pattern.compile("Property values were not valid: (.*)");
 
-    public CastledError parseError(RecordError recordError) {
-        return new UnclassifiedError(recordError.getExtraContext());
-    }
 
     @Data
     @AllArgsConstructor

@@ -1,7 +1,7 @@
 package io.castled.apps.connectors.restapi;
 
 import io.castled.OptionsReferences;
-import io.castled.apps.syncconfigs.AppSyncConfig;
+import io.castled.apps.syncconfigs.BaseAppSyncConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RestApiAppSyncConfig extends AppSyncConfig {
+public class RestApiAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(required = false, type = FormFieldType.TEXT_BOX, title = "Property Name in the input object", description = "Property name in the input object")
     private String propertyName;

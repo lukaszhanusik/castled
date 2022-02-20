@@ -33,4 +33,9 @@ public class OptionsReferences {
     public static final String CURRENCY_CODES = "CURRENCY_CODES";
     public static final String ZONE_IDS = "ZONE_IDS";
 
+    public static final String FB_AUDIENCE_HASHING = "Hashing Required";
+
+
+
+
 }

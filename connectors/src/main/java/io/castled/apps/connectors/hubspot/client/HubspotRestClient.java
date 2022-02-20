@@ -21,7 +21,6 @@ import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.SocketTimeoutException;
@@ -48,16 +47,15 @@ public class HubspotRestClient {
     }
 
     public List<HubspotProperty> getObjectProperties(String objectType) {
-        return executeRequest(() -> this.client.target(String.format("%s/properties/v2/%s/properties", HUBSPOT_BASE_URL, objectType))
+        return executeRequest(() -> this.client.target(String.format("%s/crm/v3/schemas/%s", HUBSPOT_BASE_URL, objectType))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + hubspotAccessConfig.getAccessToken())
-                .get(new GenericType<List<HubspotProperty>>() {
-                }));
+                .get(HubspotPropertyResponse.class).getProperties());
     }
 
-    private void doUpdateObjects(String batchUpdateUrl, BatchUpdateRequest batchUpdateRequest, boolean create, int retries) throws BatchObjectException {
+    private void doUpdateObjects(String objectType, BatchUpdateRequest batchUpdateRequest, boolean create, int retries) throws BatchObjectException {
 
-        String batchUrl = String.format("%s/crm/v3/objects/%s/batch/%s", HUBSPOT_BASE_URL, batchUpdateUrl, create ? "create" : "update");
+        String batchUrl = String.format("%s/crm/v3/objects/%s/batch/%s", HUBSPOT_BASE_URL, objectType, create ? "create" : "update");
         try (Response response = executeRequest(() -> this.client.target(batchUrl)
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + hubspotAccessConfig.getAccessToken())
@@ -66,7 +64,7 @@ public class HubspotRestClient {
                 if (response.getStatus() == 502) {
                     if (retries < 3) {
                         ThreadUtils.interruptIgnoredSleep(TimeUtils.secondsToMillis(10));
-                        doUpdateObjects(batchUpdateUrl, batchUpdateRequest, create, retries + 1);
+                        doUpdateObjects(objectType, batchUpdateRequest, create, retries + 1);
                         return;
                     } else {
                         throw new BatchObjectException(new BatchObjectError(null, "Hubspot server unavailable", HubspotErrorCategory.SERVER_DOWN.name()));
@@ -78,7 +76,7 @@ public class HubspotRestClient {
                 BatchObjectError batchObjectError = JsonUtils.jsonStringToObject(errorString, BatchObjectError.class);
                 if (batchObjectError.getMessage().contains("You have reached your ten_secondly_rolling limit")) {
                     ThreadUtils.interruptIgnoredSleep(TimeUtils.secondsToMillis(5));
-                    doUpdateObjects(batchUpdateUrl, batchUpdateRequest, create, retries + 1);
+                    doUpdateObjects(objectType, batchUpdateRequest, create, retries + 1);
                     return;
                 }
                 throw new BatchObjectException(batchObjectError);
@@ -87,9 +85,16 @@ public class HubspotRestClient {
 
     }
 
-    public void updateObjects(String batchUpdateUrl, BatchUpdateRequest batchUpdateRequest, boolean create) throws BatchObjectException {
-        doUpdateObjects(batchUpdateUrl, batchUpdateRequest, create, 0);
+    public void updateObjects(String object, BatchUpdateRequest batchUpdateRequest, boolean create) throws BatchObjectException {
+        doUpdateObjects(object, batchUpdateRequest, create, 0);
 
+    }
+
+    public List<HubspotSchema> getHubspotSchemas() {
+        return executeRequest(() -> this.client.target(String.format("%s/crm/v3/schemas", HUBSPOT_BASE_URL))
+                .request(MediaType.APPLICATION_JSON)
+                .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + hubspotAccessConfig.getAccessToken())
+                .get(HubspotSchemaResponse.class).getResults());
     }
 
     public void consumeObjects(List<String> properties, String objectType, Consumer<HubspotObject> objectConsumer) {
@@ -116,7 +121,6 @@ public class HubspotRestClient {
 
     private <T> T executeRequest(ThrowingSupplier<T> supplier) {
         try {
-
             return RetryUtils.retrySupplier(supplier, 3, Lists.newArrayList(NotAuthorizedException.class,
                             SocketTimeoutException.class),
                     ((throwable, attempts) -> {
