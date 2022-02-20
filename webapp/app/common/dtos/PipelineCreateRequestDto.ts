@@ -1,5 +1,8 @@
+import { StringAnyMap } from "./../utils/types";
 import { ScheduleType } from "@/app/common/enums/ScheduleType";
 import { QueryMode } from "../enums/QueryMode";
+import { PipelineMappingType } from "../enums/PipelineMappingType";
+import { HttpMethod } from "../enums/HttpMethod";
 
 export interface PipelineCreateRequestDto {
   name?: string;
@@ -17,7 +20,12 @@ export interface PipelineCreateRequestDto {
 
 export interface PipelineMappingDto {
   primaryKeys?: string[];
-  fieldMappings: FieldMapping[];
+  type?: PipelineMappingType;
+  fieldMappings?: FieldMapping[];
+  url?: string;
+  method?: HttpMethod;
+  template?: string;
+  headers?: StringAnyMap;
 }
 
 export interface FieldMapping {

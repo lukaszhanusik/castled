@@ -38,7 +38,6 @@ export default {
   ): Promise<AxiosResponse<void>> => {
     return http.put(`/v1/pipelines/${pipelineId}`, pipelineUpdateRequest);
   },
-
   getSchemaForMapping: (
     req: PipelineCreateRequestDto
   ): Promise<AxiosResponse<PipelineSchemaResponseDto>> => {
@@ -48,5 +47,8 @@ export default {
     req: PipelineCreateRequestDto
   ): Promise<AxiosResponse<EntityCreatedResponseDto>> => {
     return http.post("/v1/pipelines", req);
+  },
+  testMapping: (req: any): Promise<AxiosResponse<any>> => {
+    return http.post("/v1/pipelines/mappings/test", req);
   },
 };

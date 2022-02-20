@@ -30,6 +30,10 @@ public class SchemaMappedErrorTracker implements CastledErrorTracker {
 
     @Override
     public void writeError(Tuple record, CastledError pipelineError) throws Exception {
+        if (targetSourceMapping == null) {
+            castledErrorTracker.writeError(record, pipelineError);
+            return;
+        }
         Tuple.Builder recordBuilder = Tuple.builder();
         for (FieldSchema fieldSchema : targetSchema.getFieldSchemas()) {
             String sourceField = targetSourceMapping.get(fieldSchema.getName());

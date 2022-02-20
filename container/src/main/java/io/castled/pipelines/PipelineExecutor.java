@@ -25,6 +25,7 @@ import io.castled.pipelines.exceptions.PipelineInterruptedException;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.RecordSchema;
 import io.castled.services.PipelineService;
+import io.castled.utils.DataMappingUtils;
 import io.castled.utils.PipelineUtils;
 import io.castled.warehouses.WarehouseConnector;
 import io.castled.warehouses.WarehouseService;
@@ -107,26 +108,28 @@ public class PipelineExecutor implements TaskExecutor {
             ErrorOutputStream schemaMappingErrorOutputStream = new ErrorOutputStream(warehouseSyncFailureListener, mysqlErrorTracker);
 
             SchemaMappedMessageInputStream schemaMappedMessageInputStream = new SchemaMappedMessageInputStream(
-                    appSchema, warehouseExecutionContext.getMessageInputStreamImpl(), pipeline.getDataMapping().appWarehouseMapping(),
-                    pipeline.getDataMapping().warehouseAppMapping(), schemaMappingErrorOutputStream);
+                    appSchema, warehouseExecutionContext.getMessageInputStreamImpl(), DataMappingUtils.appWarehouseMapping(pipeline.getDataMapping()),
+                    DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()), schemaMappingErrorOutputStream);
 
             SchemaMappedRecordOutputStream schemaMappedRecordOutputStream =
                     new SchemaMappedRecordOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
                             PipelineUtils.getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
-                            pipeline.getDataMapping().warehouseAppMapping());
+                            DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()));
 
             ErrorOutputStream sinkErrorOutputStream = new ErrorOutputStream(schemaMappedRecordOutputStream,
-                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(), pipeline.getDataMapping().warehouseAppMapping()));
+                    new SchemaMappedErrorTracker(mysqlErrorTracker, warehouseExecutionContext.getWarehouseSchema(),
+                            DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping())));
 
             log.info("App Sync started for pipeline {}", pipeline.getName());
 
-            List<String> mappedAppFields = pipeline.getDataMapping().getFieldMappings().stream().filter(mapping -> !mapping.isSkipped())
-                    .map(FieldMapping::getAppField).collect(Collectors.toList());
+            List<String> mappedAppFields = DataMappingUtils.getMappedAppFields(pipeline.getDataMapping());
 
             DataSinkRequest dataSinkRequest = DataSinkRequest.builder().externalApp(externalApp).errorOutputStream(sinkErrorOutputStream)
                     .appSyncConfig(pipeline.getAppSyncConfig()).mappedFields(mappedAppFields)
                     .objectSchema(appSchema).primaryKeys(pipeline.getDataMapping().getPrimaryKeys())
-                    .messageInputStream(schemaMappedMessageInputStream).queryMode(pipeline.getQueryMode())
+                    .mapping(pipeline.getDataMapping()).queryMode(pipeline.getQueryMode())
+                    .messageInputStream(schemaMappedMessageInputStream)
+
                     .build();
 
             PipelineSyncStats pipelineSyncStats = monitoredDataSink.syncRecords(externalAppConnector.getDataSink(),

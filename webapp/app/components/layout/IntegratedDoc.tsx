@@ -21,7 +21,6 @@ const IntegratedDoc = ({ category, connectorType }: IntegratedDocProps) => {
     documentationService
       .load(category, connectorType)
       .then((markdown) => {
-        console.log(markdown);
         const metaPos = markdown.lastIndexOf("\n---\n");
         setMarkdownNotFound(markdown == "404: Not Found");
         setMarkdown(

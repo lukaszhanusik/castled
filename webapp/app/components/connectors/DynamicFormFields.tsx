@@ -93,6 +93,7 @@ const DynamicFormFields = ({
     }
     const { renderer: Input, props } = fieldRenderer;
     const name = namePrefix ? `${namePrefix}.${key}` : key;
+
     fields.push(
       <Input
         key={name}
@@ -107,6 +108,7 @@ const DynamicFormFields = ({
         setFieldValue={setFieldValue}
         deps={formFields.groupActivators[field.group]?.dependencies}
         title={field.fieldProps.title || key}
+        isClearable={true}
       />
     );
   }

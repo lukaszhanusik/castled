@@ -34,7 +34,7 @@ public class ErrorOutputStream {
             this.castledErrorTracker.writeError(message.getRecord(), pipelineError);
             this.recordOutputStream.writeRecord(message.getRecord());
         } catch (Exception e) {
-            log.error(String.format("Write failed record failed for error %s", pipelineError.description()));
+            log.error(String.format("Write failed record failed for error %s", pipelineError.description()),e);
             throw new CastledRuntimeException(e);
         }
     }

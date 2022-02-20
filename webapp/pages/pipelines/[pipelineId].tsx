@@ -13,7 +13,9 @@ import pipelineService from "@/app/services/pipelineService";
 import cn from "classnames";
 import PipelineRunView from "@/app/components/pipeline/PipelineRunView";
 import PipelineMappingView from "@/app/components/pipeline/PipelineMappingView";
+import PipelineMappingViewRestApi from "@/app/components/pipeline/PipelineMappingViewRestApi";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
+import { PipelineResponseRestApiDto } from "@/app/common/dtos/PipelineResponseRestApiDto";
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
 import DefaultErrorPage from "next/error";
@@ -56,6 +58,11 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   const [pipeline, setPipeline] = useState<
     PipelineResponseDto | undefined | null
   >();
+
+  const [pipelineRestApi, setPipelineRestApi] = useState<
+    PipelineResponseRestApiDto | undefined | null
+  >();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pipelineRuns, setPipelineRuns] = useState<
     PipelineRunDto[] | undefined | null
@@ -64,10 +71,14 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
     pipelineService
       .getById(pipelineId)
       .then(({ data }) => {
+        if (data.app.type == "RESTAPI") {
+          setPipelineRestApi(data as unknown as PipelineResponseRestApiDto);
+        }
         setPipeline(data);
       })
       .catch(() => {
         setPipeline(null);
+        setPipelineRestApi(null);
       });
     pipelineRunsService
       .getByPipelineId(pipelineId)
@@ -95,7 +106,6 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(JSON.stringify(error.message));
         setPipelineRuns(null);
       });
   }, [reloadKey]);
@@ -103,7 +113,13 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   if (pipeline === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={renderTitle(pipeline, router, setPipeline, setReloadKey, setPipelineRuns)}
+      title={renderTitle(
+        pipeline,
+        router,
+        setPipeline,
+        setReloadKey,
+        setPipelineRuns
+      )}
       subTitle={undefined}
       pageTitle={pipeline ? "Pipeline " + pipeline.name : ""}
       rightBtn={{
@@ -135,10 +151,11 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2>Data sync successful!
-          {pipelineRuns[0].createdTs && (
-            <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
-          )}
+          <h2>
+            Data sync successful!
+            {pipelineRuns[0].createdTs && (
+              <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
+            )}
           </h2>
           <p>
             Go to <strong>{pipeline?.app.name}</strong> to check the data synced
@@ -158,10 +175,23 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
           <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView>
         </Tab>
         <Tab eventKey="Mapping" title="Query & Mapping">
-          <PipelineMappingView
-            sourceQuery={pipeline?.sourceQuery}
-            dataMapping={pipeline?.dataMapping}
-          ></PipelineMappingView>
+          {(() => {
+            if (pipeline && pipeline.app && pipeline.app.type == "RESTAPI") {
+              return (
+                <PipelineMappingViewRestApi
+                  sourceQuery={pipelineRestApi?.sourceQuery}
+                  dataMapping={pipelineRestApi?.dataMapping}
+                ></PipelineMappingViewRestApi>
+              );
+            } else {
+              return (
+                <PipelineMappingView
+                  sourceQuery={pipeline?.sourceQuery}
+                  dataMapping={pipeline?.dataMapping}
+                ></PipelineMappingView>
+              );
+            }
+          })()}
         </Tab>
         <Tab eventKey="Schedule" title="Schedule">
           <PipelineSettingsView
@@ -251,7 +281,9 @@ function renderTitle(
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                if (confirm(`Do you want to delete ${pipeline.name} Pipeline ?`)) {
+                if (
+                  confirm(`Do you want to delete ${pipeline.name} Pipeline ?`)
+                ) {
                   pipelineService.delete(pipeline.id).then(() => {
                     bannerNotificationService.success("Pipeline Deleted");
                     router.push("/pipelines").then();
@@ -263,7 +295,8 @@ function renderTitle(
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <button className="btn btn-outline-primary mx-2"
+        <button
+          className="btn btn-outline-primary mx-2"
           onClick={() => {
             pipelineRunsService
               .getByPipelineId(pipeline.id)
@@ -273,7 +306,10 @@ function renderTitle(
               .catch(() => {
                 setPipelineRuns(null);
               });
-          }}>Refresh</button>
+          }}
+        >
+          Refresh
+        </button>
       </div>
     </>
   );

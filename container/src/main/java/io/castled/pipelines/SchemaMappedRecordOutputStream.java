@@ -27,6 +27,10 @@ public class SchemaMappedRecordOutputStream implements RecordOutputStream {
     @Override
     public void writeRecord(Tuple inputRecord) throws Exception {
 
+        if (this.targetSourceMapping == null) {
+            recordOutputStream.writeRecord(inputRecord);
+            return;
+        }
         Tuple.Builder targetRecordBuilder = Tuple.builder();
         for (FieldSchema field : targetSchema.getFieldSchemas()) {
             String sourceField = targetSourceMapping.get(field.getName());

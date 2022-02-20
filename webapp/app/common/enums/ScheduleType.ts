@@ -9,12 +9,12 @@ export enum ScheduleTimeUnit {
   DAYS,
 }
 
-export const ScheduleTypeLabel: any = {
+export const ScheduleTypeLabel: { [key in ScheduleType]: string } = {
   [ScheduleType.CRON]: "Cron",
   [ScheduleType.FREQUENCY]: "Frequency",
 };
 
-export const SchedulTimeUnitLabel: any = {
+export const SchedulTimeUnitLabel: { [key in ScheduleTimeUnit]: string } = {
   [ScheduleTimeUnit.MINUTES]: "Minutes",
   [ScheduleTimeUnit.HOURS]: "Hours",
   [ScheduleTimeUnit.DAYS]: "Days",
