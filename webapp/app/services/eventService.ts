@@ -25,4 +25,12 @@ export default {
       });
     }
   },
+
+  trackConversion: (conversionId: string| string[]) => {
+    if (process.browser) {
+      http.get(`/v1/tracking/${conversionId}`).catch(() => {
+        console.log(`tracking conversion failed for event ${conversionId}`);
+      });
+    }
+  },
 };

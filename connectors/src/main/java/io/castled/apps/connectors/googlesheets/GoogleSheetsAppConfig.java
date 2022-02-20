@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.googlesheets;
 
-import io.castled.apps.AppConfig;
+import io.castled.apps.BaseAppConfig;
 import io.castled.commons.models.ServiceAccountDetails;
 import io.castled.forms.*;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @HelpText(value = "Provide Editor access of your google sheets to this email:  \n" +
         "```${serviceAccount.client_email}```", dependencies = {"spreadSheetId", "serviceAccount"})
 @GroupActivator(dependencies = {"spreadSheetId"}, group = "service_account")
-public class GoogleSheetsAppConfig extends AppConfig {
+public class GoogleSheetsAppConfig extends BaseAppConfig {
 
     @FormField(type = FormFieldType.TEXT_BOX, title = "Spread Sheet Url", placeholder = "e.g. https://docs.google.com/spreadsheets/[/u/1]/d/spreadsheetId/edit.*", description = "Spread Sheet Id", schema = FormFieldSchema.STRING)
     private String spreadSheetId;

@@ -4,11 +4,8 @@ import { InputBaseProps } from "@/app/common/dtos/InputBaseProps";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import _, { values } from "lodash";
 import { AxiosResponse } from "axios";
-
 import { ObjectUtils } from "@/app/common/utils/objectUtils";
-
 import { Spinner } from "react-bootstrap";
-
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import Select from "react-select";
 import cn from "classnames";
@@ -138,6 +135,8 @@ const InputSelect = ({
             )}
             isClearable={isClearable}
           />
+          
+
           {dataFetcher && (
             <div className="col-1 my-auto">
               <IconRefresh

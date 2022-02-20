@@ -19,6 +19,7 @@ import bannerNotificationService from "@/app/services/bannerNotificationService"
 const MembersTab = () => {
   const [teamMembers, setTeamMembers] = useState<TeamDTO | undefined | null>();
   const [email, setEmail] = useState<string>("");
+  const [isDisabled, setIsDisabled] = useState(true);
   const [user, setUser] = useState<LoggedInUserDto | null>();
   const [roles, setRoles] = useState<string[] | null | undefined>([]);
   const [updateRoleFlag, setUpdateRoleFlag] = useState<number | undefined>();
@@ -68,14 +69,7 @@ const MembersTab = () => {
         handleClose();
       })
       .catch((err: any) => {
-        if (
-          err &&
-          err.response &&
-          err.response.data &&
-          err.response.data.message
-        ) {
-          bannerNotificationService.error(err.response.data.message);
-        }
+        bannerNotificationService.error(err?.response?.data?.message);
       });
   };
   const resendInvitation = (email: string) => {
@@ -137,7 +131,16 @@ const MembersTab = () => {
 
   const handleChange = (event: any) => {
     setEmail(event.target.value);
+    if (validateEmail(event.target.value))
+      setIsDisabled(false);
+    else
+      setIsDisabled(true);
   };
+
+  const validateEmail = (email: string) => {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
 
   const onChangeRole = (event: any, email: string) => {
     let obj = teamMembers?.activeMembers?.find(
@@ -172,7 +175,11 @@ const MembersTab = () => {
         <h3 className="mb-1 mt-4 font-weight-bold">Members</h3>
         {user?.role === "ADMIN" && (
           <div className="mt-3 mb-2">
-            <Button variant="outline-primary" size="sm" onClick={handleShow}>
+            <Button variant="outline-primary" size="sm"
+              onClick={() => {
+                setEmail("");
+                handleShow()
+              }}>
               <span>
                 <IconUserPlus size={14} className="sidebar-icon" />
                 &nbsp; Invite team member
@@ -311,6 +318,7 @@ const MembersTab = () => {
               type="email"
               placeholder="Email address"
               onChange={handleChange}
+              required
             />
           </InputGroup>
         </Modal.Body>
@@ -318,7 +326,7 @@ const MembersTab = () => {
           <Button variant="outline-danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={sendInvite}>
+          <Button variant="primary" disabled={isDisabled} onClick={sendInvite}>
             Send invitation
           </Button>
         </Modal.Footer>

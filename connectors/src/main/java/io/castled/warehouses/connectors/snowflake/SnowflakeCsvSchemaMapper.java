@@ -22,6 +22,9 @@ public class SnowflakeCsvSchemaMapper extends SchemaMapper {
         if (!(value instanceof String)) {
             throw new CastledRuntimeException("csv value needs to be string");
         }
+        if (((String) value).equalsIgnoreCase("null")) {
+            return null;
+        }
         if (schema.getType() == SchemaType.DATE) {
             return LocalDate.parse((String) value);
         }

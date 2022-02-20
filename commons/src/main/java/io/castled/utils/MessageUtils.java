@@ -43,6 +43,9 @@ public class MessageUtils {
             default:
                 return field.getValue();
         }
+    }
 
+    public static String toString(Field field) {
+        return field.getValue().toString();
     }
 }

@@ -3,22 +3,25 @@ package io.castled.apps.connectors.googleads;
 import com.google.ads.googleads.lib.GoogleAdsClient;
 import com.google.ads.googleads.v7.resources.ConversionCustomVariable;
 import com.google.ads.googleads.v7.services.*;
+import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
-import io.castled.apps.models.SyncObject;
+import io.castled.commons.errors.errorclassifications.MissingRequiredFieldsError;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.oauth.OAuthDetails;
+import io.castled.schema.models.Field;
 import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.services.OAuthService;
+import io.castled.utils.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 public class ConversionObjectSink extends GadsObjectSink {
@@ -40,24 +43,38 @@ public class ConversionObjectSink extends GadsObjectSink {
     }
 
     public void writeRecords(List<Message> messages) {
-        SyncObject syncObject = mappingConfig.getObject();
-        GAdsObjectType gAdsObjectType = GAdsObjectType.valueOf(syncObject.getObjectName());
+        GAdsObjectType gAdsObjectType = mappingConfig.getObjectType();
         if (gAdsObjectType == GAdsObjectType.CLICK_CONVERSIONS) {
             uploadClickConversions(messages);
+        } else {
+            uploadCallConversions(messages);
         }
-        uploadCallConversions(messages);
         this.processedRecords.addAndGet(messages.size());
         this.lastProcessedMessageId = Math.min(lastProcessedMessageId, messages.get(messages.size() - 1).getOffset());
     }
 
     private void uploadClickConversions(List<Message> messages) {
 
-        List<ClickConversion> clickConversions = messages.stream().map(this::getClickConversion).collect(Collectors.toList());
-
+        List<ClickConversion> clickConversions = Lists.newArrayList();
+        for (Message message : messages) {
+            ClickConversion clickConversion = getClickConversion(message);
+            if (!clickConversion.hasConversionDateTime()) {
+                errorOutputStream.writeFailedRecord(message,
+                        new MissingRequiredFieldsError(Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName())));
+                continue;
+            }
+            if (!clickConversion.hasGclid()) {
+                errorOutputStream.writeFailedRecord(message,
+                        new MissingRequiredFieldsError(Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName())));
+                continue;
+            }
+            clickConversions.add(clickConversion);
+        }
         UploadClickConversionsResponse response =
                 conversionUploadServiceClient.uploadClickConversions(
-                        UploadClickConversionsRequest.newBuilder().setCustomerId(String.valueOf(mappingConfig))
+                        UploadClickConversionsRequest.newBuilder().setCustomerId(String.valueOf(mappingConfig.getAccountId()))
                                 .addAllConversions(clickConversions).setPartialFailure(true).build());
+
         if (response.hasPartialFailureError()) {
             handlePartialFailures(messages, response.getPartialFailureError());
         }
@@ -71,11 +88,11 @@ public class ConversionObjectSink extends GadsObjectSink {
         String gclId = (String) record.getValue(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName());
         String currencyCode = (String) record.getValue(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CURRENCY_CODE.getFieldName());
 
-        Date conversionDateTime = (Date) record.getValue(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
-        String conversionDateTimeString = Optional.ofNullable(conversionDateTime).map(this::formatDate).orElse(null);
+        LocalDateTime conversionTime = (LocalDateTime) record.getValue(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
+        String conversionDateTimeString = Optional.ofNullable(conversionTime).map(this::formatTimestampField).orElse(null);
 
         ClickConversion.Builder builder = ClickConversion.newBuilder()
-                .setConversionAction(mappingConfig.getSubResource().getResourceName());
+                .setConversionAction(mappingConfig.getClickConversion().getResourceName());
 
         Optional.ofNullable(gclId).ifPresent(builder::setGclid);
         Optional.ofNullable(conversionValue).ifPresent(builder::setConversionValue);
@@ -84,7 +101,7 @@ public class ConversionObjectSink extends GadsObjectSink {
         Optional.ofNullable(conversionDateTimeString).ifPresent(builder::setConversionDateTime);
 
         for (ConversionCustomVariable customVariable : customVariables) {
-            String customVariableValue = (String) record.getValue(customVariable.getName());
+            String customVariableValue = MessageUtils.toString(record.getField(customVariable.getName()));
             Optional.ofNullable(customVariableValue).ifPresent(valueRef -> builder.addCustomVariables(
                     CustomVariable.newBuilder()
                             .setConversionCustomVariable(customVariable.getResourceName())
@@ -95,10 +112,11 @@ public class ConversionObjectSink extends GadsObjectSink {
 
     }
 
-    private String formatDate(Date date) {
-        ZonedDateTime dateTime = date.toInstant().atZone(ZoneId.of("UTC"));
-        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx"));
+    private String formatTimestampField(LocalDateTime localDateTime) {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of(mappingConfig.getZoneId()));
+        return zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx"));
     }
+
 
     private CallConversion getCallConversion(Message message) {
         Tuple record = message.getRecord();
@@ -107,14 +125,14 @@ public class ConversionObjectSink extends GadsObjectSink {
         String callerId = (String) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName());
         String currencyCode = (String) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CURRENCY_CODE.getFieldName());
 
-        Date conversionDateTime = (Date) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
-        String conversionDateTimeString = Optional.ofNullable(conversionDateTime).map(this::formatDate).orElse(null);
+        LocalDateTime conversionDateTime = (LocalDateTime) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
+        String conversionDateTimeString = Optional.ofNullable(conversionDateTime).map(this::formatTimestampField).orElse(null);
 
-        Date callStartTime = (Date) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName());
-        String callStartTimeString = Optional.ofNullable(callStartTime).map(this::formatDate).orElse(null);
+        LocalDateTime callStartTime = (LocalDateTime) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName());
+        String callStartTimeString = Optional.ofNullable(callStartTime).map(this::formatTimestampField).orElse(null);
 
         CallConversion.Builder builder = CallConversion.newBuilder()
-                .setConversionAction(mappingConfig.getSubResource().getResourceName());
+                .setConversionAction(mappingConfig.getCallConversion().getResourceName());
 
         Optional.ofNullable(callerId).ifPresent(builder::setCallerId);
         Optional.ofNullable(conversionValue).ifPresent(builder::setConversionValue);
@@ -135,15 +153,33 @@ public class ConversionObjectSink extends GadsObjectSink {
 
     private void uploadCallConversions(List<Message> messages) {
 
-        List<CallConversion> callConversions = messages.stream().map(this::getCallConversion).collect(Collectors.toList());
+        List<CallConversion> callConversions = Lists.newArrayList();
+        for (Message message : messages) {
+            CallConversion callConversion = getCallConversion(message);
+            if (!callConversion.hasConversionDateTime()) {
+                errorOutputStream.writeFailedRecord(message,
+                        new MissingRequiredFieldsError(Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName())));
+                continue;
+            }
+            if (!callConversion.hasCallerId()) {
+                errorOutputStream.writeFailedRecord(message,
+                        new MissingRequiredFieldsError(Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName())));
+                continue;
+            }
+            if (!callConversion.hasCallStartDateTime()) {
+                errorOutputStream.writeFailedRecord(message,
+                        new MissingRequiredFieldsError(Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName())));
+                continue;
+            }
+            callConversions.add(callConversion);
+        }
 
         UploadCallConversionsResponse response =
                 conversionUploadServiceClient.uploadCallConversions(
-                        UploadCallConversionsRequest.newBuilder().setCustomerId(Long.toString(2041314835L))
+                        UploadCallConversionsRequest.newBuilder().setCustomerId(mappingConfig.getAccountId())
                                 .addAllConversions(callConversions).setPartialFailure(true).build());
         if (response.hasPartialFailureError()) {
             handlePartialFailures(messages, response.getPartialFailureError());
         }
     }
-
 }

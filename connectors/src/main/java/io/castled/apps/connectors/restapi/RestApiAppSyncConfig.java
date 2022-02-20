@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.restapi;
 
-import io.castled.apps.syncconfigs.AppSyncConfig;
+import io.castled.apps.syncconfigs.BaseAppSyncConfig;
 import io.castled.forms.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @GroupActivator(dependencies = {"bulk"}, group = "bulk")
-public class RestApiAppSyncConfig extends AppSyncConfig {
+public class RestApiAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(type = FormFieldType.TEXT_BOX, title = "Parallelism", description = "Parallelism")
     private Integer parallelism;

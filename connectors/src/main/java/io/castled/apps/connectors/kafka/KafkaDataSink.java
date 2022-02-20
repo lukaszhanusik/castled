@@ -59,7 +59,7 @@ public class KafkaDataSink implements DataSink {
             while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
                 validateAndThrow();
                 pendingMessageIds.add(message.getOffset());
-                publishMessage(kafkaProducer, message, kafkaAppSyncConfig.getObject().getObjectName(),
+                publishMessage(kafkaProducer, message, kafkaAppSyncConfig.getTopic(),
                         dataSinkRequest.getErrorOutputStream());
                 lastBufferedOffset = message.getOffset();
             }

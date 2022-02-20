@@ -31,13 +31,15 @@ function PipelineSettingsView({
 }: PipelineSettingsViewProps) {
   const handleSettingsUpdate = (
     name: string,
-    pipelineSchedule: PipelineSchedule
+    pipelineSchedule: PipelineSchedule,
+    queryMode?: QueryMode,
   ) => {
+    console.log(queryMode);
     pipelineService.updatePipeline(pipelineId!, {
       name: name,
       schedule: pipelineSchedule,
-    });
-    bannerNotificationService.success("Pipeline Updated");
+      queryMode: queryMode!,
+    }).then(() => bannerNotificationService.success("Pipeline Updated"))
   };
   return (
     <PipelineSettingsForm
@@ -49,7 +51,7 @@ function PipelineSettingsView({
         } as PipelineSettingsConfig
       }
       onSubmit={handleSettingsUpdate}
-      submitLabel="Save"
+      submitLabel="Update"
     ></PipelineSettingsForm>
   );
 }

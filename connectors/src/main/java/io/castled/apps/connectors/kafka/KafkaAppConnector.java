@@ -34,8 +34,7 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
             properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
             try (AdminClient adminClient = KafkaAdminClient.create(properties)) {
                 return adminClient.listTopics().names().get()
-                        .stream().map(topic -> new FormFieldOption(new GenericSyncObject(topic,
-                                ExternalAppType.KAFKA), topic)).collect(Collectors.toList());
+                        .stream().map(topic -> new FormFieldOption(topic, topic)).collect(Collectors.toList());
             }
         } catch (InterruptedException | ExecutionException e) {
             log.error("Topics list failed for kafka", e);

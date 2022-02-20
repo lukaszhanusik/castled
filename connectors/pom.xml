@@ -7,9 +7,9 @@
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>0.2.16-alpha</version>
+        <version>0.2.30-alpha</version>
     </parent>
-    <version>0.2.16-alpha</version>
+    <version>0.2.30-alpha</version>
     <artifactId>connectors</artifactId>
 
     <properties>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets -->
@@ -63,14 +63,14 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.23</version>
+            <version>42.3.3</version>
         </dependency>
 
 
         <dependency>
             <groupId>io.castled</groupId>
             <artifactId>commons</artifactId>
-            <version>0.2.16-alpha</version>
+            <version>0.2.30-alpha</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.snowflake/snowflake-jdbc -->

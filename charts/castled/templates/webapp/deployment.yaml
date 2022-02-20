@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "castled.fullname" . }}-webapp
+  labels:
+    {{- include "castled.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.webapp.autoscaling.enabled }}
+  replicas: {{ .Values.webapp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      castled: webapp
+  template:
+    metadata:
+      {{- with .Values.webapp.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        castled: webapp
+    spec:
+      containers:
+        - name: castled-webapp-container
+          image: "{{ .Values.webapp.image.repository }}:{{ .Values.webapp.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.webapp.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: API_BASE_URL
+            - name: API_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: API_BASE
+            - name: APP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: APP_BASE_URL
+            - name: IS_OSS
+              valueFrom:
+                configMapKeyRef:
+                  name: castled-env
+                  key: IS_OSS
+          resources:
+            {{- toYaml .Values.webapp.resources | nindent 12 }}
+      {{- with .Values.webapp.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webapp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

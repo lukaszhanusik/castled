@@ -75,7 +75,7 @@ public class CustomerMatchObjectSink extends GadsObjectSink {
         OfflineUserDataJob offlineUserDataJob = OfflineUserDataJob.newBuilder()
                 .setType(OfflineUserDataJobTypeEnum.OfflineUserDataJobType.CUSTOMER_MATCH_USER_LIST)
                 .setCustomerMatchUserListMetadata(
-                        CustomerMatchUserListMetadata.newBuilder().setUserList(mappingConfig.getSubResource().getResourceName()))
+                        CustomerMatchUserListMetadata.newBuilder().setUserList(mappingConfig.getCustomerMatch().getResourceName()))
                 .build();
 
         // Issues a request to create the offline user data job.
@@ -115,7 +115,7 @@ public class CustomerMatchObjectSink extends GadsObjectSink {
     }
 
     private UserIdentifier getUserIdentifier(Tuple record) {
-        switch (mappingConfig.getSubResource().getCustomerMatchType()) {
+        switch (mappingConfig.getCustomerMatchType()) {
             case CONTACT_INFO:
                 return getContactInfoIdentifer(record);
             case MOBILE_ADVERTISING_ID:
@@ -123,7 +123,7 @@ public class CustomerMatchObjectSink extends GadsObjectSink {
             case CRM_ID:
                 return getThirdPartyUserIdentifier(record);
             default:
-                throw new CastledRuntimeException(String.format("Unhandled customer match type %s", mappingConfig.getSubResource().getCustomerMatchType()));
+                throw new CastledRuntimeException(String.format("Unhandled customer match type %s", mappingConfig.getCustomerMatchType()));
         }
 
     }

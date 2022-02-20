@@ -106,6 +106,7 @@ public class GoogleSheetUtils {
                 return localTime.format(DateTimeFormatter.ISO_TIME);
             case INT:
             case LONG:
+            case SHORT:
                 return String.valueOf(field.getValue());
             default:
                 return field.getValue();

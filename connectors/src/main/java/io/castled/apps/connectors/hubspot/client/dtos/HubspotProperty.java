@@ -9,5 +9,5 @@ public class HubspotProperty {
     private String label;
     private HubspotType type;
     private boolean calculated;
-    private boolean readOnlyValue;
+    private ModificationMetadata modificationMetadata;
 }

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "castled.fullname" . }}-webapp-service
+spec:
+  type: {{ .Values.webapp.service.type }}
+  ports:
+    - port: {{ .Values.webapp.service.port }}
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    castled : webapp

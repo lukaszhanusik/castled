@@ -33,12 +33,11 @@ public class HubspotDataSink implements DataSink {
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
 
         Message message;
-        HubspotStandardObject hubspotStandardObject = HubspotStandardObject.fromName(((GenericObjectRadioGroupConfig) dataSinkRequest.getAppSyncConfig())
-                .getObject().getObjectName());
+        HubspotSyncObject hubspotObject = ((HubspotAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
         this.hubspotObjectSink = new HubspotObjectSink((OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getErrorOutputStream(),
-                hubspotStandardObject);
+                hubspotObject);
 
-        PrimaryKeyIdMapper<String> primaryKeyObjectIdMapper = createPrimaryIdMapper(hubspotStandardObject,
+        PrimaryKeyIdMapper<String> primaryKeyObjectIdMapper = createPrimaryIdMapper(hubspotObject,
                 (OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getPrimaryKeys(),
                 dataSinkRequest.getObjectSchema());
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
@@ -55,13 +54,12 @@ public class HubspotDataSink implements DataSink {
                 .orElse(new AppSyncStats(0, 0, 0));
     }
 
-    private PrimaryKeyIdMapper<String> createPrimaryIdMapper(HubspotStandardObject hubspotStandardObject,
-                                                             OAuthAppConfig appConfig, List<String> primaryKeys,
-                                                             RecordSchema objectSchema) {
+    private PrimaryKeyIdMapper<String> createPrimaryIdMapper(HubspotSyncObject hubspotObject, OAuthAppConfig appConfig,
+                                                             List<String> primaryKeys, RecordSchema objectSchema) {
         HubspotRestClient hubspotRestClient = new HubspotRestClient(appConfig.getOAuthToken(),
                 appConfig.getClientConfig());
         Map<List<Object>, String> objectIds = Maps.newHashMap();
-        hubspotRestClient.consumeObjects(primaryKeys, hubspotStandardObject.getObjectUrl(), (object ->
+        hubspotRestClient.consumeObjects(primaryKeys, hubspotObject.getTypeId(), (object ->
                 objectIds.put(primaryKeyValues(object, primaryKeys, objectSchema), object.getId())));
         return new PrimaryKeyIdMapper<>(objectIds);
     }
@@ -79,7 +77,7 @@ public class HubspotDataSink implements DataSink {
 
         List<Object> primaryKeyValues = dataSinkRequest.getPrimaryKeys().stream().map(pk -> message.getRecord().getValue(pk))
                 .collect(Collectors.toList());
-        GenericObjectRadioGroupConfig hubspotAppSyncConfig = (GenericObjectRadioGroupConfig) dataSinkRequest.getAppSyncConfig();
+        HubspotAppSyncConfig hubspotAppSyncConfig = (HubspotAppSyncConfig) dataSinkRequest.getAppSyncConfig();
         if (hubspotAppSyncConfig.getMode() == AppSyncMode.INSERT) {
             hubspotObjectSink.writeRecord(new ObjectIdAndMessage(null, message));
             return;

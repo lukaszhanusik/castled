@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.sendgrid;
 
-import io.castled.apps.AppConfig;
+import io.castled.apps.BaseAppConfig;
 import io.castled.forms.FormField;
 import io.castled.forms.FormFieldSchema;
 import io.castled.forms.FormFieldType;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SendgridAppConfig extends AppConfig {
+public class SendgridAppConfig extends BaseAppConfig {
 
     @FormField(description = "Sendgrid API Key", title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String apiKey;

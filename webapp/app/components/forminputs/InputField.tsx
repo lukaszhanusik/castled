@@ -82,7 +82,7 @@ function getInput(
     );
   } else {
     return (
-      <input
+      <input type={props.type}
         onChange={(e) => {
           field.onChange(e);
           onChange?.(e.currentTarget.value);

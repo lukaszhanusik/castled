@@ -29,16 +29,15 @@ public class GoogleAdsDataSink implements DataSink {
     private GadsObjectSink getObjectSink(GoogleAdsAppSyncConfig mappingConfig,
                                          GoogleAdsAppConfig googleAdsAppConfig,
                                          ErrorOutputStream errorOutputStream) {
-        GAdsObjectType gAdsObjectType = GAdsObjectType.valueOf(mappingConfig.getObject().getObjectName());
 
-        switch (gAdsObjectType) {
+        switch (mappingConfig.getObjectType()) {
             case CUSTOMER_MATCH:
                 return new CustomerMatchObjectSink(mappingConfig, googleAdsAppConfig, errorOutputStream);
             case CLICK_CONVERSIONS:
             case CALL_CONVERSIONS:
                 return new ConversionObjectSink(mappingConfig, googleAdsAppConfig, errorOutputStream);
             default:
-                throw new CastledRuntimeException(String.format("Unhandled sync object type %s", gAdsObjectType));
+                throw new CastledRuntimeException(String.format("Unhandled sync object type %s", mappingConfig.getObjectType()));
         }
     }
 

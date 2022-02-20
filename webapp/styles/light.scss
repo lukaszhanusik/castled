@@ -16,7 +16,9 @@ strong {
 }
 
 .bg-guest {
-  background-color: $gray-200;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
 ::-webkit-input-placeholder,
@@ -30,6 +32,10 @@ strong {
 label {
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
+}
+
+.description {
+  font-weight: $font-weight-normal;
 }
 
 form {

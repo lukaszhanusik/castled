@@ -2,7 +2,7 @@ package io.castled.apps.connectors.activecampaign;
 
 import io.castled.OptionsReferences;
 import io.castled.apps.models.GenericSyncObject;
-import io.castled.apps.syncconfigs.AppSyncConfig;
+import io.castled.apps.syncconfigs.BaseAppSyncConfig;
 import io.castled.forms.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
-public class ActiveCampaignAppSyncConfig extends AppSyncConfig {
+public class ActiveCampaignAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(title = "Select object to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
