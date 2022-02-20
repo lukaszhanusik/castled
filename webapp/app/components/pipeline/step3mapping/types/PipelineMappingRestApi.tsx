@@ -223,11 +223,17 @@ const PipelineMappingRestApi = ({
                   </Col>
                 </Row>
               ))}
-
               <label>
                 <span className="required-icon">*</span>
                 Mapping
               </label>
+              <p className="text-muted mb-1">
+                The body should be a Mustache template for mapping of fields
+                from source to destination.{" "}
+                <a href="https://mustache.github.io/mustache.5.html">
+                  Read more about Mustache templating.
+                </a>
+              </p>
               <div className="mapping-wrapper">
                 <Col className="col-md-9">
                   <TextareaAutosize

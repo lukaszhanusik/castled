@@ -306,17 +306,17 @@ form {
     cursor: pointer;
   }
 
-  .processing{
+  .processing {
     background-color: $yellow-light;
     color: $yellow;
   }
 
-  .completed{
+  .completed {
     background-color: $green-semi;
     color: $green-light;
   }
 
-  .failed{
+  .failed {
     background-color: $red-base;
     color: $red-light;
   }
@@ -331,15 +331,16 @@ form {
     animation: dotFlashing 1s infinite alternate;
   }
 
-  .dot-flashing{
+  .dot-flashing {
     position: relative;
     top: 12px;
     left: -28px;
-    animation-delay: .5s;
+    animation-delay: 0.5s;
   }
 
-  .dot-flashing::before, .dot-flashing::after {
-    content: '';
+  .dot-flashing::before,
+  .dot-flashing::after {
+    content: "";
     display: inline-block;
     position: absolute;
     top: 0;
@@ -483,11 +484,11 @@ form {
   }
   .rh-xs-panel {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.35rem;
+    right: 0.35rem;
     bottom: 1px;
     overflow: auto;
-    min-width: 150px;
+    min-width: 175px;
     .list-group-item {
       margin: 0 0 0 0;
       padding-top: 0.25rem;
@@ -499,15 +500,14 @@ form {
     }
   }
 }
-#logout-dropdown{
-  background-color: $gunmetal; 
+#logout-dropdown {
+  background-color: $gunmetal;
 }
 
-#logout-dropdown:after{
-  content:none;
+#logout-dropdown:after {
+  content: none;
 }
 
-#edit-email{
+#edit-email {
   cursor: pointer;
 }
-
