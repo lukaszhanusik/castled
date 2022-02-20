@@ -1,64 +1,25 @@
-import InputField from "@/app/components/forminputs/InputField";
-import InputSelect from "@/app/components/forminputs/InputSelect";
-import { values } from "lodash";
-import { useState } from "react";
-import { Placeholder } from "react-bootstrap";
-import { MappingFieldsProps } from "../types/componentTypes";
+import Select from "react-select";
+import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
+
+type MappingFieldsOptions = Pick<MappingFieldsProps, "options">;
+
+interface MappingFieldsOptionsProps {
+  options: SchemaOptions[];
+  onlyOptions?: SchemaOptions[];
+}
 
 export default function MappingTableBody({
-  title,
-  description,
   options,
-  setFieldValue,
-  setFieldTouched,
-  fieldName,
-}: MappingFieldsProps) {
-  // const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
-
-  // const change = (e: any) => {
-  //   setWarehouseSelected(true)
-  //   console.log("change")
-  // }
-
-  const renderBody = (
+  onlyOptions,
+}: MappingFieldsOptionsProps) {
+  return (
     <tr>
       <th>
-        <InputSelect
-          title={undefined}
-          options={options}
-          deps={undefined}
-          values={values}
-          setFieldValue={setFieldValue}
-          setFieldTouched={setFieldTouched}
-          name={fieldName + ".appField"}
-        />
+        <Select options={options} />
       </th>
       <th>
-        <InputField
-          className="w-100"
-          type="text"
-          title={undefined}
-          values={values}
-          setFieldValue={setFieldValue}
-          setFieldTouched={setFieldTouched}
-          name={fieldName + ".appField"}
-        />
+        <Select options={onlyOptions} />
       </th>
     </tr>
   );
-  const addBody = [renderBody];
-
-  // if (warehouseSelected) {
-  //   addBody.push(
-  //     <MappingTableBody
-  //       options={options}
-  //       title={undefined}
-  //       setFieldValue={setFieldValue}
-  //       setFieldTouched={setFieldTouched}
-  //       fieldName={fieldName}
-  //     />
-  //   );
-  // }
-
-  return <>{addBody}</>;
 }

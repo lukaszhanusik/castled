@@ -3,7 +3,10 @@ import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import {
+  PipelineSchemaResponseDto,
+  PrimaryKeyElement,
+} from "@/app/common/dtos/PipelineSchemaResponseDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { Table } from "react-bootstrap";
 import { IconTrash } from "@tabler/icons";
@@ -24,6 +27,9 @@ import Select from "react-select";
 import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
+// import MappingMiscellaneousFields from "./components/MappingTableBody";
+import WarehouseColumn from "./components/WarehouseColumn";
+import MappingTableBody from "./components/MappingTableBody";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -107,37 +113,14 @@ const PipelineMapping = ({
     );
   }
 
-  console.log(pipelineSchema);
+  console.log(pipelineSchema)
 
   const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
     (field) => ({
       value: field.fieldName,
-      title: field.fieldName,
+      label: field.fieldName,
     })
   );
-
-  // const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
-  //   const fieldMappings: FieldMapping[] = [];
-  //   const primaryKeys: string[] = [];
-  //   _.each(mappingInfo, (value, key) => {
-  //     if (value.appField) {
-  //       fieldMappings.push({
-  //         warehouseField: key,
-  //         appField: value.appField,
-  //         skipped: false,
-  //       });
-  //     }
-  //     if (value.isPrimaryKey) {
-  //       primaryKeys.push(value.appField);
-  //     }
-  //   });
-  //   return {
-  //     primaryKeys,
-  //     fieldMappings,
-  //   };
-  // };
-
-  // console.log(transformMapping(pipelineWizContext.mappingInfo))
 
   const { warehouseSchema, mappingGroups } = pipelineSchema;
 
@@ -145,13 +128,29 @@ const PipelineMapping = ({
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
 
-  const mandatoryFields = mappingGroups.filter((fields) => {
+  // SECTION - 1 - Mandatory fields filter from warehouseSchema
+  const sectionOneFields = mappingGroups.filter((fields) => {
     return fields.type === "IMPORTANT_PARAMS" && fields.fields;
   });
 
-  const miscellaneousFieldGroup = mappingGroups.filter((fields) => {
+  // SECTION - 2 - Primary Keys to match the destination object
+  const sectionTwoFields = mappingGroups.filter((fields) => {
+    return fields.type === "PRIMARY_KEYS" && fields;
+  });
+
+  // SECTION - 3 - Other fields to match the destination object
+  const sectionThreeFields = mappingGroups.filter((fields) => {
+    return fields.type === "DESTINATION_FIELDS" && fields;
+  });
+
+  // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
+  const sectionFourFields = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
+
+  function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
+    return [{ value: option.fieldName, label: option.fieldName }];
+  }
 
   return (
     <Layout
@@ -174,28 +173,53 @@ const PipelineMapping = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form className="container">
+              {/* First Section - IMPORTANT PARAMS*/}
               <div className="row py-2">
-                {mandatoryFields.length > 0 &&
-                  mandatoryFields[0].fields?.map((field) => (
+                {sectionOneFields.length > 0 &&
+                  sectionOneFields[0].fields?.map((field) => (
                     <MappingImportantFields
                       title={field.title}
                       options={appSchemaOptions}
-                      setFieldValue={setFieldValue}
-                      setFieldTouched={setFieldTouched}
-                      fieldName={field.fieldName}
+                      description={
+                        field.title === field.description
+                          ? ""
+                          : field.description
+                      }
                     />
                   ))}
               </div>
+              {/* SECOND Section - PRIMARY KEYS*/}
               <div className="row py-2">
-                {miscellaneousFieldGroup.length > 0 &&
-                  miscellaneousFieldGroup?.map((field) => (
-                    <MappingMiscellaneousFields
+                {sectionTwoFields.length > 0 &&
+                  sectionTwoFields.map((field) => (
+                    <WarehouseColumn
                       title={field.title}
-                      options={appSchemaOptions}
-                      setFieldValue={setFieldValue}
-                      setFieldTouched={setFieldTouched}
-                      fieldName={""}
-                    />
+                      description={field.description}
+                    >
+                      {field.primaryKeys!.map((key) => (
+                        <MappingTableBody
+                          options={appSchemaOptions}
+                          onlyOptions={appSchemaPrimaryKeysFilter(key)}
+                        />
+                      ))}
+                    </WarehouseColumn>
+                  ))}
+              </div>
+              {/* THIRD Section - DESTINATION_FIELDS*/}
+
+              {/* FOURTH Section - MISCELLANEOUS_FIELDS*/}
+              <div className="row py-2">
+                {sectionFourFields.length > 0 &&
+                  sectionFourFields?.map((field) => (
+                    <WarehouseColumn
+                      title={field.title}
+                      description={field.description}
+                    >
+                      <MappingMiscellaneousFields
+                        options={appSchemaOptions}
+                        type={"input"}
+                      />
+                    </WarehouseColumn>
                   ))}
               </div>
               <ButtonSubmit submitting={isSubmitting}>
