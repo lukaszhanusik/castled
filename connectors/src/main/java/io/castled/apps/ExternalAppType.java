@@ -89,6 +89,12 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Rest API")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/restapi.png")
+            .build()),
+    FBCUSTOMAUDIENCE(ImmutableMap.<String, Object>builder()
+            .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
+            .put(ConnectorConstants.TITLE, "Facebook Custom Audience")
+            .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
+            .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.FBCUSTOMAUDIENCE)
             .build());
 
     private final Map<String, Object> properties;
