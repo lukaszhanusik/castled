@@ -72,7 +72,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       .getById(pipelineId)
       .then(({ data }) => {
         if (data.app.type == "RESTAPI") {
-          setPipelineRestApi(data as PipelineResponseRestApiDto);
+          setPipelineRestApi(data as unknown as PipelineResponseRestApiDto);
         }
         setPipeline(data);
       })
@@ -113,7 +113,13 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   if (pipeline === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={renderTitle(pipeline, router, setPipeline, setReloadKey, setPipelineRuns)}
+      title={renderTitle(
+        pipeline,
+        router,
+        setPipeline,
+        setReloadKey,
+        setPipelineRuns
+      )}
       subTitle={undefined}
       pageTitle={pipeline ? "Pipeline " + pipeline.name : ""}
       rightBtn={{
@@ -145,10 +151,11 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2>Data sync successful!
-          {pipelineRuns[0].createdTs && (
-            <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
-          )}
+          <h2>
+            Data sync successful!
+            {pipelineRuns[0].createdTs && (
+              <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
+            )}
           </h2>
           <p>
             Go to <strong>{pipeline?.app.name}</strong> to check the data synced
@@ -274,7 +281,9 @@ function renderTitle(
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                if (confirm(`Do you want to delete ${pipeline.name} Pipeline ?`)) {
+                if (
+                  confirm(`Do you want to delete ${pipeline.name} Pipeline ?`)
+                ) {
                   pipelineService.delete(pipeline.id).then(() => {
                     bannerNotificationService.success("Pipeline Deleted");
                     router.push("/pipelines").then();
@@ -286,7 +295,8 @@ function renderTitle(
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <button className="btn btn-outline-primary mx-2"
+        <button
+          className="btn btn-outline-primary mx-2"
           onClick={() => {
             pipelineRunsService
               .getByPipelineId(pipeline.id)
@@ -296,7 +306,10 @@ function renderTitle(
               .catch(() => {
                 setPipelineRuns(null);
               });
-          }}>Refresh</button>
+          }}
+        >
+          Refresh
+        </button>
       </div>
     </>
   );
