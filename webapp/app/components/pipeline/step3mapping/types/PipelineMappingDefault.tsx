@@ -109,6 +109,10 @@ const PipelineMappingDefault = ({
               );
               return;
             }
+
+            pipelineWizContext.values.mapping.type =
+              PipelineMappingType.TARGET_FIELDS_MAPPING;
+
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(undefined, "settings");
             setSubmitting(false);

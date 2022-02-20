@@ -223,6 +223,7 @@ const PipelineMappingRestApi = ({
                   </Col>
                 </Row>
               ))}
+
               <label>
                 <span className="required-icon">*</span>
                 Mapping
