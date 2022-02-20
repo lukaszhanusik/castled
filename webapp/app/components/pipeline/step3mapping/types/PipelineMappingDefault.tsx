@@ -72,7 +72,7 @@ const PipelineMappingDefault = ({
   };
 
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo || {
-    type: PipelineMappingType.TARGET_TEMPLATE_MAPPING,
+    type: PipelineMappingType.TARGET_FIELDS_MAPPING,
   }) as MappingInfo;
   if (!appSchemaFields) {
     pipelineSchema?.warehouseSchema.fields.map(
