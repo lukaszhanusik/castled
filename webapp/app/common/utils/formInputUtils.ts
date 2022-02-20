@@ -1,7 +1,6 @@
 import { SelectOptionDto } from "./../dtos/SelectOptionDto";
 import { StringAnyMap } from "./types";
 import _ from "lodash";
-import { cpuUsage } from "process";
 
 export interface ReactSelectOption {
   value: any;
@@ -32,9 +31,6 @@ const insertTextInInput = (
     oldValue.substring(0, selectionStart) +
     userInput +
     oldValue.substring(selectionEnd, oldValue.length);
-  // console.log(userInput);
-  // console.log(oldValue);
-  // console.log(selectionStart);
   setValue(newValue);
 };
 

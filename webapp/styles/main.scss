@@ -412,11 +412,29 @@ form {
   }
 }
 
-.rh-xs-panel {
-  padding-left: 0;
-  .list-group-item {
-    margin: 0 0 0 0;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+.mapping-wrapper {
+  position: relative;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius;
+
+  textarea {
+    border: none;
+  }
+  .rh-xs-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 1px;
+    overflow: auto;
+    min-width: 150px;
+    .list-group-item {
+      margin: 0 0 0 0;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      box-shadow: none;
+      border-radius: 0;
+      border-right: 0;
+      border-top: 0;
+    }
   }
 }

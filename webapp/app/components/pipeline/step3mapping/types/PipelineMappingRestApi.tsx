@@ -21,6 +21,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Select from "react-select";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
+import pipelineService from "@/app/services/pipelineService";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
   pipelineSchema: PipelineSchemaResponseDto | undefined;
@@ -43,10 +44,14 @@ const PipelineMappingRestApi = ({
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   const [headerKeys, setHeaderKeys] = useState<string[]>([""]);
   const { isOss } = useSession();
+
+  let templateareaRef = useRef<HTMLTextAreaElement>(null);
+  const [templateValue, setTemplateValue] = useState("");
+
   if (!pipelineWizContext) {
     return <Loading />;
   }
-  const warehouseSchemaFields = pipelineMappingUtils.getSchemaFieldsAsOptions(
+  let warehouseSchemaFields = pipelineMappingUtils.getSchemaFieldsAsOptions(
     pipelineSchema?.warehouseSchema
   );
 
@@ -54,6 +59,35 @@ const PipelineMappingRestApi = ({
     value: o.value,
     label: o.title,
   });
+
+  const [testResults, setTestResults] = useState(false);
+
+  const nextStep = (): void => {
+    setPipelineWizContext(pipelineWizContext);
+    setCurWizardStep(undefined, "settings");
+  };
+
+  const getTestResults = (): void => {
+    setTestResults(false);
+
+    pipelineService
+      .testMapping(pipelineWizContext.values?.mapping)
+      .then(({ data }) => {
+        bannerNotificationService.success("Test successfully passed.");
+        setTestResults(true);
+      })
+      .catch((err) => {
+        setTestResults(false);
+        if (
+          err &&
+          err.response &&
+          err.response.data &&
+          err.response.data.message
+        ) {
+          bannerNotificationService.error(err.response.data.message);
+        }
+      });
+  };
 
   const formValidationSchema = yup.object().shape({
     primaryKeys: yup
@@ -63,9 +97,6 @@ const PipelineMappingRestApi = ({
     url: yup.string().url().required("URL is required"),
     // template: yup.string().required("Body cannot be empty"),
   });
-
-  let templateareaRef = useRef<HTMLTextAreaElement>(null);
-  const [templateValue, setTemplateValue] = useState("");
 
   // const onFieldSelect = (event: ReactSelectOption) => {
   const onFieldSelect = (event: any) => {
@@ -109,12 +140,12 @@ const PipelineMappingRestApi = ({
 
             if (!values.template) {
               bannerNotificationService.error("Body cannot be empty");
+              return setSubmitting(false);
             }
 
-            setPipelineWizContext(pipelineWizContext);
-            setCurWizardStep(undefined, "settings");
-            setSubmitting(false);
+            getTestResults();
           }}
+          enableReinitialize
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form>
@@ -156,7 +187,6 @@ const PipelineMappingRestApi = ({
                   />
                 </Col>
               </Row>
-
               <label>Headers</label>
               {headerKeys.map((headerKey, i) => (
                 <Row>
@@ -193,21 +223,12 @@ const PipelineMappingRestApi = ({
                   </Col>
                 </Row>
               ))}
-
-              {/* <Select
-                size="sm"
-                onChange={(e: any) => onFieldSelect(e)}
-                options={warehouseSchemaFields?.map((option) =>
-                  toReactSelectOption(option)
-                )}
-              ></Select> */}
-
-              <Row>
-                <Col>
-                  <label>
-                    <span className="required-icon">*</span>
-                    Body
-                  </label>
+              <label>
+                <span className="required-icon">*</span>
+                Mapping
+              </label>
+              <div className="mapping-wrapper">
+                <Col className="col-md-9">
                   <TextareaAutosize
                     name="template"
                     ref={templateareaRef}
@@ -217,8 +238,17 @@ const PipelineMappingRestApi = ({
                     onChange={({ target }) => setTemplateValue(target.value)}
                   />
                 </Col>
-                <Col className="rh-xs-panel col-md-3 mt-4">
-                  <ListGroup>
+
+                <Col className="rh-xs-panel">
+                  <Select
+                    size="sm"
+                    onChange={(e: any) => onFieldSelect(e)}
+                    options={warehouseSchemaFields?.map((option) =>
+                      toReactSelectOption(option)
+                    )}
+                  ></Select>
+
+                  {/* <ListGroup>
                     {warehouseSchemaFields?.map((option, i) => (
                       <ListGroup.Item
                         action
@@ -227,31 +257,26 @@ const PipelineMappingRestApi = ({
                         {option.value}
                       </ListGroup.Item>
                     ))}
-                  </ListGroup>
+                  </ListGroup> */}
                 </Col>
-              </Row>
-
-              {/* <InputField
-                name="template"
-                type="textarea"
-                title="Body"
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-                minRows={6}
-                required
-                ref={templateareaRef}
-                onChange={setTemplateValue}
-                value={templateValue}
-              /> */}
+              </div>
               <Button
                 type="submit"
                 className="btn mt-2"
-                disabled={isSubmitting}
                 variant="outline-primary"
               >
                 Run test
               </Button>
-              <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
+              &nbsp;&nbsp;&nbsp;
+              {testResults && (
+                <Button
+                  type="button"
+                  className="btn btn-primary mt-2 ms-2"
+                  onClick={nextStep}
+                >
+                  Continue
+                </Button>
+              )}
             </Form>
           )}
         </Formik>
