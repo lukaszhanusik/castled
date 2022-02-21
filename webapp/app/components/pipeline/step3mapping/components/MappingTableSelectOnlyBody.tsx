@@ -15,9 +15,9 @@ export default function MappingTableBody({
     return fields.type === "PRIMARY_KEYS" && fields;
   });
 
-  function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
-    return [{ value: option.fieldName, label: option.fieldName }];
-  }
+  // function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
+  //   return [{ value: option.fieldName, label: option.fieldName }];
+  // }
 
   return (
     <div className="row py-2">
