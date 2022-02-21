@@ -1,7 +1,8 @@
+import { MappingGroup } from "@/app/common/dtos/PipelineSchemaResponseDto";
+
 export interface MappingFieldsProps {
-  title: string;
-  description?: string;
   options: SchemaOptions[];
+  mappingGroups: MappingGroup[];
 }
 
 export interface SchemaOptions {

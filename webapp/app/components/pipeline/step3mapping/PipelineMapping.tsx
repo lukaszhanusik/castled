@@ -30,6 +30,7 @@ import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields"
 // import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
 import WarehouseColumn from "./components/WarehouseColumn";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
+import DynamicMappingFields from "./DynamicMappingFields";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -113,7 +114,7 @@ const PipelineMapping = ({
     );
   }
 
-  console.log(pipelineSchema)
+  console.log(pipelineSchema);
 
   const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
     (field) => ({
@@ -173,55 +174,11 @@ const PipelineMapping = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form className="container">
-              {/* First Section - IMPORTANT PARAMS*/}
-              <div className="row py-2">
-                {importantParamsSection.length > 0 &&
-                  importantParamsSection[0].fields?.map((field) => (
-                    <MappingImportantFields
-                      title={field.title}
-                      options={appSchemaOptions}
-                      description={
-                        field.title === field.description
-                          ? ""
-                          : field.description
-                      }
-                    />
-                  ))}
-              </div>
-              {/* SECOND Section - PRIMARY KEYS*/}
-              <div className="row py-2">
-                {primaryKeysSection.length > 0 &&
-                  primaryKeysSection.map((field) => (
-                    <WarehouseColumn
-                      title={field.title}
-                      description={field.description}
-                    >
-                      {field.primaryKeys!.map((key) => (
-                        <MappingTableSelectOnlyBody
-                          options={appSchemaOptions}
-                          onlyOptions={appSchemaPrimaryKeysFilter(key)}
-                        />
-                      ))}
-                    </WarehouseColumn>
-                  ))}
-              </div>
-              {/* THIRD Section - DESTINATION_FIELDS*/}
-
-              {/* FOURTH Section - MISCELLANEOUS_FIELDS*/}
-              <div className="row py-2">
-                {miscellaneousFieldSection.length > 0 &&
-                  miscellaneousFieldSection?.map((field) => (
-                    <WarehouseColumn
-                      title={field.title}
-                      description={field.description}
-                    >
-                      <MappingMiscellaneousFields
-                        options={appSchemaOptions}
-                        type={"input"}
-                      />
-                    </WarehouseColumn>
-                  ))}
-              </div>
+              <DynamicMappingFields
+                values={values}
+                formFields={pipelineSchema}
+                setFieldValue={setFieldValue}
+              />
               <ButtonSubmit submitting={isSubmitting}>
                 TEST & CONTINUE
               </ButtonSubmit>

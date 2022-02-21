@@ -8,7 +8,11 @@ import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto
 import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
-import { MappingGroup, PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import {
+  MappingGroup,
+  PipelineSchemaResponseDto,
+  PrimaryKeyElement,
+} from "@/app/common/dtos/PipelineSchemaResponseDto";
 import { MappingFieldEnums } from "./types/MappingFieldEnums";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
@@ -75,6 +79,9 @@ DynamicMappingFieldsProps) => {
   //   const group = formFields.fields[key].group;
   //   orderedFieldsInfo.push({ order: i, key, group });
   // });
+  function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
+    return [{ value: option.fieldName, label: option.fieldName }];
+  }
 
   // Display
   for (const fieldInfo of mappingGroups) {
@@ -102,22 +109,45 @@ DynamicMappingFieldsProps) => {
     //   );
     //   if (skip) continue;
     // }
-    const { renderer: Input } = fieldRenderer;
 
+    const appSchemaOptions = warehouseSchema.fields.map((field) => ({
+      value: field.fieldName,
+      label: field.fieldName,
+    }));
+
+
+    // SECTION - 2 - Primary Keys to match the destination object
+    const primaryKeysSection = mappingGroups.filter((fields) => {
+      return fields.type === "PRIMARY_KEYS" && fields;
+    });
+
+    // SECTION - 3 - Other fields to match the destination object
+    const destinationFieldSection = mappingGroups.filter((fields) => {
+      return fields.type === "DESTINATION_FIELDS" && fields;
+    });
+
+    // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
+    const miscellaneousFieldSection = mappingGroups.filter((fields) => {
+      return fields.type === "MISCELLANEOUS_FIELDS" && fields;
+    });
+
+    const { renderer: Input } = fieldRenderer;
     const name = `mapping.${fieldInfo.type}`;
 
     fields.push(
       <Input
         key={name}
-        // required={field.validations.required}
+        mappingGroups={mappingGroups}
+        options={appSchemaOptions}
         name={name}
+        defaultValue=""
+        values={values}
+        setFieldValue={setFieldValue}
+        // required={field.validations.required}
         // {...field.fieldProps}
         // {...props}
-        defaultValue=""
         // dValues={depValues}
-        values={values}
         // dataFetcher={dataFetcher}
-        setFieldValue={setFieldValue}
         // deps={formFields.groupActivators[field.group]?.dependencies}
         // title={field.fieldProps.title || key}
       />
