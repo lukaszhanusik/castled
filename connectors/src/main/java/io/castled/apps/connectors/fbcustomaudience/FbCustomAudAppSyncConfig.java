@@ -19,10 +19,6 @@ public class FbCustomAudAppSyncConfig extends BaseAppSyncConfig {
     @FormField(type = FormFieldType.TEXT_BOX, title = "Custom Audience Name", description = "Customer list custom audience name", schema = FormFieldSchema.STRING, group = MappingFormGroups.OBJECT)
     private String customAudienceName;
 
-    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
-            optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
-    private AppSyncMode mode;
-
     @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.BOOLEAN, title = "Hashing Required?", description = "Decides whether Castled should hash Personally identifiable Information(PII).", group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.HASHING_OPTIONS, type = OptionsRefType.STATIC), required = true)
     private boolean hashingRequired;

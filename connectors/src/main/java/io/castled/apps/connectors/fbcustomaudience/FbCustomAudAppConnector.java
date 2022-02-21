@@ -36,7 +36,7 @@ public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig
 
     @Override
     public List<AppSyncMode> getSyncModes(FbAppConfig config, FbCustomAudAppSyncConfig mappingConfig) {
-        return Lists.newArrayList(AppSyncMode.UPSERT);
+        return Lists.newArrayList();
     }
 
     @Override
