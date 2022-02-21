@@ -128,6 +128,7 @@ const PipelineMappingRestApi = ({
               primaryKeys: [],
               fieldMappings: [],
               headers: {},
+              fields: [],
             } as PipelineMappingDto
           }
           validationSchema={formValidationSchema}
@@ -142,6 +143,9 @@ const PipelineMappingRestApi = ({
               bannerNotificationService.error("Body cannot be empty");
               return setSubmitting(false);
             }
+
+            pipelineWizContext.values.mapping.fields =
+              warehouseSchemaFields?.map((i) => i.value);
 
             getTestResults();
           }}
@@ -227,26 +231,17 @@ const PipelineMappingRestApi = ({
                 <span className="required-icon">*</span>
                 Mapping
               </label>
-              <p className="text-muted mb-1">
-                The body should be a Mustache template for mapping of fields
-                from source to destination.{" "}
-                <a href="https://mustache.github.io/mustache.5.html">
-                  Read more about Mustache templating.
-                </a>
-              </p>
-              <div className="mapping-wrapper">
+              <Row>
                 <Col className="col-md-9">
-                  <TextareaAutosize
-                    name="template"
-                    ref={templateareaRef}
-                    value={templateValue}
-                    className="form-control"
-                    minRows={9}
-                    onChange={({ target }) => setTemplateValue(target.value)}
-                  />
+                  <p className="text-muted mb-1">
+                    The body should be a Mustache template for mapping of fields
+                    from source to destination.{" "}
+                    <a href="https://mustache.github.io/mustache.5.html">
+                      Read more about Mustache templating.
+                    </a>
+                  </p>
                 </Col>
-
-                <Col className="rh-xs-panel">
+                <Col className="col-md-3">
                   <Select
                     size="sm"
                     onChange={(e: any) => onFieldSelect(e)}
@@ -254,8 +249,20 @@ const PipelineMappingRestApi = ({
                       toReactSelectOption(option)
                     )}
                   ></Select>
+                </Col>
+              </Row>
+              <div>
+                <TextareaAutosize
+                  name="template"
+                  ref={templateareaRef}
+                  value={templateValue}
+                  className="form-control"
+                  minRows={9}
+                  onChange={({ target }) => setTemplateValue(target.value)}
+                />
 
-                  {/* <ListGroup>
+                {/* <Col className="rh-xs-panel"> */}
+                {/* <ListGroup>
                     {warehouseSchemaFields?.map((option, i) => (
                       <ListGroup.Item
                         action
@@ -265,7 +272,7 @@ const PipelineMappingRestApi = ({
                       </ListGroup.Item>
                     ))}
                   </ListGroup> */}
-                </Col>
+                {/* </Col> */}
               </div>
               <Button
                 type="submit"
