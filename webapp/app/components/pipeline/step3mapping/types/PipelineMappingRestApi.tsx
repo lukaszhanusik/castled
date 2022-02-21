@@ -42,7 +42,7 @@ const PipelineMappingRestApi = ({
   isLoading,
 }: PipelineMappingRestApiProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
-  const [headerKeys, setHeaderKeys] = useState<string[]>([""]);
+  let [headerKeys, setHeaderKeys] = useState<string[]>([""]);
   const { isOss } = useSession();
 
   let templateareaRef = useRef<HTMLTextAreaElement>(null);
@@ -202,19 +202,15 @@ const PipelineMappingRestApi = ({
                       defaultValue={headerKey}
                       onChange={(e) => {
                         headerKeys[i] = e.currentTarget.value;
-                        if (
-                          e.currentTarget.value &&
-                          i === headerKeys.length - 1
-                        ) {
-                          headerKeys.push("");
-                        }
+                        headerKeys = _.compact(headerKeys);
+                        headerKeys.push("");
                         setHeaderKeys(_.cloneDeep(headerKeys));
                       }}
                     />
                   </Col>
                   <Col>
                     <InputField
-                      name={`headers[${headerKey}]`}
+                      name={`headers[${headerKey + i}]`}
                       placeholder="Value"
                       type="text"
                       title={undefined}
