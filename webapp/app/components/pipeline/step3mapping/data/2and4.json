@@ -1,79 +1,100 @@
 {
-  "warehouseSchema":{
-     "fields":[
-        {
-           "fieldName":"id",
-           "type":"Long",
-           "optional":true
-        },
-        {
-           "fieldName":"first_name",
-           "type":"String",
-           "optional":true
-        },
-        {
-           "fieldName":"last_name",
-           "type":"String",
-           "optional":true
-        },
-        {
-           "fieldName":"email",
-           "type":"String",
-           "optional":true
-        },
-        {
-           "fieldName":"company",
-           "type":"String",
-           "optional":true
-        }
-     ]
+  "warehouseSchema": {
+    "fields": [
+      {
+        "fieldName": "id",
+        "type": "Long",
+        "optional": true
+      },
+      {
+        "fieldName": "first_name",
+        "type": "String",
+        "optional": true
+      },
+      {
+        "fieldName": "last_name",
+        "type": "String",
+        "optional": true
+      },
+      {
+        "fieldName": "email",
+        "type": "String",
+        "optional": true
+      },
+      {
+        "fieldName": "company",
+        "type": "String",
+        "optional": true
+      }
+    ]
   },
-  "mappingGroups":[
-     {
-        "title":"How to match Source Record to Destination Object",
-        "description":"Identify a column in the source record which will help uniquely identify the destination object field",
-        "type":"PRIMARY_KEYS",
-        "primaryKeys":[
-           {
-              "fieldName":"id",
-              "type":"String",
-              "optional":false
-           },
-           {
-              "fieldName":"email",
-              "type":"String",
-              "optional":false
-           }
-        ]
-     },
-     {
-        "title":"Which column would you like to sync as custom destination fields",
-        "description":"Configure how the columns in your query results are added as custom fields in your destination object",
-        "type":"MISCELLANEOUS_FIELDS"
-     },
-     {
-      "title":"",
-      "description":"",
-      "type":"DESTINATION_FIELDS",
-      "mandatoryFields":[
-         {
-            "fieldName":"email",
-            "type":"String",
-            "optional":false
-         }
-      ],
-      "optionalFields":[
-         {
-            "fieldName":"first_name",
-            "type":"String",
-            "optional":true
-         },
-         {
-            "fieldName":"last_name",
-            "type":"String",
-            "optional":true
-         }
+  "mappingGroups": [
+    {
+      "title": "How to match Source Record to Destination Object",
+      "description": "Identify a column in the source record which will help uniquely identify the destination object field",
+      "type": "PRIMARY_KEYS",
+      "primaryKeys": [
+        {
+          "fieldName": "id",
+          "type": "String",
+          "optional": false
+        },
+        {
+          "fieldName": "email",
+          "type": "String",
+          "optional": false
+        }
       ]
-   }
+    },
+    {
+      "title": "Which column would you like to sync as custom destination fields",
+      "description": "Configure how the columns in your query results are added as custom fields in your destination object",
+      "type": "MISCELLANEOUS_FIELDS"
+    },
+    {
+      "title": "",
+      "description": "",
+      "type": "DESTINATION_FIELDS",
+      "mandatoryFields": [
+        {
+          "fieldName": "email",
+          "type": "String",
+          "optional": false
+        }
+      ],
+      "optionalFields": [
+        {
+          "fieldName": "first_name",
+          "type": "String",
+          "optional": true
+        },
+        {
+          "fieldName": "last_name",
+          "type": "String",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "title": "",
+      "description": "",
+      "type": "IMPORTANT_PARAMS",
+      "fields": [
+        {
+          "fieldName": "customer_id",
+          "type": "String",
+          "optional": false,
+          "title": "Column identifying Customer.io id (customer_id) of the person",
+          "description": "Column identifying Customer.io id (customer_id) of the person"
+        },
+        {
+          "fieldName": "timestamp",
+          "type": "String",
+          "optional": false,
+          "title": "Column identifying the Event Timestamp",
+          "description": "Column identifying the Event Timestamp"
+        }
+      ]
+    }
   ]
 }
