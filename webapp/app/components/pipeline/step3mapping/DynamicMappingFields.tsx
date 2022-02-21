@@ -9,9 +9,7 @@ import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import {
-  MappingGroup,
   PipelineSchemaResponseDto,
-  PrimaryKeyElement,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import { MappingFieldEnums } from "./types/MappingFieldEnums";
 import MappingImportantFields from "./components/MappingImportantFields";

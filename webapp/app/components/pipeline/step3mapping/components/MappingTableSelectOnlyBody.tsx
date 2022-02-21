@@ -26,7 +26,7 @@ export default function MappingTableBody({
                 </th>
                 <th>
                   <input
-                    className="form-control p-2 w-75 mx-2"
+                    className="form-control p-2 px-2"
                     value={key.fieldName}
                     disabled={!key.optional}
                   />
