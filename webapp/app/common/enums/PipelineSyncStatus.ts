@@ -3,7 +3,7 @@ export enum PipelineSyncStatus {
   PAUSED = "PAUSED",
 }
 
-export const PipelineSyncStatusLabel: any = {
+export const PipelineSyncStatusLabel: { [key in PipelineSyncStatus]: string } = {
   [PipelineSyncStatus.ACTIVE]: "Active",
   [PipelineSyncStatus.PAUSED]: "Paused",
 };

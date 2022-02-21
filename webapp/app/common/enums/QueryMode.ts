@@ -3,7 +3,7 @@ export enum QueryMode {
     FULL_LOAD = 'FULL_LOAD'
 };
 
-export const QueryModeLabel: any = {
-    [QueryMode.INCREMENTAL]: "Incremental",
-    [QueryMode.FULL_LOAD]: "Full Load",
-  };
+export const QueryModeLabel: { [key in QueryMode]: string } = {
+  [QueryMode.INCREMENTAL]: "Incremental",
+  [QueryMode.FULL_LOAD]: "Full Load",
+};

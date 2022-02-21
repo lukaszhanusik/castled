@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
 public class GoogleSheetsAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(title = "Select the sheet to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,

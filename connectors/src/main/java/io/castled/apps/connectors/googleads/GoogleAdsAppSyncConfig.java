@@ -28,7 +28,7 @@ public class GoogleAdsAppSyncConfig extends BaseAppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.GADS_ACCOUNT_ID, type = OptionsRefType.DYNAMIC))
     private String accountId;
 
-    @FormField(type = FormFieldType.DROP_DOWN, title = "Auto Generated Login CustomerId", optionsRef = @OptionsRef(value = OptionsReferences.GADS_LOGIN_ACCOUNT_ID, type = OptionsRefType.DYNAMIC), group = "loginAccountId")
+    @FormField(type = FormFieldType.DROP_DOWN, title = "Auto Generated Login CustomerId", optionsRef = @OptionsRef(value = OptionsReferences.GADS_LOGIN_ACCOUNT_ID, type = OptionsRefType.DYNAMIC), group = GoogleAdsFormGroups.LOGIN_ACCOUNT_ID)
     private String loginCustomerId;
 
     @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.STRING, title = "Resource", description = "Google Ads resource to sync the data",

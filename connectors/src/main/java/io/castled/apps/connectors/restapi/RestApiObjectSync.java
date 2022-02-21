@@ -1,15 +1,15 @@
 package io.castled.apps.connectors.restapi;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
+import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
+import io.castled.models.TargetRestApiMapping;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.Field;
 import io.castled.schema.models.Message;
@@ -28,31 +28,27 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-
-@Singleton
 @Slf4j
-public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
+public class RestApiObjectSync extends BufferedObjectSink<Message> {
 
-    private final RestApiClient restApiRestClient;
+
+    private final RestApiTemplateClient restApiRestClient;
     private final RestApiErrorParser restApiErrorParser;
     private final ErrorOutputStream errorOutputStream;
     private final AtomicLong processedRecords = new AtomicLong(0);
     private final Integer batchSize;
-    private final String payloadProperty;
     private final CastledOffsetListQueue<Message> requestsBuffer;
-    private long lastProcessedOffset = 0;
 
-    public RestApiBufferedParallelSink(DataSinkRequest dataSinkRequest) {
-        String apiURL = ((RestApiAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiURL();
-        String apiKey = ((RestApiAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiKey();
-        this.batchSize = Optional.ofNullable(((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getBatchSize()).orElse(1);
-        this.payloadProperty = ((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getPropertyName();
-        this.restApiRestClient = new RestApiClient(apiURL, apiKey);
+    public RestApiObjectSync(DataSinkRequest dataSinkRequest) {
+        RestApiAppSyncConfig restApiAppSyncConfig = (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+        this.batchSize = Optional.ofNullable(restApiAppSyncConfig.getBatchSize()).orElse(1);
+        this.restApiRestClient = new RestApiTemplateClient((TargetRestApiMapping) dataSinkRequest.getMapping(),
+                (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig());
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.restApiErrorParser = ObjectRegistry.getInstance(RestApiErrorParser.class);
 
-        int parallelThreads = Optional.ofNullable(((RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getParallelThreads()).orElse(1);
-        this.requestsBuffer = new CastledOffsetListQueue<>(new UpsertRestApiObjectConsumer(), parallelThreads, parallelThreads, true);
+        this.requestsBuffer = new CastledOffsetListQueue<>(new UpsertRestApiObjectConsumer(), restApiAppSyncConfig.getParallelism()
+                , restApiAppSyncConfig.getParallelism(), true);
     }
 
     @Override
@@ -69,13 +65,12 @@ public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
     }
 
     @Override
-    public MessageSyncStats getSyncStats() {
-        return new MessageSyncStats(processedRecords.get(), lastProcessedOffset);
-    }
-
-    @Override
     public long getMaxBufferedObjects() {
         return batchSize;
+    }
+
+    public MessageSyncStats getSyncStats() {
+        return new MessageSyncStats(processedRecords.get(), requestsBuffer.getProcessedOffset());
     }
 
     public void flushRecords() throws Exception {
@@ -99,14 +94,13 @@ public class RestApiBufferedParallelSink extends RestApiObjectSink<Message> {
     }
 
     private void upsertRestApiObjects(List<Message> messages) {
-        ErrorObject errorObject = this.restApiRestClient.upsertDetails(this.payloadProperty,
-                messages.stream().map(Message::getRecord).map(this::constructProperties).collect(Collectors.toList()));
+        ErrorAndCode errorObject = this.restApiRestClient.upsertDetails(messages.stream()
+                .map(Message::getRecord).map(this::constructProperties).collect(Collectors.toList()));
 
         Optional.ofNullable(errorObject).ifPresent((objectAndErrorRef) -> messages.
                 forEach(message -> this.errorOutputStream.writeFailedRecord(message, restApiErrorParser.getPipelineError(objectAndErrorRef.getCode(), objectAndErrorRef.getMessage()))));
 
         this.processedRecords.addAndGet(messages.size());
-        this.lastProcessedOffset = Math.max(lastProcessedOffset, Iterables.getLast(messages).getOffset());
     }
 
     private class UpsertRestApiObjectConsumer implements Consumer<List<Message>> {

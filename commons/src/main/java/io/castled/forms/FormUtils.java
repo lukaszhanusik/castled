@@ -124,6 +124,8 @@ public class FormUtils {
                 return getDropDownTypeFields(formField);
             case RADIO_GROUP:
                 return getRadioGroupTypeFields(formField);
+            case RADIO_BOX:
+                return getRadioBoxTypeFields(formField);
             case MAPPING:
                 return new MappingProps();
             case CHECK_BOX:
@@ -151,6 +153,20 @@ public class FormUtils {
             }
             return new DropDownProps(optionsRef.value(), StringUtils.nullIfEmpty(formField.title()),
                     StringUtils.nullIfEmpty(formField.description()));
+        }
+        return null;
+    }
+
+    private static RadioBoxProps getRadioBoxTypeFields(FormField formField) {
+        OptionsRef optionsRef = formField.optionsRef();
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(optionsRef.value())) {
+            if (optionsRef.type() == OptionsRefType.STATIC) {
+                List<FormFieldOption> formFieldOptions = ObjectRegistry.getInstance(StaticOptionsFetcherFactory.class)
+                        .getOptions(optionsRef.value());
+                return new RadioBoxProps(formFieldOptions, StringUtils.nullIfEmpty(formField.title()),
+                        StringUtils.nullIfEmpty(formField.description()));
+            }
+            return new RadioBoxProps(optionsRef.value(), StringUtils.nullIfEmpty(formField.title()), StringUtils.nullIfEmpty(formField.description()));
         }
         return null;
     }

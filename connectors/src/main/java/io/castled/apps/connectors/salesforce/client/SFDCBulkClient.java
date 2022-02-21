@@ -147,7 +147,7 @@ public class SFDCBulkClient {
                 ((throwable, attempts) -> {
                     AsyncApiException asyncApiException = (AsyncApiException) throwable;
                     if (asyncApiException.getExceptionCode() == AsyncExceptionCode.InvalidSessionId) {
-                        this.bulkConnection.getConfig().setSessionId(this.accessTokenRefresher.refreshAccessConfig(oAuthDetails.getId()).getAccessToken());
+                        this.bulkConnection.getConfig().setSessionId(this.accessTokenRefresher.refreshAndPersistAccessConfig(oAuthDetails.getId()).getAccessToken());
                         return new WaitTimeAndRetry(0, true);
                     }
                     return new WaitTimeAndRetry(0, false);

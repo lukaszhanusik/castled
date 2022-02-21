@@ -9,6 +9,7 @@ import io.castled.dtos.PipelineConfigDTO;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.models.FieldMapping;
+import io.castled.models.TargetFieldsMapping;
 import io.castled.schema.SchemaConstants;
 import io.castled.schema.models.RecordSchema;
 import org.apache.commons.collections4.CollectionUtils;
@@ -120,7 +121,8 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
     }
 
     public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
-        List<String> mappedAppFields = pipelineConfig.getMapping().getFieldMappings().stream()
+        TargetFieldsMapping targetFieldsMapping = (TargetFieldsMapping)pipelineConfig.getMapping();
+        List<String> mappedAppFields = targetFieldsMapping.getFieldMappings().stream()
                 .map(FieldMapping::getAppField).collect(Collectors.toList());
         GAdsObjectType gAdsObjectType = ((GoogleAdsAppSyncConfig) pipelineConfig.getAppSyncConfig()).getObjectType();
         List<String> requiredFields = getRequiredFields(gAdsObjectType);
