@@ -45,9 +45,7 @@ const fieldRenderers: {
 };
 
 const DynamicMappingFields = ({
-  // namePrefix,
   formFields,
-  // skipNames,
   values,
   setFieldValue,
 }: // dataFetcher,

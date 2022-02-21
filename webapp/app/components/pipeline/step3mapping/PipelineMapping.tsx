@@ -24,7 +24,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 // import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
 // import MappingImportantFields from "./components/MappingImportantFields";
 // import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
-// // import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
+// import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
 // import WarehouseColumn from "./components/WarehouseColumn";
 // import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 import DynamicMappingFields from "./DynamicMappingFields";
@@ -77,20 +77,6 @@ const PipelineMapping = ({
     return <Loading />;
   }
 
-  if (!pipelineSchema) {
-    return (
-      <Layout
-        title={steps[curWizardStep].title}
-        subTitle={steps[curWizardStep].description}
-        centerTitle={true}
-        steps={steps}
-        stepGroups={stepGroups}
-      >
-        <LoadingTable />
-      </Layout>
-    );
-  }
-
   console.log(pipelineSchema);
 
   // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
@@ -105,31 +91,35 @@ const PipelineMapping = ({
       steps={steps}
       stepGroups={stepGroups}
     >
-      <div className="container">
-        <Formik
-          initialValues={initialMappingInfo}
-          onSubmit={(values, { setSubmitting }) => {
-            if (!pipelineWizContext.values) return setSubmitting(false);
-            pipelineWizContext.mappingInfo = values;
-            setPipelineWizContext(pipelineWizContext);
-            setCurWizardStep(undefined, "settings");
-            setSubmitting(false);
-          }}
-        >
-          {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
-            <Form className="container">
-              <DynamicMappingFields
-                values={values}
-                formFields={pipelineSchema}
-                setFieldValue={setFieldValue}
-              />
-              <ButtonSubmit submitting={isSubmitting}>
-                TEST & CONTINUE
-              </ButtonSubmit>
-            </Form>
-          )}
-        </Formik>
-      </div>
+      {pipelineSchema ? (
+        <div className="container">
+          <Formik
+            initialValues={initialMappingInfo}
+            onSubmit={(values, { setSubmitting }) => {
+              if (!pipelineWizContext.values) return setSubmitting(false);
+              pipelineWizContext.mappingInfo = values;
+              setPipelineWizContext(pipelineWizContext);
+              setCurWizardStep(undefined, "settings");
+              setSubmitting(false);
+            }}
+          >
+            {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
+              <Form className="container">
+                <DynamicMappingFields
+                  values={values}
+                  formFields={pipelineSchema}
+                  setFieldValue={setFieldValue}
+                />
+                <ButtonSubmit submitting={isSubmitting}>
+                  TEST & CONTINUE
+                </ButtonSubmit>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      ) : (
+        <LoadingTable />
+      )}
     </Layout>
   );
 };
