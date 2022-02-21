@@ -11,7 +11,6 @@ import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import {
   PipelineSchemaResponseDto,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
-import { MappingFieldEnums } from "./types/MappingFieldEnums";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
