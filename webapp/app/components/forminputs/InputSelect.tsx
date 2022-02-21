@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useField } from "formik";
+import { FieldInputProps, useField } from "formik";
 import { InputBaseProps } from "@/app/common/dtos/InputBaseProps";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import _, { values } from "lodash";
@@ -26,9 +26,24 @@ export interface InputSelectOptions extends InputBaseProps {
   dataFetcher?: (
     optionsRef: string
   ) => Promise<AxiosResponse<DataFetcherResponseDto>>;
+  isMulti?: boolean;
+  isClearable?: boolean;
   hidden?: boolean;
   loadingText?: string;
 }
+
+export interface ReactSelectOption {
+  value: any;
+  label: string;
+}
+
+const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
+  value: o.value,
+  label: o.title,
+});
+
+const loadingOption = { label: "Loading...", value: "" };
+const emptyOption = { label: "", value: "" };
 
 const InputSelect = ({
   title,
@@ -43,6 +58,8 @@ const InputSelect = ({
   dataFetcher,
   values,
   dValues,
+  isMulti,
+  isClearable,
   ...props
 }: InputSelectOptions) => {
   const [field, meta] = useField(props);
@@ -97,28 +114,30 @@ const InputSelect = ({
             {...props}
             options={
               !optionsDynamic
-                ? [{ label: "Loading.." }]
-                : optionsDynamic.map((o) => ({
-                    value: o.value,
-                    label: o.title,
-                  }))
+                ? [loadingOption]
+                : optionsDynamic.map((option) => toReactSelectOption(option))
             }
-            isClearable
+            isMulti={isMulti}
             className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
+<<<<<<< HEAD
             onChange={(v) => {setFieldValue?.(field.name, v?.value)}}
+=======
+            onChange={(v: any | undefined) => {
+              let newValue = v?.value;
+              if (isMulti) {
+                newValue = v?.map((option: any) => option.value);
+              }
+              setFieldValue?.(field.name, newValue);
+            }}
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
             onBlur={() => setFieldTouched?.(field.name, true)}
-            value={
-              optionsLoading || !optionsDynamic
-                ? { label: "Loading..." }
-                : {
-                    value: field.value,
-                    label: optionsDynamic
-                      .filter((o) =>
-                        ObjectUtils.objectEquals(o.value, field.value)
-                      )
-                      .map((o) => o.title),
-                  }
-            }
+            value={getOptionValues(
+              field,
+              optionsDynamic,
+              isMulti,
+              optionsLoading
+            )}
+            isClearable={isClearable}
           />
           
 
@@ -137,4 +156,26 @@ const InputSelect = ({
     </div>
   );
 };
+
+function getOptionValues(
+  field: FieldInputProps<any>,
+  optionsDynamic: SelectOptionDto[] | undefined,
+  isMulti?: boolean,
+  optionsLoading?: boolean
+): ReactSelectOption | ReactSelectOption[] {
+  if (optionsLoading || !optionsDynamic) {
+    return isMulti ? [] : emptyOption;
+  }
+  if (!isMulti) {
+    const selectedOptions = optionsDynamic
+      .filter((o) => ObjectUtils.objectEquals(o.value, field.value))
+      .map((o) => toReactSelectOption(o));
+    return selectedOptions.length ? selectedOptions[0] : emptyOption;
+  } else {
+    return optionsDynamic
+      .filter((o) => _.includes(field.value, o.value))
+      .map((o) => toReactSelectOption(o));
+  }
+}
+
 export default InputSelect;

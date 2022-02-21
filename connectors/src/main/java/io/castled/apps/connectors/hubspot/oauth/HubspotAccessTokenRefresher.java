@@ -29,7 +29,7 @@ public class HubspotAccessTokenRefresher implements AccessTokenRefresher<Hubspot
         this.messagePublisher = ObjectRegistry.getInstance(MessagePublisher.class);
     }
 
-    public HubspotAccessConfig refreshAccessConfig(Long oAuthToken) {
+    public HubspotAccessConfig refreshAndPersistAccessConfig(Long oAuthToken) {
 
         OAuthDetails oAuthDetails = this.oAuthCache.getValue(oAuthToken);
         HubspotTokenResponse hubspotTokenResponse = this.hubspotAuthClient

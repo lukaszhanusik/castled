@@ -1,40 +1,24 @@
 package io.castled.models;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.*;
 
 @Data
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        visible = true,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = TargetFieldsMapping.class, name = "TARGET_FIELDS_MAPPING"),
+        @JsonSubTypes.Type(value = TargetRestApiMapping.class, name = "TARGET_REST_MAPPING")})
 public class CastledDataMapping {
 
     private List<String> primaryKeys;
+    private DataMappingType type;
 
     private List<FieldMapping> fieldMappings;
-
-    public Map<String, String> getMappingForAppFields(List<String> appFields) {
-        return fieldMappings.stream().filter(fieldMapping -> appFields.contains(fieldMapping.getAppField()))
-                .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
-    }
-
-    public Map<String, List<String>> appWarehouseMapping() {
-        return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(groupingBy(FieldMapping::getAppField, mapping(FieldMapping::getWarehouseField, toList())));
-    }
-
-    public Map<String, List<String>> warehouseAppMapping() {
-        return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(groupingBy(FieldMapping::getWarehouseField, mapping(FieldMapping::getAppField, toList())));
-    }
-
-    public void addAdditionalMappings(List<FieldMapping> additionalMappings) {
-        fieldMappings.addAll(additionalMappings);
-    }
-
-    public void addAdditionalMapping(FieldMapping additionalMapping) {
-        fieldMappings.add(additionalMapping);
-    }
 }

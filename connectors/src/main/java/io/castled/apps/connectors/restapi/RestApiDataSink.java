@@ -11,12 +11,11 @@ import java.util.Optional;
 @Slf4j
 public class RestApiDataSink implements DataSink {
 
-    private volatile RestApiObjectSink<Message> restApiObjectSink;
+    private volatile RestApiObjectSync restApiObjectSink;
 
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        this.restApiObjectSink = new RestApiBufferedParallelSink(dataSinkRequest);
-        log.info("Sync started for REST API");
+        this.restApiObjectSink = new RestApiObjectSync(dataSinkRequest);
         Message message;
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             this.restApiObjectSink.writeRecord(message);

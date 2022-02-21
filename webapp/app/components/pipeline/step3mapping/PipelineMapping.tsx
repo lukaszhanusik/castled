@@ -1,5 +1,4 @@
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
-import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
@@ -8,14 +7,9 @@ import {
   PrimaryKeyElement,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
-import { Table } from "react-bootstrap";
-import { IconTrash } from "@tabler/icons";
-import InputSelect from "@/app/components/forminputs/InputSelect";
-import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
-import { Form, Formik } from "formik";
-import InputCheckbox from "@/app/components/forminputs/InputCheckbox";
 import Loading from "@/app/components/common/Loading";
+<<<<<<< HEAD
 import classNames from "classnames";
 import {
   FieldMapping,
@@ -37,8 +31,13 @@ interface MappingInfo {
     isPrimaryKey: boolean;
   };
 }
+=======
+import PipelineMappingDefault from "./types/PipelineMappingDefault";
+import PipelineMappingRestApi from "./types/PipelineMappingRestApi";
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
 
 const PipelineMapping = ({
+  appBaseUrl,
   curWizardStep,
   steps,
   stepGroups,
@@ -77,6 +76,7 @@ const PipelineMapping = ({
   if (!pipelineWizContext) {
     return <Loading />;
   }
+<<<<<<< HEAD
 
   if (!pipelineSchema) {
     return (
@@ -150,15 +150,28 @@ const PipelineMapping = ({
 
   function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
     return [{ value: option.fieldName, label: option.fieldName }];
+=======
+  if (pipelineWizContext.appType?.value === "RESTAPI") {
+    return (
+      <PipelineMappingRestApi
+        appBaseUrl={appBaseUrl}
+        curWizardStep={curWizardStep}
+        steps={steps}
+        stepGroups={stepGroups}
+        setCurWizardStep={setCurWizardStep}
+        pipelineSchema={pipelineSchema}
+        isLoading={isLoading}
+      />
+    );
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
   }
-
   return (
-    <Layout
-      title={steps[curWizardStep].title}
-      subTitle={steps[curWizardStep].description}
-      centerTitle={true}
+    <PipelineMappingDefault
+      appBaseUrl={appBaseUrl}
+      curWizardStep={curWizardStep}
       steps={steps}
       stepGroups={stepGroups}
+<<<<<<< HEAD
     >
       <div className="container">
         <Formik
@@ -230,6 +243,12 @@ const PipelineMapping = ({
         </Formik>
       </div>
     </Layout>
+=======
+      setCurWizardStep={setCurWizardStep}
+      pipelineSchema={pipelineSchema}
+      isLoading={isLoading}
+    />
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
   );
 };
 

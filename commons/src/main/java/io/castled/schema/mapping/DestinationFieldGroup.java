@@ -16,6 +16,8 @@ public class DestinationFieldGroup extends MappingGroup {
     private List<SchemaFieldDTO> optionalFields;
 
     public DestinationFieldGroup() {
-        super("", "", MappingGroupType.DESTINATION_FIELDS);
+        super("Which column would you like to sync to destination fields",
+                "Configure how the columns in your query results should be mapped to fields in your destination",
+                MappingGroupType.DESTINATION_FIELDS);
     }
 }

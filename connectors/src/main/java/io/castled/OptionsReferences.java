@@ -2,7 +2,7 @@ package io.castled;
 
 public class OptionsReferences {
 
-    //dynamic options references
+    // dynamic options references
     public static final String OBJECT = "Object";
 
     public static final String GADS_SUB_RESOURCE = "gads_sub_resource";
@@ -23,7 +23,9 @@ public class OptionsReferences {
     public static final String CIO_PRIMARY_KEYS = "CIO Primary keys";
     public static final String CIO_EVENT_TYPES = "CIO Event Types";
 
-    //static options references
+    public static final String FB_ADS_ACCOUNTS = "Facebook Ad Accounts";
+
+    // static options references
 
     public static final String GCP_LOCATIONS = "GCP_LOCATIONS";
     public static final String CUSTOMER_MATCH_TYPE = "CUSTOMER_MATCH_TYPE";
@@ -31,4 +33,5 @@ public class OptionsReferences {
     public static final String CURRENCY_CODES = "CURRENCY_CODES";
     public static final String ZONE_IDS = "ZONE_IDS";
 
+    public static final String HASHING_OPTIONS = "Hashing Required";
 }

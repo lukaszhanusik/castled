@@ -148,7 +148,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         String pk = Optional.ofNullable(customerIOAppSyncConfig.getPrimaryKey()).orElseThrow(() -> new BadRequestException("Primary key for the Destination App Record is mandatory"));
         String personIdentifier = Optional.ofNullable(customerIOAppSyncConfig.getPersonIdentifier()).orElseThrow(() -> new BadRequestException("Column uniquely identifying the Person Records is mandatory"));
 
-        FieldMapping primaryKeyFieldMapping = pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(personIdentifier))
+        FieldMapping primaryKeyFieldMapping = ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(personIdentifier))
                 .findFirst().orElseThrow(() -> new BadRequestException("Mapping missing for the Destination App primary key"));
 
         if (CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName().equalsIgnoreCase(pk)) {
@@ -162,11 +162,12 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
     }
 
     private void enrichPipelineConfigForEventObject(PipelineConfigDTO pipelineConfig, CustomerIOAppSyncConfig customerIOAppSyncConfig) throws BadRequestException {
-        FieldMapping primaryKeyFieldMapping = pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
+        FieldMapping primaryKeyFieldMapping =  ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
                 .equalsIgnoreCase(customerIOAppSyncConfig.getEventId())).findFirst().orElseThrow(() -> new BadRequestException("Mapping missing for the Destination App primary key"));
         primaryKeyFieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_ID.getFieldName());
         String eventType = Optional.ofNullable(customerIOAppSyncConfig.getEventType()).orElseThrow(() -> new BadRequestException("Event type is mandatory"));
 
+<<<<<<< HEAD
         if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
             pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
                             .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getEventName()).orElseThrow(() -> new BadRequestException("Event Name is mandatory for Events"))))
@@ -174,15 +175,24 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         }
         if (CIOEventTypeEnum.TRACK_PAGE_VIEWS.getEventType().equalsIgnoreCase(eventType)) {
             pipelineConfig.getMapping().getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
+=======
+        if ("event".equalsIgnoreCase(eventType)) {
+            ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
+                            .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getEventName()).orElseThrow(() -> new BadRequestException("Event Name is mandatory for Events"))))
+                    .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_NAME.getFieldName()));
+        }
+        if ("pageView".equalsIgnoreCase(eventType)) {
+            ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
                             .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getPageURL()).orElseThrow(() -> new BadRequestException("Page View is mandatory for Page View Events"))))
                     .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName()));
         }
 
         pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(CustomerIOObjectFields.EVENT_FIELDS.EVENT_ID.getFieldName()));
-        pipelineConfig.getMapping().getFieldMappings().stream()
+        ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream()
                 .filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(customerIOAppSyncConfig.getCustomerId()))
                 .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName()));
-        pipelineConfig.getMapping().getFieldMappings().stream()
+        ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream()
                 .filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(customerIOAppSyncConfig.getEventTimestamp()))
                 .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName()));
     }*/

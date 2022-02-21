@@ -1,6 +1,24 @@
+export interface ConnectorSchema {
+  schemaName: string;
+  fields: {
+    fieldName: string;
+    type: string;
+    optional: true;
+  }[];
+}
+
 export interface PipelineSchemaResponseDto {
+<<<<<<< HEAD
   warehouseSchema: WarehouseSchema;
   mappingGroups:   MappingGroup[];
+=======
+  warehouseSchema: ConnectorSchema;
+  appSchema: ConnectorSchema;
+  pkEligibles: {
+    eligibles : string[],
+    autoDetect : boolean
+  }
+>>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
 }
 
 export interface MappingGroup {

@@ -169,6 +169,7 @@ public class SnowflakeDataPoller extends S3BasedDataPoller {
                         "ENCRYPTION = (TYPE = 'AWS_CSE'  MASTER_KEY = '%s' ) OVERWRITE=TRUE HEADER=TRUE",
                 unloadDirectory, getDataFetchQuery(warehousePollContext, bookKeepingTables), snowflakeWarehouseConfig.getAccessKeyId(),
                 snowflakeWarehouseConfig.getAccessKeySecret(), s3Client.getEncryptionKey());
+        log.info("unload query {}", unloadQuery);
 
         try (Statement statement = connection.createStatement()) {
             statement.execute(unloadQuery);

@@ -167,7 +167,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         Optional.ofNullable(mixpanelAppSyncConfig.getLastName()).ifPresent(lastName -> additionalMapping.add(new FieldMapping(lastName,MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName(),false)));
         Optional.ofNullable(mixpanelAppSyncConfig.getFirstName()).ifPresent((firstName) -> additionalMapping.add(new FieldMapping(firstName,MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName(),false)));
         Optional.ofNullable(mixpanelAppSyncConfig.getUserEmail()).ifPresent((email) -> additionalMapping.add(new FieldMapping(email,MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName(),false)));
-        pipelineConfig.getMapping().addAdditionalMappings(additionalMapping);
+        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
 
         pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName()));
     }
@@ -178,7 +178,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
         List<FieldMapping> additionalMapping = Lists.newArrayList();
         Optional.ofNullable(groupID).ifPresent((ID) -> additionalMapping.add(new FieldMapping(ID,MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName(),false)));
-        pipelineConfig.getMapping().addAdditionalMappings(additionalMapping);
+        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
 
         pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName()));
     }
@@ -197,7 +197,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
                 .add(new FieldMapping(eventIP,MixpanelObjectFields.EVENT_FIELDS.GEO_IP.getFieldName(),false)));
         Optional.ofNullable(mixpanelAppSyncConfig.getEventTimeStamp()).ifPresent((eventTimeStamp) -> additionalMapping
                 .add(new FieldMapping(eventTimeStamp,MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(),false)));
-        pipelineConfig.getMapping().addAdditionalMappings(additionalMapping);
+        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
 
         pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName()));
     }

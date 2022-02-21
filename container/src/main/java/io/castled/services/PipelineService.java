@@ -44,6 +44,7 @@ import io.castled.schema.SchemaUtils;
 import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 import io.castled.utils.JsonUtils;
+import io.castled.utils.MustacheUtils;
 import io.castled.utils.TimeUtils;
 import io.castled.warehouses.WarehouseConnector;
 import io.castled.warehouses.WarehouseService;
@@ -346,6 +347,15 @@ public class PipelineService {
             return pipelineDAO.listPipelines(teamid);
         }
         return pipelineDAO.listPipelines(teamid, appId);
+    }
+
+    public void testDataMapping(CastledDataMapping castledDataMapping) {
+        if (castledDataMapping.getType() == DataMappingType.TARGET_FIELDS_MAPPING) {
+            return;
+        }
+        TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) castledDataMapping;
+        String template = targetRestApiMapping.getTemplate();
+        MustacheUtils.validateMustacheJson(template);
     }
 
     public List<WarehouseAggregate> getWarehouseAggregates(Long teamId) {

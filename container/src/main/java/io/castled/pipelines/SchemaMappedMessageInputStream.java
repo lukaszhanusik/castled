@@ -43,6 +43,9 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
             if (message == null) {
                 return null;
             }
+            if (this.sourceTargetMapping == null) {
+                return message;
+            }
             Message mappedMessage = mapMessage(message);
             if (mappedMessage == null) {
                 continue;

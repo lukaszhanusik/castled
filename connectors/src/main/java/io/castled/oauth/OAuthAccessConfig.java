@@ -2,6 +2,7 @@ package io.castled.oauth;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.castled.apps.connectors.fbcustomaudience.FbAccessConfig;
 import io.castled.apps.connectors.googleads.GadsAccessConfig;
 import io.castled.apps.connectors.hubspot.HubspotAccessConfig;
 import io.castled.apps.connectors.mailchimp.MailchimpAccessConfig;
@@ -19,7 +20,8 @@ import lombok.NoArgsConstructor;
         @JsonSubTypes.Type(value = SalesforceAccessConfig.class, name = "SALESFORCE"),
         @JsonSubTypes.Type(value = HubspotAccessConfig.class, name = "HUBSPOT"),
         @JsonSubTypes.Type(value = GadsAccessConfig.class, name = "GADS"),
-        @JsonSubTypes.Type(value = MailchimpAccessConfig.class, name = "MAILCHIMP")
+        @JsonSubTypes.Type(value = MailchimpAccessConfig.class, name = "MAILCHIMP"),
+        @JsonSubTypes.Type(value = FbAccessConfig.class, name = "FBCUSTOMAUDIENCE")
 })
 @AllArgsConstructor
 @NoArgsConstructor
