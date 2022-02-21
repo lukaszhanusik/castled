@@ -1,4 +1,5 @@
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
+import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
@@ -7,35 +8,28 @@ import {
   PrimaryKeyElement,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
+import { Table } from "react-bootstrap";
+import { IconTrash } from "@tabler/icons";
+import InputSelect from "@/app/components/forminputs/InputSelect";
+import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
-<<<<<<< HEAD
+import { Form, Formik } from "formik";
+import InputCheckbox from "@/app/components/forminputs/InputCheckbox";
 import Loading from "@/app/components/common/Loading";
-<<<<<<< HEAD
 import classNames from "classnames";
 import {
   FieldMapping,
   PipelineMappingDto,
 } from "@/app/common/dtos/PipelineCreateRequestDto";
-=======
-import { Form, Formik } from "formik";
-// import InputCheckbox from "@/app/components/forminputs/InputCheckbox";
-import Loading from "@/app/components/common/Loading";
-// import classNames from "classnames";
-// import {
-//   FieldMapping,
-//   PipelineMappingDto,
-// } from "@/app/common/dtos/PipelineCreateRequestDto";
->>>>>>> 24cd59e2b4cc8a8ef29e80062bd1ed3c684f6797
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
-// import Placeholder from "react-bootstrap/Placeholder";
-// import Select from "react-select";
-// import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
-// import MappingImportantFields from "./components/MappingImportantFields";
-// import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
-// // import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
-// import WarehouseColumn from "./components/WarehouseColumn";
-// import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
-import DynamicMappingFields from "./DynamicMappingFields";
+import Placeholder from "react-bootstrap/Placeholder";
+import Select from "react-select";
+import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
+import MappingImportantFields from "./components/MappingImportantFields";
+import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
+// import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
+import WarehouseColumn from "./components/WarehouseColumn";
+import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -43,13 +37,8 @@ interface MappingInfo {
     isPrimaryKey: boolean;
   };
 }
-=======
-import PipelineMappingDefault from "./types/PipelineMappingDefault";
-import PipelineMappingRestApi from "./types/PipelineMappingRestApi";
->>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
 
 const PipelineMapping = ({
-  appBaseUrl,
   curWizardStep,
   steps,
   stepGroups,
@@ -88,7 +77,6 @@ const PipelineMapping = ({
   if (!pipelineWizContext) {
     return <Loading />;
   }
-<<<<<<< HEAD
 
   if (!pipelineSchema) {
     return (
@@ -125,59 +113,52 @@ const PipelineMapping = ({
     );
   }
 
-  console.log(pipelineSchema);
+  console.log(pipelineSchema)
+
+  const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
+    (field) => ({
+      value: field.fieldName,
+      label: field.fieldName,
+    })
+  );
+
+  const { warehouseSchema, mappingGroups } = pipelineSchema;
 
   // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
 
-<<<<<<< HEAD
   // SECTION - 1 - Mandatory fields filter from warehouseSchema
-  const sectionOneFields = mappingGroups.filter((fields) => {
+  const importantParamsSection = mappingGroups.filter((fields) => {
     return fields.type === "IMPORTANT_PARAMS" && fields.fields;
   });
 
   // SECTION - 2 - Primary Keys to match the destination object
-  const sectionTwoFields = mappingGroups.filter((fields) => {
+  const primaryKeysSection = mappingGroups.filter((fields) => {
     return fields.type === "PRIMARY_KEYS" && fields;
   });
 
   // SECTION - 3 - Other fields to match the destination object
-  const sectionThreeFields = mappingGroups.filter((fields) => {
+  const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
   });
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
-  const sectionFourFields = mappingGroups.filter((fields) => {
+  const miscellaneousFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
 
   function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
     return [{ value: option.fieldName, label: option.fieldName }];
-=======
-  if (pipelineWizContext.appType?.value === "RESTAPI") {
-    return (
-      <PipelineMappingRestApi
-        appBaseUrl={appBaseUrl}
-        curWizardStep={curWizardStep}
-        steps={steps}
-        stepGroups={stepGroups}
-        setCurWizardStep={setCurWizardStep}
-        pipelineSchema={pipelineSchema}
-        isLoading={isLoading}
-      />
-    );
->>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
   }
-=======
->>>>>>> 24cd59e2b4cc8a8ef29e80062bd1ed3c684f6797
+
   return (
-    <PipelineMappingDefault
-      appBaseUrl={appBaseUrl}
-      curWizardStep={curWizardStep}
+    <Layout
+      title={steps[curWizardStep].title}
+      subTitle={steps[curWizardStep].description}
+      centerTitle={true}
       steps={steps}
       stepGroups={stepGroups}
-<<<<<<< HEAD
     >
       <div className="container">
         <Formik
@@ -192,11 +173,55 @@ const PipelineMapping = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form className="container">
-              <DynamicMappingFields
-                values={values}
-                formFields={pipelineSchema}
-                setFieldValue={setFieldValue}
-              />
+              {/* First Section - IMPORTANT PARAMS*/}
+              <div className="row py-2">
+                {importantParamsSection.length > 0 &&
+                  importantParamsSection[0].fields?.map((field) => (
+                    <MappingImportantFields
+                      title={field.title}
+                      options={appSchemaOptions}
+                      description={
+                        field.title === field.description
+                          ? ""
+                          : field.description
+                      }
+                    />
+                  ))}
+              </div>
+              {/* SECOND Section - PRIMARY KEYS*/}
+              <div className="row py-2">
+                {primaryKeysSection.length > 0 &&
+                  primaryKeysSection.map((field) => (
+                    <WarehouseColumn
+                      title={field.title}
+                      description={field.description}
+                    >
+                      {field.primaryKeys!.map((key) => (
+                        <MappingTableSelectOnlyBody
+                          options={appSchemaOptions}
+                          onlyOptions={appSchemaPrimaryKeysFilter(key)}
+                        />
+                      ))}
+                    </WarehouseColumn>
+                  ))}
+              </div>
+              {/* THIRD Section - DESTINATION_FIELDS*/}
+
+              {/* FOURTH Section - MISCELLANEOUS_FIELDS*/}
+              <div className="row py-2">
+                {miscellaneousFieldSection.length > 0 &&
+                  miscellaneousFieldSection?.map((field) => (
+                    <WarehouseColumn
+                      title={field.title}
+                      description={field.description}
+                    >
+                      <MappingMiscellaneousFields
+                        options={appSchemaOptions}
+                        type={"input"}
+                      />
+                    </WarehouseColumn>
+                  ))}
+              </div>
               <ButtonSubmit submitting={isSubmitting}>
                 TEST & CONTINUE
               </ButtonSubmit>
@@ -205,12 +230,6 @@ const PipelineMapping = ({
         </Formik>
       </div>
     </Layout>
-=======
-      setCurWizardStep={setCurWizardStep}
-      pipelineSchema={pipelineSchema}
-      isLoading={isLoading}
-    />
->>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
   );
 };
 
