@@ -19,6 +19,7 @@ export default function MappingMiscellaneousFields({
             <AdditionalFields
               options={options}
               mappingGroups={mappingGroups}
+              type="input"
             />
           </WarehouseColumn>
         ))}

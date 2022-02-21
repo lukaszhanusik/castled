@@ -21,7 +21,7 @@ export default function MappingImportantFields({
                 {field.title === field.description ? "" : field.description}
               </div>
             </div>
-            <div>
+            <div className="w-50">
               <Select options={options} />
             </div>
           </div>

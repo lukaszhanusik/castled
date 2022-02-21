@@ -19,16 +19,17 @@ export default function MappingTableBody({
       {primaryKeysSection.length > 0 &&
         primaryKeysSection.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
-            {field.primaryKeys!.map((key) => (
+            {field.primaryKeys!.map((_e) => (
               <tr>
-                <th>
+                <th className="w-50">
                   <Select options={options} />
                 </th>
-                <th>
-                  <input
-                    className="form-control p-2 px-2"
-                    value={key.fieldName}
-                    disabled={!key.optional}
+                <th className="w-50">
+                  <Select
+                    options={field.primaryKeys?.map((key) => ({
+                      value: key.fieldName,
+                      label: key.fieldName,
+                    }))}
                   />
                 </th>
               </tr>
