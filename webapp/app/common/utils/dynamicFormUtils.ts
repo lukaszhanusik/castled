@@ -164,6 +164,7 @@ const getValidationErrors = (
     values,
     moreValidations
   );
+
   if (!schema) return {};
   let errors: StringAnyMap = {};
   try {

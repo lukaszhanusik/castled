@@ -1,5 +1,6 @@
 package io.castled.oauth;
 
+import io.castled.apps.connectors.fbcustomaudience.FbOAuthAccessProvider;
 import io.castled.apps.connectors.googleads.GoogleAdsOAuthAccessProvider;
 import io.castled.apps.connectors.hubspot.oauth.HubspotOAuthAccessProvider;
 import io.castled.apps.connectors.mailchimp.MailchimpOAuthAccessProvider;
@@ -22,6 +23,8 @@ public class OAuthAccessProviderFactory {
                 return new GoogleAdsOAuthAccessProvider(oAuthClientConfig);
             case MAILCHIMP:
                 return new MailchimpOAuthAccessProvider(oAuthClientConfig);
+            case FBCUSTOMAUDIENCE:
+                return new FbOAuthAccessProvider(oAuthClientConfig);
             default:
                 throw new CastledRuntimeException(String.format("Invalid oauth access type %s", oAuthServiceType));
         }

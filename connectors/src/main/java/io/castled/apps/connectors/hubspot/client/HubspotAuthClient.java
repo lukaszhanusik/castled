@@ -33,7 +33,7 @@ public class HubspotAuthClient {
     }
 
     public HubspotTokenResponse getTokenViaRefreshToken(String refreshToken, String clientId,
-                                                             String clientSecret) {
+                                                        String clientSecret) {
         Response response = this.client.target(TOKEN_SERVICE_END_POINT)
                 .queryParam("refresh_token", refreshToken)
                 .queryParam("grant_type", "refresh_token")

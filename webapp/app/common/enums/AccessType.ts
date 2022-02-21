@@ -4,7 +4,7 @@ export enum AccessType {
   PASSWORD = "PASSWORD",
 }
 
-export const AccessTypeLabel: any = {
+export const AccessTypeLabel: { [key in AccessType]: string } = {
   [AccessType.OAUTH]: "Oauth",
   [AccessType.API_KEY]: "Api Key",
   [AccessType.PASSWORD]: "Password",

@@ -41,6 +41,7 @@ const PipelineMappingView = ({
         </thead>
         <tbody>
           {dataMapping !== undefined &&
+            dataMapping.fieldMappings &&
             dataMapping.fieldMappings.map((fieldMapping, i) => (
               <tr key={i}>
                 <td>{fieldMapping.warehouseField}</td>

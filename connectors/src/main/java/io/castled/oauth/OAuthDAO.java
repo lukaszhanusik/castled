@@ -51,8 +51,8 @@ public interface OAuthDAO {
         @Override
         public OAuthDetails map(ResultSet rs, StatementContext ctx) throws SQLException {
             OAuthAccessConfig providerConfig = JsonUtils.jsonStringToObject(rs.getString("config"), OAuthAccessConfig.class);
-            return OAuthDetails.builder().
-                    id(rs.getLong("id"))
+            return OAuthDetails.builder()
+                    .id(rs.getLong("id"))
                     .accessConfig(providerConfig).build();
         }
     }

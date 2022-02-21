@@ -6,5 +6,6 @@ public enum OAuthProviderType {
     HUBSPOT,
     MICROSOFT,
     INTERCOM,
-    MAILCHIMP
+    MAILCHIMP,
+    FACEBOOK
 }

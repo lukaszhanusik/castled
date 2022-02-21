@@ -97,7 +97,7 @@ public class SFDCRestClient {
         try {
             return RetryUtils.retrySupplier(supplier, 1, Lists.newArrayList(NotAuthorizedException.class),
                     ((throwable, attempts) -> {
-                        this.salesforceAccessConfig = accessTokenRefresher.refreshAccessConfig(oauthToken);
+                        this.salesforceAccessConfig = accessTokenRefresher.refreshAndPersistAccessConfig(oauthToken);
                         return new WaitTimeAndRetry(0, true);
                     }));
         } catch (Exception e) {
