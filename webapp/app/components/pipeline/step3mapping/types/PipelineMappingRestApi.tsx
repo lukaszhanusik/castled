@@ -71,7 +71,7 @@ const PipelineMappingRestApi = ({
     setTestResults(false);
 
     pipelineService
-      .testMapping(pipelineWizContext.values?.mapping)
+      .testMapping(pipelineWizContext.values)
       .then(({ data }) => {
         bannerNotificationService.success("Test successfully passed.");
         setTestResults(true);
@@ -128,7 +128,6 @@ const PipelineMappingRestApi = ({
               primaryKeys: [],
               fieldMappings: [],
               headers: {},
-              fields: [],
             } as PipelineMappingDto
           }
           validationSchema={formValidationSchema}
@@ -143,9 +142,9 @@ const PipelineMappingRestApi = ({
               bannerNotificationService.error("Body cannot be empty");
               return setSubmitting(false);
             }
-
-            pipelineWizContext.values.mapping.fields =
-              warehouseSchemaFields?.map((i) => i.value);
+            pipelineWizContext.values.queryFields = warehouseSchemaFields?.map(
+              (i) => i.value
+            );
 
             getTestResults();
           }}

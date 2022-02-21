@@ -16,6 +16,7 @@ export interface PipelineCreateRequestDto {
     [key: string]: string | undefined;
   };
   mapping?: PipelineMappingDto;
+  queryFields?: string[];
 }
 
 export interface PipelineMappingDto {
@@ -26,7 +27,6 @@ export interface PipelineMappingDto {
   method?: HttpMethod;
   template?: string;
   headers?: StringAnyMap;
-  fields?: string[];
 }
 
 export interface FieldMapping {
