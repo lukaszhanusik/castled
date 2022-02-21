@@ -3,6 +3,7 @@ package io.castled.resources.validators;
 import com.google.inject.Singleton;
 import io.castled.apps.ExternalApp;
 import io.castled.models.Pipeline;
+import io.castled.models.QueryModel;
 import io.castled.models.Warehouse;
 
 import javax.ws.rs.ForbiddenException;
@@ -35,6 +36,15 @@ public class ResourceAccessController {
         }
         if (!pipeline.getTeamId().equals(teamId)) {
             throw new ForbiddenException(String.format("User not authorized to access pipeline %s", pipeline.getName()));
+        }
+    }
+
+    public void validateQueryModelAccess(QueryModel queryModel, long teamId) throws ForbiddenException {
+        if (queryModel == null) {
+            throw new NotFoundException("Query model not found");
+        }
+        if (!queryModel.getTeamId().equals(teamId)) {
+            throw new ForbiddenException(String.format("User not authorized to access model %s", queryModel.getModelName()));
         }
     }
 }

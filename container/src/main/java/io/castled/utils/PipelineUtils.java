@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PipelineUtils {
 
-    public static List<String> getWarehousePrimaryKeys(Pipeline pipeline) {
+    /*public static List<String> getWarehousePrimaryKeys(Pipeline pipeline) {
         return getWarehouseFields(pipeline.getDataMapping(), pipeline.getDataMapping().getPrimaryKeys());
     }
 
@@ -20,5 +20,5 @@ public class PipelineUtils {
 
     public static Path getAppUploadPath(String pipelineId, Long pipelineRunId) {
         return ConnectorExecutionConstants.APP_UPLOADS_PATH.resolve(pipelineId).resolve(String.valueOf(pipelineRunId));
-    }
+    }*/
 }

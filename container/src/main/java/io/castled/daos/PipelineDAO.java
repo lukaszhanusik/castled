@@ -34,8 +34,8 @@ import java.util.List;
 public interface PipelineDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into pipelines(name, user_id, team_id, schedule, source_query, mapping, app_sync_config, app_id, warehouse_id, uuid, status, sync_status, query_mode)" +
-            " values(:pipeline.name, :user.id, :user.teamId, :pipeline.schedule, :pipeline.sourceQuery," +
+    @SqlUpdate("insert into pipelines(name, user_id, team_id, schedule, model_id, mapping, app_sync_config, app_id, warehouse_id, uuid, status, sync_status, query_mode)" +
+            " values(:pipeline.name, :user.id, :user.teamId, :pipeline.schedule, :pipeline.modelId," +
             " :pipeline.mapping, :pipeline.appSyncConfig, :pipeline.appId, :pipeline.warehouseId, :uuid, 'OK', 'ACTIVE', :pipeline.queryMode)")
     long createPipeline(@BindBean("pipeline") PipelineConfigDTO pipelineConfigDTO, @BindBean("user") User user, @Bind("uuid") String uuid);
 
@@ -146,7 +146,7 @@ public interface PipelineDAO {
                     .status(PipelineStatus.valueOf(rs.getString(TableFields.STATUS)))
                     .seqId(rs.getLong(TableFields.SEQ_ID)).appSyncConfig(appSyncConfig)
                     .dataMapping(mapping).uuid(rs.getString(TableFields.UUID)).isDeleted(rs.getBoolean(TableFields.ID))
-                    .jobSchedule(jobSchedule).sourceQuery(rs.getString("source_query"))
+                    .jobSchedule(jobSchedule).modelId(rs.getLong("model_id"))
                     .teamId(rs.getLong(TableFields.TEAM_ID)).queryMode(QueryMode.valueOf(rs.getString("query_mode")))
                     .appId(rs.getLong(TableFields.APP_ID)).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
                     .syncStatus(PipelineSyncStatus.valueOf(rs.getString("sync_status"))).build();

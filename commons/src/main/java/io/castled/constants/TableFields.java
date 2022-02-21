@@ -26,4 +26,8 @@ public class TableFields {
 
     public static final String RESULT = "result";
 
+    public static final String MODEL_NAME =  "model_name";
+    public static final String WAREHOUSE_PK = "wh_pk";
+    public static final String QUERY_MODEL_DETAILS = "model_details";
+
 }
