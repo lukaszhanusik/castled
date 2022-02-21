@@ -15,6 +15,7 @@ import { MappingFieldEnums } from "./types/MappingFieldEnums";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
+import MappingDestinationFields from "./components/MappingDestinationFields";
 
 export interface DynamicMappingFieldsProps {
   namePrefix?: string;
@@ -40,7 +41,7 @@ const fieldRenderers: {
 } = {
   IMPORTANT_PARAMS: { renderer: MappingImportantFields },
   PRIMARY_KEYS: { renderer: MappingTableSelectOnlyBody },
-  DESTINATION_FIELDS: { renderer: MappingTableSelectOnlyBody },
+  DESTINATION_FIELDS: { renderer: MappingDestinationFields },
   MISCELLANEOUS_FIELDS: { renderer: MappingMiscellaneousFields },
 };
 

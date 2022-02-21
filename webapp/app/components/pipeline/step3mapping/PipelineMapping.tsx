@@ -5,7 +5,6 @@ import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import {
   PipelineSchemaResponseDto,
-  PrimaryKeyElement,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { Table } from "react-bootstrap";
@@ -31,6 +30,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 // import WarehouseColumn from "./components/WarehouseColumn";
 // import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 import DynamicMappingFields from "./DynamicMappingFields";
+import LoadingTable from "./components/LoadingTable";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -88,28 +88,7 @@ const PipelineMapping = ({
         steps={steps}
         stepGroups={stepGroups}
       >
-        <div>
-          <div className="table-responsive mx-auto mt-2">
-            <Table hover>
-              <tbody>
-                <tr className="pt-4 pb-4">
-                  <td>
-                    <div className="linear-background"></div>
-                  </td>
-                  <td>
-                    <div className="linear-background"></div>
-                  </td>
-                  <td>
-                    <div className="linear-background"></div>
-                  </td>
-                  <td>
-                    <div className="linear-background"></div>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-        </div>
+        <LoadingTable />
       </Layout>
     );
   }
