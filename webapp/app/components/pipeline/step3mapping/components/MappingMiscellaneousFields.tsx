@@ -2,17 +2,23 @@ import { useState } from "react";
 import Select from "react-select";
 import { StringLiteralLike } from "typescript";
 import { MappingFieldsProps } from "../types/componentTypes";
+import WarehouseColumn from "./WarehouseColumn";
 
-type MappingFieldsOptions = Pick<MappingFieldsProps, "options">;
-interface RowType extends MappingFieldsOptions {
+interface MappingMiscellaneousFieldsProps extends MappingFieldsProps {
   type: string;
 }
 
 export default function MappingMiscellaneousFields({
   options,
-  type
-}: RowType) {
+  mappingGroups,
+  type,
+}: MappingMiscellaneousFieldsProps) {
   const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
+
+  // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
+  const miscellaneousFieldSection = mappingGroups.filter((fields) => {
+    return fields.type === "MISCELLANEOUS_FIELDS" && fields;
+  });
 
   const renderBody = (
     <tr>
@@ -38,14 +44,29 @@ export default function MappingMiscellaneousFields({
   const addBody = [renderBody];
 
   if (warehouseSelected && type === "select") {
-    addBody.push(<MappingMiscellaneousFields options={options} type={'select'}/>);
+    addBody.push(
+      <MappingMiscellaneousFields
+        options={options}
+        type={"select"}
+        mappingGroups={mappingGroups}
+      />
+    );
   }
 
   if (warehouseSelected && type !== "select") {
-    addBody.push(<MappingMiscellaneousFields options={options} type={'input'}/>);
+    addBody.push(renderBody);
   }
 
-  return <>{addBody}</>;
+  return (
+    <div className="row py-2">
+      {miscellaneousFieldSection.length > 0 &&
+        miscellaneousFieldSection?.map((field) => (
+          <WarehouseColumn title={field.title} description={field.description}>
+            {addBody}
+          </WarehouseColumn>
+        ))}
+    </div>
+  );
 }
 
 // import InputField from "@/app/components/forminputs/InputField";
