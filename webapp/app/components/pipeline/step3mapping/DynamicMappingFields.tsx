@@ -35,12 +35,6 @@ export interface DynamicMappingFieldsProps {
   // ) => Promise<AxiosResponse<DataFetcherResponseDto>>;
 }
 
-// interface OrderedFieldInfo {
-//   order: number;
-//   key: string;
-//   group: string;
-// }
-
 const fieldRenderers: {
   [key: string]: {
     renderer: any;
@@ -66,29 +60,9 @@ DynamicMappingFieldsProps) => {
   const { warehouseSchema, mappingGroups } = formFields;
 
   const fields: Array<any> = [];
-  // const skipNamesSet = new Set<String>();
-
-  // if (skipNames) {
-  //   skipNames.forEach((name) => skipNamesSet.add(name));
-  // }
-  // // Handle ordering
-  // const orderedFieldsInfo: OrderedFieldInfo[] = [];
-  // const names = Object.keys(formFields.mappingGroups);
-
-  // names.forEach((key, i) => {
-  //   const group = formFields.fields[key].group;
-  //   orderedFieldsInfo.push({ order: i, key, group });
-  // });
-  function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
-    return [{ value: option.fieldName, label: option.fieldName }];
-  }
 
   // Display
   for (const fieldInfo of mappingGroups) {
-    // const index = fieldInfo;
-
-    // if (skipNamesSet.has(key)) continue;
-    // const field: MappingGroup = formFields.fields[key];
 
     const fieldRenderer = fieldRenderers[fieldInfo.type];
 
@@ -97,39 +71,10 @@ DynamicMappingFieldsProps) => {
       continue;
     }
 
-    // const depValues: any[] = [];
-    // // Skip if group activator is present but dependency not met
-    // if (field.group in formFields.groupActivators) {
-    //   const groupActivator = formFields.groupActivators[field.group];
-    //   const skip = dynamicFormUtils.isFieldHidden(
-    //     groupActivator,
-    //     namePrefix,
-    //     values,
-    //     depValues
-    //   );
-    //   if (skip) continue;
-    // }
-
     const appSchemaOptions = warehouseSchema.fields.map((field) => ({
       value: field.fieldName,
       label: field.fieldName,
     }));
-
-
-    // SECTION - 2 - Primary Keys to match the destination object
-    const primaryKeysSection = mappingGroups.filter((fields) => {
-      return fields.type === "PRIMARY_KEYS" && fields;
-    });
-
-    // SECTION - 3 - Other fields to match the destination object
-    const destinationFieldSection = mappingGroups.filter((fields) => {
-      return fields.type === "DESTINATION_FIELDS" && fields;
-    });
-
-    // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
-    const miscellaneousFieldSection = mappingGroups.filter((fields) => {
-      return fields.type === "MISCELLANEOUS_FIELDS" && fields;
-    });
 
     const { renderer: Input } = fieldRenderer;
     const name = `mapping.${fieldInfo.type}`;

@@ -1,4 +1,3 @@
-import { PrimaryKeyElement } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import Select from "react-select";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import WarehouseColumn from "./WarehouseColumn";
@@ -14,10 +13,6 @@ export default function MappingTableBody({
   const primaryKeysSection = mappingGroups.filter((fields) => {
     return fields.type === "PRIMARY_KEYS" && fields;
   });
-
-  // function appSchemaPrimaryKeysFilter(option: PrimaryKeyElement) {
-  //   return [{ value: option.fieldName, label: option.fieldName }];
-  // }
 
   return (
     <div className="row py-2">
