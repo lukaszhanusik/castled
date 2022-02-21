@@ -1,6 +1,6 @@
 import Select from "react-select";
 import { MappingFieldsProps } from "../types/componentTypes";
-import WarehouseColumn from "./WarehouseColumn";
+import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingImportantFields({
   options,

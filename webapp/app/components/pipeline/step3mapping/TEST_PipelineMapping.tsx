@@ -28,7 +28,7 @@ import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 // import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
-import WarehouseColumn from "./components/WarehouseColumn";
+import WarehouseColumn from "./components/Layouts/WarehouseColumn";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 
 interface MappingInfo {

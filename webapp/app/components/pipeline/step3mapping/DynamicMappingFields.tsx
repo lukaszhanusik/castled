@@ -18,7 +18,7 @@ import MappingDestinationFields from "./components/MappingDestinationFields";
 
 export interface DynamicMappingFieldsProps {
   namePrefix?: string;
-  formFields?: PipelineSchemaResponseDto;
+  mappingFields?: PipelineSchemaResponseDto;
   skipNames?: string[];
   values: any;
   setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
@@ -45,15 +45,15 @@ const fieldRenderers: {
 };
 
 const DynamicMappingFields = ({
-  formFields,
+  mappingFields,
   values,
   setFieldValue,
 }: // dataFetcher,
 DynamicMappingFieldsProps) => {
-  if (!formFields?.warehouseSchema.fields || !formFields?.mappingGroups.length)
+  if (!mappingFields?.warehouseSchema.fields || !mappingFields?.mappingGroups.length)
     return null;
 
-  const { warehouseSchema, mappingGroups } = formFields;
+  const { warehouseSchema, mappingGroups } = mappingFields;
 
   const fields: Array<any> = [];
 

@@ -1,68 +1,25 @@
-import { useState } from "react";
-import Select from "react-select";
-import { StringLiteralLike } from "typescript";
 import { MappingFieldsProps } from "../types/componentTypes";
-import WarehouseColumn from "./WarehouseColumn";
-
-interface MappingMiscellaneousFieldsProps extends MappingFieldsProps {
-  type: string;
-}
+import AdditionalFields from "./Layouts/AdditionalFields";
+import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingMiscellaneousFields({
   options,
   mappingGroups,
-  type,
-}: MappingMiscellaneousFieldsProps) {
-  const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
-
+}: MappingFieldsProps) {
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
-
-  const renderBody = (
-    <tr>
-      <th>
-        <Select options={options} onChange={() => setWarehouseSelected(true)} />
-      </th>
-      <th>
-        {type === "select" ? (
-          <Select
-            options={options}
-            onChange={() => setWarehouseSelected(true)}
-          />
-        ) : (
-          <input
-            type="text"
-            placeholder="Enter a field"
-            className="form-control p-2"
-          />
-        )}
-      </th>
-    </tr>
-  );
-  const addBody = [renderBody];
-
-  if (warehouseSelected && type === "select") {
-    addBody.push(
-      <MappingMiscellaneousFields
-        options={options}
-        type={"select"}
-        mappingGroups={mappingGroups}
-      />
-    );
-  }
-
-  if (warehouseSelected && type !== "select") {
-    addBody.push(renderBody);
-  }
 
   return (
     <div className="row py-2">
       {miscellaneousFieldSection.length > 0 &&
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
-            {addBody}
+            <AdditionalFields
+              options={options}
+              mappingGroups={mappingGroups}
+            />
           </WarehouseColumn>
         ))}
     </div>

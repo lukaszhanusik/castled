@@ -1,6 +1,6 @@
 import Select from "react-select";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
-import WarehouseColumn from "./WarehouseColumn";
+import WarehouseColumn from "./Layouts/WarehouseColumn";
 interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
   onlyOptions?: SchemaOptions[];
 }

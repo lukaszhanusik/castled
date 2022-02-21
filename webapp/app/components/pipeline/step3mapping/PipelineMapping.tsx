@@ -28,7 +28,7 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 // import WarehouseColumn from "./components/WarehouseColumn";
 // import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 import DynamicMappingFields from "./DynamicMappingFields";
-import LoadingTable from "./components/LoadingTable";
+import LoadingTable from "./components/Layouts/LoadingTable";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -107,7 +107,7 @@ const PipelineMapping = ({
               <Form className="container">
                 <DynamicMappingFields
                   values={values}
-                  formFields={pipelineSchema}
+                  mappingFields={pipelineSchema}
                   setFieldValue={setFieldValue}
                 />
                 <ButtonSubmit submitting={isSubmitting}>
