@@ -1,7 +1,7 @@
 package io.castled.daos;
 
 import io.castled.constants.TableFields;
-import io.castled.dtos.querymodel.QueryModelDTO;
+import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.QueryModelDetails;
 import io.castled.models.QueryModel;
 import io.castled.models.QueryModelPK;
@@ -34,7 +34,7 @@ public interface QueryModelDAO {
     @SqlUpdate("insert into query_model(user_id, team_id,warehouse_id,model_name,model_type,model_details,query_pk)" +
             " values(:user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
             " :modelDTO.modelDetails, :modelDTO.queryModelPK)")
-    long createModel(@BindBean("modelDTO") QueryModelDTO modelDTO, @BindBean("user") User user);
+    long createModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @BindBean("user") User user);
 
     @SqlQuery("select * from query_model where model_name = :modelName and is_deleted = 0")
     QueryModel getQueryModelByModelName(@Bind("modelName") String modelName);

@@ -3,8 +3,8 @@ package io.castled.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.dtos.EntityCreateResponse;
-import io.castled.dtos.querymodel.QueryModelDTO;
-import io.castled.models.QueryModel;
+import io.castled.dtos.querymodel.ModelDetailsDTO;
+import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
 import io.castled.services.QueryModelService;
@@ -32,16 +32,14 @@ public class QueryModelResource {
     }
 
     @POST
-    public EntityCreateResponse createModel(@Valid QueryModelDTO queryModelDTO, @Auth User user) {
-        return new EntityCreateResponse(this.queryModelService.createModel(queryModelDTO, user));
+    public EntityCreateResponse createModel(@Valid ModelInputDTO modelInputDTO, @Auth User user) {
+        return new EntityCreateResponse(this.queryModelService.createModel(modelInputDTO, user));
     }
 
     @GET
     @Path("/{id}")
-    public QueryModelDTO getModel(@PathParam("id") Long id, @Auth User user) {
-        QueryModel queryModel = this.queryModelService.getQueryModel(id);
-        this.resourceAccessController.validateQueryModelAccess(queryModel, user.getTeamId());
-        return null;
+    public ModelDetailsDTO getModel(@PathParam("id") Long id, @Auth User user) {
+        return this.queryModelService.getQueryModel(id, user.getTeamId());
     }
 
     @DELETE
@@ -51,7 +49,7 @@ public class QueryModelResource {
     }
 
     @GET
-    public List<QueryModelDTO> getAllModels(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
+    public List<ModelDetailsDTO> getAllModels(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
         return this.queryModelService.getAllModels(warehouseId, user.getTeamId());
     }
 }
