@@ -33,9 +33,11 @@ export interface FieldElement {
 }
 export interface PrimaryKeyElement {
   fieldName: string;
-  type:      string;
-  optional:  boolean;
+  type: string;
+  optional: boolean;
 }
 export interface WarehouseSchema {
   fields: FieldElement[];
 }
+
+export type ConnectorSchema = any;
