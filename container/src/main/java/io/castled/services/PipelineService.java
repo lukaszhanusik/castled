@@ -18,6 +18,7 @@ import io.castled.constants.CommonConstants;
 import io.castled.daos.ErrorReportsDAO;
 import io.castled.daos.PipelineDAO;
 import io.castled.daos.PipelineRunDAO;
+import io.castled.dtos.MappingTestRequest;
 import io.castled.dtos.PipelineConfigDTO;
 import io.castled.dtos.PipelineSchema;
 import io.castled.dtos.PipelineUpdateRequest;
@@ -51,6 +52,7 @@ import io.castled.warehouses.WarehouseService;
 import io.castled.warehouses.WarehouseType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
@@ -349,13 +351,19 @@ public class PipelineService {
         return pipelineDAO.listPipelines(teamid, appId);
     }
 
-    public void testDataMapping(CastledDataMapping castledDataMapping) {
-        if (castledDataMapping.getType() == DataMappingType.TARGET_FIELDS_MAPPING) {
+    public void testDataMapping(MappingTestRequest mappingTestRequest) {
+        if (mappingTestRequest.getMapping().getType() == DataMappingType.TARGET_FIELDS_MAPPING) {
             return;
         }
-        TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) castledDataMapping;
+        TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) mappingTestRequest.getMapping();
         String template = targetRestApiMapping.getTemplate();
         MustacheUtils.validateMustacheJson(template);
+        List<String> templateFields = MustacheUtils.getTemplateVariables(template);
+        List<String> invalidFields = ListUtils.subtract(templateFields, mappingTestRequest.getQueryFields());
+        if (CollectionUtils.isNotEmpty(invalidFields)) {
+            throw new BadRequestException(String.format("Fields %s not present in the selected query",
+                    invalidFields));
+        }
     }
 
     public List<WarehouseAggregate> getWarehouseAggregates(Long teamId) {

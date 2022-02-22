@@ -474,32 +474,6 @@ form {
   }
 }
 
-.mapping-wrapper {
-  position: relative;
-  border: 1px solid $gray-200;
-  border-radius: $border-radius;
-
-  textarea {
-    border: none;
-  }
-  .rh-xs-panel {
-    position: absolute;
-    top: 0.35rem;
-    right: 0.35rem;
-    bottom: 1px;
-    overflow: auto;
-    min-width: 175px;
-    .list-group-item {
-      margin: 0 0 0 0;
-      padding-top: 0.25rem;
-      padding-bottom: 0.25rem;
-      box-shadow: none;
-      border-radius: 0;
-      border-right: 0;
-      border-top: 0;
-    }
-  }
-}
 #logout-dropdown {
   background-color: $gunmetal;
 }
