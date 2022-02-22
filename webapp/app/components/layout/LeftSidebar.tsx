@@ -4,6 +4,7 @@ import {
   IconGitCompare,
   IconDatabase,
   IconSettings,
+  IconRelationManyToMany,
 } from "@tabler/icons";
 import Link from "next/link";
 import cn from "classnames";
@@ -12,7 +13,7 @@ import DropdownCaretDown from "@/app/components/bootstrap/DropdownCaretDown";
 import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 
-interface LeftSidebarProps { }
+interface LeftSidebarProps {}
 
 const sidebarLinks = [
   {
@@ -31,6 +32,12 @@ const sidebarLinks = [
     icon: IconApps,
     title: "Apps",
     href: "/apps",
+    enabledInOss: true,
+  },
+  {
+    icon: IconRelationManyToMany,
+    title: "Models",
+    href: "/models",
     enabledInOss: true,
   },
   {
@@ -109,7 +116,9 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                   />
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="/auth/logout" className="text-primary">Logout</Dropdown.Item>
+                  <Dropdown.Item href="/auth/logout" className="text-primary">
+                    Logout
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             )}
