@@ -20,10 +20,13 @@ export default function MappingImportantFields({
   on Primary if optional row is empty. \/
   */
   useEffect(() => {
-    if (optionalRow.length === 0) {
+    console.log({ optionalRow });
+    if (!optionalRow.length) {
       setAddOptionalRow(true);
+    } else {
+      setAddOptionalRow(false);
     }
-  }, [optionalRow])
+  }, [optionalRow]);
 
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
@@ -39,7 +42,6 @@ export default function MappingImportantFields({
 
   // This is for primary key to add optional row if there are no optional row present.
   function addOptional() {
-    // console.log(addOptionalRow);
     if (addOptionalRow) {
       addRow();
       setAddOptionalRow(!addOptionalRow);
