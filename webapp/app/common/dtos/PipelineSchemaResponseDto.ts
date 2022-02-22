@@ -40,4 +40,4 @@ export interface WarehouseSchema {
   fields: FieldElement[];
 }
 
-export type ConnectorSchema = any;
+// export type ConnectorSchema = any;
