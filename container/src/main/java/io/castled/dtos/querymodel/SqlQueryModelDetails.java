@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RawQueryModelDetails extends QueryModelDetails {
+public class SqlQueryModelDetails extends QueryModelDetails {
 
     private String sourceQuery;
 
-    public RawQueryModelDetails(String sourceQuery) {
-        super(QueryModelType.RAW_QUERY_EDITOR);
+    public SqlQueryModelDetails(String sourceQuery) {
+        super(QueryModelType.SQL_QUERY_EDITOR);
         this.sourceQuery = sourceQuery;
     }
 }

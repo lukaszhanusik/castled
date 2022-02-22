@@ -14,7 +14,7 @@ import lombok.Setter;
         visible = true,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RawQueryModelDetails.class, name = "RAW_QUERY"),
+        @JsonSubTypes.Type(value = SqlQueryModelDetails.class, name = "SQL_QUERY_EDITOR"),
         @JsonSubTypes.Type(value = TableQueryModelDetails.class, name = "TABLE_SELECTOR"),
         @JsonSubTypes.Type(value = DbtQueryModelDetails.class, name = "DBT_MODEL_SELECTOR")})
 @AllArgsConstructor

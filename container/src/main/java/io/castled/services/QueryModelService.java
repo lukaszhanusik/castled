@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.daos.QueryModelDAO;
 import io.castled.dtos.querymodel.QueryModelDTO;
-import io.castled.dtos.querymodel.RawQueryModelDetails;
+import io.castled.dtos.querymodel.SqlQueryModelDetails;
 import io.castled.dtos.querymodel.TableQueryModelDetails;
 import io.castled.models.QueryModel;
 import io.castled.models.users.User;
@@ -51,8 +51,8 @@ public class QueryModelService {
     private String getSourceQuery(QueryModel queryModel) {
 
         switch (queryModel.getModelType()) {
-            case RAW_QUERY_EDITOR:
-                ((RawQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
+            case SQL_QUERY_EDITOR:
+                ((SqlQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
                 break;
             case TABLE_SELECTOR:
                 ((TableQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
