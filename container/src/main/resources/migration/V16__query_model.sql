@@ -12,3 +12,5 @@ CREATE TABLE `query_model` (
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 );
+
+alter table pipelines add model_id bigint(20) not null;
