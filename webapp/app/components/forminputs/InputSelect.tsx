@@ -85,70 +85,70 @@ const InputSelect = ({
     }
   }, [key, optionsRef, ...depValues]);
   return (
-    <div className={props.className}>
-      {optionsLoading && props.hidden && (
-        <div className="mb-1">
-          <Spinner
-            as="span"
-            animation="border"
-            size="sm"
-            role="status"
-            aria-hidden="true"
+    <div className="mb-3 d-flex">
+      <div className={cn(props.className, "col-12 card p-2")}>
+        {optionsLoading && props.hidden && (
+          <div className="mb-1">
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            <span className="ml-2">{props.loadingText}</span>
+          </div>
+        )}
+        <div
+          className={cn({
+            "d-none": props.hidden,
+          })}
+        >
+          {title && (
+            <label htmlFor={props.id || props.name} className="form-label">
+              {required && <span className="required-icon">*</span>}
+              {title}
+            </label>
+          )}
+          <div className="row">
+            <Select
+              {...props}
+              options={
+                !optionsDynamic
+                  ? [loadingOption]
+                  : optionsDynamic.map((option) => toReactSelectOption(option))
+              }
+              isMulti={isMulti}
+              className={cn({ "border-0": !!dataFetcher, col: !dataFetcher })}
+              onChange={(v: any | undefined) => {
+                let newValue = v?.value;
+                if (isMulti) {
+                  newValue = v?.map((option: any) => option.value);
+                }
+                setFieldValue?.(field.name, newValue);
+              }}
+              onBlur={() => setFieldTouched?.(field.name, true)}
+              value={getOptionValues(
+                field,
+                optionsDynamic,
+                isMulti,
+                optionsLoading
+              )}
+              isClearable={isClearable}
+            />
+          </div>
+          {meta.error ? <div className="error">{meta.error}</div> : null}
+        </div>
+      </div>
+      {dataFetcher && (
+        <div className="ms-2 my-auto">
+          <IconRefresh
+            size={24}
+            role="button"
+            onClick={() => setKey(key + 1)}
           />
-          <span className="ml-2">{props.loadingText}</span>
         </div>
       )}
-      <div
-        className={cn("mb-3", {
-          "d-none": props.hidden,
-        })}
-      >
-        {title && (
-          <label htmlFor={props.id || props.name} className="form-label">
-            {required && <span className="required-icon">*</span>}
-            {title}
-          </label>
-        )}
-        <div className="row">
-          <Select
-            {...props}
-            options={
-              !optionsDynamic
-                ? [loadingOption]
-                : optionsDynamic.map((option) => toReactSelectOption(option))
-            }
-            isMulti={isMulti}
-            className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
-            onChange={(v: any | undefined) => {
-              let newValue = v?.value;
-              if (isMulti) {
-                newValue = v?.map((option: any) => option.value);
-              }
-              setFieldValue?.(field.name, newValue);
-            }}
-            onBlur={() => setFieldTouched?.(field.name, true)}
-            value={getOptionValues(
-              field,
-              optionsDynamic,
-              isMulti,
-              optionsLoading
-            )}
-            isClearable={isClearable}
-          />
-          
-
-          {dataFetcher && (
-            <div className="col-1 my-auto">
-              <IconRefresh
-                size={24}
-                role="button"
-                onClick={() => setKey(key + 1)}
-              />
-            </div>
-          )}
-        </div>
-        {meta.error ? <div className="error">{meta.error}</div> : null}
-      </div>
     </div>
   );
 };

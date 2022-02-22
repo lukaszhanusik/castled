@@ -114,6 +114,20 @@ form {
     width: 100%;
     resize: none;
   }
+  .card{
+    border: 1px solid $gray-200;
+  }
+  .card:focus-within{
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);
+    border: 1px solid $primary-color;
+  }
+  .css-yk16xz-control, .css-1pahdxg-control{
+    border: none;
+    box-shadow: none;
+  }
+  .css-g1d714-ValueContainer{
+    padding: 0;
+  }
 }
 
 .form-top-label {
@@ -263,6 +277,7 @@ form {
   margin-bottom: 0.75rem;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
+  padding: 0.5rem 0.7rem;
 }
 
 .list-group-item:hover {
