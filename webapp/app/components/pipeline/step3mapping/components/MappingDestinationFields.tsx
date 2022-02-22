@@ -9,29 +9,50 @@ export default function MappingImportantFields({
   mappingGroups,
 }: MappingFieldsProps) {
   const [optionalRow, setOptionalRow] = useState<JSX.Element[]>([]);
+  const [addOptionalRow, setAddOptionalRow] = useState(true);
 
   useEffect(() => {
-    console.log(optionalRow);
-  }, [optionalRow]);
+    addRow();
+  }, []);
+
+  /* 
+  Keep tracking optional row and activate addRow 
+  on Primary if optional row is empty. \/
+  */
+  useEffect(() => {
+    if (optionalRow.length === 0) {
+      setAddOptionalRow(true);
+    }
+  }, [optionalRow])
+
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
   });
 
-  function handleCount() {
-    if (optionalFields && optionalFields.length > 0) {
+  function addRow() {
+    if (optionalFields && optionalFields.length) {
       setOptionalRow((prevState) => [...prevState, optionalFields[0]]);
       optionalFields.shift();
     }
   }
 
-  function deleteRow(i: number) {
-    //delete specific row from optionalRow
-    setOptionalRow((prevState) => {
-      const newArray = [...prevState];
-      newArray.splice(i, 1);
-      return newArray;
-    });
+  // This is for primary key to add optional row if there are no optional row present.
+  function addOptional() {
+    console.log(addOptionalRow);
+    if (addOptionalRow) {
+      addRow();
+      setAddOptionalRow(!addOptionalRow);
+    }
+  }
+
+  function deleteRow(key: string) {
+    // filter items based on key
+    setOptionalRow((prevState) =>
+      prevState.filter((item) => {
+        return item.key !== key;
+      })
+    );
   }
 
   const optionalFields = destinationFieldSection[0].optionalFields?.map(
@@ -41,11 +62,15 @@ export default function MappingImportantFields({
         options={options}
         destinationFieldSection={destinationFieldSection}
         isDisabled={!optionalField.optional}
-        onChange={handleCount}
-        handleDelete={() => deleteRow(i)}
+        onChange={addRow}
+        handleDelete={(e) => {
+          e.preventDefault();
+          deleteRow(optionalField.fieldName);
+        }}
       />
     )
   );
+  console.log(optionalRow);
 
   return (
     <div className="row py-2">
@@ -62,7 +87,7 @@ export default function MappingImportantFields({
                     label: mandatoryField.fieldName,
                   }}
                   isDisabled={!mandatoryField.optional}
-                  onChange={handleCount}
+                  onChange={addOptional}
                 />
               ))}
             {optionalRow}
