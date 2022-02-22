@@ -71,8 +71,14 @@ public class QueryModelService {
         this.queryModelDAO.deleteModel(id);
     }
 
-    public List<QueryModelDTO> getModelsByWarehouse(Long warehouseId, Long teamId) {
-        List<QueryModel> queryModels = this.queryModelDAO.getQueryModelsByWarehouseAndTeam(warehouseId, teamId);
+    public List<QueryModelDTO> getAllModels(Long warehouseId, Long teamId) {
+        List<QueryModel> queryModels = null;
+        if(warehouseId!=null){
+            queryModels = this.queryModelDAO.getQueryModelsByWarehouseAndTeam(warehouseId, teamId);
+        }
+        else{
+            queryModels = this.queryModelDAO.getQueryModelsByTeam(teamId);
+        }
         return mapEntityToDTO(queryModels);
     }
 

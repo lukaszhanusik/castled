@@ -52,7 +52,7 @@ public class QueryModelResource {
     }
 
     @GET
-    public List<QueryModelDTO> getModelsByWarehouse(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
-        return this.queryModelService.getModelsByWarehouse(warehouseId, user.getTeamId());
+    public List<QueryModelDTO> getAllModels(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
+        return this.queryModelService.getAllModels(warehouseId, user.getTeamId());
     }
 }
