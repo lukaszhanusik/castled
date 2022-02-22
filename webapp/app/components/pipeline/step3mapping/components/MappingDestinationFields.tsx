@@ -1,12 +1,17 @@
+// Section 3 Mapping with formic
+
 import { MappingGroup } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, { FocusEventHandler } from "react-select";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingImportantFields({
   options,
   mappingGroups,
+  values,
+  setFieldValue,
+  setFieldTouched,
 }: MappingFieldsProps) {
   const [optionalRow, setOptionalRow] = useState<JSX.Element[]>([]);
   const [addOptionalRow, setAddOptionalRow] = useState(true);
@@ -20,7 +25,6 @@ export default function MappingImportantFields({
   on Primary if optional row is empty. \/
   */
   useEffect(() => {
-    console.log({ optionalRow });
     if (!optionalRow.length) {
       setAddOptionalRow(true);
     } else {
@@ -42,6 +46,7 @@ export default function MappingImportantFields({
 
   // This is for primary key to add optional row if there are no optional row present.
   function addOptional() {
+    // console.log(addOptionalRow);
     if (addOptionalRow) {
       addRow();
       setAddOptionalRow(!addOptionalRow);
@@ -64,11 +69,15 @@ export default function MappingImportantFields({
         options={options}
         destinationFieldSection={destinationFieldSection}
         isDisabled={!optionalField.optional}
-        onChange={addRow}
+        onChange={(e) => {
+          setFieldValue?.(`3-${optionalField.fieldName}`, e);
+          addRow();
+        }}
         handleDelete={(e) => {
           e.preventDefault();
           deleteRow(optionalField.fieldName);
         }}
+        onBlur={() => setFieldTouched?.(`3-${optionalField.fieldName}`, true)}
       />
     )
   );
@@ -89,7 +98,13 @@ export default function MappingImportantFields({
                     label: mandatoryField.fieldName,
                   }}
                   isDisabled={!mandatoryField.optional}
-                  onChange={addOptional}
+                  onChange={(e) => {
+                    setFieldValue?.(`3-${mandatoryField.fieldName}`, e);
+                    addOptional();
+                  }}
+                  onBlur={() =>
+                    setFieldTouched?.(`3-${mandatoryField.fieldName}`, true)
+                  }
                 />
               ))}
             {optionalRow}
@@ -100,12 +115,14 @@ export default function MappingImportantFields({
 }
 
 interface DestinationFieldRowsProps {
-  options?: SchemaOptions[];
+  options: SchemaOptions[];
   destinationFieldSection?: MappingGroup[];
   defaultValue?: { value: string; label: string };
   isDisabled?: boolean;
   onChange?: (value: any) => void;
   handleDelete?: (value: any) => void;
+  onBlur?: FocusEventHandler | undefined;
+  values?: any;
 }
 
 function DestinationFieldRows({
@@ -114,12 +131,14 @@ function DestinationFieldRows({
   defaultValue,
   isDisabled,
   onChange,
+  onBlur,
   handleDelete,
+  values,
 }: DestinationFieldRowsProps) {
   return (
     <tr>
       <th className="w-50">
-        <Select options={options} onChange={onChange} />
+        <Select options={options} onChange={onChange} onBlur={onBlur} />
       </th>
       <th className="w-50">
         <Select
@@ -131,6 +150,7 @@ function DestinationFieldRows({
           }
           defaultValue={defaultValue}
           isDisabled={isDisabled}
+          onBlur={onBlur}
         />
       </th>
       {!isDisabled && <button onClick={handleDelete}>X</button>}
