@@ -52,7 +52,7 @@ public class MustacheUtils {
         return JsonUtils.jsonStringToMap(trimPayloadTemplate(writer.toString()));
     }
 
-    private static List<String> getTemplateVariables(String mustacheTemplate) {
+    public static List<String> getTemplateVariables(String mustacheTemplate) {
         String cleanedTemplate = mustacheTemplate.replaceAll("\\s+", "");
         List<String> templateVariables = Lists.newArrayList();
         for (int i = 0; i < cleanedTemplate.length(); i++) {

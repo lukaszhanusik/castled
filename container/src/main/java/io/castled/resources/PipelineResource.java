@@ -116,9 +116,9 @@ public class PipelineResource {
 
     @POST
     @Path("/mappings/test")
-    public void testDataMapping(CastledDataMapping castledDataMapping,
+    public void testDataMapping(MappingTestRequest mappingTestRequest,
                                 @Auth User user) {
-        this.pipelineService.testDataMapping(castledDataMapping);
+        this.pipelineService.testDataMapping(mappingTestRequest);
     }
 
     @GET
