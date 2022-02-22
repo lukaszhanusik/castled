@@ -8,6 +8,9 @@ interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
 export default function MappingTableBody({
   options,
   mappingGroups,
+  values,
+  setFieldValue,
+  setFieldTouched,
 }: MappingPrimaryKeyFieldsProps) {
   // SECTION - 2 - Primary Keys to match the destination object
   const primaryKeysSection = mappingGroups.filter((fields) => {
@@ -19,10 +22,16 @@ export default function MappingTableBody({
       {primaryKeysSection.length > 0 &&
         primaryKeysSection.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
-            {field.primaryKeys!.map((_e) => (
+            {field.primaryKeys!.map((primaryKeys, index) => (
               <tr>
                 <th className="w-50">
-                  <Select options={options} />
+                  <Select
+                    options={options}
+                    onChange={(e) => setFieldValue?.(`warehouseField-${index}`, e)}
+                    onBlur={() =>
+                      setFieldTouched?.(primaryKeys.fieldName, true)
+                    }
+                  />
                 </th>
                 <th className="w-50">
                   <Select
@@ -30,6 +39,10 @@ export default function MappingTableBody({
                       value: key.fieldName,
                       label: key.fieldName,
                     }))}
+                    onChange={(e) => setFieldValue?.(`appField-${index}`, e)}
+                    onBlur={() =>
+                      setFieldTouched?.(primaryKeys.fieldName, true)
+                    }
                   />
                 </th>
               </tr>
