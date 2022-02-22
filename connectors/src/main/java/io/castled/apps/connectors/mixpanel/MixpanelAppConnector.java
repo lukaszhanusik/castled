@@ -9,14 +9,17 @@ import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
+import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.schema.ParameterFieldDTO;
 import io.castled.schema.SchemaFieldDTO;
 import io.castled.schema.mapping.*;
 import io.castled.schema.models.SchemaType;
 
+import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -141,13 +144,17 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
         return mappingGroups;
     }
-/*
+
+      /*
     public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
         MixpanelAppSyncConfig mixpanelAppSyncConfig = (MixpanelAppSyncConfig) pipelineConfig.getAppSyncConfig();
+
+        pipelineConfig.getMapping().getFieldMappings();
         String objectName = ((MixpanelAppSyncConfig)pipelineConfig.getAppSyncConfig()).getObject().getObjectName();
 
         if(MixpanelObject.EVENT.getName().equalsIgnoreCase(objectName)) {
-            enrichPipelineConfigForEventObject(pipelineConfig, mixpanelAppSyncConfig);
+            List<MappingGroup> mappingGroups = getMappingGroupsForEventObject(null,mixpanelAppSyncConfig);
+            enrichPipelineConfigForEventObject(pipelineConfig, mixpanelAppSyncConfig,mappingGroups);
         }
         if(MixpanelObject.USER_PROFILE.getName().equalsIgnoreCase(objectName)){
             enrichPipelineConfigForUserProfileObject(pipelineConfig, mixpanelAppSyncConfig);
@@ -158,49 +165,24 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         return pipelineConfig;
     }
 
-    private void enrichPipelineConfigForUserProfileObject(PipelineConfigDTO pipelineConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) throws BadRequestException{
-
+   private void enrichPipelineConfigForUserProfileObject(PipelineConfigDTO pipelineConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) throws BadRequestException {
         String distinctID = Optional.ofNullable(mixpanelAppSyncConfig.getDistinctID()).orElseThrow(()->new BadRequestException("Column uniquely identifying the User is mandatory"));
 
-        List<FieldMapping> additionalMapping = Lists.newArrayList();
-        Optional.ofNullable(distinctID).ifPresent((ID) -> additionalMapping.add(new FieldMapping(ID,MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getLastName()).ifPresent(lastName -> additionalMapping.add(new FieldMapping(lastName,MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getFirstName()).ifPresent((firstName) -> additionalMapping.add(new FieldMapping(firstName,MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getUserEmail()).ifPresent((email) -> additionalMapping.add(new FieldMapping(email,MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName(),false)));
-        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
-
-        pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName()));
     }
 
     private void enrichPipelineConfigForGroupProfileObject(PipelineConfigDTO pipelineConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) throws BadRequestException{
         String groupID = Optional.ofNullable(mixpanelAppSyncConfig.getGroupID()).orElseThrow(()->new BadRequestException("Column uniquely identifying the Group is mandatory"));
         String groupKey = Optional.ofNullable(mixpanelAppSyncConfig.getGroupKey()).orElseThrow(()->new BadRequestException("Group key is mandatory"));
 
-        List<FieldMapping> additionalMapping = Lists.newArrayList();
-        Optional.ofNullable(groupID).ifPresent((ID) -> additionalMapping.add(new FieldMapping(ID,MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName(),false)));
-        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
-
-        pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName()));
     }
 
-    private void enrichPipelineConfigForEventObject(PipelineConfigDTO pipelineConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) throws BadRequestException{
+    private void enrichPipelineConfigForEventObject(PipelineConfigDTO pipelineConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig, List<MappingGroup> mappingGroups) throws BadRequestException{
 
         String eventId = Optional.ofNullable(mixpanelAppSyncConfig.getEventID()).orElseThrow(()->new BadRequestException("Column uniquely identifying the Event is mandatory"));
         Optional.ofNullable(mixpanelAppSyncConfig.getEventName()).orElseThrow(()-> new BadRequestException("Event Name is mandatory"));
 
-        List<FieldMapping> additionalMapping = Lists.newArrayList();
-        Optional.ofNullable(eventId).ifPresent((insertID) -> additionalMapping
-                .add(new FieldMapping(insertID,MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getDistinctIDForEvent()).ifPresent((distinctID) -> additionalMapping
-                .add(new FieldMapping(distinctID,MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getEventIP()).ifPresent((eventIP) -> additionalMapping
-                .add(new FieldMapping(eventIP,MixpanelObjectFields.EVENT_FIELDS.GEO_IP.getFieldName(),false)));
-        Optional.ofNullable(mixpanelAppSyncConfig.getEventTimeStamp()).ifPresent((eventTimeStamp) -> additionalMapping
-                .add(new FieldMapping(eventTimeStamp,MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(),false)));
-        DataMappingUtils.addAdditionalMappings((TargetFieldsMapping) pipelineConfig.getMapping(), additionalMapping);
-
-        pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName()));
     }
+
 
     @Override
     public RecordSchema enrichWarehouseASchema(AppSyncConfigDTO appSyncConfigDTO , RecordSchema warehouseSchema) {

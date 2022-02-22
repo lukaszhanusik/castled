@@ -19,6 +19,5 @@ public class CastledDataMapping {
 
     private List<String> primaryKeys;
     private DataMappingType type;
-
     private List<FieldMapping> fieldMappings;
 }

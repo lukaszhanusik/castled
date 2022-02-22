@@ -113,7 +113,7 @@ public class PipelineService {
         try {
             ExternalApp externalApp = this.externalAppService.getExternalApp(pipelineConfigDTO.getAppId(), true);
             PipelineConfigDTO enrichedPipelineConfig = this.appConnectors.get(externalApp.getType()).validateAndEnrichPipelineConfig(pipelineConfigDTO);
-            validPipelineConfig(enrichedPipelineConfig);
+            //validPipelineConfig(enrichedPipelineConfig);
             Long pipelineId = this.pipelineDAO.createPipeline(enrichedPipelineConfig, user,
                     UUID_PREFIX + UUID.randomUUID().toString().replaceAll("-", "_"));
             this.castledEventsClient.publishPipelineEvent(new PipelineEvent(pipelineId, PipelineEventType.PIPELINE_CREATED));
