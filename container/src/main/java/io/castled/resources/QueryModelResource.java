@@ -32,8 +32,7 @@ public class QueryModelResource {
     }
 
     @POST
-    public EntityCreateResponse createModel(@Valid QueryModelDTO queryModelDTO,
-                                            @Auth User user) {
+    public EntityCreateResponse createModel(@Valid QueryModelDTO queryModelDTO, @Auth User user) {
         return new EntityCreateResponse(this.queryModelService.createModel(queryModelDTO, user));
     }
 

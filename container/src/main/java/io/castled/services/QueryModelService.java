@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.daos.QueryModelDAO;
 import io.castled.dtos.querymodel.QueryModelDTO;
+import io.castled.dtos.querymodel.QueryModelDetails;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
 import io.castled.dtos.querymodel.TableQueryModelDetails;
 import io.castled.models.QueryModel;
@@ -49,16 +50,12 @@ public class QueryModelService {
     }
 
     private String getSourceQuery(QueryModel queryModel) {
-
-        switch (queryModel.getModelType()) {
-            case SQL_QUERY_EDITOR:
-                ((SqlQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
-                break;
-            case TABLE_SELECTOR:
-                ((TableQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
-
+        QueryModelDetails modelDetails = queryModel.getModelDetails();
+        if (modelDetails instanceof SqlQueryModelDetails) {
+            return ((SqlQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
+        } else if (modelDetails instanceof TableQueryModelDetails) {
+            return ((TableQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
         }
-
         return null;
     }
 
@@ -73,10 +70,9 @@ public class QueryModelService {
 
     public List<QueryModelDTO> getAllModels(Long warehouseId, Long teamId) {
         List<QueryModel> queryModels = null;
-        if(warehouseId!=null){
+        if (warehouseId != null) {
             queryModels = this.queryModelDAO.getQueryModelsByWarehouseAndTeam(warehouseId, teamId);
-        }
-        else{
+        } else {
             queryModels = this.queryModelDAO.getQueryModelsByTeam(teamId);
         }
         return mapEntityToDTO(queryModels);

@@ -7,8 +7,12 @@ import io.castled.models.QueryModel;
 import io.castled.models.QueryModelPK;
 import io.castled.models.users.User;
 import io.castled.utils.JsonUtils;
+import org.jdbi.v3.core.argument.AbstractArgumentFactory;
+import org.jdbi.v3.core.argument.Argument;
+import org.jdbi.v3.core.config.ConfigRegistry;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.sqlobject.config.RegisterArgumentFactory;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -18,18 +22,21 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 @RegisterRowMapper(QueryModelDAO.QueryModelRowMapper.class)
+@RegisterArgumentFactory(QueryModelDAO.QueryModelArgumentFactory.class)
+@RegisterArgumentFactory(QueryModelDAO.QueryModelPKArgumentFactory.class)
 public interface QueryModelDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into query_model(id, user_id, team_id,warehouse_id, model_name,model_details,query_pk)" +
-            " values(:modelDTO.id, :user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.modelName," +
+    @SqlUpdate("insert into query_model(user_id, team_id,warehouse_id,model_name,model_type,model_details,query_pk)" +
+            " values(:user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
             " :modelDTO.modelDetails, :modelDTO.queryModelPK)")
-    long createModel(@BindBean("pipeline") QueryModelDTO modelDTO, @BindBean("user") User user);
+    long createModel(@BindBean("modelDTO") QueryModelDTO modelDTO, @BindBean("user") User user);
 
-    @SqlQuery("select * from query_model where model_name = :model_name and is_deleted = 0")
+    @SqlQuery("select * from query_model where model_name = :modelName and is_deleted = 0")
     QueryModel getQueryModelByModelName(@Bind("modelName") String modelName);
 
     @SqlQuery("select * from query_model where id = :id and is_deleted = 0")
@@ -49,6 +56,31 @@ public interface QueryModelDAO {
 
     @SqlUpdate("update query_model set is_deleted = 1 where id = :id")
     void deleteModel(@Bind("id") Long id);
+
+
+    class QueryModelArgumentFactory extends AbstractArgumentFactory<QueryModelDetails> {
+
+        public QueryModelArgumentFactory() {
+            super(Types.VARCHAR);
+        }
+
+        @Override
+        protected Argument build(QueryModelDetails modelDetails, ConfigRegistry config) {
+            return (position, statement, ctx) -> statement.setString(position, JsonUtils.objectToString(modelDetails));
+        }
+    }
+
+    class QueryModelPKArgumentFactory extends AbstractArgumentFactory<QueryModelPK> {
+
+        public QueryModelPKArgumentFactory() {
+            super(Types.VARCHAR);
+        }
+
+        @Override
+        protected Argument build(QueryModelPK queryModelPK, ConfigRegistry config) {
+            return (position, statement, ctx) -> statement.setString(position, JsonUtils.objectToString(queryModelPK));
+        }
+    }
 
     class QueryModelRowMapper implements RowMapper<QueryModel> {
 

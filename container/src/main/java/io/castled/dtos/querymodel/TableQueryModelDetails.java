@@ -12,10 +12,7 @@ public class TableQueryModelDetails extends QueryModelDetails {
     private String tableName;
     private String sourceQuery;
 
-    public TableQueryModelDetails(String schemaName, String tableName, String sourceQuery) {
+    public TableQueryModelDetails() {
         super(QueryModelType.TABLE_SELECTOR);
-        this.schemaName = schemaName;
-        this.tableName = tableName;
-        this.sourceQuery = sourceQuery;
     }
 }

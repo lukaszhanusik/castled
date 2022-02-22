@@ -18,7 +18,7 @@ public class QueryModel {
     private Long teamId;
     private Long warehouseId;
     private String modelName;
-    private QueryModelType modelType;
+    private String modelType;
     private QueryModelDetails modelDetails;
     private QueryModelPK queryModelPK;
 }
