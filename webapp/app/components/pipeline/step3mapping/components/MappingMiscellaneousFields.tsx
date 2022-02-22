@@ -1,15 +1,63 @@
+import { useState, useEffect } from "react";
+import Select from "react-select";
 import { MappingFieldsProps } from "../types/componentTypes";
-import AdditionalFields from "./Layouts/AdditionalFields";
+// import AdditionalFields from "./Layouts/AdditionalFields";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingMiscellaneousFields({
   options,
   mappingGroups,
 }: MappingFieldsProps) {
+  const [row, setRow] = useState<JSX.Element[]>([]);
+  const [addOptionalRow, setAddOptionalRow] = useState(true);
+
+  useEffect(() => {
+    if (row.length === 0) {
+      setAddOptionalRow(true);
+    }
+  }, [row]);
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
+
+  function addRow() {
+    if (miscellaneousFieldSection && miscellaneousFieldSection.length) {
+      const randomKey = Math.floor(Math.random() * 10000000000);
+      const additionalRow = (
+        <AdditionalFields
+          key={randomKey}
+          options={options}
+          mappingGroups={mappingGroups}
+          addRow={addRow}
+          handleDelete={(e) => {
+            e.preventDefault();
+            handleDelete(randomKey);
+          }}
+          additonalField
+        />
+      );
+      setRow((prevState) => [...prevState, additionalRow]);
+    }
+  }
+
+  function addOptional() {
+    // console.log(addOptionalRow);
+    if (addOptionalRow) {
+      addRow();
+      setAddOptionalRow(!addOptionalRow);
+    }
+  }
+
+  function handleDelete(key: number) {
+    setRow((prevState) =>
+      prevState.filter((item) => {
+        return item.key !== String(key);
+      })
+    );
+  }
+
+  console.log(row);
 
   return (
     <div className="row py-2">
@@ -17,73 +65,45 @@ export default function MappingMiscellaneousFields({
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
             <AdditionalFields
+              key={`item-${row.length}`}
               options={options}
               mappingGroups={mappingGroups}
-              type="input"
+              addRow={addOptional}
+              additonalField={false}
             />
+            {row}
           </WarehouseColumn>
         ))}
     </div>
   );
 }
 
-// import InputField from "@/app/components/forminputs/InputField";
-// import InputSelect from "@/app/components/forminputs/InputSelect";
-// import { values } from "lodash";
-// import { useState } from "react";
-// import { Placeholder } from "react-bootstrap";
-// import { MappingFieldsProps } from "../types/componentTypes";
+interface AdditionalFieldsProps extends MappingFieldsProps {
+  addRow: (e: any) => void;
+  handleDelete?: (e: any) => void;
+  additonalField?: boolean;
+}
 
-// export default function MappingTableBody({
-//   title,
-//   description,
-//   options,
-//   setFieldValue,
-//   setFieldTouched,
-//   fieldName,
-// }: MappingFieldsProps) {
-//   const [warehouseSelected, setWarehouseSelected] = useState<boolean>(false);
-
-//   const renderBody = (
-//     <tr>
-//       <th>
-//         <InputSelect
-//           title={undefined}
-//           options={options}
-//           deps={undefined}
-//           values={values}
-//           setFieldValue={setFieldValue}
-//           setFieldTouched={setFieldTouched}
-//           name={fieldName + ".appField"}
-//           addColumn={() => setWarehouseSelected(true)}
-//         />
-//       </th>
-//       <th>
-//         <InputField
-//           className="w-100"
-//           type="text"
-//           title={undefined}
-//           values={values}
-//           setFieldValue={setFieldValue}
-//           setFieldTouched={setFieldTouched}
-//           name={fieldName + ".appField"}
-//         />
-//       </th>
-//     </tr>
-//   );
-//   const addBody = [renderBody];
-
-//   if (warehouseSelected) {
-//     addBody.push(
-//       <MappingTableBody
-//         options={options}
-//         title={undefined}
-//         setFieldValue={setFieldValue}
-//         setFieldTouched={setFieldTouched}
-//         fieldName={fieldName}
-//       />
-//     );
-//   }
-
-//   return <>{addBody}</>;
-// }
+function AdditionalFields({
+  options,
+  mappingGroups,
+  addRow,
+  handleDelete,
+  additonalField,
+}: AdditionalFieldsProps) {
+  return (
+    <tr>
+      <th className="w-50">
+        <Select options={options} onChange={addRow} />
+      </th>
+      <th className="w-50">
+        <input
+          type="text"
+          placeholder="Enter a field"
+          className="form-control p-2"
+        />
+      </th>
+      {additonalField && <button onClick={handleDelete}>X</button>}
+    </tr>
+  );
+}

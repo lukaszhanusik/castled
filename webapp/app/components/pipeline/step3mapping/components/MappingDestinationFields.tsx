@@ -39,7 +39,7 @@ export default function MappingImportantFields({
 
   // This is for primary key to add optional row if there are no optional row present.
   function addOptional() {
-    console.log(addOptionalRow);
+    // console.log(addOptionalRow);
     if (addOptionalRow) {
       addRow();
       setAddOptionalRow(!addOptionalRow);
@@ -70,7 +70,7 @@ export default function MappingImportantFields({
       />
     )
   );
-  console.log(optionalRow);
+  // console.log(optionalRow);
 
   return (
     <div className="row py-2">

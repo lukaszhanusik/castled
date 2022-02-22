@@ -77,7 +77,7 @@ const PipelineMapping = ({
     return <Loading />;
   }
 
-  // console.log(pipelineSchema);
+  console.log(pipelineSchema);
 
   // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
