@@ -29,6 +29,10 @@ import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 // import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 import DynamicMappingFields from "./DynamicMappingFields";
 import LoadingTable from "./components/Layouts/LoadingTable";
+import {
+  FieldMapping,
+  PipelineMappingDto,
+} from "@/app/common/dtos/PipelineCreateRequestDto";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -83,6 +87,27 @@ const PipelineMapping = ({
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
 
+  const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
+    const fieldMappings: FieldMapping[] = [];
+    const primaryKeys: string[] = [];
+    _.each(mappingInfo, (value, key) => {
+      if (value.appField) {
+        fieldMappings.push({
+          warehouseField: key,
+          appField: value.appField,
+          skipped: false,
+        });
+      }
+      if (value.isPrimaryKey) {
+        primaryKeys.push(value.appField);
+      }
+    });
+    return {
+      primaryKeys,
+      fieldMappings,
+    };
+  };
+
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -97,10 +122,23 @@ const PipelineMapping = ({
             initialValues={initialMappingInfo}
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
-              pipelineWizContext.mappingInfo = values;
-              setPipelineWizContext(pipelineWizContext);
-              setCurWizardStep(undefined, "settings");
-              setSubmitting(false);
+              // pipelineWizContext.mappingInfo = values;
+              // pipelineWizContext.values.mapping = transformMapping(values);
+              console.log(values);
+              // console.log(pipelineWizContext.values.mapping);
+              // if (
+              //   pipelineWizContext.values.mapping.primaryKeys?.length == 0 &&
+              /*   !pipelineSchema?.pkEligibles.autoDetect */
+              // ) {
+              //   setSubmitting(false);
+              //   bannerNotificationService.error(
+              //     "Atleast one primary key should be selected"
+              //   );
+              //   return;
+              // }
+              // setPipelineWizContext(pipelineWizContext);
+              // setCurWizardStep(undefined, "settings");
+              // setSubmitting(false);
             }}
           >
             {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
@@ -109,6 +147,7 @@ const PipelineMapping = ({
                   values={values}
                   mappingFields={pipelineSchema}
                   setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
                 />
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE

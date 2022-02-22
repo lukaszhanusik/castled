@@ -3,6 +3,13 @@ import { MappingGroup } from "@/app/common/dtos/PipelineSchemaResponseDto";
 export interface MappingFieldsProps {
   options: SchemaOptions[];
   mappingGroups: MappingGroup[];
+  values?: any;
+  setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldTouched?: (
+    field: string,
+    isTouched?: boolean,
+    shouldValidate?: boolean
+  ) => void;
 }
 
 export interface SchemaOptions {

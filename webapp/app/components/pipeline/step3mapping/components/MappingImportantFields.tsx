@@ -4,6 +4,9 @@ import { MappingFieldsProps } from "../types/componentTypes";
 export default function MappingImportantFields({
   options,
   mappingGroups,
+  values,
+  setFieldValue,
+  setFieldTouched,
 }: MappingFieldsProps) {
   // SECTION - 1 - Mandatory fields filter from warehouseSchema
   const importantParamsSection = mappingGroups.filter((fields) => {
@@ -22,7 +25,11 @@ export default function MappingImportantFields({
               </div>
             </div>
             <div className="w-50">
-              <Select options={options} />
+              <Select
+                options={options}
+                onChange={(e) => setFieldValue?.(field.fieldName, e)}
+                onBlur={() => setFieldTouched?.(field.fieldName, true)}
+              />
             </div>
           </div>
         ))}
