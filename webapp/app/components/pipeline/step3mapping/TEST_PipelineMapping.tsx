@@ -28,7 +28,7 @@ import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 // import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
-import WarehouseColumn from "./components/WarehouseColumn";
+import WarehouseColumn from "./components/Layouts/WarehouseColumn";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 
 interface MappingInfo {
@@ -113,7 +113,7 @@ const PipelineMapping = ({
     );
   }
 
-  console.log(pipelineSchema)
+  console.log(pipelineSchema);
 
   const appSchemaOptions = pipelineSchema?.warehouseSchema?.fields.map(
     (field) => ({
@@ -142,6 +142,8 @@ const PipelineMapping = ({
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
   });
+
+  console.log(destinationFieldSection);
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
@@ -175,50 +177,41 @@ const PipelineMapping = ({
             <Form className="container">
               {/* First Section - IMPORTANT PARAMS*/}
               <div className="row py-2">
-                {importantParamsSection.length > 0 &&
-                  importantParamsSection[0].fields?.map((field) => (
-                    <MappingImportantFields
-                      title={field.title}
-                      options={appSchemaOptions}
-                      description={
-                        field.title === field.description
-                          ? ""
-                          : field.description
-                      }
-                    />
-                  ))}
-              </div>
-              {/* SECOND Section - PRIMARY KEYS*/}
-              <div className="row py-2">
-                {primaryKeysSection.length > 0 &&
-                  primaryKeysSection.map((field) => (
+                {destinationFieldSection.length > 0 &&
+                  destinationFieldSection.map((field) => (
                     <WarehouseColumn
                       title={field.title}
                       description={field.description}
                     >
-                      {field.primaryKeys!.map((key) => (
-                        <MappingTableSelectOnlyBody
-                          options={appSchemaOptions}
-                          onlyOptions={appSchemaPrimaryKeysFilter(key)}
-                        />
+                      {field.mandatoryFields!.length > 0 &&
+                        field.mandatoryFields?.map((mandatoryField) => (
+                          <tr>
+                            <th>
+                              <Select options={appSchemaOptions} />
+                            </th>
+                            <th>
+                              <input
+                                className="form-control p-2 px-2"
+                                value={mandatoryField.fieldName}
+                                disabled={!mandatoryField.optional}
+                              />
+                            </th>
+                          </tr>
+                        ))}
+                      {field.optionalFields?.map((optionalField) => (
+                        <tr>
+                          <th>
+                            <Select options={appSchemaOptions} />
+                          </th>
+                          <th>
+                            <Select
+                              options={field.optionalFields!.map((items) => {
+                                return { value: items.fieldName, label: items.fieldName }
+                              })}
+                            />
+                          </th>
+                        </tr>
                       ))}
-                    </WarehouseColumn>
-                  ))}
-              </div>
-              {/* THIRD Section - DESTINATION_FIELDS*/}
-
-              {/* FOURTH Section - MISCELLANEOUS_FIELDS*/}
-              <div className="row py-2">
-                {miscellaneousFieldSection.length > 0 &&
-                  miscellaneousFieldSection?.map((field) => (
-                    <WarehouseColumn
-                      title={field.title}
-                      description={field.description}
-                    >
-                      <MappingMiscellaneousFields
-                        options={appSchemaOptions}
-                        type={"input"}
-                      />
                     </WarehouseColumn>
                   ))}
               </div>

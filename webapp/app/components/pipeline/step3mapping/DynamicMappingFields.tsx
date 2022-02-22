@@ -9,18 +9,16 @@ import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import {
-  MappingGroup,
   PipelineSchemaResponseDto,
-  PrimaryKeyElement,
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
-import { MappingFieldEnums } from "./types/MappingFieldEnums";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
+import MappingDestinationFields from "./components/MappingDestinationFields";
 
 export interface DynamicMappingFieldsProps {
   namePrefix?: string;
-  formFields?: PipelineSchemaResponseDto;
+  mappingFields?: PipelineSchemaResponseDto;
   skipNames?: string[];
   values: any;
   setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
@@ -42,22 +40,20 @@ const fieldRenderers: {
 } = {
   IMPORTANT_PARAMS: { renderer: MappingImportantFields },
   PRIMARY_KEYS: { renderer: MappingTableSelectOnlyBody },
-  DESTINATION_FIELDS: { renderer: MappingTableSelectOnlyBody },
+  DESTINATION_FIELDS: { renderer: MappingDestinationFields },
   MISCELLANEOUS_FIELDS: { renderer: MappingMiscellaneousFields },
 };
 
 const DynamicMappingFields = ({
-  // namePrefix,
-  formFields,
-  // skipNames,
+  mappingFields,
   values,
   setFieldValue,
 }: // dataFetcher,
 DynamicMappingFieldsProps) => {
-  if (!formFields?.warehouseSchema.fields || !formFields?.mappingGroups.length)
+  if (!mappingFields?.warehouseSchema.fields || !mappingFields?.mappingGroups.length)
     return null;
 
-  const { warehouseSchema, mappingGroups } = formFields;
+  const { warehouseSchema, mappingGroups } = mappingFields;
 
   const fields: Array<any> = [];
 

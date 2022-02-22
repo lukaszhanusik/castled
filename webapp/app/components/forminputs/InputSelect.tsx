@@ -119,9 +119,6 @@ const InputSelect = ({
             }
             isMulti={isMulti}
             className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
-<<<<<<< HEAD
-            onChange={(v) => {setFieldValue?.(field.name, v?.value)}}
-=======
             onChange={(v: any | undefined) => {
               let newValue = v?.value;
               if (isMulti) {
@@ -129,7 +126,6 @@ const InputSelect = ({
               }
               setFieldValue?.(field.name, newValue);
             }}
->>>>>>> db16da0c148b2c0fed4cffe07107bd5929f5f7d8
             onBlur={() => setFieldTouched?.(field.name, true)}
             value={getOptionValues(
               field,
