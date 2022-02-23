@@ -35,6 +35,7 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
     private final MixpanelRestClient mixpanelRestClient;
     private final MixpanelErrorParser mixpanelErrorParser;
     private final ErrorOutputStream errorOutputStream;
+    private final MixpanelAppConfig mixpanelAppConfig;
     private final AtomicLong processedRecords = new AtomicLong(0);
     private long lastProcessedOffset = 0;
     private final MixpanelAppSyncConfig syncConfig;
@@ -48,6 +49,7 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.mixpanelErrorParser = ObjectRegistry.getInstance(MixpanelErrorParser.class);
         this.syncConfig = (MixpanelAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+        this.mixpanelAppConfig = (MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig();
     }
 
     @Override
@@ -69,6 +71,7 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
 
     private Map<String,Object> constructGroupProfileDetails(Tuple record) {
         Map<String,Object> groupProfileInfo = Maps.newHashMap();
+        groupProfileInfo.put("$token",mixpanelAppConfig.getProjectToken());
         groupProfileInfo.put("$group_key",syncConfig.getGroupKey());
         groupProfileInfo.put("$group_id",getGroupID(record));
         groupProfileInfo.put("$set",constructPropertyMap(record));

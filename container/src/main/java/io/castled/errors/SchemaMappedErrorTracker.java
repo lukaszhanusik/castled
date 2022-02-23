@@ -10,6 +10,7 @@ import io.castled.schema.models.FieldSchema;
 import io.castled.schema.models.RecordSchema;
 import io.castled.schema.models.Tuple;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -38,13 +39,15 @@ public class SchemaMappedErrorTracker implements CastledErrorTracker {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (FieldSchema fieldSchema : targetSchema.getFieldSchemas()) {
             List<String> sourceFields = targetSourceMapping.get(fieldSchema.getName());
-            for (String sourceField : sourceFields) {
-                if (sourceField != null) {
-                    Object value = record.getValue(sourceField);
-                    try {
-                        recordBuilder.put(fieldSchema, schemaMapper.transformValue(value, fieldSchema.getSchema()));
-                    } catch (IncompatibleValueException e) {
-                        recordBuilder.put(new FieldSchema(fieldSchema.getName(), SchemaConstants.STRING_SCHEMA), value.toString());
+            if (!CollectionUtils.isEmpty(sourceFields)) {
+                for (String sourceField : sourceFields) {
+                    if (sourceField != null) {
+                        Object value = record.getValue(sourceField);
+                        try {
+                            recordBuilder.put(fieldSchema, schemaMapper.transformValue(value, fieldSchema.getSchema()));
+                        } catch (IncompatibleValueException e) {
+                            recordBuilder.put(new FieldSchema(fieldSchema.getName(), SchemaConstants.STRING_SCHEMA), value.toString());
+                        }
                     }
                 }
             }
