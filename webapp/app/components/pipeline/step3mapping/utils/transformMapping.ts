@@ -32,7 +32,7 @@ export default function transformMapping(
         }
         if (key.includes("appField")) {
           let arrObj: any = arr[Number(key.charAt(key.length - 1))] || {};
-          let arrObjVal = { appfield: value };
+          let arrObjVal = { appField: value };
           arr[Number(key.charAt(key.length - 1))] = Object.assign(
             arrObj,
             arrObjVal
