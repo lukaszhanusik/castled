@@ -10,16 +10,27 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
-public interface QueryModelDTOMapper {
-    QueryModelDTOMapper INSTANCE = Mappers.getMapper(QueryModelDTOMapper.class);
+import java.util.Map;
+import java.util.Optional;
 
-    @Mapping(target = "warehouse", source = "warehouseId", qualifiedByName = "getWarehouseDetails")
-    ModelDetailsDTO toDTO(QueryModel queryModel);
+public class QueryModelDTOMapper {
 
-    default WarehouseDetails getWarehouseDetails(Long warehouseId) {
-        Warehouse warehouse = ObjectRegistry.getInstance(WarehouseService.class).getWarehouse(warehouseId, true);
-        return WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
-                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build();
+    public static ModelDetailsDTO toDTO(QueryModel queryModel, Warehouse warehouse , Integer activeSyncsCount) {
+        if ( queryModel == null ) {
+            return null;
+        }
+
+        ModelDetailsDTO.ModelDetailsDTOBuilder modelDetailsDTO = ModelDetailsDTO.builder();
+        modelDetailsDTO.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
+                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build());
+        modelDetailsDTO.id( queryModel.getId() );
+        modelDetailsDTO.userId( queryModel.getUserId() );
+        modelDetailsDTO.teamId( queryModel.getTeamId() );
+        modelDetailsDTO.modelName( queryModel.getModelName() );
+        modelDetailsDTO.modelType( queryModel.getModelType() );
+        modelDetailsDTO.modelDetails( queryModel.getModelDetails() );
+        modelDetailsDTO.queryModelPK( queryModel.getQueryModelPK() );
+        modelDetailsDTO.activeSyncsCount(Optional.ofNullable(activeSyncsCount).orElse(0));
+        return modelDetailsDTO.build();
     }
 }

@@ -16,6 +16,7 @@ import org.jdbi.v3.sqlobject.config.RegisterArgumentFactory;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -31,6 +32,7 @@ import java.util.List;
 @RegisterRowMapper(PipelineDAO.PipelineRowMapper.class)
 @RegisterRowMapper(PipelineDAO.WarehouseAggregateRowMapper.class)
 @RegisterRowMapper(PipelineDAO.AppAggregateRowMapper.class)
+@RegisterRowMapper(PipelineDAO.ModelAggregateRowMapper.class)
 public interface PipelineDAO {
 
     @GetGeneratedKeys
@@ -77,6 +79,9 @@ public interface PipelineDAO {
 
     @SqlQuery("select app_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by app_id")
     List<AppAggregate> aggregateByApp(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId and model_id in (<modelIds>) group by model_id")
+    List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId, @BindList("modelIds") List<Long> modelIds);
 
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 
@@ -130,6 +135,14 @@ public interface PipelineDAO {
         @Override
         public AppAggregate map(ResultSet rs, StatementContext ctx) throws SQLException {
             return new AppAggregate(rs.getLong("app_id"),
+                    rs.getInt("pipelines"));
+        }
+    }
+
+    class ModelAggregateRowMapper implements RowMapper<ModelAggregate> {
+        @Override
+        public ModelAggregate map(ResultSet rs, StatementContext ctx) throws SQLException {
+            return new ModelAggregate(rs.getLong("model_id"),
                     rs.getInt("pipelines"));
         }
     }

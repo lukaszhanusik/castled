@@ -20,4 +20,5 @@ public class ModelDetailsDTO {
     private String modelType;
     private QueryModelDetails modelDetails;
     private QueryModelPK queryModelPK;
+    private Integer activeSyncsCount;
 }
