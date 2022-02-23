@@ -1,6 +1,5 @@
 package io.castled.dtomappers;
 
-import com.google.common.collect.Collections2;
 import io.castled.dtos.PipelineDTO;
 import io.castled.dtos.WarehouseDetails;
 import io.castled.dtos.querymodel.ModelDetailsDTO;
@@ -8,7 +7,6 @@ import io.castled.models.QueryModel;
 import io.castled.models.Warehouse;
 import org.apache.commons.collections.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
