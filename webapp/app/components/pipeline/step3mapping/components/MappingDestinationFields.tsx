@@ -1,9 +1,8 @@
 // Section 3 Mapping with formic
 
-import { MappingGroup } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import { useEffect, useState } from "react";
-import Select, { FocusEventHandler } from "react-select";
-import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
+import Select from "react-select";
+import { DestinationFieldRowsProps, MappingFieldsProps } from "../types/componentTypes";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingImportantFields({
@@ -70,14 +69,26 @@ export default function MappingImportantFields({
         destinationFieldSection={destinationFieldSection}
         isDisabled={!optionalField.optional}
         onChange={(e) => {
-          setFieldValue?.(`3-${optionalField.fieldName}`, e);
+          setFieldValue?.(
+            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            e?.value
+          );
           addRow();
         }}
         handleDelete={(e) => {
           e.preventDefault();
           deleteRow(optionalField.fieldName);
+          setFieldValue?.(
+            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            ""
+          );
         }}
-        onBlur={() => setFieldTouched?.(`3-${optionalField.fieldName}`, true)}
+        onBlur={() =>
+          setFieldTouched?.(
+            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            true
+          )
+        }
       />
     )
   );
@@ -89,7 +100,7 @@ export default function MappingImportantFields({
         destinationFieldSection.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
             {field.mandatoryFields!.length > 0 &&
-              field.mandatoryFields?.map((mandatoryField) => (
+              field.mandatoryFields?.map((mandatoryField, i) => (
                 <DestinationFieldRows
                   key={mandatoryField.fieldName}
                   options={options}
@@ -99,11 +110,17 @@ export default function MappingImportantFields({
                   }}
                   isDisabled={!mandatoryField.optional}
                   onChange={(e) => {
-                    setFieldValue?.(`3-${mandatoryField.fieldName}`, e);
+                    setFieldValue?.(
+                      `DESTINATION_FIELDS-${i}-mandatory-${mandatoryField.fieldName}`,
+                      e?.value
+                    );
                     addOptional();
                   }}
                   onBlur={() =>
-                    setFieldTouched?.(`3-${mandatoryField.fieldName}`, true)
+                    setFieldTouched?.(
+                      `DESTINATION_FIELDS-${i}-mandatory-${mandatoryField.fieldName}`,
+                      true
+                    )
                   }
                 />
               ))}
@@ -112,17 +129,6 @@ export default function MappingImportantFields({
         ))}
     </div>
   );
-}
-
-interface DestinationFieldRowsProps {
-  options: SchemaOptions[];
-  destinationFieldSection?: MappingGroup[];
-  defaultValue?: { value: string; label: string };
-  isDisabled?: boolean;
-  onChange?: (value: any) => void;
-  handleDelete?: (value: any) => void;
-  onBlur?: FocusEventHandler | undefined;
-  values?: any;
 }
 
 function DestinationFieldRows({

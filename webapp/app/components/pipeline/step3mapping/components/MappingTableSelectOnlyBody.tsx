@@ -27,7 +27,12 @@ export default function MappingTableBody({
                 <th className="w-50">
                   <Select
                     options={options}
-                    onChange={(e) => setFieldValue?.(`primary-warehouseField-${index}`, e)}
+                    onChange={(e) =>
+                      setFieldValue?.(
+                        `PRIMARY_KEYS-warehouseField-${index}`,
+                        e?.value
+                      )
+                    }
                     onBlur={() =>
                       setFieldTouched?.(primaryKeys.fieldName, true)
                     }
@@ -39,7 +44,12 @@ export default function MappingTableBody({
                       value: key.fieldName,
                       label: key.fieldName,
                     }))}
-                    onChange={(e) => setFieldValue?.(`primary-appField-${index}`, e)}
+                    onChange={(e) =>
+                      setFieldValue?.(
+                        `PRIMARY_KEYS-appField-${index}`,
+                        e?.value
+                      )
+                    }
                     onBlur={() =>
                       setFieldTouched?.(primaryKeys.fieldName, true)
                     }

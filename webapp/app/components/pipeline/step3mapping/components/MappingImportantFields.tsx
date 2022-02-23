@@ -27,8 +27,15 @@ export default function MappingImportantFields({
             <div className="w-50">
               <Select
                 options={options}
-                onChange={(e) => setFieldValue?.(field.fieldName, e)}
-                onBlur={() => setFieldTouched?.(field.fieldName, true)}
+                onChange={(e) =>
+                  setFieldValue?.(
+                    `IMPORTANT_PARAMS-${field.fieldName}`,
+                    e?.value
+                  )
+                }
+                onBlur={() =>
+                  setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
+                }
               />
             </div>
           </div>
