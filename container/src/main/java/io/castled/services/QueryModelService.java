@@ -55,7 +55,7 @@ public class QueryModelService {
     public ModelDetailsDTO getQueryModel(Long modelId, Long teamId) {
         QueryModel queryModel = this.queryModelDAO.getQueryModel(modelId);
         this.resourceAccessController.validateQueryModelAccess(queryModel, teamId);
-        return populateModelDetailsDTO(teamId, queryModel);
+        return convertToModelDetailsDTO(teamId, queryModel);
     }
 
     public QueryModel getQueryModel(Long modelId) {
@@ -93,10 +93,10 @@ public class QueryModelService {
         } else {
             queryModels = this.queryModelDAO.getQueryModelsByTeam(teamId);
         }
-        return populateModelDetailDTOList(teamId, queryModels);
+        return convertToModelDetailDTOList(teamId, queryModels);
     }
 
-    private List<ModelDetailsDTO> populateModelDetailDTOList(Long teamId, List<QueryModel> queryModels) {
+    private List<ModelDetailsDTO> convertToModelDetailDTOList(Long teamId, List<QueryModel> queryModels) {
         Map<Long, Warehouse> warehouseMap = prepareWarehouseMap(queryModels);
         Map<Long, Integer> modelToSyncCountMap = prepareModelToSyncCountMap(teamId, queryModels);
         List<ModelDetailsDTO> modelDetailsDTOS = Lists.newArrayList();
@@ -105,7 +105,7 @@ public class QueryModelService {
         return modelDetailsDTOS;
     }
 
-    private ModelDetailsDTO populateModelDetailsDTO(Long teamId, QueryModel queryModel) {
+    private ModelDetailsDTO convertToModelDetailsDTO(Long teamId, QueryModel queryModel) {
         Warehouse warehouse = warehouseService.getWarehouse(queryModel.getWarehouseId());
         List<Pipeline> pipelines = pipelineService.listPipelinesByModelId(teamId, queryModel.getId());
         List<PipelineDTO> pipelineDTOS = pipelines.stream().map(PipelineDTOMapper.INSTANCE::toDetailedDTO).collect(Collectors.toList());
