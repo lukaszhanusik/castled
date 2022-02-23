@@ -62,6 +62,9 @@ public interface PipelineDAO {
     @SqlQuery("select * from pipelines where team_id = :teamId and app_id = :appId and is_deleted = 0 ")
     List<Pipeline> listPipelines(@Bind("teamId") Long teamId, @Bind("appId") Long appId);
 
+    @SqlQuery("select * from pipelines where team_id = :teamId and model_id = :modelId and is_deleted = 0 ")
+    List<Pipeline> listPipelinesByModelId(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
+
     @SqlUpdate("update pipelines set sync_status = :syncStatus where id = :id")
     void updateSyncStatus(@Bind("id") Long id, @Bind("syncStatus") PipelineSyncStatus syncStatus);
 
