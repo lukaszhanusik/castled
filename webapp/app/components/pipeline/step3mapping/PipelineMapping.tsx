@@ -34,6 +34,7 @@ import {
   PipelineMappingDto,
 } from "@/app/common/dtos/PipelineCreateRequestDto";
 import transformMapping from "./utils/transformMapping";
+import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -137,6 +138,8 @@ const PipelineMapping = ({
               //   );
               //   return;
               // }
+              pipelineWizContext.values.mapping.type =
+                PipelineMappingType.TARGET_FIELDS_MAPPING;
               setPipelineWizContext(pipelineWizContext);
               setCurWizardStep(undefined, "settings");
               setSubmitting(false);
