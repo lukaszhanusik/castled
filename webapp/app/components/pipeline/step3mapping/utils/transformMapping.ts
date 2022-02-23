@@ -8,9 +8,7 @@ interface FieldMapping {
   appField: string;
   skipped: boolean;
 }
-export default function transformMapping(
-  obj: any
-): MappingReturnObject {
+export default function transformMapping(obj: any): MappingReturnObject {
   const primary: string[] = [];
   const fields: FieldMapping[] = [];
 
@@ -24,7 +22,7 @@ export default function transformMapping(
         }
         if (key.includes("warehouseField")) {
           let arrObj: any = arr[Number(key.charAt(key.length - 1))] || {};
-          let arrObjVal = { warehouseField: value, skipped: false };
+          let arrObjVal = { warehouseField: value };
           arr[Number(key.charAt(key.length - 1))] = Object.assign(
             arrObj,
             arrObjVal
@@ -32,7 +30,7 @@ export default function transformMapping(
         }
         if (key.includes("appField")) {
           let arrObj: any = arr[Number(key.charAt(key.length - 1))] || {};
-          let arrObjVal = { appField: value };
+          let arrObjVal = { appField: value, skipped: false };
           arr[Number(key.charAt(key.length - 1))] = Object.assign(
             arrObj,
             arrObjVal
@@ -56,9 +54,9 @@ export default function transformMapping(
           //         let arrObj = arr[allCount] || {}
           let toReplace = `DESTINATION_FIELDS-${mandatoryCount}-mandatory-`;
           let arrObjVal = {
+            warehouseField: value,
             appField: key.replace(toReplace, ""),
             skipped: false,
-            warehouseField: value,
           };
           arr[allCount] = Object.assign({}, arrObjVal);
           mandatoryCount += 1;
@@ -69,9 +67,9 @@ export default function transformMapping(
           //         let arrObj = arr[allCount] || {}
           let toReplace = `DESTINATION_FIELDS-${optionalCount}-optional-`;
           let arrObjVal = {
+            warehouseField: value,
             appField: key.replace(toReplace, ""),
             skipped: false,
-            warehouseField: value,
           };
           arr[allCount] = Object.assign({}, arrObjVal);
           optionalCount += 1;
