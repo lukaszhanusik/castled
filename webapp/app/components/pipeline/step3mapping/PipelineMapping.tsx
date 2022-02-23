@@ -124,8 +124,8 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
               // pipelineWizContext.mappingInfo = values;
-              // pipelineWizContext.values.mapping = transformMapping(values);
-              console.log(transformMapping(values));
+              pipelineWizContext.values.mapping = transformMapping(values);
+              // console.log(transformMapping(values));
               // console.log(pipelineWizContext.values.mapping);
               // if (
               //   pipelineWizContext.values.mapping.primaryKeys?.length == 0 &&
@@ -137,9 +137,9 @@ const PipelineMapping = ({
               //   );
               //   return;
               // }
-              // setPipelineWizContext(pipelineWizContext);
-              // setCurWizardStep(undefined, "settings");
-              // setSubmitting(false);
+              setPipelineWizContext(pipelineWizContext);
+              setCurWizardStep(undefined, "settings");
+              setSubmitting(false);
             }}
           >
             {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
