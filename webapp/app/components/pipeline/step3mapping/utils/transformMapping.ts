@@ -38,7 +38,9 @@ export default function transformMapping(obj: any): MappingReturnObject {
         }
       }
     }
-    fields.push(...arr);
+    fields.push(
+      ...arr.filter((field) => field.warehouseField && field.appField)
+    );
   }
 
   // Destination Object Transform Function
@@ -77,7 +79,9 @@ export default function transformMapping(obj: any): MappingReturnObject {
         }
       }
     }
-    fields.push(...arr);
+    fields.push(
+      ...arr.filter((field) => field.warehouseField && field.appField)
+    );
   }
 
   // Important params transform function
@@ -96,7 +100,9 @@ export default function transformMapping(obj: any): MappingReturnObject {
         count += 1;
       }
     }
-    fields.push(...arr);
+    fields.push(
+      ...arr.filter((field) => field.warehouseField && field.appField)
+    );
   }
 
   // Miscellaneous object transform Function
