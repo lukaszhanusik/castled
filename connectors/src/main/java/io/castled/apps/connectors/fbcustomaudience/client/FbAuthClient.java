@@ -23,6 +23,7 @@ public class FbAuthClient {
                                                         String clientSecret, String redirectUri) {
         Response response = FbClientUtils.executeAndHandleError(() -> {
             return this.client.target(TOKEN_SERVICE_API_END_POINT)
+                    .queryParam("scope", "ads_management")
                     .queryParam("code", authorizationCode)
                     .queryParam("client_id", clientId)
                     .queryParam("client_secret", clientSecret)
