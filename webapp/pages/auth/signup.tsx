@@ -45,6 +45,8 @@ function SignUp(props: serverSideProps) {
               initialValues={
                 {
                   email: router.query.email || "",
+                  destinations: router.query.destinations || "",
+                  plan: router.query.plan || "",
                 } as SignUpRequestDto
               }
               validationSchema={formSchema}
