@@ -13,7 +13,7 @@ import {
 } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
-import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
+import MappingPrimaryKeyFields from "./components/MappingPrimaryKeyFields";
 import MappingDestinationFields from "./components/MappingDestinationFields";
 
 export interface DynamicMappingFieldsProps {
@@ -39,7 +39,7 @@ const fieldRenderers: {
   };
 } = {
   IMPORTANT_PARAMS: { renderer: MappingImportantFields },
-  PRIMARY_KEYS: { renderer: MappingTableSelectOnlyBody },
+  PRIMARY_KEYS: { renderer: MappingPrimaryKeyFields },
   DESTINATION_FIELDS: { renderer: MappingDestinationFields },
   MISCELLANEOUS_FIELDS: { renderer: MappingMiscellaneousFields },
 };

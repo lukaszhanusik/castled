@@ -27,4 +27,5 @@ export interface DestinationFieldRowsProps {
   handleDelete?: (value: any) => void;
   onBlur?: FocusEventHandler | undefined;
   values?: any;
+  isClearable?: boolean;
 }

@@ -5,7 +5,7 @@ interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
   onlyOptions?: SchemaOptions[];
 }
 
-export default function MappingTableBody({
+export default function MappingPrimaryKeyFields({
   options,
   mappingGroups,
   values,

@@ -92,6 +92,7 @@ export default function MappingImportantFields({
             true
           )
         }
+        isClearable={true}
       />
     )
   );
@@ -143,11 +144,17 @@ function DestinationFieldRows({
   onBlur,
   handleDelete,
   values,
+  isClearable,
 }: DestinationFieldRowsProps) {
   return (
     <tr>
       <th className="w-50">
-        <Select options={options} onChange={onChange} onBlur={onBlur} />
+        <Select
+          options={options}
+          onChange={onChange}
+          onBlur={onBlur}
+          isClearable={isClearable}
+        />
       </th>
       <th className="w-50">
         <Select
@@ -160,6 +167,7 @@ function DestinationFieldRows({
           defaultValue={defaultValue}
           isDisabled={isDisabled}
           onBlur={onBlur}
+          isClearable={isClearable}
         />
       </th>
       {isDisabled && <p className=".text-red">*</p>}

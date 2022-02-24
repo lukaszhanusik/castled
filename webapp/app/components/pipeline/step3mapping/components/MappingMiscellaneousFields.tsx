@@ -145,7 +145,12 @@ function AdditionalFields({
   return (
     <tr>
       <th className="w-50">
-        <Select options={options} onChange={onChange} onBlur={onBlur} />
+        <Select
+          options={options}
+          onChange={onChange}
+          onBlur={onBlur}
+          isClearable
+        />
       </th>
       <th className="w-50">
         <input

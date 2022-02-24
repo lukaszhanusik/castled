@@ -82,14 +82,14 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
               // pipelineWizContext.mappingInfo = values;
-              pipelineWizContext.values.mapping = transformMapping(values);
-              // console.log(transformMapping(values));
+              // pipelineWizContext.values.mapping = transformMapping(values);
+              console.log(transformMapping(values));
 
-              pipelineWizContext.values.mapping.type =
-                PipelineMappingType.TARGET_FIELDS_MAPPING;
-              setPipelineWizContext(pipelineWizContext);
-              setCurWizardStep(undefined, "settings");
-              setSubmitting(false);
+              // pipelineWizContext.values.mapping.type =
+              //   PipelineMappingType.TARGET_FIELDS_MAPPING;
+              // setPipelineWizContext(pipelineWizContext);
+              // setCurWizardStep(undefined, "settings");
+              // setSubmitting(false);
             }}
           >
             {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (

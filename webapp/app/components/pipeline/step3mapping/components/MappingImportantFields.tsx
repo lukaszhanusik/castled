@@ -39,6 +39,7 @@ export default function MappingImportantFields({
                 onBlur={() =>
                   setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
                 }
+                isClearable={field.optional}
               />
             </div>
           </div>
