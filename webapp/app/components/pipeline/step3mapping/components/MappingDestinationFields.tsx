@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import { DestinationFieldRowsProps, MappingFieldsProps } from "../types/componentTypes";
+import {
+  DestinationFieldRowsProps,
+  MappingFieldsProps,
+} from "../types/componentTypes";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingImportantFields({
@@ -159,6 +162,7 @@ function DestinationFieldRows({
           onBlur={onBlur}
         />
       </th>
+      {isDisabled && <p className=".text-red">*</p>}
       {!isDisabled && <button onClick={handleDelete}>X</button>}
     </tr>
   );
