@@ -99,7 +99,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
               <Dropdown align="end">
                 <Dropdown.Toggle
                   id="logout-dropdown"
-                  className="ms-2 border-0 shadow-none"
+                  className="ms-4 border-0 shadow-none p-0"
                 >
                   <img
                     src={`https://ui-avatars.com/api/?name=${user.name}`}
