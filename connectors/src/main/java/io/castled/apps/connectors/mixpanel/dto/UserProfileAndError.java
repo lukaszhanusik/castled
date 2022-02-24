@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserProfileAndError {
-    private String distinctID;
+    private Object distinctID;
     private List<String> failureReasons;
 }

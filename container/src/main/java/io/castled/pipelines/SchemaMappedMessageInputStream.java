@@ -9,6 +9,7 @@ import io.castled.schema.SchemaMapper;
 import io.castled.schema.models.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,9 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (Field field : message.getRecord().getFields()) {
             List<String> targetFields = sourceTargetMapping.get(field.getName());
-            targetFields.stream().forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
+            if(!CollectionUtils.isEmpty(targetFields)){
+                targetFields.stream().forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
+            }
         }
         return new Message(message.getOffset(), recordBuilder.build());
     }
