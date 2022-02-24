@@ -14,10 +14,18 @@ export default function MappingMiscellaneousFields({
   setFieldTouched,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
+  const [addOptionalRow, setAddOptionalRow] = useState(true);
 
+  // useEffect(() => {
+  //   addRow(false);
+  // }, []);
   useEffect(() => {
-    addRow(false);
-  }, []);
+    if (!additionalRow.length) {
+      setAddOptionalRow(true);
+    } else {
+      setAddOptionalRow(false);
+    }
+  }, [additionalRow]);
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
@@ -30,6 +38,13 @@ export default function MappingMiscellaneousFields({
       ...prevState,
       additionalFields(randomKey, btn),
     ]);
+  }
+
+  function addOptional() {
+    if (addOptionalRow) {
+      addRow(true);
+      setAddOptionalRow(!addOptionalRow);
+    }
   }
 
   function deleteRow(key: string) {
@@ -74,6 +89,36 @@ export default function MappingMiscellaneousFields({
       {miscellaneousFieldSection.length > 0 &&
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
+            <AdditionalFields
+              key={"0x0x0x0x0x0x0x"}
+              options={options}
+              onChange={(e) => {
+                setFieldValue?.(
+                  "MISCELLANEOUS_FIELDS-warehouseField-0x0x0x0x0x0x0x",
+                  e?.value
+                );
+                addOptional();
+              }}
+              onBlur={() =>
+                setFieldTouched?.(
+                  "MISCELLANEOUS_FIELDS-warehouseField-0x0x0x0x0x0x0x",
+                  true
+                )
+              }
+              button={false}
+              inputChange={(e) => {
+                setFieldValue?.(
+                  "MISCELLANEOUS_FIELDS-appField-0x0x0x0x0x0x0x",
+                  e.target.value
+                );
+              }}
+              inputBlur={() =>
+                setFieldTouched?.(
+                  "MISCELLANEOUS_FIELDS-appField-0x0x0x0x0x0x0x",
+                  true
+                )
+              }
+            />
             {additionalRow}
           </WarehouseColumn>
         ))}
@@ -97,7 +142,7 @@ function AdditionalFields({
   inputChange,
   inputBlur,
 }: AdditionalFieldsProps) {
-  const [isSelected, setIsSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState(false);
 
   return (
     <tr>

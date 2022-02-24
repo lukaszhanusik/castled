@@ -5,34 +5,12 @@ import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
-import { Table } from "react-bootstrap";
-import { IconTrash } from "@tabler/icons";
-import InputSelect from "@/app/components/forminputs/InputSelect";
-import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
 import { Form, Formik } from "formik";
-// import InputCheckbox from "@/app/components/forminputs/InputCheckbox";
 import Loading from "@/app/components/common/Loading";
-// import classNames from "classnames";
-// import {
-//   FieldMapping,
-//   PipelineMappingDto,
-// } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
-// import Placeholder from "react-bootstrap/Placeholder";
-// import Select from "react-select";
-// import { MappingFieldsProps, SchemaOptions } from "./types/componentTypes";
-// import MappingImportantFields from "./components/MappingImportantFields";
-// import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
-// import MappingMiscellaneousFields from "./components/MappingTableSelectOnlyBody";
-// import WarehouseColumn from "./components/WarehouseColumn";
-// import MappingTableSelectOnlyBody from "./components/MappingTableSelectOnlyBody";
 import DynamicMappingFields from "./DynamicMappingFields";
 import LoadingTable from "./components/Layouts/LoadingTable";
-import {
-  FieldMapping,
-  PipelineMappingDto,
-} from "@/app/common/dtos/PipelineCreateRequestDto";
 import transformMapping from "./utils/transformMapping";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 
@@ -89,27 +67,6 @@ const PipelineMapping = ({
   const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
     {}) as MappingInfo;
 
-  // const transformMapping = (mappingInfo: MappingInfo): PipelineMappingDto => {
-  //   const fieldMappings: FieldMapping[] = [];
-  //   const primaryKeys: string[] = [];
-  //   _.each(mappingInfo, (value, key) => {
-  //     if (value.appField) {
-  //       fieldMappings.push({
-  //         warehouseField: key,
-  //         appField: value.appField,
-  //         skipped: false,
-  //       });
-  //     }
-  //     if (value.isPrimaryKey) {
-  //       primaryKeys.push(value.appField);
-  //     }
-  //   });
-  //   return {
-  //     primaryKeys,
-  //     fieldMappings,
-  //   };
-  // };
-
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -125,24 +82,14 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
               // pipelineWizContext.mappingInfo = values;
-              pipelineWizContext.values.mapping = transformMapping(values);
-              // console.log(transformMapping(values));
-              // console.log(pipelineWizContext.values.mapping);
-              // if (
-              //   pipelineWizContext.values.mapping.primaryKeys?.length == 0 &&
-              /*   !pipelineSchema?.pkEligibles.autoDetect */
-              // ) {
-              //   setSubmitting(false);
-              //   bannerNotificationService.error(
-              //     "Atleast one primary key should be selected"
-              //   );
-              //   return;
-              // }
-              pipelineWizContext.values.mapping.type =
-                PipelineMappingType.TARGET_FIELDS_MAPPING;
-              setPipelineWizContext(pipelineWizContext);
-              setCurWizardStep(undefined, "settings");
-              setSubmitting(false);
+              // pipelineWizContext.values.mapping = transformMapping(values);
+              console.log(transformMapping(values));
+
+              // pipelineWizContext.values.mapping.type =
+              //   PipelineMappingType.TARGET_FIELDS_MAPPING;
+              // setPipelineWizContext(pipelineWizContext);
+              // setCurWizardStep(undefined, "settings");
+              // setSubmitting(false);
             }}
           >
             {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
