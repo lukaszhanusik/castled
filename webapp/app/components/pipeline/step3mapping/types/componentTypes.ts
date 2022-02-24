@@ -11,6 +11,7 @@ export interface MappingFieldsProps {
     isTouched?: boolean,
     shouldValidate?: boolean
   ) => void;
+  setFieldError?: (field: string, value: string | undefined) => void;
 }
 
 export interface SchemaOptions {

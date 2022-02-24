@@ -1,3 +1,4 @@
+import InputSelect from "@/app/components/forminputs/InputSelect";
 import Select from "react-select";
 import { MappingFieldsProps } from "../types/componentTypes";
 
@@ -7,6 +8,7 @@ export default function MappingImportantFields({
   values,
   setFieldValue,
   setFieldTouched,
+  setFieldError
 }: MappingFieldsProps) {
   // SECTION - 1 - Mandatory fields filter from warehouseSchema
   const importantParamsSection = mappingGroups.filter((fields) => {
@@ -20,8 +22,10 @@ export default function MappingImportantFields({
           <div className="flex-column align-self-center my-2">
             <div className="flex-column mx-4 my-2">
               <div className="row">
-                {!field.optional && <span className="text-danger">*</span>}
-                <label className="font-weight-bold">{field.title}</label>
+                <label className="font-weight-bold">
+                  {!field.optional && <span className="required-icon">*</span>}
+                  {field.title}
+                </label>
               </div>
               <div className="row description text-muted">
                 {field.description}

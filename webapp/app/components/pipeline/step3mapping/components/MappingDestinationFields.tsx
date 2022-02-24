@@ -170,7 +170,7 @@ function DestinationFieldRows({
           isClearable={isClearable}
         />
       </th>
-      {isDisabled && <p className=".text-red">*</p>}
+      {isDisabled && <span className="required-icon">*</span>}
       {!isDisabled && <button onClick={handleDelete}>X</button>}
     </tr>
   );

@@ -13,6 +13,7 @@ import DynamicMappingFields from "./DynamicMappingFields";
 import LoadingTable from "./components/Layouts/LoadingTable";
 import transformMapping from "./utils/transformMapping";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
+import mappingFieldValidations from "./utils/mappingFieldValidations";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -63,10 +64,23 @@ const PipelineMapping = ({
 
   console.log(pipelineSchema);
 
-  // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
-  const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
-    {}) as MappingInfo;
+  function validate(values: any) {
+    const errors = {};
+    const appFieldRepeating = mappingFieldValidations(values);
 
+    if (appFieldRepeating) {
+      Object.assign(errors, { appFieldRepeating: "App Field Repeating" });
+    }
+    return errors;
+  }
+
+  // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
+  // const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
+  //   {}) as MappingInfo;
+
+  const initialValues: any = {
+    appFieldRepeating: "",
+  };
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -78,11 +92,15 @@ const PipelineMapping = ({
       {pipelineSchema ? (
         <div className="container">
           <Formik
-            initialValues={initialMappingInfo}
+            initialValues={initialValues}
+            validate={validate}
+            validateOnChange={false}
+            validateOnBlur={false}
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
               // pipelineWizContext.mappingInfo = values;
               // pipelineWizContext.values.mapping = transformMapping(values);
+              // console.log(values);
               console.log(transformMapping(values));
 
               // pipelineWizContext.values.mapping.type =
@@ -92,14 +110,25 @@ const PipelineMapping = ({
               // setSubmitting(false);
             }}
           >
-            {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
+            {({
+              values,
+              setFieldValue,
+              setFieldTouched,
+              setFieldError,
+              isSubmitting,
+              errors,
+            }) => (
               <Form className="container">
                 <DynamicMappingFields
                   values={values}
                   mappingFields={pipelineSchema}
                   setFieldValue={setFieldValue}
                   setFieldTouched={setFieldTouched}
+                  setFieldError={setFieldError}
                 />
+                {errors && (
+                  <span className="error">{errors.appFieldRepeating}</span>
+                )}
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE
                 </ButtonSubmit>
