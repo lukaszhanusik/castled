@@ -84,6 +84,6 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
         //return mappingGroups;
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addMiscellaneousGroup(true).build().getMappingGroups();
+        return builder.addMiscellaneousFields(true).build().getMappingGroups();
     }
 }

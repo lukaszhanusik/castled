@@ -73,7 +73,7 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
         //return mappingGroups;
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addMiscellaneousGroup(true).build().getMappingGroups();
+        return builder.addMiscellaneousFields(true).build().getMappingGroups();
     }
 
     public void validateAppConfig(GooglePubSubAppConfig appConfig) throws InvalidConfigException {

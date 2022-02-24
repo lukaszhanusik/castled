@@ -90,7 +90,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addMiscellaneousGroup(false).build().getMappingGroups();
+        return builder.addPrimaryKeys(primaryKeys).addMiscellaneousFields(false).build().getMappingGroups();
         // return mappingGroups;
     }
 
@@ -130,7 +130,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addDestinationFields(destinationFields).addMiscellaneousGroup(false).build().getMappingGroups();
+        return builder.addPrimaryKeys(primaryKeys).addDestinationFields(destinationFields).addMiscellaneousFields(false).build().getMappingGroups();
         //return mappingGroups;
     }
 
@@ -160,7 +160,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
         mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addImportantParameters(importantParameters).addMiscellaneousGroup(false).build().getMappingGroups();
+        return builder.addImportantParameters(importantParameters).addMiscellaneousFields(false).build().getMappingGroups();
         //return mappingGroups;
     }
 

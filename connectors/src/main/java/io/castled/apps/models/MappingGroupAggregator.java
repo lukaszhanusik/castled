@@ -40,7 +40,7 @@ public class MappingGroupAggregator {
             return this;
         }
 
-        public Builder addMiscellaneousGroup(boolean autoMap) {
+        public Builder addMiscellaneousFields(boolean autoMap) {
             mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.constructMiscellaneousFieldGroup(autoMap));
             return this;
         }
