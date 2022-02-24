@@ -6,15 +6,19 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class QueryModelDTO {
-    @NotNull
-    private Long id;
+public class ModelInputDTO {
+
     @NotNull
     private Long warehouseId;
+
     @NotNull
     private String modelName;
+
+    private String modelType;
+
     @NotNull
     private QueryModelDetails modelDetails;
+
     @NotNull
     private QueryModelPK queryModelPK;
 }

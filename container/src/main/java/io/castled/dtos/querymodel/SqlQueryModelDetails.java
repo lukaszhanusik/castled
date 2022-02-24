@@ -10,8 +10,7 @@ public class SqlQueryModelDetails extends QueryModelDetails {
 
     private String sourceQuery;
 
-    public SqlQueryModelDetails(String sourceQuery) {
+    public SqlQueryModelDetails() {
         super(QueryModelType.SQL_QUERY_EDITOR);
-        this.sourceQuery = sourceQuery;
     }
 }

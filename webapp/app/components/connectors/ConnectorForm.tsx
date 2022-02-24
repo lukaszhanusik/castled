@@ -188,13 +188,18 @@ const ConnectorForm = ({
       key={`fields-${!!formFields}`}
       initialValues={
         editConnector
-          ? dynamicFormUtils.getInitialValues(formFields, "config", editConnector)
+          ? dynamicFormUtils.getInitialValues(
+              formFields,
+              "config",
+              editConnector
+            )
           : dynamicFormUtils.getInitialValues(formFields, "config", {
-            name: "",
-            config: {
-              type: connectorType,
-            },
-          })}
+              name: "",
+              config: {
+                type: connectorType,
+              },
+            })
+      }
       validate={(values: any) =>
         dynamicFormUtils.getValidationErrors(formFields, "config", values, {
           name: yup.string().required("Required"),
@@ -228,7 +233,11 @@ const ConnectorForm = ({
           )}
           {formFields?.codeBlock && getCodeBlock(formFields, values)}
           {formFields?.helpText && getHelpText(formFields, values)}
-          <ButtonSubmit submitting={isSubmitting} className="mb-3">
+          <ButtonSubmit
+            submitting={isSubmitting}
+            className="mb-3"
+            connectorType={connectorType}
+          >
             {submitLabel}
           </ButtonSubmit>
         </Form>

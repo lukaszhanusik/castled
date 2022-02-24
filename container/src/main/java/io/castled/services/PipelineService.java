@@ -382,4 +382,15 @@ public class PipelineService {
     public List<AppAggregate> getAppAggregates(Long teamId) {
         return pipelineDAO.aggregateByApp(teamId);
     }
+
+    public List<ModelAggregate> getModelAggregates(Long teamId, List<Long> modelIds) {
+        return pipelineDAO.aggregateByModel(teamId, modelIds);
+    }
+
+    public List<Pipeline> listPipelinesByModelId(Long teamid, Long modelId) {
+        if (modelId == null) {
+            return pipelineDAO.listPipelines(teamid);
+        }
+        return pipelineDAO.listPipelinesByModelId(teamid, modelId);
+    }
 }

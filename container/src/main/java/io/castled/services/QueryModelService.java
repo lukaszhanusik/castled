@@ -5,17 +5,25 @@ import com.google.api.client.util.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.daos.QueryModelDAO;
-import io.castled.dtos.querymodel.QueryModelDTO;
-import io.castled.dtos.querymodel.SqlQueryModelDetails;
-import io.castled.dtos.querymodel.TableQueryModelDetails;
+import io.castled.dtomappers.PipelineDTOMapper;
+import io.castled.dtomappers.QueryModelDTOMapper;
+import io.castled.dtos.PipelineDTO;
+import io.castled.dtos.querymodel.*;
+import io.castled.models.ModelAggregate;
+import io.castled.models.Pipeline;
 import io.castled.models.QueryModel;
+import io.castled.models.Warehouse;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
+import io.castled.warehouses.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.ws.rs.BadRequestException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Singleton
@@ -23,20 +31,31 @@ public class QueryModelService {
 
     final private QueryModelDAO queryModelDAO;
     final private ResourceAccessController resourceAccessController;
+    final private WarehouseService warehouseService;
+    final private PipelineService pipelineService;
 
     @Inject
-    public QueryModelService(Jdbi jdbi, ResourceAccessController resourceAccessController) {
+    public QueryModelService(Jdbi jdbi, ResourceAccessController resourceAccessController,
+                             WarehouseService warehouseService, PipelineService pipelineService) {
         this.queryModelDAO = jdbi.onDemand(QueryModelDAO.class);
         this.resourceAccessController = resourceAccessController;
+        this.warehouseService = warehouseService;
+        this.pipelineService = pipelineService;
     }
 
-    public Long createModel(QueryModelDTO queryModelDTO, User user) {
-        QueryModel queryModel = this.queryModelDAO.getQueryModelByModelName(queryModelDTO.getModelName());
+    public Long createModel(ModelInputDTO modelInputDTO, User user) {
+        QueryModel queryModel = this.queryModelDAO.getQueryModelByModelName(modelInputDTO.getModelName());
         if (queryModel != null) {
             throw new BadRequestException("Model name already taken,enter another model name");
         }
-        Long modelId = this.queryModelDAO.createModel(queryModelDTO, user);
+        Long modelId = this.queryModelDAO.createModel(modelInputDTO, user);
         return modelId;
+    }
+
+    public ModelDetailsDTO getQueryModel(Long modelId, Long teamId) {
+        QueryModel queryModel = this.queryModelDAO.getQueryModel(modelId);
+        this.resourceAccessController.validateQueryModelAccess(queryModel, teamId);
+        return convertToModelDetailsDTO(teamId, queryModel);
     }
 
     public QueryModel getQueryModel(Long modelId) {
@@ -49,16 +68,12 @@ public class QueryModelService {
     }
 
     private String getSourceQuery(QueryModel queryModel) {
-
-        switch (queryModel.getModelType()) {
-            case SQL_QUERY_EDITOR:
-                ((SqlQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
-                break;
-            case TABLE_SELECTOR:
-                ((TableQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
-
+        QueryModelDetails modelDetails = queryModel.getModelDetails();
+        if (modelDetails instanceof SqlQueryModelDetails) {
+            return ((SqlQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
+        } else if (modelDetails instanceof TableQueryModelDetails) {
+            return ((TableQueryModelDetails) queryModel.getModelDetails()).getSourceQuery();
         }
-
         return null;
     }
 
@@ -71,26 +86,41 @@ public class QueryModelService {
         this.queryModelDAO.deleteModel(id);
     }
 
-    public List<QueryModelDTO> getAllModels(Long warehouseId, Long teamId) {
+    public List<ModelDetailsDTO> getAllModels(Long warehouseId, Long teamId) {
         List<QueryModel> queryModels = null;
-        if(warehouseId!=null){
+        if (warehouseId != null) {
             queryModels = this.queryModelDAO.getQueryModelsByWarehouseAndTeam(warehouseId, teamId);
-        }
-        else{
+        } else {
             queryModels = this.queryModelDAO.getQueryModelsByTeam(teamId);
         }
-        return mapEntityToDTO(queryModels);
+        return convertToModelDetailDTOList(teamId, queryModels);
     }
 
-    private List<QueryModelDTO> mapEntityToDTO(List<QueryModel> queryModels) {
-        List<QueryModelDTO> queryModelDTOs = Lists.newArrayList();
-
-        return queryModelDTOs;
+    private List<ModelDetailsDTO> convertToModelDetailDTOList(Long teamId, List<QueryModel> queryModels) {
+        Map<Long, Warehouse> warehouseMap = prepareWarehouseMap(queryModels);
+        Map<Long, Integer> modelToSyncCountMap = prepareModelToSyncCountMap(teamId, queryModels);
+        List<ModelDetailsDTO> modelDetailsDTOS = Lists.newArrayList();
+        queryModels.forEach(queryModel -> modelDetailsDTOS.add(QueryModelDTOMapper.toDTO(queryModel,
+                warehouseMap.get(queryModel.getWarehouseId()), modelToSyncCountMap.get(queryModel.getId()))));
+        return modelDetailsDTOS;
     }
 
-    private QueryModelDTO mapEntityToDTO(QueryModel queryModel) {
-        QueryModelDTO queryModelDTO = new QueryModelDTO();
+    private ModelDetailsDTO convertToModelDetailsDTO(Long teamId, QueryModel queryModel) {
+        Warehouse warehouse = warehouseService.getWarehouse(queryModel.getWarehouseId());
+        List<Pipeline> pipelines = pipelineService.listPipelinesByModelId(teamId, queryModel.getId());
+        List<PipelineDTO> pipelineDTOS = pipelines.stream().map(PipelineDTOMapper.INSTANCE::toDetailedDTO).collect(Collectors.toList());
+        return QueryModelDTOMapper.toDetailedDTO(queryModel, warehouse, pipelineDTOS);
+    }
 
-        return queryModelDTO;
+    private Map<Long, Warehouse> prepareWarehouseMap(List<QueryModel> queryModels) {
+        List<Long> warehouseList = queryModels.stream().map(QueryModel::getWarehouseId).collect(Collectors.toList());
+        List<Warehouse> warehouses = warehouseService.getWarehouses(warehouseList, true);
+        return warehouses.stream().collect(Collectors.toMap(Warehouse::getId, Function.identity()));
+    }
+
+    private Map<Long, Integer> prepareModelToSyncCountMap(Long teamId, List<QueryModel> queryModels) {
+        List<Long> modelIdList = queryModels.stream().map(QueryModel::getId).collect(Collectors.toList());
+        List<ModelAggregate> modelAggregates = pipelineService.getModelAggregates(teamId, modelIdList);
+        return modelAggregates.stream().collect(Collectors.toMap(ModelAggregate::getModelId, ModelAggregate::getPipelines));
     }
 }
