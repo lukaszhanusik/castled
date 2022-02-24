@@ -7,19 +7,17 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
-import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.schema.ParameterFieldDTO;
-import io.castled.schema.SchemaFieldDTO;
-import io.castled.schema.mapping.*;
+import io.castled.models.AppFieldDetails;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.SchemaType;
+import io.castled.utils.MappingGroupUtil;
 
-import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -78,71 +76,92 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
     }
 
     private List<MappingGroup> getMappingGroupsForGroupProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+
+        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
+        primaryKeys.add(AppFieldDetails.builder()
+                .internalName(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName())
+                .displayName(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(false)
+                .build());
+
         List<MappingGroup> mappingGroups = Lists.newArrayList();
+        mappingGroups.add(MappingGroupUtil.constructPrimaryKeyGroup(primaryKeys));
+        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
-        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
-        List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(new SchemaFieldDTO(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName(),
-                SchemaType.STRING.getDisplayName(), false));
-        primaryKeyGroup.setPrimaryKeys(primaryKeys);
-        mappingGroups.add(primaryKeyGroup);
-
-        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
-        mappingGroups.add(miscellaneousFieldGroup);
-
-        return mappingGroups;
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addPrimaryKeys(primaryKeys).addMiscellaneousGroup(false).build().getMappingGroups();
+        // return mappingGroups;
     }
 
     private List<MappingGroup> getMappingGroupsForUserProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
+
+        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
+        primaryKeys.add(AppFieldDetails.builder()
+                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName())
+                .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(false)
+                .build());
+
+        List<AppFieldDetails> destinationFields = Lists.newArrayList();
+        destinationFields.add(AppFieldDetails.builder()
+                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName())
+                .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(true)
+                .build());
+        destinationFields.add(AppFieldDetails.builder()
+                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName())
+                .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(true)
+                .build());
+        destinationFields.add(AppFieldDetails.builder()
+                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName())
+                .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(false)
+                .build());
+
         List<MappingGroup> mappingGroups = Lists.newArrayList();
+        mappingGroups.add(MappingGroupUtil.constructPrimaryKeyGroup(primaryKeys));
+        mappingGroups.add(MappingGroupUtil.constructDestinationFieldGroup(destinationFields));
+        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
-        //Primary Key Section
-        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
-        List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName(),
-                SchemaType.STRING.getDisplayName(), false));
-        primaryKeyGroup.setPrimaryKeys(primaryKeys);
-        mappingGroups.add(primaryKeyGroup);
-
-        //Destination field group
-        DestinationFieldGroup destinationFieldGroup = new DestinationFieldGroup();
-        List<SchemaFieldDTO> optionalFields = Lists.newArrayList();
-        optionalFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName(), SchemaType.STRING.getDisplayName(), true));
-        optionalFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName(), SchemaType.STRING.getDisplayName(), true));
-        destinationFieldGroup.setOptionalFields(optionalFields);
-        List<SchemaFieldDTO> mandatoryFields = Lists.newArrayList();
-        mandatoryFields.add(new SchemaFieldDTO(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName(), SchemaType.STRING.getDisplayName(), false));
-        destinationFieldGroup.setMandatoryFields(mandatoryFields);
-        mappingGroups.add(destinationFieldGroup);
-
-        //Misc group
-        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
-        mappingGroups.add(miscellaneousFieldGroup);
-
-        return mappingGroups;
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addPrimaryKeys(primaryKeys).addDestinationFields(destinationFields).addMiscellaneousGroup(false).build().getMappingGroups();
+        //return mappingGroups;
     }
 
     private List<MappingGroup> getMappingGroupsForEventObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
 
+        List<AppFieldDetails> importantParameters = Lists.newArrayList();
+        importantParameters.add(AppFieldDetails.builder()
+                .title("Column identifying the user associated with the event")
+                .description("This field will be used to uniquely identifying the user associated with the event")
+                .internalName(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName())
+                .displayName(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldTitle())
+                .type(SchemaType.STRING.getDisplayName())
+                .optional(false)
+                .build());
+
+        importantParameters.add(AppFieldDetails.builder()
+                .title("Column identifying Event Timestamp")
+                .description("Column identifying Event Timestamp")
+                .internalName(MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                .displayName(MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
+                .type(SchemaType.TIMESTAMP.getDisplayName())
+                .optional(true)
+                .build());
+
         List<MappingGroup> mappingGroups = Lists.newArrayList();
+        mappingGroups.add(MappingGroupUtil.constructImportantParameterGroup(importantParameters));
+        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(false));
 
-        //Important params group
-        ImportantParameterGroup importantParameterGroup = new ImportantParameterGroup();
-        List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
-        importantParameters.add(new ParameterFieldDTO("Column identifying the user associated with the event",
-                "Column identifying the user associated with the event",
-                MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName(), SchemaType.STRING.getDisplayName(), false));
-        importantParameters.add(new ParameterFieldDTO("Column identifying Event Timestamp",
-                "If not mentioned system will default to the message processing time",
-                MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName(), SchemaType.TIMESTAMP.getDisplayName(), true));
-        importantParameterGroup.setFields(importantParameters);
-        mappingGroups.add(importantParameterGroup);
-
-        //Misc group
-        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup();
-        mappingGroups.add(miscellaneousFieldGroup);
-
-        return mappingGroups;
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addImportantParameters(importantParameters).addMiscellaneousGroup(false).build().getMappingGroups();
+        //return mappingGroups;
     }
 
       /*
