@@ -66,10 +66,12 @@ const PipelineMapping = ({
 
   function validate(values: any) {
     const errors = {};
-    const appFieldRepeating = mappingFieldValidations(values);
+    const validationResult = mappingFieldValidations(values);
 
-    if (appFieldRepeating) {
-      Object.assign(errors, { appFieldRepeating: "App Field Repeating" });
+    if (validationResult.length) {
+      for (let error of validationResult) {
+        Object.assign(errors, error);
+      }
     }
     return errors;
   }
@@ -78,9 +80,10 @@ const PipelineMapping = ({
   // const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
   //   {}) as MappingInfo;
 
-  const initialValues: any = {
+  const initialValuesForValidation: any = {
     appFieldRepeating: "",
   };
+
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -92,7 +95,7 @@ const PipelineMapping = ({
       {pipelineSchema ? (
         <div className="container">
           <Formik
-            initialValues={initialValues}
+            initialValues={initialValuesForValidation}
             validate={validate}
             validateOnChange={false}
             validateOnBlur={false}
