@@ -19,9 +19,12 @@ export default function MappingImportantFields({
         importantParamsSection[0].fields?.map((field) => (
           <div className="flex-column align-self-center my-2">
             <div className="flex-column mx-4 my-2">
-              <div className="row font-weight-bold">{field.title}</div>
+              <div className="row">
+                {!field.optional && <span className="text-danger">*</span>}
+                <label className="font-weight-bold">{field.title}</label>
+              </div>
               <div className="row description text-muted">
-                {field.title === field.description ? "" : field.description}
+                {field.description}
               </div>
             </div>
             <div className="w-50">

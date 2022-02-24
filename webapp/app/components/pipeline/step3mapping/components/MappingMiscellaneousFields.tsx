@@ -56,29 +56,35 @@ export default function MappingMiscellaneousFields({
     );
   }
 
+  function keyValueDefault(s: string, key?: string): string {
+    return key
+      ? `MISCELLANEOUS_FIELDS-${s}-${key}`
+      : `MISCELLANEOUS_FIELDS-${s}-0x0x0x0x0x0x0x`;
+  }
+
   const additionalFields = (key: string, button: boolean) => (
     <AdditionalFields
       key={key}
       options={options}
       onChange={(e) => {
-        setFieldValue?.(`MISCELLANEOUS_FIELDS-warehouseField-${key}`, e?.value);
+        setFieldValue?.(keyValueDefault("warehouseField", key), e?.value);
         addRow(true);
       }}
       onBlur={() =>
-        setFieldTouched?.(`MISCELLANEOUS_FIELDS-warehouseField-${key}`, true)
+        setFieldTouched?.(keyValueDefault("warehouseField", key), true)
       }
       handleDelete={(e) => {
         e.preventDefault();
         deleteRow(key);
-        setFieldValue?.(`MISCELLANEOUS_FIELDS-warehouseField-${key}`, "");
-        setFieldValue?.(`MISCELLANEOUS_FIELDS-appField-${key}`, "");
+        setFieldValue?.(keyValueDefault("warehouseField", key), "");
+        setFieldValue?.(keyValueDefault("appField", key), "");
       }}
       button={button}
       inputChange={(e) => {
-        setFieldValue?.(`MISCELLANEOUS_FIELDS-appField-${key}`, e.target.value);
+        setFieldValue?.(keyValueDefault("appField", key), e.target.value);
       }}
       inputBlur={() =>
-        setFieldTouched?.(`MISCELLANEOUS_FIELDS-appField-${key}`, true)
+        setFieldTouched?.(keyValueDefault("appField", key), true)
       }
     />
   );
@@ -94,29 +100,21 @@ export default function MappingMiscellaneousFields({
               options={options}
               onChange={(e) => {
                 setFieldValue?.(
-                  "MISCELLANEOUS_FIELDS-warehouseField-0x0x0x0x0x0x0x",
+                  // Default key for the first row identification
+                  keyValueDefault("warehouseField"),
                   e?.value
                 );
                 addOptional();
               }}
               onBlur={() =>
-                setFieldTouched?.(
-                  "MISCELLANEOUS_FIELDS-warehouseField-0x0x0x0x0x0x0x",
-                  true
-                )
+                setFieldTouched?.(keyValueDefault("warehouseField"), true)
               }
               button={false}
               inputChange={(e) => {
-                setFieldValue?.(
-                  "MISCELLANEOUS_FIELDS-appField-0x0x0x0x0x0x0x",
-                  e.target.value
-                );
+                setFieldValue?.(keyValueDefault("appField"), e.target.value);
               }}
               inputBlur={() =>
-                setFieldTouched?.(
-                  "MISCELLANEOUS_FIELDS-appField-0x0x0x0x0x0x0x",
-                  true
-                )
+                setFieldTouched?.(keyValueDefault("appField"), true)
               }
             />
             {additionalRow}
