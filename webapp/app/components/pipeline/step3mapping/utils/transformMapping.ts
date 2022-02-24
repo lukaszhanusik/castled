@@ -1,4 +1,4 @@
-interface MappingReturnObject {
+export interface MappingReturnObject {
   primaryKeys: string[];
   fieldMappings: FieldMapping[];
 }
