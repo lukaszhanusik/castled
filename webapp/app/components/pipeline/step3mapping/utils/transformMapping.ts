@@ -17,24 +17,19 @@ export default function transformMapping(obj: any): MappingReturnObject {
     let arr = [];
     for (let [key, value] of Object.entries(o)) {
       if (key.includes("PRIMARY_KEYS")) {
+        let index = Number(key.charAt(key.length - 1));
         if (key.includes("appField")) {
           primary.push(value);
         }
         if (key.includes("warehouseField")) {
-          let arrObj: any = arr[Number(key.charAt(key.length - 1))] || {};
+          let arrObj: any = arr[index] || {};
           let arrObjVal = { warehouseField: value };
-          arr[Number(key.charAt(key.length - 1))] = Object.assign(
-            arrObj,
-            arrObjVal
-          );
+          arr[index] = Object.assign(arrObj, arrObjVal);
         }
         if (key.includes("appField")) {
-          let arrObj: any = arr[Number(key.charAt(key.length - 1))] || {};
+          let arrObj: any = arr[index] || {};
           let arrObjVal = { appField: value, skipped: false };
-          arr[Number(key.charAt(key.length - 1))] = Object.assign(
-            arrObj,
-            arrObjVal
-          );
+          arr[index] = Object.assign(arrObj, arrObjVal);
         }
       }
     }
