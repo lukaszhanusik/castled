@@ -73,6 +73,7 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
+    console.log(validationResult);
     return errors;
   }
 
@@ -82,6 +83,7 @@ const PipelineMapping = ({
 
   const initialValuesForValidation: any = {
     appFieldRepeating: "",
+    fillBothPrimaryFields: "",
   };
 
   return (
@@ -103,8 +105,8 @@ const PipelineMapping = ({
               if (!pipelineWizContext.values) return setSubmitting(false);
               // pipelineWizContext.mappingInfo = values;
               // pipelineWizContext.values.mapping = transformMapping(values);
-              // console.log(values);
-              console.log(transformMapping(values));
+              console.log(values);
+              // console.log(transformMapping(values));
 
               // pipelineWizContext.values.mapping.type =
               //   PipelineMappingType.TARGET_FIELDS_MAPPING;
@@ -130,7 +132,12 @@ const PipelineMapping = ({
                   setFieldError={setFieldError}
                 />
                 {errors && (
-                  <span className="error">{errors.appFieldRepeating}</span>
+                  <>
+                    <span className="error">{errors.appFieldRepeating}</span>
+                    <span className="error">
+                      {errors.fillBothPrimaryFields}
+                    </span>
+                  </>
                 )}
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE
