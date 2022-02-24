@@ -150,7 +150,7 @@ export default function transformMapping(obj: any): MappingReturnObject {
         }
       }
     }
-    fields.push(...arr.filter((e) => e && e));
+    fields.push(...arr.filter((e) => e.warehouseField && e.appField));
   }
 
   primaryKeyTransform(obj);
