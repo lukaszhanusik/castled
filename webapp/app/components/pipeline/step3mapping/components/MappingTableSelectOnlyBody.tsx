@@ -22,19 +22,19 @@ export default function MappingTableBody({
       {primaryKeysSection.length > 0 &&
         primaryKeysSection.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
-            {field.primaryKeys!.map((primaryKeys, index) => (
+            {/* {field.primaryKeys!.map((primaryKeys, index) => ( */}
               <tr>
                 <th className="w-50">
                   <Select
                     options={options}
                     onChange={(e) =>
                       setFieldValue?.(
-                        `PRIMARY_KEYS-warehouseField-${index}`,
+                        `PRIMARY_KEYS-warehouseField-0`,
                         e?.value
                       )
                     }
                     onBlur={() =>
-                      setFieldTouched?.(primaryKeys.fieldName, true)
+                      setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                   />
                 </th>
@@ -46,17 +46,17 @@ export default function MappingTableBody({
                     }))}
                     onChange={(e) =>
                       setFieldValue?.(
-                        `PRIMARY_KEYS-appField-${index}`,
+                        `PRIMARY_KEYS-appField-0`,
                         e?.value
                       )
                     }
                     onBlur={() =>
-                      setFieldTouched?.(primaryKeys.fieldName, true)
+                      setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                     }
                   />
                 </th>
               </tr>
-            ))}
+            {/* ))} */}
           </WarehouseColumn>
         ))}
     </div>
