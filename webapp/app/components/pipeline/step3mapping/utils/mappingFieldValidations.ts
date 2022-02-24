@@ -1,6 +1,10 @@
+import { MappingGroup } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import transformMapping, { MappingReturnObject } from "./transformMapping";
 
-export default function mappingFieldValidations(values: any) {
+export default function mappingFieldValidations(
+  values: any,
+  mappingGroups?: MappingGroup[]
+) {
   const fields: MappingReturnObject = transformMapping(values);
 
   const { fieldMappings } = fields;
@@ -17,28 +21,35 @@ export default function mappingFieldValidations(values: any) {
     }
   }
 
+  // Both row needed to be filled for primary key section 2
   function primaryKeyBothRowNeeded(obj: any) {
-    let count = 0;
+    let appFieldCount = 0;
+    let warehouseFieldCount = 0;
+    let hasPrimaryKey = false;
     for (let [key, value] of Object.entries(obj)) {
       if (key.includes("PRIMARY_KEYS")) {
         if (key.includes("appField")) {
           for (let [key0, value0] of Object.entries(obj)) {
             if (key.includes("PRIMARY_KEYS")) {
               if (key0.includes("warehouseField")) {
-                count += 1;
+                warehouseFieldCount += 1;
               }
             }
           }
+          appFieldCount += 1;
         }
+        hasPrimaryKey = true;
       }
     }
-    return count;
+    if (hasPrimaryKey && (appFieldCount == 0 || warehouseFieldCount == 0)) {
+      errors.push({
+        fillBothPrimaryFields: "Both Primary key fields must be filled",
+      });
+    }
   }
+
   appFieldRepeatingValidations();
-  if (!primaryKeyBothRowNeeded(values)) {
-    errors.push({
-      fillBothPrimaryFields: "Both Primary key fields must be filled",
-    });
-  }
+  primaryKeyBothRowNeeded(values);
+
   return errors;
 }

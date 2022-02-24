@@ -66,13 +66,16 @@ const PipelineMapping = ({
 
   function validate(values: any) {
     const errors = {};
-    const validationResult = mappingFieldValidations(values);
+    const validationResult = pipelineSchema
+      ? mappingFieldValidations(values, pipelineSchema.mappingGroups)
+      : mappingFieldValidations(values);
 
     if (validationResult.length) {
       for (let error of validationResult) {
         Object.assign(errors, error);
       }
     }
+    console.log(values);
     console.log(validationResult);
     return errors;
   }
