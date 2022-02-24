@@ -35,12 +35,12 @@ public class RestApiTemplateClient {
     }
 
     public ErrorAndCode upsertDetails(List<Map<String, Object>> details) {
-        try {
-            Response response = invokeRestAPI(details);
+        try (Response response = invokeRestAPI(details)) {
             if (!ResponseUtils.is2xx(response)) {
                 String errorMessage = response.readEntity(String.class);
                 return new ErrorAndCode(String.valueOf(response.getStatus()), errorMessage);
             }
+
             return null;
         } catch (Exception e) {
             log.error(String.format("Custom API upsert failed for %s %s", targetTemplateMapping.getUrl(), targetTemplateMapping.getTemplate()), e);

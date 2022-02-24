@@ -32,6 +32,10 @@ export interface ReactSelectOption {
   value: any;
   label: string;
 }
+export interface HeaderValues {
+  value: string;
+  key: string;
+}
 
 const PipelineMappingRestApi = ({
   curWizardStep,
@@ -42,7 +46,7 @@ const PipelineMappingRestApi = ({
   isLoading,
 }: PipelineMappingRestApiProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
-  let [headerKeys, setHeaderKeys] = useState<string[]>([""]);
+  let [headerValues, setHeaderValues] = useState([]) as any;
   const { isOss } = useSession();
 
   let templateareaRef = useRef<HTMLTextAreaElement>(null);
@@ -50,6 +54,10 @@ const PipelineMappingRestApi = ({
 
   if (!pipelineWizContext) {
     return <Loading />;
+  }
+
+  if (!headerValues || (headerValues && headerValues.length == 0)) {
+    headerValues = [{ key: "", value: "" }];
   }
   let warehouseSchemaFields = pipelineMappingUtils.getSchemaFieldsAsOptions(
     pipelineSchema?.warehouseSchema
@@ -63,8 +71,17 @@ const PipelineMappingRestApi = ({
   const [testResults, setTestResults] = useState(false);
 
   const nextStep = (): void => {
+    pipelineWizContext!.values!.mapping!.headers = getHeader();
     setPipelineWizContext(pipelineWizContext);
     setCurWizardStep(undefined, "settings");
+  };
+
+  const getHeader = () => {
+    let headerObj = {};
+    if (headerValues && headerValues[0]) {
+      headerObj = _.mapValues(_.keyBy(headerValues, "key"), "value");
+    }
+    return _.pickBy(headerObj, _.identity);
   };
 
   const getTestResults = (): void => {
@@ -146,6 +163,7 @@ const PipelineMappingRestApi = ({
               (i) => i.value
             );
 
+            pipelineWizContext!.values!.mapping!.headers = getHeader();
             getTestResults();
           }}
           enableReinitialize
@@ -191,33 +209,31 @@ const PipelineMappingRestApi = ({
                 </Col>
               </Row>
               <label>Headers</label>
-              {headerKeys.map((headerKey, i) => (
-                <Row>
+              {headerValues?.map((headerKey: HeaderValues, i: number) => (
+                <Row className="mb-2">
                   <Col>
                     <input
                       placeholder="Key"
                       type="text"
                       className="form-control form-control-md"
-                      defaultValue={headerKey}
+                      defaultValue={headerKey.key}
                       onChange={(e) => {
-                        headerKeys[i] = e.currentTarget.value;
-                        headerKeys = _.compact(headerKeys);
-                        headerKeys.push("");
-                        setHeaderKeys(_.cloneDeep(headerKeys));
+                        headerKey.key = e.currentTarget.value as string;
+                        headerValues.push({ key: "", value: "" });
+                        headerValues = _.uniqBy(headerValues, "key");
+                        setHeaderValues(_.cloneDeep(headerValues));
                       }}
                     />
                   </Col>
                   <Col>
-                    <InputField
-                      name={`headers[${headerKey + i}]`}
+                    <input
                       placeholder="Value"
                       type="text"
-                      title={undefined}
-                      values={values}
-                      setFieldValue={setFieldValue}
-                      setFieldTouched={setFieldTouched}
-                      inputClassName="form-control-md"
-                      required
+                      className="form-control form-control-md"
+                      defaultValue={headerKey.value}
+                      onChange={(e) => {
+                        headerKey.value = e.currentTarget.value as string;
+                      }}
                     />
                   </Col>
                 </Row>
