@@ -52,7 +52,7 @@ function SignUp(props: serverSideProps) {
               validationSchema={formSchema}
               onSubmit={(values) =>
                 authService
-                  .signUp(values)
+                  .signUpV2(values)
                   .then(() => handleSignUp(values, router))
               }
             >

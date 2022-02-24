@@ -44,4 +44,7 @@ export default {
       }
     );
   },
+  signUpV2: async (request: SignUpRequestDto) => {
+    await axios.post("/v1/users/signupV2", request);
+  },
 };
