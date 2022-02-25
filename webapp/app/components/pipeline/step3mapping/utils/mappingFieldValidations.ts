@@ -96,6 +96,7 @@ export default function mappingFieldValidations(
     }
   }
 
+  // Validation for mandatory and both filled optional on section 3
   function destinationFieldsValidations(obj: any) {
     const hasDestinationFields = mappingGroups?.filter(
       (group) => group.type == "DESTINATION_FIELDS"

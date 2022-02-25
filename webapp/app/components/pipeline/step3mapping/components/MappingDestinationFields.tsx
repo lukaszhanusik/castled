@@ -18,6 +18,8 @@ export default function MappingImportantFields({
   const [optionalRow, setOptionalRow] = useState<JSX.Element[]>([]);
   const [addOptionalRow, setAddOptionalRow] = useState(true);
 
+  const trackShiftedElements: JSX.Element[] = [];
+
   useEffect(() => {
     addRow();
   }, []);
@@ -42,7 +44,10 @@ export default function MappingImportantFields({
   function addRow() {
     if (optionalFields && optionalFields.length) {
       setOptionalRow((prevState) => [...prevState, optionalFields[0]]);
-      optionalFields.shift();
+      const shiftedElement = optionalFields.shift();
+      if (shiftedElement) trackShiftedElements.push(shiftedElement);
+      // console.log(shiftedElement);
+      // console.log(optionalFields);
     }
   }
 
@@ -62,6 +67,15 @@ export default function MappingImportantFields({
         return item.key !== key;
       })
     );
+    // console.log(optionalFields);
+    const shiftedElement = trackShiftedElements.shift();
+    if (shiftedElement) optionalFields?.push(shiftedElement);
+    // optionalFields?.push(shiftedElement);
+    // if (!optionalFields) {
+    //   optionalFields!.push(
+    //     ...trackShiftedElements.filter((ele) => ele.key === key)
+    //   );
+    // }
   }
 
   const optionalFields = destinationFieldSection[0].optionalFields?.map(
@@ -92,10 +106,7 @@ export default function MappingImportantFields({
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             ""
           );
-          setFieldValue?.(
-            `DESTINATION_FIELDS-optional-appField-${i}`,
-            ""
-          );
+          setFieldValue?.(`DESTINATION_FIELDS-optional-appField-${i}`, "");
         }}
         onBlur={() =>
           setFieldTouched?.(
