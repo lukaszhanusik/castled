@@ -6,6 +6,7 @@ import io.castled.schema.SchemaMapper;
 import io.castled.schema.models.FieldSchema;
 import io.castled.schema.models.RecordSchema;
 import io.castled.schema.models.Tuple;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,11 @@ public class SchemaMappedRecordOutputStream implements RecordOutputStream {
         Tuple.Builder targetRecordBuilder = Tuple.builder();
         for (FieldSchema field : targetSchema.getFieldSchemas()) {
             List<String> sourceFields = targetSourceMapping.get(field.getName());
-            for (String sourceField : sourceFields) {
-                if (sourceField != null) {
-                    targetRecordBuilder.put(field, schemaMapper.transformValue(inputRecord.getValue(sourceField), field.getSchema()));
+            if (!CollectionUtils.isEmpty(sourceFields)) {
+                for (String sourceField : sourceFields) {
+                    if (sourceField != null) {
+                        targetRecordBuilder.put(field, schemaMapper.transformValue(inputRecord.getValue(sourceField), field.getSchema()));
+                    }
                 }
             }
         }
