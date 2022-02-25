@@ -41,7 +41,6 @@ public class ActiveCampaignUtils {
                 appFieldDetails.add(AppFieldDetails.builder()
                         .internalName(field.getFieldName())
                         .displayName(field.getFieldTitle())
-                        .type(field.getSchema().getType().getDisplayName())
                         .optional(true)
                         .custom(false)
                         .build());
@@ -52,7 +51,6 @@ public class ActiveCampaignUtils {
             appFieldDetails.add(AppFieldDetails.builder()
                     .internalName(dataAttribute.getTitle())
                     .displayName(dataAttribute.getTitle())
-                    .type(Optional.ofNullable(getFieldSchemaType(activeCampaignObject, dataAttribute)).orElse(null))
                     .optional(true)
                     .custom(true)
                     .build());

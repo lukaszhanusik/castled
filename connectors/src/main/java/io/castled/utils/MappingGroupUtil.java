@@ -8,6 +8,7 @@ import io.castled.schema.mapping.DestinationFieldGroup;
 import io.castled.schema.mapping.ImportantParameterGroup;
 import io.castled.schema.mapping.MiscellaneousFieldGroup;
 import io.castled.schema.mapping.PrimaryKeyGroup;
+import io.castled.schema.models.SchemaType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,30 +20,29 @@ public class MappingGroupUtil {
         List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
         appFieldDetails.forEach(appFieldDetail -> {
             importantParameters.add(new ParameterFieldDTO(appFieldDetail.getTitle(), appFieldDetail.getDescription(), appFieldDetail.getInternalName(),
-                    appFieldDetail.getDisplayName(), appFieldDetail.getType(), appFieldDetail.isOptional()));
+                    appFieldDetail.getDisplayName(), SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
         importantParameterGroup.setFields(importantParameters);
         return importantParameterGroup;
     }
 
     public static MiscellaneousFieldGroup constructMiscellaneousFieldGroup(boolean autoMap) {
-        MiscellaneousFieldGroup miscellaneousFieldGroup = new MiscellaneousFieldGroup(autoMap);
-        return miscellaneousFieldGroup;
+        return new MiscellaneousFieldGroup(autoMap);
     }
 
     public static DestinationFieldGroup constructDestinationFieldGroup(List<AppFieldDetails> appFieldDetailsList) {
         DestinationFieldGroup destinationFieldGroup = new DestinationFieldGroup();
 
         List<SchemaFieldDTO> optionalFields = Lists.newArrayList();
-        appFieldDetailsList.stream().filter(appFieldDetails -> appFieldDetails.isOptional()).collect(Collectors.toList()).forEach(appFieldDetail -> {
+        appFieldDetailsList.stream().filter(AppFieldDetails::isOptional).collect(Collectors.toList()).forEach(appFieldDetail -> {
             optionalFields.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
-                    appFieldDetail.getType(), appFieldDetail.isOptional()));
+                    SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
 
         List<SchemaFieldDTO> mandatoryFields = Lists.newArrayList();
         appFieldDetailsList.stream().filter(appFieldDetails -> !appFieldDetails.isOptional()).collect(Collectors.toList()).forEach(appFieldDetail -> {
             mandatoryFields.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
-                    appFieldDetail.getType(), appFieldDetail.isOptional()));
+                    SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
 
         destinationFieldGroup.setMandatoryFields(mandatoryFields);
@@ -55,7 +55,7 @@ public class MappingGroupUtil {
         List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
         appFieldDetails.forEach(appFieldDetail -> {
             primaryKeys.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
-                    appFieldDetail.getType(), appFieldDetail.isOptional()));
+                    SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
         primaryKeyGroup.setPrimaryKeys(primaryKeys);
         return primaryKeyGroup;
