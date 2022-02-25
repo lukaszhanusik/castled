@@ -13,7 +13,6 @@ import io.castled.commons.models.ServiceAccountDetails;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.schema.mapping.MappingGroup;
-import io.castled.utils.MappingGroupUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -68,10 +67,6 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
     }
 
     public List<MappingGroup> getMappingGroups(GooglePubSubAppConfig config, GooglePubSubAppSyncConfig googlePubSubAppSyncConfig) {
-        List<MappingGroup> mappingGroups = Lists.newArrayList();
-        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(true));
-        //return mappingGroups;
-
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
         return builder.addMiscellaneousFields(true).build().getMappingGroups();
     }

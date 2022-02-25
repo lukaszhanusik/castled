@@ -13,7 +13,6 @@ public class AppFieldDetails {
     private String description;
     private String internalName;
     private String displayName;
-    private String type;
     private boolean optional;
     private boolean custom;
 }

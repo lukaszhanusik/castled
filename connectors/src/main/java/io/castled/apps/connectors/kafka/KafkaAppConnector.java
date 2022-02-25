@@ -10,7 +10,6 @@ import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.schema.mapping.MappingGroup;
-import io.castled.utils.MappingGroupUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -79,10 +78,6 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
     }
 
     public List<MappingGroup> getMappingGroups(KafkaAppConfig config, KafkaAppSyncConfig kafkaAppSyncConfig) {
-        List<MappingGroup> mappingGroups = Lists.newArrayList();
-        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(true));
-        //return mappingGroups;
-
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
         return builder.addMiscellaneousFields(true).build().getMappingGroups();
     }
