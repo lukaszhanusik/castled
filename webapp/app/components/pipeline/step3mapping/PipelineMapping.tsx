@@ -14,6 +14,7 @@ import LoadingTable from "./components/Layouts/LoadingTable";
 import transformMapping from "./utils/transformMapping";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import mappingFieldValidations from "./utils/mappingFieldValidations";
+import misclValidation from "./utils/misclValidation";
 
 interface MappingInfo {
   [warehouseKey: string]: {
@@ -70,8 +71,20 @@ const PipelineMapping = ({
       ? mappingFieldValidations(values, pipelineSchema.mappingGroups)
       : mappingFieldValidations(values);
 
+    // moving misclValidation to other function for modularity
+
+    const misclValidationResult = pipelineSchema
+      ? misclValidation(values, pipelineSchema.mappingGroups)
+      : misclValidation(values);
+
     if (validationResult.length) {
       for (let error of validationResult) {
+        Object.assign(errors, error);
+      }
+    }
+
+    if (misclValidationResult.length) {
+      for (let error of misclValidationResult) {
         Object.assign(errors, error);
       }
     }
@@ -91,6 +104,7 @@ const PipelineMapping = ({
     importantParamsMandatory: "",
     destinationFieldsMandatory: "",
     destinationFieldsOptional: "",
+    misclFieldsValidation: "",
   };
 
   return (
@@ -139,22 +153,13 @@ const PipelineMapping = ({
                   setFieldError={setFieldError}
                 />
                 {errors && (
-                  <>
-                    <span className="error">{errors.appFieldRepeating}</span>
-                    <span className="error">
-                      {errors.fillBothPrimaryFields}
-                    </span>
-                    <span className="error">{errors.primaryKeyMandatory}</span>
-                    <span className="error">
-                      {errors.importantParamsMandatory}
-                    </span>
-                    <span className="error">
-                      {errors.destinationFieldsMandatory}
-                    </span>
-                    <span className="error">
-                      {errors.destinationFieldsOptional}
-                    </span>
-                  </>
+                  <div className="alert alert-danger">
+                    <ul>
+                      {Object.keys(errors).map((key) => (
+                        <li key={key}>{errors[key]}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE
