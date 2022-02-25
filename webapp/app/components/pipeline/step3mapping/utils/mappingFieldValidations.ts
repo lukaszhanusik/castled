@@ -48,8 +48,29 @@ export default function mappingFieldValidations(
     }
   }
 
+  // Primary keys mandatory validation section 2
+  function primaryKeysMandatoryValidation(obj: any) {
+    let primaryCount = 0;
+    let hasPrimaryKey = mappingGroups?.some(
+      (group) => group.type == "PRIMARY_KEYS"
+    );
+    if (hasPrimaryKey) {
+      for (let [key, value] of Object.entries(obj)) {
+        if (key.includes("PRIMARY_KEYS")) {
+          primaryCount += 1;
+        }
+      }
+    }
+    if (hasPrimaryKey && !primaryCount) {
+      errors.push({
+        primaryKeyMandatory: "Primary Key App Field is mandatory",
+      });
+    }
+  }
+
   appFieldRepeatingValidations();
   primaryKeyBothRowNeeded(values);
+  primaryKeysMandatoryValidation(values);
 
   return errors;
 }
