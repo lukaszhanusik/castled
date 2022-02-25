@@ -68,9 +68,38 @@ export default function mappingFieldValidations(
     }
   }
 
+  // Important Params mandatory validation section 1
+  function importantParamsMandatoryValidation(obj: any) {
+    let importantParamsCount = 0;
+    let hasImportantParams = mappingGroups?.filter(
+      (group) => group.type == "IMPORTANT_PARAMS"
+    )[0];
+
+    let importantParamsFieldsCount = hasImportantParams?.fields?.reduce(
+      (acc, group) => acc + 1,
+      0
+    );
+    if (hasImportantParams) {
+      for (let [key, value] of Object.entries(obj)) {
+        if (key.includes("IMPORTANT_PARAMS")) {
+          importantParamsCount += 1;
+        }
+      }
+    }
+    if (
+      hasImportantParams &&
+      !(importantParamsCount == importantParamsFieldsCount)
+    ) {
+      errors.push({
+        importantParamsMandatory: "All Important Params App Field is mandatory",
+      });
+    }
+  }
+
   appFieldRepeatingValidations();
   primaryKeyBothRowNeeded(values);
   primaryKeysMandatoryValidation(values);
+  importantParamsMandatoryValidation(values);
 
   return errors;
 }

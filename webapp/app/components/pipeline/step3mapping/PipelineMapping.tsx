@@ -88,6 +88,7 @@ const PipelineMapping = ({
     appFieldRepeating: "",
     fillBothPrimaryFields: "",
     primaryKeyMandatory: "",
+    importantParamsMandatory: "",
   };
 
   return (
@@ -142,6 +143,9 @@ const PipelineMapping = ({
                       {errors.fillBothPrimaryFields}
                     </span>
                     <span className="error">{errors.primaryKeyMandatory}</span>
+                    <span className="error">
+                      {errors.importantParamsMandatory}
+                    </span>
                   </>
                 )}
                 <ButtonSubmit submitting={isSubmitting}>
