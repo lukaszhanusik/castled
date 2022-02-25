@@ -120,7 +120,7 @@ export default function mappingFieldValidations(
         }
       }
       if (hasDestinationFields[0].optionalFields) {
-        let countOptionalFields = hasDestinationFields[0].optionalFields.length;
+        // let countOptionalFields = hasDestinationFields[0].optionalFields.length;
         let optionalFieldsTrack = 0;
 
         const userInputObject = { ...obj };
@@ -135,7 +135,7 @@ export default function mappingFieldValidations(
             optionalFieldsTrack += 1;
           }
         }
-        console.log(optionalFieldsTrack);
+        // console.log(optionalFieldsTrack);
         if (optionalFieldsTrack) {
           const trackedOptionalFields = [];
           for (let [key, value] of Object.entries(userInputObject)) {
@@ -157,7 +157,7 @@ export default function mappingFieldValidations(
               }
             }
           }
-          console.log(trackedOptionalFields.length);
+          // console.log(trackedOptionalFields.length);
 
           if (trackedOptionalFields.length * 2 !== optionalFieldsTrack) {
             errors.push({
