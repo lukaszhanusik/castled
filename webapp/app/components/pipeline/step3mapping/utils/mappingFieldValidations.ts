@@ -10,6 +10,19 @@ export default function mappingFieldValidations(
   const { fieldMappings } = fields;
   const errors: { [s: string]: string }[] = [];
 
+  const hasPrimaryKeyObject = mappingGroups?.find(
+    (group) => group.type == "PRIMARY_KEYS"
+  );
+
+  const hasDestinationFieldsObject = mappingGroups?.find(
+    (group) => group.type == "DESTINATION_FIELDS"
+  );
+
+  const hasImportantParamsObject = mappingGroups?.find(
+    (group) => group.type == "IMPORTANT_PARAMS"
+  );
+
+
   // AppField repeating schema validation
   function appFieldRepeatingValidations() {
     for (let i = 0; i < fieldMappings.length; i++) {
@@ -54,6 +67,7 @@ export default function mappingFieldValidations(
     let hasPrimaryKey = mappingGroups?.some(
       (group) => group.type == "PRIMARY_KEYS"
     );
+    // console.log("hasPrimaryKey", hasPrimaryKey);
     if (hasPrimaryKey) {
       for (let [key, value] of Object.entries(obj)) {
         if (key.includes("PRIMARY_KEYS")) {
@@ -172,10 +186,10 @@ export default function mappingFieldValidations(
   }
 
   appFieldRepeatingValidations();
-  primaryKeyBothRowNeeded(values);
-  primaryKeysMandatoryValidation(values);
-  importantParamsMandatoryValidation(values);
-  destinationFieldsValidations(values);
+  hasPrimaryKeyObject && primaryKeyBothRowNeeded(values);
+  hasPrimaryKeyObject && primaryKeysMandatoryValidation(values);
+  hasImportantParamsObject && importantParamsMandatoryValidation(values);
+  hasDestinationFieldsObject && destinationFieldsValidations(values);
 
   return errors;
 }
