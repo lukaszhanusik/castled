@@ -39,44 +39,59 @@ export default function transformMapping(obj: any): MappingReturnObject {
   }
 
   // Destination Object Transform Function
-  function destinationObjectTransform(o: { [s: string]: string }) {
-    let arr = [];
-    let mandatoryCount = 0;
-    let optionalCount = 0;
-    let allCount = 0;
-
+  function destinationObjectTransform(o: any) {
+    let mandatoryArr = [];
+    let optionalArr = [];
+  
     for (let [key, value] of Object.entries(o)) {
       if (key.includes("DESTINATION_FIELDS")) {
-        if (key.includes("mandatory")) {
-          //         let arrObj = arr[allCount] || {}
-          let toReplace = `DESTINATION_FIELDS-${mandatoryCount}-mandatory-`;
-          let arrObjVal = {
-            warehouseField: value,
-            appField: key.replace(toReplace, ""),
-            skipped: false,
-          };
-          arr[allCount] = Object.assign({}, arrObjVal);
-          mandatoryCount += 1;
-          allCount += 1;
-        }
-
-        if (key.includes("optional")) {
-          //         let arrObj = arr[allCount] || {}
-          let toReplace = `DESTINATION_FIELDS-${optionalCount}-optional-`;
-          let arrObjVal = {
-            warehouseField: value,
-            appField: key.replace(toReplace, ""),
-            skipped: false,
-          };
-          arr[allCount] = Object.assign({}, arrObjVal);
-          optionalCount += 1;
-          allCount += 1;
+        if (key.includes("mandatory-warehouseField")) {
+          let mandatoryIndex = Number(
+            key.replace("DESTINATION_FIELDS-mandatory-warehouseField-", "")
+          );
+          for (let [key0, value0] of Object.entries(o)) {
+            if (key.includes("DESTINATION_FIELDS")) {
+              let mandatoryAppIndex = `mandatory-appField-${mandatoryIndex}`;
+              if (key0.includes(mandatoryAppIndex)) {
+                let arrObj: any = mandatoryArr[mandatoryIndex] || {};
+                let arrObjVal = {
+                  warehouseField: value,
+                  appField: value0,
+                  skipped: false,
+                };
+                mandatoryArr[mandatoryIndex] = Object.assign(arrObj, arrObjVal);
+              }
+            }
+          }
         }
       }
     }
-    fields.push(
-      ...arr.filter((field) => field.warehouseField && field.appField)
-    );
+    for (let [key, value] of Object.entries(o)) {
+      if (key.includes("DESTINATION_FIELDS")) {
+        if (key.includes("optional-warehouseField")) {
+          let optionalIndex = Number(
+            key.replace("DESTINATION_FIELDS-optional-warehouseField-", "")
+          );
+          for (let [key0, value0] of Object.entries(o)) {
+            if (key.includes("DESTINATION_FIELDS")) {
+              let optionalAppIndex = `optional-appField-${optionalIndex}`;
+              if (key0.includes(optionalAppIndex)) {
+                let arrObj: any = optionalArr[optionalIndex] || {};
+                let arrObjVal = {
+                  warehouseField: value,
+                  appField: value0,
+                  skipped: false,
+                };
+                optionalArr[optionalIndex] = Object.assign(arrObj, arrObjVal);
+              }
+            }
+          }
+        }
+      }
+    }
+    let combinedArray = mandatoryArr.concat(optionalArr);
+
+    fields.push(...combinedArray.filter((field) => field));
   }
 
   // Important params transform function
