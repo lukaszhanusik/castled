@@ -52,7 +52,7 @@ public class SchemaUtils {
         }
         List<SchemaFieldDTO> schemaFields = Lists.newArrayList();
         for (FieldSchema fieldSchema : recordSchema.getFieldSchemas()) {
-            schemaFields.add(new SchemaFieldDTO(fieldSchema.getName(), SchemaUtils.getPrettyName(fieldSchema.getSchema()), fieldSchema.getSchema().isOptional()));
+            schemaFields.add(new SchemaFieldDTO(fieldSchema.getName(), fieldSchema.getName(), SchemaUtils.getPrettyName(fieldSchema.getSchema()), fieldSchema.getSchema().isOptional()));
         }
         return SimpleSchema.builder().schemaName(recordSchema.getName()).fields(schemaFields).build();
     }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SchemaFieldDTO {
     private String fieldName;
+    private String fieldDisplayName;
     private String type;
     private boolean optional;
     //private boolean custom;

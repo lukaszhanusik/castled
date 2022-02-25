@@ -3,13 +3,14 @@ package io.castled.apps.connectors.kafka;
 import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
-import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.ExternalAppSchema;
-import io.castled.apps.models.GenericSyncObject;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.schema.mapping.MappingGroup;
+import io.castled.utils.MappingGroupUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -75,5 +76,14 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
 
     public List<AppSyncMode> getSyncModes(KafkaAppConfig kafkaAppConfig, KafkaAppSyncConfig kafkaAppSyncConfig) {
         return Lists.newArrayList(AppSyncMode.INSERT);
+    }
+
+    public List<MappingGroup> getMappingGroups(KafkaAppConfig config, KafkaAppSyncConfig kafkaAppSyncConfig) {
+        List<MappingGroup> mappingGroups = Lists.newArrayList();
+        mappingGroups.add(MappingGroupUtil.constructMiscellaneousFieldGroup(true));
+        //return mappingGroups;
+
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addMiscellaneousFields(true).build().getMappingGroups();
     }
 }

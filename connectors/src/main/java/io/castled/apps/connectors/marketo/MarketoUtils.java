@@ -31,7 +31,7 @@ public class MarketoUtils {
                 } else {
                     params.put("name", attrRef.getName());
                     // Applicable only for dedupe or id keys, empty for all other keys
-                    params.put("fieldName", dedupeAttrsFieldMap.get(attrRef.getName()));
+                    params.put("internalName", dedupeAttrsFieldMap.get(attrRef.getName()));
                 }
                 schemaBuilder.put(attrRef.getDisplayName(), getFieldSchema(attrRef.getDataType()), params);
             } catch (Exception e) {
@@ -76,9 +76,9 @@ public class MarketoUtils {
         }
 
         if (schema.getType() == SchemaType.DATE) {
-            return DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH).format((LocalDate)value);
+            return DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH).format((LocalDate) value);
         } else if (schema.getType() == SchemaType.ZONED_TIMESTAMP) {
-            return ((ZonedDateTime)value).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            return ((ZonedDateTime) value).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         } else {
             return value;
         }
