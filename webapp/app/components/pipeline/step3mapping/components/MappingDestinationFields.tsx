@@ -71,9 +71,16 @@ export default function MappingImportantFields({
         options={options}
         destinationFieldSection={destinationFieldSection}
         isDisabled={!optionalField.optional}
-        onChange={(e) => {
+        onChangeWarehouse={(e) => {
           setFieldValue?.(
-            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${i}`,
+            e?.value
+          );
+          addRow();
+        }}
+        onChangeAppField={(e) => {
+          setFieldValue?.(
+            `DESTINATION_FIELDS-optional-appField-${i}`,
             e?.value
           );
           addRow();
@@ -82,16 +89,17 @@ export default function MappingImportantFields({
           e.preventDefault();
           deleteRow(optionalField.fieldName);
           setFieldValue?.(
-            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${i}`,
             ""
           );
         }}
         onBlur={() =>
           setFieldTouched?.(
-            `DESTINATION_FIELDS-${i}-optional-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${i}`,
             true
           )
         }
+        defaultValue={undefined}
         isClearable={true}
       />
     )
@@ -113,16 +121,20 @@ export default function MappingImportantFields({
                     label: mandatoryField.fieldName,
                   }}
                   isDisabled={!mandatoryField.optional}
-                  onChange={(e) => {
+                  onChangeWarehouse={(e) => {
                     setFieldValue?.(
-                      `DESTINATION_FIELDS-${i}-mandatory-${mandatoryField.fieldName}`,
+                      `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
                       e?.value
+                    );
+                    setFieldValue?.(
+                      `DESTINATION_FIELDS-mandatory-appField-${i}`,
+                      mandatoryField.fieldName
                     );
                     addOptional();
                   }}
                   onBlur={() =>
                     setFieldTouched?.(
-                      `DESTINATION_FIELDS-${i}-mandatory-${mandatoryField.fieldName}`,
+                      `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
                       true
                     )
                   }
@@ -140,7 +152,8 @@ function DestinationFieldRows({
   destinationFieldSection,
   defaultValue,
   isDisabled,
-  onChange,
+  onChangeWarehouse,
+  onChangeAppField,
   onBlur,
   handleDelete,
   values,
@@ -151,7 +164,7 @@ function DestinationFieldRows({
       <th className="w-50">
         <Select
           options={options}
-          onChange={onChange}
+          onChange={onChangeWarehouse}
           onBlur={onBlur}
           isClearable={isClearable}
         />
@@ -168,6 +181,7 @@ function DestinationFieldRows({
           isDisabled={isDisabled}
           onBlur={onBlur}
           isClearable={isClearable}
+          onChange={onChangeAppField}
         />
       </th>
       {isDisabled && <span className="required-icon">*</span>}

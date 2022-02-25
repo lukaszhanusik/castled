@@ -25,6 +25,8 @@ export interface DestinationFieldRowsProps {
   defaultValue?: { value: string; label: string };
   isDisabled?: boolean;
   onChange?: (value: any) => void;
+  onChangeWarehouse?: (value: any) => void;
+  onChangeAppField?: (value: any) => void;
   handleDelete?: (value: any) => void;
   onBlur?: FocusEventHandler | undefined;
   values?: any;
