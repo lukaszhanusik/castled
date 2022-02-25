@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class ActiveCampaignUtils {
@@ -56,13 +55,6 @@ public class ActiveCampaignUtils {
                     .build());
         }
         return appFieldDetails;
-    }
-
-    public static String getFieldSchemaType(ActiveCampaignObject activeCampaignObject, CustomDataAttribute dataAttribute) {
-        Schema schema = getFieldSchema(activeCampaignObject, dataAttribute);
-        AtomicReference<String> schemaType = null;
-        Optional.ofNullable(schema).ifPresent(schema1 -> schemaType.set(schema1.getType().getDisplayName()));
-        return schemaType.get();
     }
 
     public static Schema getFieldSchema(ActiveCampaignObject activeCampaignObject, CustomDataAttribute dataAttribute) {

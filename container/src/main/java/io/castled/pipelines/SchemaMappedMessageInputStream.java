@@ -63,14 +63,16 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (FieldSchema field : targetSchema.getFieldSchemas()) {
             List<String> sourceFields = targetSourceMapping.get(field.getName());
-            for (String sourceField : sourceFields) {
-                if (sourceField != null) {
-                    try {
-                        recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
-                    } catch (IncompatibleValueException e) {
-                        failedRecords++;
-                        this.errorOutputStream.writeFailedRecord(message, new IncompatibleMappingError(sourceField, field.getSchema()));
-                        return null;
+            if (!CollectionUtils.isEmpty(sourceFields)) {
+                for (String sourceField : sourceFields) {
+                    if (sourceField != null) {
+                        try {
+                            recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
+                        } catch (IncompatibleValueException e) {
+                            failedRecords++;
+                            this.errorOutputStream.writeFailedRecord(message, new IncompatibleMappingError(sourceField, field.getSchema()));
+                            return null;
+                        }
                     }
                 }
             }
@@ -82,7 +84,7 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (Field field : message.getRecord().getFields()) {
             List<String> targetFields = sourceTargetMapping.get(field.getName());
-            if(!CollectionUtils.isEmpty(targetFields)){
+            if (!CollectionUtils.isEmpty(targetFields)) {
                 targetFields.stream().forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
             }
         }
