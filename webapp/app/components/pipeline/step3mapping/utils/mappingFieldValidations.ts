@@ -96,10 +96,85 @@ export default function mappingFieldValidations(
     }
   }
 
+  function destinationFieldsValidations(obj: any) {
+    const hasDestinationFields = mappingGroups?.filter(
+      (group) => group.type == "DESTINATION_FIELDS"
+    );
+
+    if (hasDestinationFields) {
+      if (hasDestinationFields[0].mandatoryFields) {
+        let mandatoryFieldsCount = 0;
+        let countOptionalFields =
+          hasDestinationFields[0].mandatoryFields.length;
+        for (let [key, value] of Object.entries(obj)) {
+          if (key.includes("DESTINATION_FIELDS-mandatory")) {
+            mandatoryFieldsCount += 1;
+          }
+        }
+        // Check if user has entered destination fields or not
+        if (mandatoryFieldsCount !== countOptionalFields * 2) {
+          errors.push({
+            destinationFieldsMandatory:
+              "All mandatory Fields of Destination Fields must be filled.",
+          });
+        }
+      }
+      if (hasDestinationFields[0].optionalFields) {
+        let countOptionalFields = hasDestinationFields[0].optionalFields.length;
+        let optionalFieldsTrack = 0;
+
+        const userInputObject = { ...obj };
+        for (let [key, value] of Object.entries(userInputObject)) {
+          if (!value) {
+            delete userInputObject[key];
+          }
+        }
+        // console.log(userInputObject);
+        for (let [key, value] of Object.entries(userInputObject)) {
+          if (key.includes("DESTINATION_FIELDS-optional")) {
+            optionalFieldsTrack += 1;
+          }
+        }
+        console.log(optionalFieldsTrack);
+        if (optionalFieldsTrack) {
+          const trackedOptionalFields = [];
+          for (let [key, value] of Object.entries(userInputObject)) {
+            let destinationWarehouseTrack =
+              "DESTINATION_FIELDS-optional-warehouseField-";
+            let destinationAppFieldTrack =
+              "DESTINATION_FIELDS-optional-appField-";
+
+            if (key.includes(destinationWarehouseTrack)) {
+              let replacedKey = Number(
+                key.replace(destinationWarehouseTrack, "")
+              );
+              for (let [key0, value0] of Object.entries(userInputObject)) {
+                if (
+                  key0.includes(`${destinationAppFieldTrack}${replacedKey}`)
+                ) {
+                  trackedOptionalFields.push(true);
+                }
+              }
+            }
+          }
+          console.log(trackedOptionalFields.length);
+
+          if (trackedOptionalFields.length * 2 !== optionalFieldsTrack) {
+            errors.push({
+              destinationFieldsOptional:
+                "Both Fields of Optional Destination Fields must be filled.",
+            });
+          }
+        }
+      }
+    }
+  }
+
   appFieldRepeatingValidations();
   primaryKeyBothRowNeeded(values);
   primaryKeysMandatoryValidation(values);
   importantParamsMandatoryValidation(values);
+  destinationFieldsValidations(values);
 
   return errors;
 }

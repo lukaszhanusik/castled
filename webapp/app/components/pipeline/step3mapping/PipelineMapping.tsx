@@ -76,7 +76,7 @@ const PipelineMapping = ({
       }
     }
     console.log(values);
-    console.log(validationResult);
+    // console.log(validationResult);
     return errors;
   }
 
@@ -89,6 +89,8 @@ const PipelineMapping = ({
     fillBothPrimaryFields: "",
     primaryKeyMandatory: "",
     importantParamsMandatory: "",
+    destinationFieldsMandatory: "",
+    destinationFieldsOptional: "",
   };
 
   return (
@@ -145,6 +147,12 @@ const PipelineMapping = ({
                     <span className="error">{errors.primaryKeyMandatory}</span>
                     <span className="error">
                       {errors.importantParamsMandatory}
+                    </span>
+                    <span className="error">
+                      {errors.destinationFieldsMandatory}
+                    </span>
+                    <span className="error">
+                      {errors.destinationFieldsOptional}
                     </span>
                   </>
                 )}

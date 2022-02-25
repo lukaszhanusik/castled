@@ -42,7 +42,7 @@ export default function transformMapping(obj: any): MappingReturnObject {
   function destinationObjectTransform(o: any) {
     let mandatoryArr = [];
     let optionalArr = [];
-  
+
     for (let [key, value] of Object.entries(o)) {
       if (key.includes("DESTINATION_FIELDS")) {
         if (key.includes("mandatory-warehouseField")) {
@@ -91,7 +91,11 @@ export default function transformMapping(obj: any): MappingReturnObject {
     }
     let combinedArray = mandatoryArr.concat(optionalArr);
 
-    fields.push(...combinedArray.filter((field) => field));
+    fields.push(
+      ...combinedArray.filter(
+        (field) => field && field.warehouseField && field.appField
+      )
+    );
   }
 
   // Important params transform function

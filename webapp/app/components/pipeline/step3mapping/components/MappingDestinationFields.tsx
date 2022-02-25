@@ -89,7 +89,11 @@ export default function MappingImportantFields({
           e.preventDefault();
           deleteRow(optionalField.fieldName);
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${i}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${i}`,
+            ""
+          );
+          setFieldValue?.(
+            `DESTINATION_FIELDS-optional-appField-${i}`,
             ""
           );
         }}
