@@ -17,11 +17,11 @@ import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
 
-const ModelComponent = ({
+const CreateModel = ({
   curWizardStep,
   steps,
-  stepGroups,
   setCurWizardStep,
+  onFinish,
 }: PipelineWizardStepProps) => {
   const [queryResults, setQueryResults] = useState<
     ExecuteQueryResultsDto | undefined
@@ -83,28 +83,20 @@ const ModelComponent = ({
         bannerNotificationService.error("Query failed unexpectedly");
       });
   };
-  const nextStep = (): void => {
-    if (!query) {
-      bannerNotificationService.error("Please enter a model name");
-      return;
-    }
-
-    //TODO;
-  };
+  
   return (
     <Layout
       title={steps[curWizardStep].title}
       subTitle={steps[curWizardStep].description}
       centerTitle={true}
       steps={steps}
-      stepGroups={stepGroups}
     >
       <div className="row">
         <div className="col-6">
           <Formik
             initialValues={{
               warehouseId,
-              modelName: "",
+              // modelName: "",
               query,
               // primaryKeys:[]
             }}
@@ -122,6 +114,7 @@ const ModelComponent = ({
                 getQueryResults(res.queryId);
               }
             )}
+            // onSubmit={() => console.log("submiting")}
             enableReinitialize
           >
             {({ isSubmitting }) => (
@@ -135,7 +128,7 @@ const ModelComponent = ({
                   placeholder="Enter Query..."
                   className="border-0 border-bottom mono-font"
                 />
-                {queryResults && queryResults.status === "SUCCEEDED" && (
+                {/* {queryResults && queryResults.status === "SUCCEEDED" && (
                   <>
                     <InputField
                       title="Model Name"
@@ -143,16 +136,16 @@ const ModelComponent = ({
                       name="modelName"
                       placeholder="Enter a name"
                     />
-                    {/* <InputSelect
+                    <InputSelect
                     title="Primary Key(s)"
                     // options={...}
                     // values={..}
                     // setFieldValue={...}
                     // setFieldTouched={}
                     name="primaryKeys"
-                  /> */}
+                  />
                   </>
-                )}
+                )} */}
                 <div className="d-flex align-items-center">
                   <Button
                     type="submit"
@@ -167,9 +160,8 @@ const ModelComponent = ({
                   {queryResults && queryResults.status === "SUCCEEDED" && (
                     <Button
                       type="button"
-                      className="btn btn-primary mt-2 ms-2"
-                      variant="outline-primary"
-                      onClick={nextStep}
+                      className="btn btn-outline-primary mt-2 ms-2"
+                      onClick={() => onFinish()}
                     >
                       Save
                       <IconChevronRight size={16} />
@@ -249,4 +241,4 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
   }
 }
 
-export default ModelComponent;
+export default CreateModel;

@@ -1,11 +1,13 @@
+import { ConnectorDetails } from "./PipelineResponseDto";
 export interface ModelListDto {
-    warehouseId: number;
-    modelName:  string;
-    modelDetails:{
-       modelType: string,
-       sourceQuery: string,
+    id: number;
+    teamId: number;
+    warehouse: ConnectorDetails;
+    modelName: string;
+    modelDetails: {
+        sourceQuery: string;
     };
-    queryModelPK:{
-       primaryKeys: string[]
-    }
- }
+    queryModelPK: {
+        primaryKey: string[];
+    };
+}

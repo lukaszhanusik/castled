@@ -13,7 +13,7 @@ import { AccessType } from "@/app/common/enums/AccessType";
 import { PipelineWizardContextDto } from "@/app/common/dtos/context/PipelineWizardContextDto";
 import warehouseService from "@/app/services/warehouseService";
 import SourceWizard from "./SourceWizard";
-
+import CreateModel from "./CreateModel";
 interface PipelineWizardProps {
   appBaseUrl: string;
   curWizardStepGroup: string | undefined;
@@ -87,38 +87,19 @@ const ModelWizard = ({
           setCurWizardStep={setCurWizardStep}
         />
       )}
-      {curWizardStepGroup === undefined && curWizardStep === "configure" && (
-        <div>configure</div>
-        // <PipelineMapping
-        //   appBaseUrl={appBaseUrl}
-        //   curWizardStep={curWizardStep}
-        //   stepGroups={steps}
-        //   steps={{
-        //     mapping: {
-        //       title: "Map fields",
-        //       description:
-        //         "Map source columns to the fields in the destination. Select primary keys based on which deduplication should happen",
-        //     },
-        //   }}
-        //   setCurWizardStep={setCurWizardStep}
-        // />
-      )}
-      {curWizardStepGroup === undefined && curWizardStep === "settings" && (
-        <div>settings</div>
-        // <PipelineSettings
-        //   appBaseUrl={appBaseUrl}
-        //   curWizardStep={curWizardStep}
-        //   stepGroups={steps}
-        //   steps={{
-        //     settings: {
-        //       title: "Final Settings",
-        //       description:
-        //         "Almost there, give a name to your model and save for use in pipeline setup.",
-        //     },
-        //   }}
-        //   setCurWizardStep={setCurWizardStep}
-        //   onFinish={onFinish}
-        // />
+      {curWizardStep === "configureModel" && (
+        <CreateModel
+          appBaseUrl={appBaseUrl}
+          curWizardStep={curWizardStep}
+          steps={{
+            configureModel: {
+              title: "Configure",
+              description: "Which warehouse do you own?",
+            }
+          }}
+          setCurWizardStep={setCurWizardStep}
+          onFinish={onFinish}
+        />
       )}
     </>
   );

@@ -74,18 +74,10 @@ const ModelType = ({
       name: "Custom SQL Query",
       icon: "/images/sql-icon.svg",
     },
-    {
-      name: "Table/View Selector",
-      icon: "/images/table-icon.svg",
-    },
-    {
-      name: "Dbt Model Selector",
-      icon: "/images/dbt-icon.svg",
-    },
   ];
 
   const onModelTypeSelect = (type: any) => {
-    console.log(type);
+    setCurWizardStep("configure", "configureModel");
   };
 
   return (
