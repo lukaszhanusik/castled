@@ -12,7 +12,7 @@ import DropdownCaretDown from "@/app/components/bootstrap/DropdownCaretDown";
 import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 
-interface LeftSidebarProps { }
+interface LeftSidebarProps {}
 
 const sidebarLinks = [
   {
@@ -86,7 +86,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                         <div className="icons">
                           <Icon size={24} stroke={1} className="sidebar-icon" />
                         </div>
-                        {((i & 1) === 0) && <hr className="sidebar-divider" />}
+                        {(i & 1) === 0 && <hr className="sidebar-divider" />}
                       </a>
                     </Link>
                   </li>
@@ -103,12 +103,14 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                   <img
                     src={`https://ui-avatars.com/api/?name=${user.name}`}
                     alt={user.name}
-                    height={24}
-                    className="ms-1 rounded-circle"
+                    height={28}
+                    className="rounded-circle"
                   />
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="/auth/logout" className="text-primary">Logout</Dropdown.Item>
+                  <Dropdown.Item href="/auth/logout" className="text-primary">
+                    Logout
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             )}
