@@ -40,19 +40,7 @@ public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig,
         List<HubspotProperty> hubspotProperties = hubspotRestClient.getObjectProperties(mappingConfig.getObject().getTypeId())
                 .stream().filter(hubspotProperty -> !hubspotProperty.getModificationMetadata().isReadOnlyValue()).collect(Collectors.toList());
 
-        return new ExternalAppSchema(HubspotUtils.getSchema(mappingConfig.getObject().getName(), hubspotProperties),
-                getPrimaryKeyEligibles(hubspotProperties, mappingConfig.getObject().getName()));
-    }
-
-    private List<String> getPrimaryKeyEligibles(List<HubspotProperty> hubspotProperties, String objectName) {
-
-        if (objectName.equals(HubspotStandardObject.contacts.name())) {
-            return Lists.newArrayList(HubspotFields.EMAIL_FIELD);
-        }
-        if (objectName.equals(HubspotStandardObject.companies.name())) {
-            return Lists.newArrayList(HubspotFields.COMPANY_DOMAIN);
-        }
-        return hubspotProperties.stream().map(HubspotProperty::getName).collect(Collectors.toList());
+        return new ExternalAppSchema(HubspotUtils.getSchema(mappingConfig.getObject().getName(), hubspotProperties));
     }
 
     @Override
