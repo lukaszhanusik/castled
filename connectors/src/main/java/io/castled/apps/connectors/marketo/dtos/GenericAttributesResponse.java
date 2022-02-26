@@ -12,4 +12,5 @@ public class GenericAttributesResponse {
     private String requestId;
     private List<GenericAttributesWrapper> result;
     private Boolean success;
+    List<ErrorResponse> errors;
 }

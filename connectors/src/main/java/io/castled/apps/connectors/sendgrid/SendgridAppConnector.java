@@ -39,8 +39,7 @@ public class SendgridAppConnector implements ExternalAppConnector<SendgridAppCon
         SendgridRestClient sendgridRestClient = new SendgridRestClient(config);
         SendgridObject sendgridObject = SendgridObject.getObjectByName(mappingConfig.getObject().getObjectName());
         ContactAttributesResponse contactAttributes = sendgridRestClient.getContactAttributes();
-        return new ExternalAppSchema(SendgridUtils.getSchema(sendgridObject, contactAttributes),
-                Lists.newArrayList(ContactAttribute.EMAIL));
+        return new ExternalAppSchema(SendgridUtils.getSchema(sendgridObject, contactAttributes));
     }
 
     @Override
@@ -55,6 +54,7 @@ public class SendgridAppConnector implements ExternalAppConnector<SendgridAppCon
         primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
                 .name(ContactAttribute.EMAIL)
                 .displayName(ContactAttribute.EMAIL)
+                .optional(false)
                 .build());
 
         // Fixed field group
