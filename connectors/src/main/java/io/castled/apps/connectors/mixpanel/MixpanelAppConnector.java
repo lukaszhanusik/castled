@@ -11,8 +11,12 @@ import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.MappingGroupField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.mapping.MappingGroup;
+import io.castled.schema.mapping.PrimaryKeyFieldsGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,65 +79,65 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
     private List<MappingGroup> getMappingGroupsForGroupProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
 
-        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(AppFieldDetails.builder()
-                .internalName(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName())
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldName())
                 .displayName(MixpanelObjectFields.GROUP_PROFILE_FIELDS.GROUP_ID.getFieldTitle())
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addMiscellaneousFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForUserProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
 
-        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(AppFieldDetails.builder()
-                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName())
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldName())
                 .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.DISTINCT_ID.getFieldTitle())
                 .build());
 
-        List<AppFieldDetails> destinationFields = Lists.newArrayList();
-        destinationFields.add(AppFieldDetails.builder()
-                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName())
+        List<FixedGroupAppField> fixedGroupAppFields = Lists.newArrayList();
+        fixedGroupAppFields.add(FixedGroupAppField.builder()
+                .name(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldName())
                 .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.FIRST_NAME.getFieldTitle())
                 .optional(true)
                 .build());
-        destinationFields.add(AppFieldDetails.builder()
-                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName())
+        fixedGroupAppFields.add(FixedGroupAppField.builder()
+                .name(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldName())
                 .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.LAST_NAME.getFieldTitle())
                 .optional(true)
                 .build());
-        destinationFields.add(AppFieldDetails.builder()
-                .internalName(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName())
+        fixedGroupAppFields.add(FixedGroupAppField.builder()
+                .name(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldName())
                 .displayName(MixpanelObjectFields.USER_PROFILE_FIELDS.EMAIL.getFieldTitle())
                 .optional(false)
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addDestinationFields(destinationFields).addMiscellaneousFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields(fixedGroupAppFields).addElasticAppFields(false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForEventObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
 
-        List<AppFieldDetails> importantParameters = Lists.newArrayList();
-        importantParameters.add(AppFieldDetails.builder()
+        List<QuestionnaireGroupField> questionnaireGroupFields = Lists.newArrayList();
+        questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                 .title("Column identifying the user associated with the event")
                 .description("This field will be used to uniquely identifying the user associated with the event")
-                .internalName(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName())
+                .name(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName())
                 .displayName(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldTitle())
                 .optional(false)
                 .build());
 
-        importantParameters.add(AppFieldDetails.builder()
+        questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                 .title("Column identifying Event Timestamp")
                 .description("Column identifying Event Timestamp")
-                .internalName(MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                .name(MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
                 .displayName(MixpanelObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
                 .optional(true)
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addImportantParameters(importantParameters).addMiscellaneousFields(false).build().getMappingGroups();
+        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false).build().getMappingGroups();
     }
 }

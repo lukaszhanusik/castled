@@ -5,17 +5,15 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
-public class DestinationFieldGroup extends MappingGroup {
+public class FixedAppFieldsGroup extends MappingGroup {
 
     private List<SchemaFieldDTO> mandatoryFields;
     private List<SchemaFieldDTO> optionalFields;
 
-    public DestinationFieldGroup() {
+    public FixedAppFieldsGroup() {
         super("Which column would you like to sync to destination fields",
                 "Configure how the columns in your query results should be mapped to fields in your destination",
                 MappingGroupType.DESTINATION_FIELDS);

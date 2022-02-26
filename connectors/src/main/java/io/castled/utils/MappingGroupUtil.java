@@ -1,13 +1,16 @@
 package io.castled.utils;
 
 import com.google.common.collect.Lists;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.MappingGroupField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.ParameterFieldDTO;
 import io.castled.schema.SchemaFieldDTO;
-import io.castled.schema.mapping.DestinationFieldGroup;
-import io.castled.schema.mapping.ImportantParameterGroup;
-import io.castled.schema.mapping.MiscellaneousFieldGroup;
-import io.castled.schema.mapping.PrimaryKeyGroup;
+import io.castled.schema.mapping.FixedAppFieldsGroup;
+import io.castled.schema.mapping.QuestionnaireFieldsGroup;
+import io.castled.schema.mapping.ElasticAppFieldsGroup;
+import io.castled.schema.mapping.PrimaryKeyFieldsGroup;
 import io.castled.schema.models.SchemaType;
 
 import java.util.List;
@@ -15,46 +18,46 @@ import java.util.stream.Collectors;
 
 public class MappingGroupUtil {
 
-    public static ImportantParameterGroup constructImportantParameterGroup(List<AppFieldDetails> appFieldDetails) {
-        ImportantParameterGroup importantParameterGroup = new ImportantParameterGroup();
+    public static QuestionnaireFieldsGroup toQuestionnaireGroupDTO(List<QuestionnaireGroupField> mappingGroupFieldDetails) {
+        QuestionnaireFieldsGroup importantParameterGroup = new QuestionnaireFieldsGroup();
         List<ParameterFieldDTO> importantParameters = Lists.newArrayList();
-        appFieldDetails.forEach(appFieldDetail -> {
-            importantParameters.add(new ParameterFieldDTO(appFieldDetail.getTitle(), appFieldDetail.getDescription(), appFieldDetail.getInternalName(),
+        mappingGroupFieldDetails.forEach(appFieldDetail -> {
+            importantParameters.add(new ParameterFieldDTO(appFieldDetail.getTitle(), appFieldDetail.getDescription(), appFieldDetail.getName(),
                     appFieldDetail.getDisplayName(), SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
         importantParameterGroup.setFields(importantParameters);
         return importantParameterGroup;
     }
 
-    public static MiscellaneousFieldGroup constructMiscellaneousFieldGroup(boolean autoMap) {
-        return new MiscellaneousFieldGroup(autoMap);
+    public static ElasticAppFieldsGroup toElasticAppFieldsGroup(boolean autoMap) {
+        return new ElasticAppFieldsGroup(autoMap);
     }
 
-    public static DestinationFieldGroup constructDestinationFieldGroup(List<AppFieldDetails> appFieldDetailsList) {
-        DestinationFieldGroup destinationFieldGroup = new DestinationFieldGroup();
+    public static FixedAppFieldsGroup toFixedAppFieldsGroup(List<FixedGroupAppField> fixedGroupAppFields) {
+        FixedAppFieldsGroup fixedAppFieldsGroup = new FixedAppFieldsGroup();
 
         List<SchemaFieldDTO> optionalFields = Lists.newArrayList();
-        appFieldDetailsList.stream().filter(AppFieldDetails::isOptional).collect(Collectors.toList()).forEach(appFieldDetail -> {
-            optionalFields.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
+        fixedGroupAppFields.stream().filter(FixedGroupAppField::isOptional).collect(Collectors.toList()).forEach(appFieldDetail -> {
+            optionalFields.add(new SchemaFieldDTO(appFieldDetail.getName(), appFieldDetail.getDisplayName(),
                     SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
 
         List<SchemaFieldDTO> mandatoryFields = Lists.newArrayList();
-        appFieldDetailsList.stream().filter(appFieldDetails -> !appFieldDetails.isOptional()).collect(Collectors.toList()).forEach(appFieldDetail -> {
-            mandatoryFields.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
+        fixedGroupAppFields.stream().filter(appFieldDetails -> !appFieldDetails.isOptional()).collect(Collectors.toList()).forEach(appFieldDetail -> {
+            mandatoryFields.add(new SchemaFieldDTO(appFieldDetail.getName(), appFieldDetail.getDisplayName(),
                     SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
 
-        destinationFieldGroup.setMandatoryFields(mandatoryFields);
-        destinationFieldGroup.setOptionalFields(optionalFields);
-        return destinationFieldGroup;
+        fixedAppFieldsGroup.setMandatoryFields(mandatoryFields);
+        fixedAppFieldsGroup.setOptionalFields(optionalFields);
+        return fixedAppFieldsGroup;
     }
 
-    public static PrimaryKeyGroup constructPrimaryKeyGroup(List<AppFieldDetails> appFieldDetails) {
-        PrimaryKeyGroup primaryKeyGroup = new PrimaryKeyGroup();
+    public static PrimaryKeyFieldsGroup toPrimaryKeyFieldsGroup(List<PrimaryKeyGroupField> mappingGroupFieldDetails) {
+        PrimaryKeyFieldsGroup primaryKeyGroup = new PrimaryKeyFieldsGroup();
         List<SchemaFieldDTO> primaryKeys = Lists.newArrayList();
-        appFieldDetails.forEach(appFieldDetail -> {
-            primaryKeys.add(new SchemaFieldDTO(appFieldDetail.getInternalName(), appFieldDetail.getDisplayName(),
+        mappingGroupFieldDetails.forEach(appFieldDetail -> {
+            primaryKeys.add(new SchemaFieldDTO(appFieldDetail.getName(), appFieldDetail.getDisplayName(),
                     SchemaType.STRING.getDisplayName(), appFieldDetail.isOptional()));
         });
         primaryKeyGroup.setPrimaryKeys(primaryKeys);

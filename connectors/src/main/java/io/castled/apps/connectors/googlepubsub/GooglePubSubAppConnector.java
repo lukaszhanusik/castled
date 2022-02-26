@@ -68,7 +68,7 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
 
     public List<MappingGroup> getMappingGroups(GooglePubSubAppConfig config, GooglePubSubAppSyncConfig googlePubSubAppSyncConfig) {
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addMiscellaneousFields(true).build().getMappingGroups();
+        return builder.addElasticAppFields(true).build().getMappingGroups();
     }
 
     public void validateAppConfig(GooglePubSubAppConfig appConfig) throws InvalidConfigException {
@@ -81,13 +81,13 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
             topicAdminClient.listTopics(ProjectName.of(projectID)).iterateAll().forEach(topic -> topics.add(topic.getName()));
 
             if (CollectionUtils.isEmpty(topics)) {
-                new InvalidConfigException("Project don't have topics");
+                throw new InvalidConfigException("Project don't have topics");
             }
         } catch (IOException ioException) {
             log.error("Exception while fetching topics", ioException);
-            new InvalidConfigException("Config Incorrect");
+            throw new InvalidConfigException("Config Incorrect");
         } catch (Exception exception) {
-            new InvalidConfigException("Project ID/JSON entered is incorrect");
+            throw new InvalidConfigException("Project ID/JSON entered is incorrect");
         }
     }
 }

@@ -5,4 +5,5 @@ public enum MappingGroupType {
     IMPORTANT_PARAMS,
     DESTINATION_FIELDS,
     MISCELLANEOUS_FIELDS
+
 }

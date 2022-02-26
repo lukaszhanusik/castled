@@ -22,7 +22,6 @@ import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.ConnectException;
 import io.castled.forms.dtos.FieldOptionsDTO;
 import io.castled.forms.dtos.FormFieldsDTO;
-import io.castled.models.DataMappingType;
 import io.castled.models.users.User;
 import io.castled.oauth.OAuthAccessProvider;
 import io.castled.oauth.OAuthAccessProviderFactory;

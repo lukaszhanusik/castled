@@ -5,18 +5,19 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
-public class ImportantParameterGroup extends MappingGroup{
+public class QuestionnaireFieldsGroup extends MappingGroup {
 
     private List<ParameterFieldDTO> fields;
 
-    public ImportantParameterGroup(){
+    public QuestionnaireFieldsGroup(){
         super("","",MappingGroupType.IMPORTANT_PARAMS);
     }
 
-    public ImportantParameterGroup(String title, String description, MappingGroupType type) {
+    public QuestionnaireFieldsGroup(String title, String description, MappingGroupType type) {
         super(title, description, type);
     }
 }

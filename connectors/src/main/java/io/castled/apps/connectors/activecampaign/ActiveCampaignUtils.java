@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.castled.apps.connectors.activecampaign.constant.ActiveCampaignConstants;
 import io.castled.apps.connectors.activecampaign.dto.CustomDataAttribute;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.MappingGroupField;
 import io.castled.schema.SchemaConstants;
 import io.castled.schema.models.RecordSchema;
 import io.castled.schema.models.Schema;
@@ -32,29 +33,27 @@ public class ActiveCampaignUtils {
     }
 
 
-    public static List<AppFieldDetails> getAppFieldDetails(ActiveCampaignObject activeCampaignObject, List<CustomDataAttribute> dataAttributes) {
+    public static List<FixedGroupAppField> getAppFieldDetails(ActiveCampaignObject activeCampaignObject, List<CustomDataAttribute> dataAttributes) {
 
-        List<AppFieldDetails> appFieldDetails = Lists.newArrayList();
+        List<FixedGroupAppField> mappingGroupFieldDetails = Lists.newArrayList();
         for (ActiveCampaignObjectFields.CONTACTS_FIELDS field : ActiveCampaignObjectFields.CONTACTS_FIELDS.values()) {
             if (!ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.equals(field)) {
-                appFieldDetails.add(AppFieldDetails.builder()
-                        .internalName(field.getFieldName())
+                mappingGroupFieldDetails.add(FixedGroupAppField.builder()
+                        .name(field.getFieldName())
                         .displayName(field.getFieldTitle())
                         .optional(true)
-                        .custom(false)
                         .build());
             }
         }
 
         for (CustomDataAttribute dataAttribute : dataAttributes) {
-            appFieldDetails.add(AppFieldDetails.builder()
-                    .internalName(dataAttribute.getTitle())
+            mappingGroupFieldDetails.add(FixedGroupAppField.builder()
+                    .name(dataAttribute.getTitle())
                     .displayName(dataAttribute.getTitle())
                     .optional(true)
-                    .custom(true)
                     .build());
         }
-        return appFieldDetails;
+        return mappingGroupFieldDetails;
     }
 
     public static Schema getFieldSchema(ActiveCampaignObject activeCampaignObject, CustomDataAttribute dataAttribute) {
@@ -78,7 +77,7 @@ public class ActiveCampaignUtils {
             case "datetime":
                 return SchemaConstants.OPTIONAL_TIMESTAMP_SCHEMA;
             default:
-                log.warn("Invalid data type %s", dataAttribute.getType());
+                log.warn(String.format("Invalid data type %s", dataAttribute.getType()));
                 return null;
         }
     }

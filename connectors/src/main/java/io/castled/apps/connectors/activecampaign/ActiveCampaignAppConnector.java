@@ -12,7 +12,7 @@ import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
@@ -63,14 +63,15 @@ public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCa
         ActiveCampaignRestClient activeCampaignRestClient = new ActiveCampaignRestClient(config.getApiURL(), config.getApiKey());
         List<CustomDataAttribute> customAttributes = activeCampaignRestClient.getContactCustomFields();
 
-        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(AppFieldDetails.builder()
-                .internalName(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
                 .displayName(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldTitle())
                 .optional(false)
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addDestinationFields(ActiveCampaignUtils.getAppFieldDetails(ActiveCampaignObject.CONTACT, customAttributes)).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields
+                (ActiveCampaignUtils.getAppFieldDetails(ActiveCampaignObject.CONTACT, customAttributes)).build().getMappingGroups();
     }
 }

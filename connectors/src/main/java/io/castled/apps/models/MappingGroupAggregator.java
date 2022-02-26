@@ -1,7 +1,9 @@
 package io.castled.apps.models;
 
 import com.google.common.collect.Lists;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.mapping.MappingGroup;
 import io.castled.utils.MappingGroupUtil;
 import lombok.AllArgsConstructor;
@@ -25,23 +27,23 @@ public class MappingGroupAggregator {
 
         private final MappingGroupAggregator mappingGroupAggregator = new MappingGroupAggregator(Lists.newArrayList());
 
-        public Builder addPrimaryKeys(List<AppFieldDetails> primaryKeys) {
-            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.constructPrimaryKeyGroup(primaryKeys));
+        public Builder addPrimaryKeyFields(List<PrimaryKeyGroupField> primaryKeys) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toPrimaryKeyFieldsGroup(primaryKeys));
             return this;
         }
 
-        public Builder addImportantParameters(List<AppFieldDetails> importantParameters) {
-            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.constructImportantParameterGroup(importantParameters));
+        public Builder addQuestionnaireFields(List<QuestionnaireGroupField> questionnaireGroupFields) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toQuestionnaireGroupDTO(questionnaireGroupFields));
             return this;
         }
 
-        public Builder addDestinationFields(List<AppFieldDetails> destinationFields) {
-            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.constructDestinationFieldGroup(destinationFields));
+        public Builder addFixedAppFields(List<FixedGroupAppField> fixedGroupAppFields) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toFixedAppFieldsGroup(fixedGroupAppFields));
             return this;
         }
 
-        public Builder addMiscellaneousFields(boolean autoMap) {
-            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.constructMiscellaneousFieldGroup(autoMap));
+        public Builder addElasticAppFields(boolean autoMap) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toElasticAppFieldsGroup(autoMap));
             return this;
         }
 

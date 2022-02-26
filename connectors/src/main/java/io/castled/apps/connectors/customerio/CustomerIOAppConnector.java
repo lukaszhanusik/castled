@@ -11,7 +11,8 @@ import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.AppFieldDetails;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
@@ -51,64 +52,64 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
 
     private List<MappingGroup> getMappingGroupsForPersonObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
 
-        List<AppFieldDetails> primaryKeys = Lists.newArrayList();
-        primaryKeys.add(AppFieldDetails.builder()
-                .internalName(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName())
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName())
                 .displayName(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldTitle())
                 .build());
 
-        primaryKeys.add(AppFieldDetails.builder()
-                .internalName(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
                 .displayName(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldTitle())
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeys(primaryKeys).addMiscellaneousFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForEventObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
         String eventType = customerIOAppSyncConfig.getEventType();
 
-        List<AppFieldDetails> importantParameters = Lists.newArrayList();
+        List<QuestionnaireGroupField> questionnaireGroupFields = Lists.newArrayList();
         if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
-            importantParameters.add(AppFieldDetails.builder()
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                     .title("Column identifying Customer.io id (customer_id) of the person")
                     .description("This field will be used to uniquely identifying the person associated with the event")
-                    .internalName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
                     .optional(false)
                     .build());
 
-            importantParameters.add(AppFieldDetails.builder()
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                     .title("Column identifying the Event Timestamp")
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
-                    .internalName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
                     .optional(false)
                     .build());
 
         }
         if (CIOEventTypeEnum.TRACK_PAGE_VIEWS.getEventType().equalsIgnoreCase(eventType)) {
-            importantParameters.add(AppFieldDetails.builder()
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                     .title("Column identifying the URL of the page viewed")
                     .description("Column identifying the URL of the page viewed")
-                    .internalName(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName())
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldTitle())
                     .optional(false)
                     .build());
 
-            importantParameters.add(AppFieldDetails.builder()
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                     .title("Column identifying Customer.io id (customer_id) of the person")
                     .description("This field will be used to uniquely identifying the person associated with the event")
-                    .internalName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
                     .optional(false)
                     .build());
 
-            importantParameters.add(AppFieldDetails.builder()
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                     .title("Column identifying the Event Timestamp")
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
-                    .internalName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
                     .optional(false)
                     .build());
@@ -116,7 +117,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         }
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addImportantParameters(importantParameters).addMiscellaneousFields(false).build().getMappingGroups();
+        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false).build().getMappingGroups();
     }
 
     public List<AppSyncMode> getSyncModes(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
