@@ -9,6 +9,7 @@ import Loading from "@/app/components/common/Loading";
 import { ExecuteQueryRequestDto } from "@/app/common/dtos/ExecuteQueryRequestDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
+import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import { Table } from "react-bootstrap";
 import _ from "lodash";
 import InputField from "@/app/components/forminputs/InputField";
@@ -16,6 +17,15 @@ import { Button } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
+import pipelineService from "@/app/services/pipelineService";
+import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
+import modelService from "@/app/services/modelService";
+import Select from "react-select";
+
+export interface ReactSelectOption {
+  value: string;
+  label: string;
+}
 
 const CreateModel = ({
   curWizardStep,
@@ -36,13 +46,71 @@ const CreateModel = ({
   const [warehouseId, setWarehouseId] = useState<any>(
     pipelineWizContext.values?.warehouseId
   );
+  const [pipelineSchema, setPipelineSchema] = useState<
+    PipelineSchemaResponseDto | undefined
+  >();
   const { isOss } = useSession();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [warehouseFields, setWarehouseFields] = useState<SelectOptionDto[]>();
 
   const updateDemoQueries = (whId: number) => {
     warehouseService.demoQueries(whId).then(({ data }) => {
       setDemoQueries(data);
     });
   };
+
+  const createModel = () => {
+    console.log(modelName);
+    console.log(primaryKeys);
+    modelService
+      .create({
+        // warehouseId: warehouseId,
+        warehouseId: 1, //delete this after testing
+        modelName: modelName,
+        modelDetails: {
+          modelType: "SQL_QUERY_EDITOR",
+          sourceQuery: query || "",
+        },
+        queryModelPK: {
+          primaryKeys: primaryKeys || [],
+        },
+      })
+      .then(({ data }) => {
+        console.log(data);
+      });
+  };
+
+  const [primaryKeys, setValue] = useState<string[]>();
+  const [modelName, setModelName] = useState("");
+  const handleChange = (event: any) => {
+    if (event && event[0]) {
+      setValue(_.map(event, "value"));
+    }
+  };
+
+  console.log("---configure---");
+  console.log(steps);
+  console.log(curWizardStep);
+  console.log("---configure---");
+
+  useEffect(() => {
+    if (!pipelineWizContext) return;
+    if (!pipelineWizContext.values) {
+      setCurWizardStep("source", "selectType");
+      return;
+    }
+    pipelineService
+      .getSchemaForMapping(pipelineWizContext.values)
+      .then(({ data }) => {
+        setIsLoading(false);
+        setPipelineSchema(data);
+      })
+      .catch(() => {
+        setIsLoading(false);
+        bannerNotificationService.error("Unable to load schemas");
+      });
+  }, [pipelineWizContext?.values]);
+
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (pipelineWizContext.isDemo) {
@@ -77,28 +145,47 @@ const CreateModel = ({
         if (data.status === "PENDING") {
           setTimeout(() => getQueryResults(queryId), 1000);
         }
+        console.log(data);
+        console.log(query);
+        if (
+          data &&
+          data.queryResults &&
+          data.queryResults.headers &&
+          data.queryResults.headers[0]
+        ) {
+          const fields = _.map(
+            data.queryResults.headers,
+            function (el: string) {
+              return { label: el, value: el, title: el };
+            }
+          );
+
+          console.log(fields);
+
+          setWarehouseFields(fields);
+          // _.set(pipelineWizContext, "values.sourceQuery", query);
+        }
         setQueryResults(data);
       })
       .catch(() => {
         bannerNotificationService.error("Query failed unexpectedly");
       });
   };
-  
+
   return (
     <Layout
       title={steps[curWizardStep].title}
       subTitle={steps[curWizardStep].description}
       centerTitle={true}
       steps={steps}
+      isFluid={true}
     >
       <div className="row">
         <div className="col-6">
           <Formik
             initialValues={{
               warehouseId,
-              // modelName: "",
               query,
-              // primaryKeys:[]
             }}
             validationSchema={yup
               .object()
@@ -128,24 +215,27 @@ const CreateModel = ({
                   placeholder="Enter Query..."
                   className="border-0 border-bottom mono-font"
                 />
-                {/* {queryResults && queryResults.status === "SUCCEEDED" && (
+                {queryResults && queryResults.status === "SUCCEEDED" && (
                   <>
-                    <InputField
-                      title="Model Name"
+                    <label>Model Name</label>
+                    <input
+                      placeholder="Key"
                       type="text"
-                      name="modelName"
-                      placeholder="Enter a name"
+                      className="form-control form-control-md"
+                      onChange={(e) => {
+                        setModelName(e.currentTarget.value);
+                      }}
                     />
-                    <InputSelect
-                    title="Primary Key(s)"
-                    // options={...}
-                    // values={..}
-                    // setFieldValue={...}
-                    // setFieldTouched={}
-                    name="primaryKeys"
-                  />
+
+                    <label>Primary Keys</label>
+                    <Select
+                      onChange={(event) => handleChange(event)}
+                      options={warehouseFields!}
+                      isMulti={true}
+                      name="primaryKeys"
+                    ></Select>
                   </>
-                )} */}
+                )}
                 <div className="d-flex align-items-center">
                   <Button
                     type="submit"
@@ -161,7 +251,8 @@ const CreateModel = ({
                     <Button
                       type="button"
                       className="btn btn-outline-primary mt-2 ms-2"
-                      onClick={() => onFinish()}
+                      // onClick={() => onFinish()}
+                      onClick={() => createModel()}
                     >
                       Save
                       <IconChevronRight size={16} />
@@ -176,7 +267,7 @@ const CreateModel = ({
           {queryResults ? (
             renderQueryResults(queryResults)
           ) : (
-            <img src="/images/model.svg" />
+            <img className="w-100" src="/images/model.svg" />
           )}
         </div>
       </div>

@@ -23,29 +23,23 @@ const Models = () => {
       });
   }, []);
   if (models === null) return <DefaultErrorPage statusCode={404} />;
-  if (models && models.length === 0) {
-    router.push("/welcome");
-    return (
-      <Layout title="Loading..." subTitle={undefined} hideHeader={true}>
-        <Loading />
-      </Layout>
-    );
-  }
+
   return (
     <Layout
       title="Model List"
       subTitle={undefined}
-      rightBtn={
-        models?.length
-          ? {
-              id: "create_model_button",
-              title: "Create Model",
-              href: "/models/create",
-            }
-          : undefined
-      }
+      rightBtn={{
+        id: "create_model_button",
+        title: "Create Model",
+        href: "/models/create",
+      }}
     >
       {!models && <Loading />}
+
+      {models && models.length === 0 && (
+        <p className="text-center">No models created.</p>
+      )}
+
       {models && models.length > 0 && (
         <div className="table-responsive">
           <Table hover>

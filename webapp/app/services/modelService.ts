@@ -5,7 +5,7 @@ import { ModelListDto } from "../common/dtos/ModelListDto";
 
 export default {
     get: (modelId?: number): Promise<AxiosResponse<ModelListDto[]>> => {
-        return http.get("/v1/modals", { modelId });
+        return http.get("/v1/models", { modelId }); //warehouseId=wId;
     },
     create: (
         req: ModelCreateRequestDto

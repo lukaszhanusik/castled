@@ -3,15 +3,9 @@ import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
 import Loading from "@/app/components/common/Loading";
-import PipelineWizardDestination from "@/app/components/pipeline/step2destination/PipelineWizardDestination";
-import PipelineMapping from "@/app/components/pipeline/step3mapping/PipelineMapping";
-import PipelineSettings from "@/app/components/pipeline/step4settings/PipelineSettings";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import routerUtils from "@/app/common/utils/routerUtils";
 import _ from "lodash";
-import { AccessType } from "@/app/common/enums/AccessType";
-import { PipelineWizardContextDto } from "@/app/common/dtos/context/PipelineWizardContextDto";
-import warehouseService from "@/app/services/warehouseService";
 import SourceWizard from "./SourceWizard";
 import CreateModel from "./CreateModel";
 interface PipelineWizardProps {
@@ -47,6 +41,10 @@ const ModelWizard = ({
   const setCurWizardStep = (stepGroup: string | undefined, step: string) => {
     wizardUtils.setCurWizardStep(router, stepGroup, step);
   };
+
+  console.log(steps);
+  console.log(curWizardStep);
+
   useEffect(() => {
     if (!pipelineWizContext) return;
 
@@ -91,11 +89,12 @@ const ModelWizard = ({
         <CreateModel
           appBaseUrl={appBaseUrl}
           curWizardStep={curWizardStep}
+          stepGroups={steps}
           steps={{
             configureModel: {
-              title: "Configure",
-              description: "Which warehouse do you own?",
-            }
+              title: "Create Model",
+              description: "",
+            },
           }}
           setCurWizardStep={setCurWizardStep}
           onFinish={onFinish}

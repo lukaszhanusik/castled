@@ -16,8 +16,6 @@ const SourceWizard = ({
   stepGroups,
   setCurWizardStep,
 }: PipelineWizardStepProps) => {
-  console.log(steps);
-  console.log(stepGroups);
 
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;

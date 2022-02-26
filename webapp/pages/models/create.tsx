@@ -26,41 +26,37 @@ interface ModelCreateProps {
   demo: boolean;
 }
 
-const ModelCreate = ({
-  wizardStepKey,
-  appBaseUrl,
-  demo
-}: ModelCreateProps) => {
+const ModelCreate = ({ wizardStepKey, appBaseUrl, demo }: ModelCreateProps) => {
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
   const [wizardStepGroup, wizardStep] =
     wizardUtils.getWizardStepAndGroup(wizardStepKey);
   return (
-      <ModelWizard
-        appBaseUrl={appBaseUrl}
-        curWizardStepGroup={wizardStepGroup}
-        curWizardStep={wizardStep}
-        demo={demo}
-        steps={{
-          source: {
-            title: "Select Source",
-            description: "",
-            stepKey: "source:selectType",
-          },
-          configure: {
-            title: "Confiqure Model",
-            description: "Confiqure Model",
-            stepKey: "configureModel",
-          },
-        }}
-        onFinish={() => {
-          if (process.browser) {
-            router.push(`/models`).then(() => {
-              setPipelineWizContext({});
-            });
-          }
-        }}
-      />
+    <ModelWizard
+      appBaseUrl={appBaseUrl}
+      curWizardStepGroup={wizardStepGroup}
+      curWizardStep={wizardStep}
+      demo={demo}
+      steps={{
+        source: {
+          title: "Select Source",
+          description: "",
+          stepKey: "selectType",
+        },
+        configure: {
+          title: "Confiqure Model",
+          description: "Confiqure Model",
+          stepKey: "configureModel",
+        },
+      }}
+      onFinish={() => {
+        if (process.browser) {
+          router.push(`/models`).then(() => {
+            setPipelineWizContext({});
+          });
+        }
+      }}
+    />
   );
 };
 
