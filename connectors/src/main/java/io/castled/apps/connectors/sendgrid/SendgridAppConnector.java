@@ -10,8 +10,12 @@ import io.castled.apps.connectors.sendgrid.dtos.ContactAttributesResponse;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.connectors.sendgrid.dtos.ContactAttribute;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +46,32 @@ public class SendgridAppConnector implements ExternalAppConnector<SendgridAppCon
     @Override
     public Class<SendgridAppSyncConfig> getMappingConfigType() {
         return SendgridAppSyncConfig.class;
+    }
+
+    @Override
+    public List<MappingGroup> getMappingGroups(SendgridAppConfig config, SendgridAppSyncConfig sendgridAppSyncConfig) {
+        // Primary key group
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(ContactAttribute.EMAIL)
+                .displayName(ContactAttribute.EMAIL)
+                .build());
+
+        // Fixed field group
+        SendgridRestClient sendgridRestClient = new SendgridRestClient(config);
+        ContactAttributesResponse contactAttributes = sendgridRestClient.getContactAttributes();
+        List<FixedGroupAppField> fixedGroupAppFields = contactAttributes.getReservedFields().stream()
+                .filter(attr -> !ContactAttribute.EMAIL.equals(attr.getName()))
+                .map(attr -> new FixedGroupAppField(attr.getName(), attr.getName(), true))
+                .collect(Collectors.toList());
+        fixedGroupAppFields.addAll(contactAttributes.getCustomFields().stream()
+                .map(attr -> new FixedGroupAppField(attr.getName(), attr.getName(), true))
+                .collect(Collectors.toList()));
+
+        return MappingGroupAggregator.builder()
+                .addPrimaryKeyFields(primaryKeyGroupFields)
+                .addFixedAppFields(fixedGroupAppFields)
+                .build().getMappingGroups();
     }
 
     @Override
