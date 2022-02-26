@@ -86,6 +86,9 @@ public interface PipelineDAO {
     @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId and model_id in (<modelIds>) group by model_id")
     List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId, @BindList("modelIds") List<Long> modelIds);
 
+    @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by model_id")
+    List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId);
+
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 
         public JobScheduleArgumentFactory() {
