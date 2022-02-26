@@ -91,24 +91,31 @@ body,
   .nav-pills .show > .nav-link {
     background-color: transparent;
     border-radius: 0;
-    padding: 0.5rem;
+    padding: 0.4rem 0.7rem;
 
-    &.active div{
-        border-radius: $border-radius;
-        padding: 0.4rem 0.7rem;
-        background-color: $blue-dark;
-      }
+    &.active div {
+      border-radius: $border-radius;
+      background-color: $blue-dark;
+    }
 
     .sidebar-icon {
       color: $white;
     }
 
-    .sidebar-divider{
+    .sidebar-divider {
       position: relative;
       bottom: -10px;
       margin: 5px;
       border-bottom: 2px solid $blue-semi;
     }
+  }
+
+  .icons {
+    padding: 0.5rem;
+  }
+
+  .icons:hover {
+    background-color: $blue-dark;
   }
 
   .logo {
@@ -121,12 +128,12 @@ body,
     margin-bottom: 10px;
   }
 
-  #logout-dropdown{
-    background-color: $primary-color; 
+  #logout-dropdown {
+    background-color: $primary-color;
   }
 
-  #logout-dropdown:after{
-    content:none;
+  #logout-dropdown:after {
+    content: none;
   }
 }
 
