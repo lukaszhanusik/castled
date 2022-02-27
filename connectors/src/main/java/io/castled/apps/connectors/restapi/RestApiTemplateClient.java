@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.models.TargetRestApiMapping;
+import io.castled.utils.JsonUtils;
 import io.castled.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,14 +63,18 @@ public class RestApiTemplateClient {
 
     }
 
-    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) throws IOException {
+    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) {
         MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
         if (restApiAppSyncConfig.isBulk()) {
+            MustacheJsonParser.BulkMustacheTokenizedResponse tokenizedResponse =
+                    mustacheJsonParser.tokenizeBulkMustacheJson(targetTemplateMapping.getTemplate(), restApiAppSyncConfig.getJsonPath());
+
             List<Map<String, Object>> transformedInput = Lists.newArrayList();
             for (Map<String, Object> inputDetail : inputDetails) {
-                transformedInput.add(mustacheJsonParser.resolveTemplate(targetTemplateMapping.getTemplate(), inputDetail));
+                transformedInput.add(mustacheJsonParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
             }
-            return constructNestedMap(restApiAppSyncConfig.getJsonPath(), transformedInput);
+            return JsonUtils.jsonStringToMap(String.format("%s%s%s", tokenizedResponse.getArrayPrefix(), JsonUtils.objectToString(transformedInput),
+                    tokenizedResponse.getArraySuffix()));
         }
         return mustacheJsonParser.resolveTemplate(targetTemplateMapping.getTemplate(), inputDetails.get(0));
     }

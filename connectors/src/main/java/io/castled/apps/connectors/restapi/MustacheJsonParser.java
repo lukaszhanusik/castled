@@ -7,6 +7,9 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.google.common.collect.Lists;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.ws.rs.BadRequestException;
@@ -20,6 +23,17 @@ public class MustacheJsonParser {
 
     private static final char TEMPLATE_START = '{';
     private static final char TEMPLATE_END = '}';
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class BulkMustacheTokenizedResponse {
+        private String arrayPrefix;
+        private String arraySuffix;
+        private String recordTemplate;
+
+    }
 
     public String resolveTemplateString(String mustacheTemplate, Map<String, Object> inputMap) {
 
@@ -74,9 +88,10 @@ public class MustacheJsonParser {
         return templateVariables;
     }
 
-    public void getRecordTemplate(String bulkJson, String arrayPath) {
-        String cleanedJson = cleanMustacheJson(bulkJson);
-        List<String> templateVariables = getTemplateVariables(bulkJson);
+    public BulkMustacheTokenizedResponse tokenizeBulkMustacheJson(String bulkMustacheJson, String arrayPath) {
+
+        String cleanedJson = cleanMustacheJson(bulkMustacheJson);
+        List<String> templateVariables = getTemplateVariables(cleanedJson);
         Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template,
                 template -> String.format("{{%s}}", template)));
         JsonNode jsonNode = JsonUtils.jsonStringToJsonNode(resolveTemplateString(cleanedJson, valuesMap));
@@ -98,21 +113,15 @@ public class MustacheJsonParser {
             throw new BadRequestException("should be object");
         }
         String templateJson = cleanMustacheJson(templateNode.toString());
-        System.out.println(templateJson);
-
         String templateArrayJson = cleanMustacheJson(arrayNode.toString());
-        System.out.println(templateArrayJson);
         int templateArrayIndex = cleanedJson.indexOf(templateArrayJson);
         String templateArrayPrefix = cleanedJson.substring(0, templateArrayIndex);
-        System.out.println(templateArrayPrefix);
         String templateArraySuffix = cleanedJson.substring(templateArrayIndex + templateArrayJson.length());
-        String constructedJson = String.format("%s%s%s", templateArrayPrefix, templateArrayJson, templateArraySuffix);
-        System.out.println(cleanedJson.equals(constructedJson));
-
+        return new BulkMustacheTokenizedResponse(templateArrayPrefix, templateArraySuffix, templateJson);
 
     }
 
-    public  String cleanMustacheJson(String mustacheJson) {
+    public String cleanMustacheJson(String mustacheJson) {
         mustacheJson = mustacheJson.replaceAll("\\s+", "");
         StringWriter cleanedJson = new StringWriter();
         for (int i = 0; i < mustacheJson.length(); i++) {
@@ -130,7 +139,7 @@ public class MustacheJsonParser {
 
     }
 
-    public  void validateMustacheJson(String mustacheJson) {
+    public void validateMustacheJson(String mustacheJson) {
         validatePayload(mustacheJson);
         List<String> templateVariables = getTemplateVariables(mustacheJson);
         Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template, template -> "dummy"));
@@ -143,7 +152,7 @@ public class MustacheJsonParser {
     }
 
 
-    public  void validatePayload(String payloadTemplate) {
+    public void validatePayload(String payloadTemplate) {
         try {
             new DefaultMustacheFactory().compile(new StringReader(payloadTemplate), "template.output");
         } catch (com.github.mustachejava.MustacheException e) {
