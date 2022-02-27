@@ -39,13 +39,13 @@ import io.castled.jarvis.taskmanager.models.requests.TaskCreateRequest;
 import io.castled.misc.PipelineScheduleManager;
 import io.castled.models.*;
 import io.castled.models.users.User;
+import io.castled.apps.connectors.restapi.MustacheJsonParser;
 import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.PipelineUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.RecordSchema;
 import io.castled.utils.JsonUtils;
-import io.castled.utils.MustacheUtils;
 import io.castled.utils.TimeUtils;
 import io.castled.warehouses.WarehouseConnector;
 import io.castled.warehouses.WarehouseService;
@@ -356,10 +356,11 @@ public class PipelineService {
         if (mappingTestRequest.getMapping().getType() == DataMappingType.TARGET_FIELDS_MAPPING) {
             return;
         }
+        MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
         TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) mappingTestRequest.getMapping();
         String template = targetRestApiMapping.getTemplate();
-        MustacheUtils.validateMustacheJson(template);
-        List<String> templateFields = MustacheUtils.getTemplateVariables(template);
+        mustacheJsonParser.validateMustacheJson(template);
+        List<String> templateFields = mustacheJsonParser.getTemplateVariables(template);
         List<String> invalidFields = ListUtils.subtract(templateFields, mappingTestRequest.getQueryFields());
         if (CollectionUtils.isNotEmpty(invalidFields)) {
             throw new BadRequestException(String.format("Fields %s not present in the selected query",
