@@ -27,7 +27,7 @@ webapp:
     repository: castled/webapp
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.37-alpha"
+    tag: "0.2.38-alpha"
 
   podAnnotations: {}
 
@@ -104,7 +104,7 @@ app:
     repository: castled/app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.37-alpha"
+    tag: "0.2.38-alpha"
 
   podAnnotations: {}
 
