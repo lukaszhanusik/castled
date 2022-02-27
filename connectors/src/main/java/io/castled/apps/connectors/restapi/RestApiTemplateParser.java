@@ -10,6 +10,7 @@ import io.castled.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.ws.rs.BadRequestException;
@@ -143,12 +144,15 @@ public class RestApiTemplateParser {
     public void validateMustacheJson(String mustacheJson, RestApiAppSyncConfig restApiAppSyncConfig) throws InvalidTemplateException {
         validatePayload(mustacheJson);
         List<String> templateVariables = getTemplateVariables(mustacheJson);
+        if (CollectionUtils.isEmpty(templateVariables)) {
+            throw new InvalidTemplateException("Template String should contain atleast one template variable");
+        }
         Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template, template -> "dummy"));
         try {
             resolveTemplate(mustacheJson, valuesMap);
         } catch (Exception e) {
             if (ExceptionUtils.getRootCause(e) instanceof JsonParseException)
-                throw new InvalidTemplateException("Json Invalid");
+                throw new InvalidTemplateException(String.format("Json Invalid: %s", ExceptionUtils.getRootCauseMessage(e)));
         }
         if (restApiAppSyncConfig.isBulk()) {
             tokenizeBulkMustacheJson(mustacheJson, restApiAppSyncConfig.getJsonPath());

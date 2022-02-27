@@ -17,7 +17,7 @@ public class RestApiAppSyncConfig extends BaseAppSyncConfig {
     @FormField(required = false, description = "Bulk update", title = "Enable bulk", schema = FormFieldSchema.BOOLEAN, type = FormFieldType.CHECK_BOX)
     private boolean bulk;
 
-    @FormField(type = FormFieldType.TEXT_BOX, title = "Json Array path", placeholder = "parent.child.subchild", description = "Json Array Path", group = "bulk")
+    @FormField(type = FormFieldType.TEXT_BOX, title = "Json Array Path", placeholder = "parent.child.subchild", description = "Json Array Path", group = "bulk")
     private String jsonPath;
 
     @FormField(type = FormFieldType.TEXT_BOX, title = "Batch Size", description = "Batch Size", group = "bulk")
