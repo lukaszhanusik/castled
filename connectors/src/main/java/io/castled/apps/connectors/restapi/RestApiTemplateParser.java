@@ -148,7 +148,7 @@ public class RestApiTemplateParser {
             resolveTemplate(mustacheJson, valuesMap);
         } catch (Exception e) {
             if (ExceptionUtils.getRootCause(e) instanceof JsonParseException)
-                throw new InvalidTemplateException("Json Invalid");
+                throw new InvalidTemplateException("Invalid Json template");
         }
         if (restApiAppSyncConfig.isBulk()) {
             tokenizeBulkMustacheJson(mustacheJson, restApiAppSyncConfig.getJsonPath());
