@@ -143,12 +143,13 @@ public class RestApiTemplateParser {
     public void validateMustacheJson(String mustacheJson, RestApiAppSyncConfig restApiAppSyncConfig) throws InvalidTemplateException {
         validatePayload(mustacheJson);
         List<String> templateVariables = getTemplateVariables(mustacheJson);
-        Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template, template -> "dummy"));
+        Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template,
+                template -> String.format("{{%s}}", template)));
         try {
             resolveTemplate(mustacheJson, valuesMap);
         } catch (Exception e) {
             if (ExceptionUtils.getRootCause(e) instanceof JsonParseException)
-                throw new InvalidTemplateException("Invalid Json template");
+                throw new InvalidTemplateException(String.format("Invalid Json template: %s", ExceptionUtils.getRootCauseMessage(e)));
         }
         if (restApiAppSyncConfig.isBulk()) {
             tokenizeBulkMustacheJson(mustacheJson, restApiAppSyncConfig.getJsonPath());
