@@ -204,8 +204,8 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
     }
 
     private List<MappingGroup> getClickConversionMappingGroup() {
-        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName(),
-                GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName());
+        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName(),
+                GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
         List<FixedGroupAppField> fixedGroupAppFields = requiredFields.stream().map(field -> new FixedGroupAppField(field, field, false))
                 .collect(Collectors.toList());
         fixedGroupAppFields.addAll(Arrays.stream(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.values()).map(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS::getFieldName)
@@ -214,8 +214,8 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
     }
 
     private List<MappingGroup> getCallConversionMappingGroup() {
-        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName(),
-                GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName(), GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName());
+        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName(),
+                GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName(), GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName());
         List<FixedGroupAppField> fixedGroupAppFields = requiredFields.stream().map(field -> new FixedGroupAppField(field, field, false))
                 .collect(Collectors.toList());
         fixedGroupAppFields.addAll(Arrays.stream(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.values()).map(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS::getFieldName)
