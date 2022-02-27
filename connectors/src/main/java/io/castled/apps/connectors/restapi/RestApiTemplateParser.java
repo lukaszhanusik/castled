@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.google.common.collect.Lists;
-import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.StringUtils;
 import lombok.AllArgsConstructor;
@@ -96,20 +95,23 @@ public class RestApiTemplateParser {
         JsonNode jsonNode = JsonUtils.jsonStringToJsonNode(resolveTemplateString(cleanedJson, valuesMap));
         for (String token : arrayPath.split("\\.")) {
             jsonNode = jsonNode.get(token);
+            if (jsonNode == null || jsonNode.isNull()) {
+                throw new InvalidTemplateException(String.format("No object found at path %s", arrayPath));
+            }
         }
         if (!jsonNode.isArray()) {
-            throw new InvalidTemplateException("Invalid Bulk payload json");
+            throw new InvalidTemplateException(String.format("No Json Array found at path %s", arrayPath));
         }
         ArrayNode arrayNode = (ArrayNode) jsonNode;
         if (arrayNode.size() == 0) {
-            throw new InvalidTemplateException("No elements in array node");
+            throw new InvalidTemplateException(String.format("Json Array found at path %s cannot be empty", arrayPath));
         }
         if (arrayNode.size() > 1) {
-            throw new BadRequestException("length should be 1");
+            throw new InvalidTemplateException(String.format("Json Array found at path %s should contain exactly one element", arrayPath));
         }
         JsonNode templateNode = arrayNode.get(0);
         if (!templateNode.isObject()) {
-            throw new BadRequestException("should be object");
+            throw new InvalidTemplateException("Json Array found at path %s should be an array of json objects");
         }
         String templateJson = cleanMustacheJson(templateNode.toString());
         String templateArrayJson = cleanMustacheJson(arrayNode.toString());
