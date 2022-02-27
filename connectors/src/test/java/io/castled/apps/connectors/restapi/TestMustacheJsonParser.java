@@ -13,13 +13,13 @@ public class TestMustacheJsonParser {
 
     @Test
     public void cleanMustacheJson() {
-        MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
-        String cleanedJson = mustacheJsonParser.cleanMustacheJson("{\n" +
+        RestApiTemplateParser restApiTemplateParser = new RestApiTemplateParser();
+        String cleanedJson = restApiTemplateParser.cleanMustacheJson("{\n" +
                 "\t\"id\": 1\n" +
                 "}");
         Assert.assertEquals(cleanedJson, "{\"id\":1}");
 
-        cleanedJson = mustacheJsonParser.cleanMustacheJson("{\n" +
+        cleanedJson = restApiTemplateParser.cleanMustacheJson("{\n" +
                 "\t\"id\": 1,\n" +
                 "\t\"name\": \"{{name}}\"\n" +
                 "}");
@@ -28,9 +28,9 @@ public class TestMustacheJsonParser {
     }
 
     @Test
-    public void testRecordTemplate() {
-        MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
-        MustacheJsonParser.BulkMustacheTokenizedResponse tokenizedResponse = mustacheJsonParser.tokenizeBulkMustacheJson("{\n" +
+    public void testRecordTemplate() throws Exception{
+        RestApiTemplateParser restApiTemplateParser = new RestApiTemplateParser();
+        RestApiTemplateParser.BulkMustacheTokenizedResponse tokenizedResponse = restApiTemplateParser.tokenizeBulkMustacheJson("{\n" +
                 "\n" +
                 "\t\"name\": \"name\",\n" +
                 "\t\"list\": {\n" +
@@ -49,7 +49,7 @@ public class TestMustacheJsonParser {
 
         List<Map<String, Object>> transformedInput = Lists.newArrayList();
         for (Map<String, Object> inputDetail : inputDetails) {
-            transformedInput.add(mustacheJsonParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
+            transformedInput.add(restApiTemplateParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
         }
         String finalJson = String.format("%s%s%s", tokenizedResponse.getArrayPrefix(), JsonUtils.objectToString(transformedInput),
                 tokenizedResponse.getArraySuffix());

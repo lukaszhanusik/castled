@@ -37,7 +37,6 @@ public class RestApiTemplateClient {
                 String errorMessage = response.readEntity(String.class);
                 return new ErrorAndCode(String.valueOf(response.getStatus()), errorMessage);
             }
-
             return null;
         } catch (Exception e) {
             log.error(String.format("Custom API upsert failed for %s %s", targetTemplateMapping.getUrl(), targetTemplateMapping.getTemplate()), e);
@@ -45,7 +44,7 @@ public class RestApiTemplateClient {
         }
     }
 
-    private Response invokeRestAPI(List<Map<String, Object>> inputDetails) throws IOException {
+    private Response invokeRestAPI(List<Map<String, Object>> inputDetails) throws InvalidTemplateException {
 
         Map<String, String> headers = targetTemplateMapping.getHeaders();
         Invocation.Builder builder = this.client.target(targetTemplateMapping.getUrl())
@@ -63,20 +62,20 @@ public class RestApiTemplateClient {
 
     }
 
-    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) {
-        MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
+    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) throws InvalidTemplateException {
+        RestApiTemplateParser restApiTemplateParser = new RestApiTemplateParser();
         if (restApiAppSyncConfig.isBulk()) {
-            MustacheJsonParser.BulkMustacheTokenizedResponse tokenizedResponse =
-                    mustacheJsonParser.tokenizeBulkMustacheJson(targetTemplateMapping.getTemplate(), restApiAppSyncConfig.getJsonPath());
+            RestApiTemplateParser.BulkMustacheTokenizedResponse tokenizedResponse =
+                    restApiTemplateParser.tokenizeBulkMustacheJson(targetTemplateMapping.getTemplate(), restApiAppSyncConfig.getJsonPath());
 
             List<Map<String, Object>> transformedInput = Lists.newArrayList();
             for (Map<String, Object> inputDetail : inputDetails) {
-                transformedInput.add(mustacheJsonParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
+                transformedInput.add(restApiTemplateParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
             }
             return JsonUtils.jsonStringToMap(String.format("%s%s%s", tokenizedResponse.getArrayPrefix(), JsonUtils.objectToString(transformedInput),
                     tokenizedResponse.getArraySuffix()));
         }
-        return mustacheJsonParser.resolveTemplate(targetTemplateMapping.getTemplate(), inputDetails.get(0));
+        return restApiTemplateParser.resolveTemplate(targetTemplateMapping.getTemplate(), inputDetails.get(0));
     }
 
     private Map<String, Object> constructNestedMap(String nestedPath, List<Map<String, Object>> transformedInput) {

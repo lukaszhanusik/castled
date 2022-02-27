@@ -11,6 +11,8 @@ import io.castled.apps.ExternalApp;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
+import io.castled.apps.connectors.restapi.InvalidTemplateException;
+import io.castled.apps.connectors.restapi.RestApiAppSyncConfig;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.caches.PipelineCache;
@@ -39,7 +41,7 @@ import io.castled.jarvis.taskmanager.models.requests.TaskCreateRequest;
 import io.castled.misc.PipelineScheduleManager;
 import io.castled.models.*;
 import io.castled.models.users.User;
-import io.castled.apps.connectors.restapi.MustacheJsonParser;
+import io.castled.apps.connectors.restapi.RestApiTemplateParser;
 import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.PipelineUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
@@ -63,6 +65,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -339,10 +342,9 @@ public class PipelineService {
         }
     }
 
-    private RecordSchema enrichWarehouseSchema(AppSyncConfigDTO appSyncConfigDTO, Future<RecordSchema> warehouseSchema) throws InterruptedException, java.util.concurrent.ExecutionException {
+    private RecordSchema enrichWarehouseSchema(AppSyncConfigDTO appSyncConfigDTO, Future<RecordSchema> warehouseSchema) throws ExecutionException, InterruptedException {
         ExternalApp externalApp = this.externalAppService.getExternalApp(appSyncConfigDTO.getAppId(), true);
-        RecordSchema warehouseASchema = this.appConnectors.get(externalApp.getType()).enrichWarehouseASchema(appSyncConfigDTO, warehouseSchema.get());
-        return warehouseASchema;
+        return this.appConnectors.get(externalApp.getType()).enrichWarehouseASchema(appSyncConfigDTO, warehouseSchema.get());
     }
 
     public List<Pipeline> listPipelines(Long teamid, Long appId) {
@@ -356,15 +358,19 @@ public class PipelineService {
         if (mappingTestRequest.getMapping().getType() == DataMappingType.TARGET_FIELDS_MAPPING) {
             return;
         }
-        MustacheJsonParser mustacheJsonParser = new MustacheJsonParser();
-        TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) mappingTestRequest.getMapping();
-        String template = targetRestApiMapping.getTemplate();
-        mustacheJsonParser.validateMustacheJson(template);
-        List<String> templateFields = mustacheJsonParser.getTemplateVariables(template);
-        List<String> invalidFields = ListUtils.subtract(templateFields, mappingTestRequest.getQueryFields());
-        if (CollectionUtils.isNotEmpty(invalidFields)) {
-            throw new BadRequestException(String.format("Fields %s not present in the selected query",
-                    invalidFields));
+        try {
+            RestApiTemplateParser restApiTemplateParser = new RestApiTemplateParser();
+            TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) mappingTestRequest.getMapping();
+            String template = targetRestApiMapping.getTemplate();
+            restApiTemplateParser.validateMustacheJson(template, (RestApiAppSyncConfig) mappingTestRequest.getAppSyncConfig());
+            List<String> templateFields = restApiTemplateParser.getTemplateVariables(template);
+            List<String> invalidFields = ListUtils.subtract(templateFields, mappingTestRequest.getQueryFields());
+            if (CollectionUtils.isNotEmpty(invalidFields)) {
+                throw new BadRequestException(String.format("Fields %s not present in the selected query",
+                        invalidFields));
+            }
+        } catch (InvalidTemplateException e) {
+            throw new BadRequestException(e.getMessage());
         }
     }
 

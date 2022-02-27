@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.google.common.collect.Lists;
+import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.StringUtils;
 import lombok.AllArgsConstructor;
@@ -19,11 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MustacheJsonParser {
+public class RestApiTemplateParser {
 
     private static final char TEMPLATE_START = '{';
     private static final char TEMPLATE_END = '}';
-
 
     @Data
     @AllArgsConstructor
@@ -32,7 +32,6 @@ public class MustacheJsonParser {
         private String arrayPrefix;
         private String arraySuffix;
         private String recordTemplate;
-
     }
 
     public String resolveTemplateString(String mustacheTemplate, Map<String, Object> inputMap) {
@@ -88,7 +87,7 @@ public class MustacheJsonParser {
         return templateVariables;
     }
 
-    public BulkMustacheTokenizedResponse tokenizeBulkMustacheJson(String bulkMustacheJson, String arrayPath) {
+    public BulkMustacheTokenizedResponse tokenizeBulkMustacheJson(String bulkMustacheJson, String arrayPath) throws InvalidTemplateException {
 
         String cleanedJson = cleanMustacheJson(bulkMustacheJson);
         List<String> templateVariables = getTemplateVariables(cleanedJson);
@@ -99,11 +98,11 @@ public class MustacheJsonParser {
             jsonNode = jsonNode.get(token);
         }
         if (!jsonNode.isArray()) {
-            throw new BadRequestException("Invalid Bulk Json");
+            throw new InvalidTemplateException("Invalid Bulk payload json");
         }
         ArrayNode arrayNode = (ArrayNode) jsonNode;
         if (arrayNode.size() == 0) {
-            throw new BadRequestException("No elements in array node");
+            throw new InvalidTemplateException("No elements in array node");
         }
         if (arrayNode.size() > 1) {
             throw new BadRequestException("length should be 1");
@@ -139,7 +138,7 @@ public class MustacheJsonParser {
 
     }
 
-    public void validateMustacheJson(String mustacheJson) {
+    public void validateMustacheJson(String mustacheJson, RestApiAppSyncConfig restApiAppSyncConfig) throws InvalidTemplateException {
         validatePayload(mustacheJson);
         List<String> templateVariables = getTemplateVariables(mustacheJson);
         Map<String, Object> valuesMap = templateVariables.stream().collect(Collectors.toMap(template -> template, template -> "dummy"));
@@ -147,7 +146,10 @@ public class MustacheJsonParser {
             resolveTemplate(mustacheJson, valuesMap);
         } catch (Exception e) {
             if (ExceptionUtils.getRootCause(e) instanceof JsonParseException)
-                throw new BadRequestException("Json Invalid");
+                throw new InvalidTemplateException("Json Invalid");
+        }
+        if (restApiAppSyncConfig.isBulk()) {
+            tokenizeBulkMustacheJson(mustacheJson, restApiAppSyncConfig.getJsonPath());
         }
     }
 
