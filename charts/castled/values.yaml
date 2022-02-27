@@ -1,15 +1,23 @@
-# Default values for castled.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## @section Global Parameters
 
+## @param global.imageRegistry Global Docker image registry
+## @param global.storageClass Global StorageClass for Persistent Volume(s)
 global:
   imageRegistry: ""
   storageClass: ""
 
-imagePullSecrets: []
+## @section Common Parameters
+
+## @param nameOverride String to partially override castled.fullname template with a string (will prepend the release name)
 nameOverride: ""
+## @param fullnameOverride String to fully override castled.fullname template with a string
 fullnameOverride: "castled"
 
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+## @param serviceAccount.annotations [object] Annotations for service account. Evaluated as a template. Only used if `create` is `true`.
+## @param serviceAccount.create Specifies whether a ServiceAccount should be created
+## @param serviceAccount.name Name of the service account to use. If not set and create is true, a name is generated using the fullname template.
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -17,37 +25,48 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "castled-admin"
 
+## @section Castled webapp Parameters
 
+## Castled webapp configuration
 webapp:
+  ## @param webapp.replicaCount Number of webapp replicas
   replicaCount: 1
 
+  ## @param webapp.image.repository The repository to use for the castled webapp image.
+  ## @param webapp.image.pullPolicy the pull policy to use for the Castled webapp image
+  ## @param webapp.image.tag The Castled webapp image tag. Defaults to the chart's AppVersion
   image:
     repository: castled/webapp
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "0.2.39-alpha"
 
+  ## @param webapp.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}
 
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
+  ## @param webapp.securityContext Security context for the container
+  ## Examples:
+  ## securityContext:
+  ##    runAsNonRoot: true
+  ##    runAsUser: 1000
+  ##    readOnlyRootFilesystem: true
+  securityContext: {}
 
-  securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
+  ## @param webapp.service.type The service type to use for the webapp service
+  ## @param webapp.service.port The service port to expose the webapp on
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
 
+  ## Configure the ingress resource that allows you to access the Castled installation.
+  ## ref: http://kubernetes.io/docs/user-guide/ingress/
+  ## @param webapp.ingress.enabled Set to true to enable ingress record generation
+  ## @param webapp.ingress.className Specifies ingressClassName for clusters >= 1.18+
+  ## @param webapp.ingress.annotations [object] Ingress annotations done as key:value pairs
+  ## @param webapp.ingress.hosts The list of hostnames to be covered with this ingress record.
+  ## @param webapp.ingress.tls [array] Custom ingress TLS configuration
   ingress:
     enabled: false
     className: ""
@@ -65,8 +84,15 @@ webapp:
     #    hosts:
     #      - chart-example.local
 
+  ## Scheduler resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param webapp.resources.limits [object] The resources limits for the scheduler container
+  ## @param webapp.resources.requests [object] The requested resources for the scheduler container
   resources:
-    {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -74,57 +100,78 @@ webapp:
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
+    limits: {}
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+    requests: {}
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
+  ## @param webapp.nodeSelector [object] Node labels for pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   nodeSelector: {}
 
+  ## @param webapp.tolerations [array] Tolerations for scheduler pod assignment.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   tolerations: []
 
+  ## @param webapp.affinity [object] Affinity and anti-affinity for scheduler pod assignment.
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
 
-  apiBaseUrl: http://castled-app-service:7050/
-  apiBase: /backend
-  appBaseUrl: http://localhost:3000/
+  ## @param webapp.appBaseUrl The webapp base url.
+  appBaseUrl: http://localhost:3000
+
+  ## @param webapp.logLevel Logging level of webapp instance.
   logLevel: INFO
+
+  ## @param webapp.isOss Set to true if this is open source instance.
   isOss: true
 
+## @section Castled app Parameters
+
+## Castled app configuration
 app:
+  ## @param app.replicaCount Number of app instances.
   replicaCount: 1
 
+  ## @param app.image.repository The repository to use for the castled webapp image.
+  ## @param app.image.pullPolicy the pull policy to use for the Castled webapp image
+  ## @param app.image.tag The Castled webapp image tag. Defaults to the chart's AppVersion
   image:
     repository: castled/app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "0.2.39-alpha"
 
+  ## @param app.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}
 
+  ## @param app.podSecurityContext Pods' Security Context
   podSecurityContext:
     {}
     # fsGroup: 2000
 
+  ## @param app.securityContext Security context for the container
+  ## Examples:
+  ## securityContext:
+  ##    runAsNonRoot: true
+  ##    runAsUser: 1000
+  ##    readOnlyRootFilesystem: true
   securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
 
+  ## @param app.service.type The service type to use for the webapp service
+  ## @param app.service.port The service port to expose the webapp on
   service:
     type: ClusterIP
     port: 7050
 
+  ## Configure the ingress resource that allows you to access the Castled installation.
+  ## ref: http://kubernetes.io/docs/user-guide/ingress/
+  ## @param app.ingress.enabled Set to true to enable ingress record generation
+  ## @param app.ingress.className Specifies ingressClassName for clusters >= 1.18+
+  ## @param app.ingress.annotations [object] Ingress annotations done as key:value pairs
+  ## @param app.ingress.hosts The list of hostnames to be covered with this ingress record.
+  ## @param app.ingress.tls [array] Custom ingress TLS configuration
   ingress:
     enabled: false
     className: ""
@@ -142,8 +189,15 @@ app:
     #    hosts:
     #      - chart-example.local
 
+  ## Scheduler resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param app.resources.limits [object] The resources limits for the scheduler container
+  ## @param app.resources.requests [object] The requested resources for the scheduler container
   resources:
-    {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -151,325 +205,188 @@ app:
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
+    limits: {}
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+    requests: {}
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+  ## @param app.logLevel Logging level for backend app.
+  logLevel: INFO
 
-  logLevel: INFO 
-
+  ## @param app.nodeSelector [object] Node labels for pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   nodeSelector: {}
 
+  ## @param app.tolerations [array] Tolerations for app pod assignment.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   tolerations: []
 
+  ## @param app.affinity [object] Affinity and anti-affinity for app pod assignment.
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
 
-db:
-  replicaCount: 1
+## @section Mysql Parameters
 
-  image:
-    repository: mysql
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "5.7"
+## Mysql configuration
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/redis
+mysql:
+  ## @param mysql.enabled Whether to deploy a Redis server to satisfy the applications requirements. To use an external database instance set this to `false` and configure the `externalDatabase` parameters.
+  enabled: true
 
-  podAnnotations: {}
+  ## @param mysql.nameOverride String to partially override common.names.fullname template (will maintain the release name)
+  nameOverride: "castled-mysql"
 
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
+  ## @param mysql.fullnameOverride String to fully override common.names.fullname template
+  fullnameOverride: ""
 
-  securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+  ## @param mysql.architecture  MySQL architecture (standalone or replication)
+  architecture: standalone
 
-  service:
-    type: ClusterIP
-    port: 3306
+  auth:
+    ## @param mysql.auth.database  Name for a custom database to create.
+    database: app
 
-  resources:
-    {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+    ## @param mysql.auth.username Name for a custom user to create.
+    username: user
 
-  persistence:
-    size: 1Gi
-    accessMode: ReadWriteOnce
-    # server.persistence.storageClass The storage class to use for the castled db volume.
-    # If defined, storageClassName: <storageClass>
-    # If set to "-", storageClassName: "", which disables dynamic provisioning
-    # If undefined (the default) or set to null, no storageClassName spec is
-    #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    #   GKE, AWS & OpenStack)
-    #
-    storageClass: ""
+    ## @param mysql.auth.password Password for the root user. Ignored if existing secret is provided.
+    password: user
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    ## @param mysql.auth.existingSecret Use existing secret for password details.
+    ## The secret has to contain the keys mysql-root-password, mysql-replication-password and mysql-password.
+    existingSecret: ""
 
-  nodeSelector: {}
+  primary:
+    persistence:
+      ## @param mysql.primary.persistence.enabled Enable data persistence using PVC.
+      enabled: false
 
-  tolerations: []
+      ## @param mysql.primary.persistence.size Persistent Volume size.
+      size: 2Gi
 
-  affinity: {}
-
-  database: "app"
-  user: "user"
-  password: "user"
-  host: "castled-db-service"
+## External Mysql configuration
+## All of these values are only used when mysql.enabled is set to false
+## @param externalDatabase.host Mysql host.
+## @param externalDatabase.port Mysql port.
+## @param externalDatabase.database  Name for a custom database to connect to.
+## @param externalDatabase.password Mysql password.
+## @param externalDatabase.existingSecret Name of an existing secret resource containing the Redis password.
+## @param externalDatabase.existingSecretPasswordKey Name of an existing secret key for external database password.
+externalDatabase:
+  host: ""
   port: 3306
-  url: "jdbc:mysql://castled-db-service:3306/app?autoReconnect=true&user=user&password=user&useSSL=false&serverTimezone=UTC"
+  database: app
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
 
+## @section Kafka Parameters
+
+## Kafka configuration
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/kafka
 kafka:
-  replicaCount: 1
+  ## @param kafka.enabled Whether to Install kafka on kubernetes. To use a managed kafka instance set this to `false` and configure the `externalKafka` parameters.
+  enabled: true
 
-  image:
-    repository: confluentinc/cp-kafka
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "5.3.0"
+  ## @param kafka.nameOverride Name override for kafka app
+  nameOverride: castled-kafka
 
-  podAnnotations: {}
-
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
-
-  securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 3306
-
-  resources:
-    {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  ## @param kafka.fullnameOverride Fullname override for kafka app
+  fullnameOverride: ""
 
   persistence:
-    size: 1Gi
-    accessMode: ReadWriteOnce
-    # server.persistence.storageClass The storage class to use for the castled db volume.
-    # If defined, storageClassName: <storageClass>
-    # If set to "-", storageClassName: "", which disables dynamic provisioning
-    # If undefined (the default) or set to null, no storageClassName spec is
-    #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    #   GKE, AWS & OpenStack)
-    #
-    storageClass: ""
+    ## @param kafka.persistence.enabled Enable persistence using PVC
+    enabled: true
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    ## @param kafka.persistence.size PVC Storage Request for kafka volume
+    size: 5Gi
 
-  nodeSelector: {}
+  ## @param kafka.logRetentionBytes A size-based retention policy for logs. Should be less than kafka.persistence.size, minimum 1GB
+  logRetentionBytes: _4_000_000_000
 
-  tolerations: []
+  ## @param kafka.logRetentionHours The minimum age of a log file to be eligible for deletion due to age
+  logRetentionHours: 24
 
-  affinity: {}
+  zookeeper:
+    ## @param kafka.zookeeper.enabled Install zookeeper on kubernetes
+    enabled: true
 
-  port: 9092
-  host: castled-kafka-service
-
-zookeeper:
-  replicaCount: 1
-
-  image:
-    repository: confluentinc/cp-zookeeper
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "5.3.0"
-
-  podAnnotations: {}
-
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
-
-  securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 2181
-
-  resources:
-    {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-  log:
     persistence:
-      size: 1Gi
-      accessMode: ReadWriteOnce
-      # server.persistence.storageClass The storage class to use for the castled db volume.
-      # If defined, storageClassName: <storageClass>
-      # If set to "-", storageClassName: "", which disables dynamic provisioning
-      # If undefined (the default) or set to null, no storageClassName spec is
-      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      #   GKE, AWS & OpenStack)
-      #
-      storageClass: ""
-  data:
-    persistence:
-      size: 1Gi
-      accessMode: ReadWriteOnce
-      # server.persistence.storageClass The storage class to use for the castled db volume.
-      # If defined, storageClassName: <storageClass>
-      # If set to "-", storageClassName: "", which disables dynamic provisioning
-      # If undefined (the default) or set to null, no storageClassName spec is
-      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      #   GKE, AWS & OpenStack)
-      #
-      storageClass: ""
+      ## @param kafka.zookeeper.persistence.enabled Enable persistence using PVC
+      enabled: true
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+      ## @param kafka.zookeeper.persistence.size Persistent Volume size
+      size: 5Gi
 
-  nodeSelector: {}
+  externalZookeeper:
+    ## @param kafka.externalZookeeper.servers URL for zookeeper. Only set when internal zookeeper is disabled
+    servers:
 
-  tolerations: []
+## External Kafka configuration
+externalKafka:
+  ## @param externalKafka.url URL for external kafka. Only set when internal `kafka.enabled` is false.
+  url:
 
-  affinity: {}
+  ## @param externalKafka.host Host for kafka. Only set when internal `kafka.enabled` is false.
+  host:
 
-  port: 2181
-  host: castled-zookeeper-service
+  ## @param externalKafka.port Port for kafka. Only set when internal `kafka.enabled` is false.
+  port:
 
+## @section Redis Parameters
+
+## Redis configuration
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/redis
 redis:
-  replicaCount: 1
+  ## @param redis.enabled Whether to deploy a Redis server to satisfy the applications requirements. To use an external redis instance set this to `false` and configure the `externalRedis` parameters.
+  enabled: true
 
-  image:
-    repository: redis
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "6.2-alpine"
+  ## @param redis.nameOverride String to partially override common.names.fullname template (will maintain the release name)
+  nameOverride: "castled-redis"
 
-  podAnnotations: {}
+  ## @param redis.fullnameOverride String to fully override common.names.fullname template
+  fullnameOverride: ""
 
-  podSecurityContext:
-    {}
-    # fsGroup: 2000
+  ## @param redis.architecture  Redis architecture (standalone or replication)
+  architecture: standalone
 
-  securityContext:
-    {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 6379
-
-  resources:
-    {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-  log:
-    persistence:
-      size: 1Gi
-      accessMode: ReadWriteOnce
-      # server.persistence.storageClass The storage class to use for the castled db volume.
-      # If defined, storageClassName: <storageClass>
-      # If set to "-", storageClassName: "", which disables dynamic provisioning
-      # If undefined (the default) or set to null, no storageClassName spec is
-      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      #   GKE, AWS & OpenStack)
-      #
-      storageClass: ""
-  data:
-    persistence:
-      size: 1Gi
-      accessMode: ReadWriteOnce
-      # server.persistence.storageClass The storage class to use for the castled db volume.
-      # If defined, storageClassName: <storageClass>
-      # If set to "-", storageClassName: "", which disables dynamic provisioning
-      # If undefined (the default) or set to null, no storageClassName spec is
-      #   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      #   GKE, AWS & OpenStack)
-      #
-      storageClass: ""
-
-  autoscaling:
+  auth:
+    ## @param redis.auth.enabled Enable Redis password authentication.
     enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
 
-  nodeSelector: {}
+    ## @param redis.auth.password Redis password authentication.
+    ## Defaults to a random 10-character alphanumeric string if not set.
+    ## @note ignored unless `redis.auth.enabled` is `true` or if `redis.auth.existingSecret` is set.
+    password: ""
 
-  tolerations: []
+    ## @param redis.auth.existingSecret The name of an existing secret containing the Redis credential to use.
+    ## NOTE: ignored unless `redis.auth.enabled` is `true`.
+    ## When it is set, the previous `redis.auth.password` parameter is ignored.
+    existingSecret: ""
 
-  affinity: {}
+    ## @param redis.auth.existingSecretPasswordKey Password key to be retrieved from existing secret.
+    ## @note ignored unless `redis.auth.existingSecret` parameter is set.
+    existingSecretPasswordKey: ""
 
+  master:
+    persistence:
+      ## @param redis.master.persistence.enabled Enable data persistence using PVC.
+      enabled: false
+
+      ## @param redis.master.persistence.size Persistent Volume size.
+      size:
+
+## External Redis configuration
+## All of these values are only used when redis.enabled is set to false
+## @param externalRedis.host Redis host.
+## @param externalRedis.port Redis port.
+## @param externalRedis.password Redis password.
+## @param externalRedis.existingSecret RName of an existing secret resource containing the Redis password.
+## @param externalRedis.existingSecretPasswordKey Name of an existing secret key for Redis password.
+externalRedis:
+  host: ""
   port: 6379
-  host: castled-redis-service
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""

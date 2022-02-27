@@ -60,3 +60,19 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "castled.webapp.apiBase" -}}
+{{- "/backend" -}}
+{{- end }}
+
+{{- define "castled.webapp.apiBaseUrl" -}}
+{{- "http://castled-app-service:7050" -}}
+{{- end }}
+
+{{- define "castled.webapp.appBaseUrl" -}}
+{{- if .Values.webapp.appBaseUrl }}
+{{- .Values.webapp.appBaseUrl }}
+{{- else }}
+{{- "http://localhost:3000" }}
+{{- end }}
+{{- end }}
