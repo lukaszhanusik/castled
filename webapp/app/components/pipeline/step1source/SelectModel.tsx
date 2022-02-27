@@ -7,77 +7,73 @@ import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
 import WarehouseModel from "./WarehouseModel";
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
+import { Col, Row } from "react-bootstrap";
+import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 
 const SelectModel = ({
-    appBaseUrl,
-    curWizardStep,
-    steps,
-    stepGroups,
-    setCurWizardStep,
-  }: PipelineWizardStepProps)  => {
-    const [models, setModels] = useState<ModelListDto[] | undefined | null>();
-    const router = useRouter();
-    useEffect(() => {
-        modelService
-            .get()
-            .then(({ data }) => {
-                setModels(data);
-            })
-            .catch(() => {
-                setModels(null);
-            });
-    }, []);
-    if (models === null || (models && models.length === 0)) {
-        router.push("/welcome");
-        return (
-            <WarehouseModel
-                appBaseUrl={appBaseUrl}
-                curWizardStep={curWizardStep}
-                steps={steps}
-                stepGroups={stepGroups}
-                setCurWizardStep={setCurWizardStep}
-            />
-        );
-    }
-    return (
-        <Layout
-            title="Model List"
-            subTitle={undefined}
-            rightBtn={
-                models?.length
-                    ? {
-                        id: "create_model_button",
-                        title: "Create Model",
-                        href: "/models/create",
-                    }
-                    : undefined
-            }
-        >
-            {!models && <Loading />}
-            {models && models.length > 0 && (
-                <ul>
-                    <li>Create New Element</li>
-                    {models.map((model, idx) => (
-                        <li key={idx}>
-                            <div className="d-flex">
-                                <img
-                                    src={model.warehouse.logoUrl}
-                                    alt={model.warehouse.name}
-                                    height={24}
-                                />
-                                <div className="ms-2">
-                                    {model.modelName}
-                                    <p className="small text-muted">
-                                        {model.modelDetails.sourceQuery}
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </Layout>
-    );
+  appBaseUrl,
+  curWizardStep,
+  steps,
+  stepGroups,
+  setCurWizardStep,
+}: PipelineWizardStepProps) => {
+  const [models, setModels] = useState<ModelListDto[] | undefined | null>();
+  const router = useRouter();
+  const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
+
+  useEffect(() => {
+    modelService
+      .get()
+      .then(({ data }) => {
+        console.log(data);
+        setModels(data);
+      })
+      .catch(() => {
+        setModels(null);
+      });
+  }, []);
+
+  const onModelSelect = (model: any) => {
+    console.log(model);
+  };
+
+  if (models === null || (models && models.length === 0)) {
+    return <p>No models found. Please create a model to continue.</p>;
+  }
+  return (
+    <Layout
+      title={steps[curWizardStep].title}
+      subTitle={steps[curWizardStep].description}
+      centerTitle={true}
+      steps={steps}
+      stepGroups={stepGroups}
+    >
+      {!models && <Loading />}
+      {models && models.length > 0 && (
+        <div className="categories">
+          {models.map((model, idx) => (
+            <button
+              key={idx}
+              className="btn list-group-item rounded model-item"
+              onClick={() => onModelSelect(model)}
+            >
+              <Row>
+                <Col className="col-md-2">
+                  <img src="/images/sql-icon.svg" />
+                </Col>
+                <Col className="col-md-10 ps-0">
+                  {model.modelName}
+                  <div className="text-muted">
+                    {model.modelDetails.sourceQuery}
+                  </div>
+                </Col>
+              </Row>
+            </button>
+          ))}
+        </div>
+      )}
+    </Layout>
+  );
 };
 
 export default SelectModel;

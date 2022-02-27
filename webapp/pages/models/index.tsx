@@ -37,7 +37,7 @@ const Models = () => {
       {!models && <Loading />}
 
       {models && models.length === 0 && (
-        <p className="text-center">No models created.</p>
+        <p className="text-center">No models created yet.</p>
       )}
 
       {models && models.length > 0 && (
@@ -53,11 +53,7 @@ const Models = () => {
             <tbody>
               {models.map((model, idx) => (
                 <tr key={idx}>
-                  <td>
-                    <Link href={`/models/${model.id}`}>
-                      <a>{model.modelName}</a>
-                    </Link>
-                  </td>
+                  <td>{model.modelName}</td>
                   <td>
                     <div className="d-flex">
                       <img
@@ -67,13 +63,14 @@ const Models = () => {
                       />
                       <div className="ms-2">
                         {model.warehouse.name}
-                        <p className="small text-muted">
+                        <div className="small text-muted">
                           {model.warehouse.type}
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </td>
-                  <td>Sync</td>
+                  <td>{model.modelDetails.type}</td>
+                  <td>{model.activeSyncsCount}</td>
                 </tr>
               ))}
             </tbody>

@@ -22,11 +22,6 @@ import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import modelService from "@/app/services/modelService";
 import Select from "react-select";
 
-export interface ReactSelectOption {
-  value: string;
-  label: string;
-}
-
 const CreateModel = ({
   curWizardStep,
   steps,
@@ -67,8 +62,9 @@ const CreateModel = ({
         // warehouseId: warehouseId,
         warehouseId: 1, //delete this after testing
         modelName: modelName,
+        modelType: "SQL_QUERY_EDITOR",
         modelDetails: {
-          modelType: "SQL_QUERY_EDITOR",
+          type: "SQL_QUERY_EDITOR",
           sourceQuery: query || "",
         },
         queryModelPK: {
@@ -92,24 +88,6 @@ const CreateModel = ({
   console.log(steps);
   console.log(curWizardStep);
   console.log("---configure---");
-
-  useEffect(() => {
-    if (!pipelineWizContext) return;
-    if (!pipelineWizContext.values) {
-      setCurWizardStep("source", "selectType");
-      return;
-    }
-    pipelineService
-      .getSchemaForMapping(pipelineWizContext.values)
-      .then(({ data }) => {
-        setIsLoading(false);
-        setPipelineSchema(data);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        bannerNotificationService.error("Unable to load schemas");
-      });
-  }, [pipelineWizContext?.values]);
 
   useEffect(() => {
     if (!pipelineWizContext) return;
