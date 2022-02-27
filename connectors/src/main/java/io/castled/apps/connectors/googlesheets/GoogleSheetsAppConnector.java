@@ -74,7 +74,7 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
 
     @Override
     public ExternalAppSchema getSchema(GoogleSheetsAppConfig config, GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig) {
-        return new ExternalAppSchema(null, Lists.newArrayList());
+        return new ExternalAppSchema(null);
     }
 
     @Override

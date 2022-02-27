@@ -79,7 +79,7 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
         for (String customVariable : GoogleAdUtils.getCustomVariables(googleAdsAppConfig, mappingConfig).stream().map(ConversionCustomVariable::getName).collect(Collectors.toList())) {
             customerSchemaBuilder.put(customVariable, SchemaConstants.OPTIONAL_STRING_SCHEMA);
         }
-        return new ExternalAppSchema(customerSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName()));
+        return new ExternalAppSchema(customerSchemaBuilder.build());
     }
 
 
@@ -92,7 +92,7 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
         for (String customVariable : GoogleAdUtils.getCustomVariables(googleAdsAppConfig, googleAdsMappingConfig).stream().map(ConversionCustomVariable::getName).collect(Collectors.toList())) {
             recordSchemaBuilder.put(customVariable, SchemaConstants.OPTIONAL_STRING_SCHEMA);
         }
-        return new ExternalAppSchema(recordSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName()));
+        return new ExternalAppSchema(recordSchemaBuilder.build());
     }
 
     private ExternalAppSchema getSchemaForCustomerMatch(CustomerMatchType customerMatchType) {

@@ -27,7 +27,7 @@ public class RestApiAppConnector implements ExternalAppConnector<RestApiAppConfi
 
     @Override
     public ExternalAppSchema getSchema(RestApiAppConfig restApiAppConfig, RestApiAppSyncConfig restApiAppSyncConfig) {
-        return new ExternalAppSchema(null, Lists.newArrayList());
+        return new ExternalAppSchema(null);
     }
 
     public List<AppSyncMode> getSyncModes(RestApiAppConfig restApiAppConfig, RestApiAppSyncConfig restApiAppSyncConfig) {

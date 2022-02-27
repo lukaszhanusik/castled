@@ -8,15 +8,12 @@ import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.MappingGroupAggregator;
-import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.mapping.FixedGroupAppField;
-import io.castled.mapping.MappingGroupField;
 import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.mapping.MappingGroup;
-import io.castled.schema.mapping.PrimaryKeyFieldsGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +36,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
     @Override
     public ExternalAppSchema getSchema(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
-        return new ExternalAppSchema(null, PrimaryKeyEligibles.autoDetect());
+        return new ExternalAppSchema(null);
     }
 
     public List<AppSyncMode> getSyncModes(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {

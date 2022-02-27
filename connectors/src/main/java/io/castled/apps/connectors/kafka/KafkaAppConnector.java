@@ -60,7 +60,7 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
 
     @Override
     public ExternalAppSchema getSchema(KafkaAppConfig config, KafkaAppSyncConfig kafkaAppSyncConfig) {
-        return new ExternalAppSchema(null, Lists.newArrayList());
+        return new ExternalAppSchema(null);
     }
 
     @Override

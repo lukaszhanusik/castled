@@ -8,7 +8,6 @@ import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.MappingGroupAggregator;
-import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.mapping.PrimaryKeyGroupField;
@@ -36,7 +35,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
 
     @Override
     public ExternalAppSchema getSchema(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
-        return new ExternalAppSchema(null, PrimaryKeyEligibles.autoDetect());
+        return new ExternalAppSchema(null);
     }
 
     public List<MappingGroup> getMappingGroups(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {

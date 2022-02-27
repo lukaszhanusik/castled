@@ -1,6 +1,5 @@
 package io.castled.dtos;
 
-import io.castled.apps.models.PrimaryKeyEligibles;
 import io.castled.schema.SimpleSchema;
 import io.castled.schema.mapping.MappingGroup;
 import lombok.AllArgsConstructor;
@@ -17,13 +16,6 @@ public class PipelineSchema {
     private List<MappingGroup> mappingGroups;
 
     private SimpleSchema appSchema;
-    private PrimaryKeyEligibles pkEligibles;
-
-    public PipelineSchema(SimpleSchema warehouseSchema ,SimpleSchema appSchema,PrimaryKeyEligibles pkEligibles){
-        this.warehouseSchema = warehouseSchema;
-        this.appSchema = appSchema;
-        this.pkEligibles = pkEligibles;
-    }
 
     public PipelineSchema(SimpleSchema warehouseSchema ,List<MappingGroup> mappingGroups){
         this.warehouseSchema = warehouseSchema;

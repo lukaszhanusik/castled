@@ -12,16 +12,9 @@ import java.util.List;
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @NoArgsConstructor
-@AllArgsConstructor
 public class ExternalAppSchema {
 
     private RecordSchema appSchema;
-    private PrimaryKeyEligibles pkEligibles;
-
-    public ExternalAppSchema(RecordSchema appSchema, List<String> pkEligibles) {
-        this.appSchema = appSchema;
-        this.pkEligibles = PrimaryKeyEligibles.eligibles(pkEligibles);
-    }
 
     public ExternalAppSchema(RecordSchema appSchema) {
         this.appSchema = appSchema;

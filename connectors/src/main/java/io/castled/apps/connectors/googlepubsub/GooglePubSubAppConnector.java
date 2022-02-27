@@ -49,7 +49,7 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
 
     @Override
     public ExternalAppSchema getSchema(GooglePubSubAppConfig googlePubSubAppConfig, GooglePubSubAppSyncConfig googlePubSubAppSyncConfig) {
-        return new ExternalAppSchema(null, Lists.newArrayList());
+        return new ExternalAppSchema(null);
     }
 
     @Override

@@ -41,8 +41,7 @@ public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCa
         ActiveCampaignRestClient activeCampaignRestClient = new ActiveCampaignRestClient(config.getApiURL(), config.getApiKey());
         List<CustomDataAttribute> customAttributes = activeCampaignRestClient.getContactCustomFields();
 
-        return new ExternalAppSchema(ActiveCampaignUtils.getSchema(ActiveCampaignObject.CONTACT, customAttributes),
-                Lists.newArrayList(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName()));
+        return new ExternalAppSchema(ActiveCampaignUtils.getSchema(ActiveCampaignObject.CONTACT, customAttributes));
     }
 
     public List<AppSyncMode> getSyncModes(ActiveCampaignAppConfig config, ActiveCampaignAppSyncConfig activeCampaignAppSyncConfig) {
