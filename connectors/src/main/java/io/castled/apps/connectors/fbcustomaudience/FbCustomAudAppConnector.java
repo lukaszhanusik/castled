@@ -5,10 +5,15 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.connectors.fbcustomaudience.client.dtos.FbAudienceUserFields;
 import io.castled.apps.models.ExternalAppSchema;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.schema.mapping.MappingGroup;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig, FbCustomAudDataSink, FbCustomAudAppSyncConfig> {
     @Override
@@ -23,10 +28,7 @@ public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig
 
     @Override
     public ExternalAppSchema getSchema(FbAppConfig config, FbCustomAudAppSyncConfig fbCaAppSyncConfig) {
-        List<String> pkEligibles = Lists.newArrayList();
-        pkEligibles.add(FbAudienceUserFields.EMAIL.getDisplayName());
-        pkEligibles.add(FbAudienceUserFields.EXTERN_ID.getDisplayName());
-        return new ExternalAppSchema(FbAdUtils.getSchema(), pkEligibles);
+        return new ExternalAppSchema(FbAdUtils.getSchema());
     }
 
     @Override
@@ -37,6 +39,18 @@ public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig
     @Override
     public List<AppSyncMode> getSyncModes(FbAppConfig config, FbCustomAudAppSyncConfig mappingConfig) {
         return Lists.newArrayList();
+    }
+
+    @Override
+    public List<MappingGroup> getMappingGroups(FbAppConfig config, FbCustomAudAppSyncConfig fbCustomAudAppSyncConfig) {
+        // Fixed field group
+        List<FixedGroupAppField> fixedGroupAppFields = Arrays.stream(FbAudienceUserFields.values())
+                .map(userField -> new FixedGroupAppField(userField.getName(), userField.getDisplayName(), true))
+                .collect(Collectors.toList());
+
+        return MappingGroupAggregator.builder()
+                .addFixedAppFields(fixedGroupAppFields)
+                .build().getMappingGroups();
     }
 
     @Override
