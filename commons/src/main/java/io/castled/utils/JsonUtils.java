@@ -128,6 +128,15 @@ public class JsonUtils {
         }
     }
 
+    public static JsonNode jsonStringToJsonNode(String jsonString) {
+        try {
+            return objectMapper.readTree(jsonString);
+        } catch (JsonProcessingException e) {
+            throw new CastledRuntimeException(e.getMessage());
+        }
+
+    }
+
     public static Map<String, Object> jsonNodeToMap(JsonNode jsonNode) {
         return objectMapper.convertValue(jsonNode, new TypeReference<Map<String, Object>>() {
         });

@@ -4,21 +4,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.models.RestMethod;
 import io.castled.models.TargetRestApiMapping;
-import io.castled.utils.MustacheUtils;
+import io.castled.utils.JsonUtils;
 import io.castled.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 public class RestApiTemplateClient {
@@ -40,7 +37,6 @@ public class RestApiTemplateClient {
                 String errorMessage = response.readEntity(String.class);
                 return new ErrorAndCode(String.valueOf(response.getStatus()), errorMessage);
             }
-
             return null;
         } catch (Exception e) {
             log.error(String.format("Custom API upsert failed for %s %s", targetTemplateMapping.getUrl(), targetTemplateMapping.getTemplate()), e);
@@ -48,7 +44,7 @@ public class RestApiTemplateClient {
         }
     }
 
-    private Response invokeRestAPI(List<Map<String, Object>> inputDetails) throws IOException {
+    private Response invokeRestAPI(List<Map<String, Object>> inputDetails) throws InvalidTemplateException {
 
         Map<String, String> headers = targetTemplateMapping.getHeaders();
         Invocation.Builder builder = this.client.target(targetTemplateMapping.getUrl())
@@ -66,15 +62,20 @@ public class RestApiTemplateClient {
 
     }
 
-    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) throws IOException {
+    private Map<String, Object> constructPayload(List<Map<String, Object>> inputDetails) throws InvalidTemplateException {
+        RestApiTemplateParser restApiTemplateParser = new RestApiTemplateParser();
         if (restApiAppSyncConfig.isBulk()) {
+            RestApiTemplateParser.BulkMustacheTokenizedResponse tokenizedResponse =
+                    restApiTemplateParser.tokenizeBulkMustacheJson(targetTemplateMapping.getTemplate(), restApiAppSyncConfig.getJsonPath());
+
             List<Map<String, Object>> transformedInput = Lists.newArrayList();
             for (Map<String, Object> inputDetail : inputDetails) {
-                transformedInput.add(MustacheUtils.constructPayload(targetTemplateMapping.getTemplate(), inputDetail));
+                transformedInput.add(restApiTemplateParser.resolveTemplate(tokenizedResponse.getRecordTemplate(), inputDetail));
             }
-            return constructNestedMap(restApiAppSyncConfig.getJsonPath(), transformedInput);
+            return JsonUtils.jsonStringToMap(String.format("%s%s%s", tokenizedResponse.getArrayPrefix(), JsonUtils.objectToString(transformedInput),
+                    tokenizedResponse.getArraySuffix()));
         }
-        return MustacheUtils.constructPayload(targetTemplateMapping.getTemplate(), inputDetails.get(0));
+        return restApiTemplateParser.resolveTemplate(targetTemplateMapping.getTemplate(), inputDetails.get(0));
     }
 
     private Map<String, Object> constructNestedMap(String nestedPath, List<Map<String, Object>> transformedInput) {
