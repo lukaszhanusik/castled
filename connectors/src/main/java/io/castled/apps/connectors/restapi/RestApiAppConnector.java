@@ -7,6 +7,7 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.schema.mapping.MappingGroup;
 
 import java.util.List;
 
@@ -31,6 +32,11 @@ public class RestApiAppConnector implements ExternalAppConnector<RestApiAppConfi
 
     public List<AppSyncMode> getSyncModes(RestApiAppConfig restApiAppConfig, RestApiAppSyncConfig restApiAppSyncConfig) {
         return Lists.newArrayList(AppSyncMode.INSERT);
+    }
+
+    @Override
+    public List<MappingGroup> getMappingGroups(RestApiAppConfig config, RestApiAppSyncConfig restApiAppSyncConfig) {
+        throw new UnsupportedOperationException("Mapping Groups not supported for Rest api");
     }
 
     public Class<RestApiAppSyncConfig> getMappingConfigType() {

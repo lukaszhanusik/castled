@@ -9,9 +9,11 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.models.ExternalAppSchema;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.schema.mapping.MappingGroup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -57,6 +59,12 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
             }
             throw new InvalidConfigException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<MappingGroup> getMappingGroups(GoogleSheetsAppConfig config, GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig) {
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addElasticAppFields(true).build().getMappingGroups();
     }
 
     @Override

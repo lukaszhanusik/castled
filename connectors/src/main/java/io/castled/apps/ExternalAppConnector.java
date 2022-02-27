@@ -64,9 +64,7 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
         return JsonUtils.jsonNodeToObject(jsonNode, getMappingConfigType());
     }
 
-    default List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig){
-        return Lists.newArrayList();
-    }
+    List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig);
 
     Class<MAPPINGCONFIG> getMappingConfigType();
 
