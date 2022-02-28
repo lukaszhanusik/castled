@@ -90,9 +90,10 @@ export default function mappingFieldValidations(
     )[0];
 
     let importantParamsFieldsCount = hasImportantParams?.fields?.reduce(
-      (acc, group) => acc + 1,
+      (acc, group) => !group.optional ? acc + 1 : acc,
       0
     );
+    
     if (hasImportantParams) {
       for (let [key, value] of Object.entries(obj)) {
         if (key.includes("IMPORTANT_PARAMS")) {
