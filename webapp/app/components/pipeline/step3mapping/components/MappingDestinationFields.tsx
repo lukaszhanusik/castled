@@ -16,67 +16,17 @@ export default function MappingImportantFields({
   setFieldTouched,
 }: MappingFieldsProps) {
   const [optionalRow, setOptionalRow] = useState<JSX.Element[]>([]);
-  const [addOptionalRow, setAddOptionalRow] = useState(true);
-
-  const trackShiftedElements: JSX.Element[] = [];
+  const [optionalFieldsElement, setOptionalFieldsElement] = useState<
+    JSX.Element[]
+  >([]);
 
   useEffect(() => {
-    addRow();
+    if (optionalFields) setOptionalFieldsElement(optionalFields);
   }, []);
- 
-  /* 
-  Keep tracking optional row and activate addRow 
-  on Primary if optional row is empty. \/
-  */
-  useEffect(() => {
-    if (!optionalRow.length) {
-      setAddOptionalRow(true);
-    } else {
-      setAddOptionalRow(false);
-    }
-  }, [optionalRow]);
-
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
   });
-
-  function addRow() {
-    if (optionalFields && optionalFields.length) {
-      setOptionalRow((prevState) => [...prevState, optionalFields[0]]);
-      const shiftedElement = optionalFields.shift();
-      if (shiftedElement) trackShiftedElements.push(shiftedElement);
-      // console.log(shiftedElement);
-      // console.log(optionalFields);
-    }
-  }
-
-  // This is for primary key to add optional row if there are no optional row present.
-  function addOptional() {
-    // console.log(addOptionalRow);
-    if (addOptionalRow) {
-      addRow();
-      setAddOptionalRow(!addOptionalRow);
-    }
-  }
-
-  function deleteRow(key: string) {
-    // filter items based on key
-    setOptionalRow((prevState) =>
-      prevState.filter((item) => {
-        return item.key !== key;
-      })
-    );
-    // console.log(optionalFields);
-    const shiftedElement = trackShiftedElements.shift();
-    if (shiftedElement) optionalFields?.push(shiftedElement);
-    // optionalFields?.push(shiftedElement);
-    // if (!optionalFields) {
-    //   optionalFields!.push(
-    //     ...trackShiftedElements.filter((ele) => ele.key === key)
-    //   );
-    // }
-  }
 
   const optionalFields = destinationFieldSection[0].optionalFields?.map(
     (optionalField, i) => (
@@ -90,14 +40,12 @@ export default function MappingImportantFields({
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             e?.value
           );
-          addRow();
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-appField-${i}`,
             e?.value
           );
-          addRow();
         }}
         handleDelete={(e) => {
           e.preventDefault();
@@ -119,7 +67,36 @@ export default function MappingImportantFields({
       />
     )
   );
-  // console.log(optionalRow);
+
+  function addRow() {
+    if (optionalFieldsElement && optionalFieldsElement.length) {
+      const elementToAdd = optionalFieldsElement[0];
+      if (elementToAdd) {
+        // Add row to the screen
+        setOptionalRow((prevState) => [...prevState, elementToAdd]);
+        // Remove row from the optionalFieldsElement giving remaining row we can add
+        setOptionalFieldsElement((prevState) =>
+          prevState.filter((field) => field.key !== elementToAdd.key)
+        );
+      }
+    }
+  }
+
+  function deleteRow(key: string) {
+    // filter items based on key
+    setOptionalRow((prevState) =>
+      prevState.filter((item) => {
+        return item.key !== key;
+      })
+    );
+
+    if (optionalFields) {
+      setOptionalFieldsElement((prevState) => [
+        ...prevState,
+        ...optionalFields.filter((field) => field.key === key),
+      ]);
+    }
+  }
 
   return (
     <div className="row py-2">
@@ -145,7 +122,6 @@ export default function MappingImportantFields({
                       `DESTINATION_FIELDS-mandatory-appField-${i}`,
                       mandatoryField.fieldName
                     );
-                    addOptional();
                   }}
                   onBlur={() =>
                     setFieldTouched?.(
@@ -156,6 +132,9 @@ export default function MappingImportantFields({
                 />
               ))}
             {optionalRow}
+            <button type="button" onClick={addRow} className="btn btn-primary">
+              Add Row
+            </button>
           </WarehouseColumn>
         ))}
     </div>
