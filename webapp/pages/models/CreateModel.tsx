@@ -16,7 +16,6 @@ import { Button } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
-import pipelineService from "@/app/services/pipelineService";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import modelService from "@/app/services/modelService";
 import Select from "react-select";
@@ -166,10 +165,12 @@ const CreateModel = ({
       <div className="row">
         <div className="col-6">
           <Formik
-            initialValues={{
-              warehouseId,
-              query,
-            }}
+            initialValues={
+              {
+                warehouseId,
+                query,
+              } as any
+            }
             validationSchema={yup
               .object()
               .shape({ query: yup.string().required("Enter a query") })}
@@ -184,7 +185,6 @@ const CreateModel = ({
                 getQueryResults(res.queryId);
               }
             )}
-            // onSubmit={() => console.log("submiting")}
             enableReinitialize
           >
             {({ isSubmitting }) => (

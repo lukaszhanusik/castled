@@ -124,7 +124,7 @@ const ConnectorWizard = ({
               console.log("on create here???");
               setCurWizardStep(curWizardStepGroup, "model");
             }}
-            onSelect={(id: number, sourceQuery?: string) => {
+            onSelect={(id: number, sourceQuery: string) => {
               console.log("fail here???", category);
               if (category !== "Model") {
                 _.set(pipelineWizContext, "values.modelId", id);
