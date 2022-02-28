@@ -23,7 +23,7 @@ export default function MappingImportantFields({
   useEffect(() => {
     addRow();
   }, []);
-
+ 
   /* 
   Keep tracking optional row and activate addRow 
   on Primary if optional row is empty. \/
