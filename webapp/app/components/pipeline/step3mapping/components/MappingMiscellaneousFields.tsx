@@ -32,20 +32,20 @@ export default function MappingMiscellaneousFields({
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
 
-  function addRow(btn: boolean) {
+  function addRow() {
     const randomKey = Math.random().toString(15).substring(2, 15);
     setAdditionalRow((prevState) => [
       ...prevState,
-      additionalFields(randomKey, btn),
+      additionalFields(randomKey),
     ]);
   }
 
-  function addOptional() {
-    if (addOptionalRow) {
-      addRow(true);
-      setAddOptionalRow(!addOptionalRow);
-    }
-  }
+  // function addOptional() {
+  //   if (addOptionalRow) {
+  //     addRow();
+  //     setAddOptionalRow(!addOptionalRow);
+  //   }
+  // }
 
   function deleteRow(key: string) {
     // filter items based on key
@@ -62,13 +62,13 @@ export default function MappingMiscellaneousFields({
       : `MISCELLANEOUS_FIELDS-${s}-0x0x0x0x0x0x0x`;
   }
 
-  const additionalFields = (key: string, button: boolean) => (
+  const additionalFields = (key: string) => (
     <AdditionalFields
       key={key}
       options={options}
       onChange={(e) => {
         setFieldValue?.(keyValueDefault("warehouseField", key), e?.value);
-        addRow(true);
+        // addRow(true);
       }}
       onBlur={() =>
         setFieldTouched?.(keyValueDefault("warehouseField", key), true)
@@ -79,7 +79,6 @@ export default function MappingMiscellaneousFields({
         setFieldValue?.(keyValueDefault("warehouseField", key), "");
         setFieldValue?.(keyValueDefault("appField", key), "");
       }}
-      button={button}
       inputChange={(e) => {
         setFieldValue?.(keyValueDefault("appField", key), e.target.value);
       }}
@@ -95,29 +94,10 @@ export default function MappingMiscellaneousFields({
       {miscellaneousFieldSection.length > 0 &&
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
-            <AdditionalFields
-              key={"0x0x0x0x0x0x0x"}
-              options={options}
-              onChange={(e) => {
-                setFieldValue?.(
-                  // Default key for the first row identification
-                  keyValueDefault("warehouseField"),
-                  e?.value
-                );
-                addOptional();
-              }}
-              onBlur={() =>
-                setFieldTouched?.(keyValueDefault("warehouseField"), true)
-              }
-              button={false}
-              inputChange={(e) => {
-                setFieldValue?.(keyValueDefault("appField"), e.target.value);
-              }}
-              inputBlur={() =>
-                setFieldTouched?.(keyValueDefault("appField"), true)
-              }
-            />
             {additionalRow}
+            <button onClick={() => addRow()} className="btn btn-primary">
+              Add row
+            </button>
           </WarehouseColumn>
         ))}
     </div>
@@ -125,7 +105,6 @@ export default function MappingMiscellaneousFields({
 }
 
 interface AdditionalFieldsProps extends DestinationFieldRowsProps {
-  button: boolean;
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -136,7 +115,6 @@ function AdditionalFields({
   onChange,
   onBlur,
   handleDelete,
-  button,
   inputChange,
   inputBlur,
 }: AdditionalFieldsProps) {
@@ -161,11 +139,10 @@ function AdditionalFields({
           onBlur={inputBlur}
         />
       </th>
-      {button && (
-        <button onClick={handleDelete} className="btn btn-danger">
-          X
-        </button>
-      )}
+
+      <button onClick={handleDelete} className="btn btn-danger">
+        X
+      </button>
     </tr>
   );
 }
