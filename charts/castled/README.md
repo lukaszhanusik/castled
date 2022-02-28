@@ -7,7 +7,6 @@
 | `global.imageRegistry` | Global Docker image registry                 | `""`  |
 | `global.storageClass`  | Global StorageClass for Persistent Volume(s) | `""`  |
 
-
 ### Common Parameters
 
 | Name                         | Description                                                                                                         | Value           |
@@ -18,33 +17,31 @@
 | `serviceAccount.create`      | Specifies whether a ServiceAccount should be created                                                                | `true`          |
 | `serviceAccount.name`        | Name of the service account to use. If not set and create is true, a name is generated using the fullname template. | `castled-admin` |
 
-
 ### Castled webapp Parameters
 
-| Name                         | Description                                                      | Value                   |
-| ---------------------------- | ---------------------------------------------------------------- | ----------------------- |
-| `webapp.replicaCount`        | Number of webapp replicas                                        | `1`                     |
-| `webapp.image.repository`    | The repository to use for the castled webapp image.              | `castled/webapp`        |
-| `webapp.image.pullPolicy`    | the pull policy to use for the Castled webapp image              | `IfNotPresent`          |
-| `webapp.image.tag`           | The Castled webapp image tag. Defaults to the chart's AppVersion | `0.2.21-alpha`          |
-| `webapp.podAnnotations`      | Add extra annotations to the webapp pod(s)                       | `{}`                    |
-| `webapp.securityContext`     | Security context for the container                               | `{}`                    |
-| `webapp.service.type`        | The service type to use for the webapp service                   | `ClusterIP`             |
-| `webapp.service.port`        | The service port to expose the webapp on                         | `80`                    |
-| `webapp.ingress.enabled`     | Set to true to enable ingress record generation                  | `false`                 |
-| `webapp.ingress.className`   | Specifies ingressClassName for clusters >= 1.18+                 | `""`                    |
-| `webapp.ingress.annotations` | Ingress annotations done as key:value pairs                      | `{}`                    |
-| `webapp.ingress.hosts`       | The list of hostnames to be covered with this ingress record.    | `[]`                    |
-| `webapp.ingress.tls`         | Custom ingress TLS configuration                                 | `[]`                    |
-| `webapp.resources.limits`    | The resources limits for the scheduler container                 | `{}`                    |
-| `webapp.resources.requests`  | The requested resources for the scheduler container              | `{}`                    |
-| `webapp.nodeSelector`        | Node labels for pod assignment                                   | `{}`                    |
-| `webapp.tolerations`         | Tolerations for scheduler pod assignment.                        | `[]`                    |
-| `webapp.affinity`            | Affinity and anti-affinity for scheduler pod assignment.         | `{}`                    |
-| `webapp.appBaseUrl`          | The webapp base url.                                             | `http://localhost:3000` |
-| `webapp.logLevel`            | Logging level of webapp instance.                                | `INFO`                  |
-| `webapp.isOss`               | Set to true if this is open source instance.                     | `true`                  |
-
+| Name                         | Description                                                      | Value            |
+| ---------------------------- | ---------------------------------------------------------------- | ---------------- |
+| `webapp.replicaCount`        | Number of webapp replicas                                        | `1`              |
+| `webapp.image.repository`    | The repository to use for the castled webapp image.              | `castled/webapp` |
+| `webapp.image.pullPolicy`    | the pull policy to use for the Castled webapp image              | `IfNotPresent`   |
+| `webapp.image.tag`           | The Castled webapp image tag. Defaults to the chart's AppVersion | `0.2.21-alpha`   |
+| `webapp.podAnnotations`      | Add extra annotations to the webapp pod(s)                       | `{}`             |
+| `webapp.securityContext`     | Security context for the container                               | `{}`             |
+| `webapp.service.type`        | The service type to use for the webapp service                   | `ClusterIP`      |
+| `webapp.service.port`        | The service port to expose the webapp on                         | `80`             |
+| `webapp.ingress.enabled`     | Set to true to enable ingress record generation                  | `false`          |
+| `webapp.ingress.className`   | Specifies ingressClassName for clusters >= 1.18+                 | `""`             |
+| `webapp.ingress.annotations` | Ingress annotations done as key:value pairs                      | `{}`             |
+| `webapp.ingress.hosts`       | The list of hostnames to be covered with this ingress record.    | `[]`             |
+| `webapp.ingress.tls`         | Custom ingress TLS configuration                                 | `[]`             |
+| `webapp.resources.limits`    | The resources limits for the scheduler container                 | `{}`             |
+| `webapp.resources.requests`  | The requested resources for the scheduler container              | `{}`             |
+| `webapp.nodeSelector`        | Node labels for pod assignment                                   | `{}`             |
+| `webapp.tolerations`         | Tolerations for scheduler pod assignment.                        | `[]`             |
+| `webapp.affinity`            | Affinity and anti-affinity for scheduler pod assignment.         | `{}`             |
+| `webapp.appBaseUrl`          | The webapp base url.                                             | `""`             |
+| `webapp.logLevel`            | Logging level of webapp instance.                                | `INFO`           |
+| `webapp.isOss`               | Set to true if this is open source instance.                     | `true`           |
 
 ### Castled app Parameters
 
@@ -71,7 +68,6 @@
 | `app.tolerations`         | Tolerations for app pod assignment.                              | `[]`           |
 | `app.affinity`            | Affinity and anti-affinity for app pod assignment.               | `{}`           |
 
-
 ### Mysql Parameters
 
 | Name                                         | Description                                                                                                                                                                          | Value           |
@@ -93,7 +89,6 @@
 | `externalDatabase.existingSecret`            | Name of an existing secret resource containing the Redis password.                                                                                                                   | `""`            |
 | `externalDatabase.existingSecretPasswordKey` | Name of an existing secret key for external database password.                                                                                                                       | `""`            |
 
-
 ### Kafka Parameters
 
 | Name                                  | Description                                                                                                                               | Value            |
@@ -112,7 +107,6 @@
 | `externalKafka.url`                   | URL for external kafka. Only set when internal `kafka.enabled` is false.                                                                  | `nil`            |
 | `externalKafka.host`                  | Host for kafka. Only set when internal `kafka.enabled` is false.                                                                          | `nil`            |
 | `externalKafka.port`                  | Port for kafka. Only set when internal `kafka.enabled` is false.                                                                          | `nil`            |
-
 
 ### Redis Parameters
 
@@ -133,5 +127,3 @@
 | `externalRedis.password`                  | Redis password.                                                                                                                                                                | `""`            |
 | `externalRedis.existingSecret`            | RName of an existing secret resource containing the Redis password.                                                                                                            | `""`            |
 | `externalRedis.existingSecretPasswordKey` | Name of an existing secret key for Redis password.                                                                                                                             | `""`            |
-
-
