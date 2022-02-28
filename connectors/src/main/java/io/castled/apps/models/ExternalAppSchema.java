@@ -11,15 +11,12 @@ import java.util.List;
 
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-@AllArgsConstructor
 @NoArgsConstructor
 public class ExternalAppSchema {
 
     private RecordSchema appSchema;
-    private PrimaryKeyEligibles pkEligibles;
 
-    public ExternalAppSchema(RecordSchema appSchema, List<String> pkEligibles) {
+    public ExternalAppSchema(RecordSchema appSchema) {
         this.appSchema = appSchema;
-        this.pkEligibles = PrimaryKeyEligibles.eligibles(pkEligibles);
     }
 }

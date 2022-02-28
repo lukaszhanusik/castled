@@ -7,7 +7,11 @@ import io.castled.apps.OAuthAppConfig;
 import io.castled.apps.connectors.hubspot.client.HubspotRestClient;
 import io.castled.apps.connectors.hubspot.client.dtos.HubspotProperty;
 import io.castled.apps.models.ExternalAppSchema;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,19 +40,7 @@ public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig,
         List<HubspotProperty> hubspotProperties = hubspotRestClient.getObjectProperties(mappingConfig.getObject().getTypeId())
                 .stream().filter(hubspotProperty -> !hubspotProperty.getModificationMetadata().isReadOnlyValue()).collect(Collectors.toList());
 
-        return new ExternalAppSchema(HubspotUtils.getSchema(mappingConfig.getObject().getName(), hubspotProperties),
-                getPrimaryKeyEligibles(hubspotProperties, mappingConfig.getObject().getName()));
-    }
-
-    private List<String> getPrimaryKeyEligibles(List<HubspotProperty> hubspotProperties, String objectName) {
-
-        if (objectName.equals(HubspotStandardObject.contacts.name())) {
-            return Lists.newArrayList(HubspotFields.EMAIL_FIELD);
-        }
-        if (objectName.equals(HubspotStandardObject.companies.name())) {
-            return Lists.newArrayList(HubspotFields.COMPANY_DOMAIN);
-        }
-        return hubspotProperties.stream().map(HubspotProperty::getName).collect(Collectors.toList());
+        return new ExternalAppSchema(HubspotUtils.getSchema(mappingConfig.getObject().getName(), hubspotProperties));
     }
 
     @Override
@@ -64,5 +56,41 @@ public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig,
     @Override
     public HubspotDataSink getDataSink() {
         return ObjectRegistry.getInstance(HubspotDataSink.class);
+    }
+
+    public List<MappingGroup> getMappingGroups(OAuthAppConfig oAuthAppConfig, HubspotAppSyncConfig hubspotAppSyncConfig) {
+
+        HubspotRestClient hubspotRestClient = new HubspotRestClient(oAuthAppConfig.getOAuthToken(), oAuthAppConfig.getClientConfig());
+
+        List<HubspotProperty> hubspotProperties = hubspotRestClient.getObjectProperties(hubspotAppSyncConfig.getObject().getTypeId())
+                .stream().filter(hubspotProperty -> !hubspotProperty.getModificationMetadata().isReadOnlyValue()).collect(Collectors.toList());
+        return MappingGroupAggregator.builder().addPrimaryKeyFields(getPrimaryKeyFields(hubspotProperties, hubspotAppSyncConfig.getObject().getName()))
+                .addFixedAppFields(getFixedAppFields(hubspotProperties, hubspotAppSyncConfig.getObject().getName())).build().getMappingGroups();
+    }
+
+    private List<PrimaryKeyGroupField> getPrimaryKeyFields(List<HubspotProperty> hubspotProperties, String objectName) {
+        if (objectName.equals(HubspotStandardObject.contacts.name())) {
+            return Lists.newArrayList(new PrimaryKeyGroupField(HubspotFields.EMAIL_FIELD, HubspotFields.EMAIL_FIELD, false));
+        }
+        if (objectName.equals(HubspotStandardObject.companies.name())) {
+            return Lists.newArrayList(new PrimaryKeyGroupField(HubspotFields.COMPANY_DOMAIN, HubspotFields.COMPANY_DOMAIN, false));
+        }
+        return hubspotProperties.stream().map(HubspotProperty::getName).map(hubspotProperty ->
+                new PrimaryKeyGroupField(hubspotProperty, hubspotProperty, true)).collect(Collectors.toList());
+
+    }
+
+    private List<FixedGroupAppField> getFixedAppFields(List<HubspotProperty> hubspotProperties, String objectName) {
+        List<FixedGroupAppField> fixedGroupAppFields = hubspotProperties.stream().map(HubspotProperty::getName).map(hubspotProperty ->
+                new FixedGroupAppField(hubspotProperty, hubspotProperty, true)).collect(Collectors.toList());
+        if (objectName.equals(HubspotStandardObject.contacts.name())) {
+            return fixedGroupAppFields.stream().filter(fixedGroupAppField -> !fixedGroupAppField.getName().equals(HubspotFields.EMAIL_FIELD))
+                    .collect(Collectors.toList());
+        }
+        if (objectName.equals(HubspotStandardObject.companies.name())) {
+            return fixedGroupAppFields.stream().filter(fixedGroupAppField -> !fixedGroupAppField.getName().equals(HubspotFields.COMPANY_DOMAIN))
+                    .collect(Collectors.toList());
+        }
+        return fixedGroupAppFields;
     }
 }

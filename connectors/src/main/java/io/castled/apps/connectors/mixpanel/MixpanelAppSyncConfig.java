@@ -18,14 +18,14 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class MixpanelAppSyncConfig extends BaseAppSyncConfig {
 
-    @FormField(title = "Select Object to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
+    @FormField(title = "Select Object to sync", type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 
     @FormField(type = FormFieldType.TEXT_BOX, group = "eventTypeGroup", title = "Event Name", description = "Name of the event")
     private String eventName;
 
-    @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column uniquely identifying the Event", description = "Column which identifies the event name",
+/*    @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column uniquely identifying the Event", description = "Column which identifies the event name",
             optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
     private String eventID;
 
@@ -39,18 +39,18 @@ public class MixpanelAppSyncConfig extends BaseAppSyncConfig {
 
     @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column identifying Geo IP", description = "How a source record will be uniquely identified",
             optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String eventIP;
+    private String eventIP;*/
 
-    @NotNull
+  /*  @NotNull
     @FormField(type = FormFieldType.DROP_DOWN, group = "groupProfileGroup", title = "Warehouse Column uniquely identifying the Group", description = "Column which identifies the event ID",
             optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String groupID;
+    private String groupID;*/
 
     @NotNull
     @FormField(type = FormFieldType.TEXT_BOX, group = "groupProfileGroup", title = "Mixpanel Group Key", description = "Column which identifies the event ID")
     private String groupKey;
 
-    @NotNull
+/*    @NotNull
     @FormField(type = FormFieldType.DROP_DOWN, group = "userProfileGroup", title = "Warehouse Column identifying the User", description = "How a source record will be uniquely identified",
             optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
     private String distinctID;
@@ -68,7 +68,7 @@ public class MixpanelAppSyncConfig extends BaseAppSyncConfig {
     @NotNull
     @FormField(type = FormFieldType.DROP_DOWN, group = "userProfileGroup", title = "Warehouse Column identifying the User Email", description = "How a source record will be uniquely identified",
             optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String userEmail;
+    private String userEmail;*/
 
     @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))

@@ -11,6 +11,7 @@ import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.FormUtils;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.forms.dtos.FormFieldsDTO;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 import io.castled.utils.JsonUtils;
 
@@ -62,6 +63,8 @@ public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends
     default MAPPINGCONFIG getAppSyncConfig(JsonNode jsonNode) {
         return JsonUtils.jsonNodeToObject(jsonNode, getMappingConfigType());
     }
+
+    List<MappingGroup> getMappingGroups(CONFIG config, MAPPINGCONFIG mappingconfig);
 
     Class<MAPPINGCONFIG> getMappingConfigType();
 

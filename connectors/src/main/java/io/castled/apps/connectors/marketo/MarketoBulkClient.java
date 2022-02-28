@@ -52,19 +52,33 @@ public class MarketoBulkClient {
         List<GenericAttribute> result;
         ObjectAttributesContainer attrsContainer;
         if (object == MarketoObject.LEADS) {
-            LeadAttributesResponse response = this.client.target(url)
-                    .request(MediaType.APPLICATION_JSON)
-                    .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + authClient.getToken())
-                    .get(LeadAttributesResponse.class);
+            ThrowingSupplier<LeadAttributesResponse> requestSupplier = () -> {
+                LeadAttributesResponse response = this.client.target(url)
+                        .request(MediaType.APPLICATION_JSON)
+                        .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + authClient.getToken())
+                        .get(LeadAttributesResponse.class);
+                if (!response.getSuccess()) {
+                    errorConsumer.accept(response.getErrors());
+                }
+                return response;
+            };
+            LeadAttributesResponse response = executeRequest(requestSupplier);
             result = response.getResult();
             List<String> primaryKeys = response.getResult().stream().map(attrRef -> attrRef.getRest().getName())
                     .filter(fieldName -> !fieldName.equals(LeadAttribute.ID)).collect(Collectors.toList());
             attrsContainer = new ObjectAttributesContainer(result, primaryKeys, LeadAttribute.ID, object);
         } else {
-            GenericAttributesResponse response = this.client.target(url)
-                    .request(MediaType.APPLICATION_JSON)
-                    .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + authClient.getToken())
-                    .get(GenericAttributesResponse.class);
+            ThrowingSupplier<GenericAttributesResponse> requestSupplier = () -> {
+                GenericAttributesResponse response = this.client.target(url)
+                        .request(MediaType.APPLICATION_JSON)
+                        .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + authClient.getToken())
+                        .get(GenericAttributesResponse.class);
+                if (!response.getSuccess()) {
+                    errorConsumer.accept(response.getErrors());
+                }
+                return response;
+            };
+            GenericAttributesResponse response = executeRequest(requestSupplier);
             GenericAttributesWrapper wrapper = response.getResult().stream().findFirst().get();
             attrsContainer = new ObjectAttributesContainer(wrapper.getFields(), wrapper.getDedupeFields(), wrapper.getIdField(), object);
         }
@@ -234,6 +248,8 @@ public class MarketoBulkClient {
         switch (err.getCode()) {
             case "602":
                 throw new TokenExpiredException(err);
+            case "601":
+                throw new CastledRuntimeException(err.getMessage());
         }
     };
 

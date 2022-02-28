@@ -5,23 +5,17 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
-import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
-import io.castled.apps.models.PrimaryKeyEligibles;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
-import io.castled.dtos.PipelineConfigDTO;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.models.FieldMapping;
-import io.castled.models.TargetFieldsMapping;
-import io.castled.schema.models.Field;
-import io.castled.schema.models.RecordSchema;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
+import io.castled.schema.mapping.MappingGroup;
 
-import javax.ws.rs.BadRequestException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -41,7 +35,88 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
 
     @Override
     public ExternalAppSchema getSchema(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
-        return new ExternalAppSchema(null, PrimaryKeyEligibles.autoDetect());
+        return new ExternalAppSchema(null);
+    }
+
+    public List<MappingGroup> getMappingGroups(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+        String object = customerIOAppSyncConfig.getObject().getObjectName();
+        if (CustomerIOObject.EVENT.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForEventObject(config, customerIOAppSyncConfig);
+        }
+        if (CustomerIOObject.PERSON.getName().equalsIgnoreCase(object)) {
+            return getMappingGroupsForPersonObject(config, customerIOAppSyncConfig);
+        }
+        return null;
+    }
+
+    private List<MappingGroup> getMappingGroupsForPersonObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName())
+                .displayName(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldTitle())
+                .build());
+
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
+                .displayName(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldTitle())
+                .build());
+
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false).build().getMappingGroups();
+    }
+
+    private List<MappingGroup> getMappingGroupsForEventObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
+        String eventType = customerIOAppSyncConfig.getEventType();
+
+        List<QuestionnaireGroupField> questionnaireGroupFields = Lists.newArrayList();
+        if (CIOEventTypeEnum.TRACK_EVENT.getEventType().equalsIgnoreCase(eventType)) {
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                    .title("Column identifying Customer.io id (customer_id) of the person")
+                    .description("This field will be used to uniquely identifying the person associated with the event")
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
+                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
+                    .optional(false)
+                    .build());
+
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                    .title("Column identifying the Event Timestamp")
+                    .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
+                    .optional(false)
+                    .build());
+
+        }
+        if (CIOEventTypeEnum.TRACK_PAGE_VIEWS.getEventType().equalsIgnoreCase(eventType)) {
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                    .title("Column identifying the URL of the page viewed")
+                    .description("Column identifying the URL of the page viewed")
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName())
+                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldTitle())
+                    .optional(false)
+                    .build());
+
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                    .title("Column identifying Customer.io id (customer_id) of the person")
+                    .description("This field will be used to uniquely identifying the person associated with the event")
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
+                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
+                    .optional(false)
+                    .build());
+
+            questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                    .title("Column identifying the Event Timestamp")
+                    .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
+                    .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
+                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
+                    .optional(false)
+                    .build());
+
+        }
+
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false).build().getMappingGroups();
     }
 
     public List<AppSyncMode> getSyncModes(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
@@ -62,61 +137,5 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
     @Override
     public Class<CustomerIOAppConfig> getAppConfigType() {
         return CustomerIOAppConfig.class;
-    }
-
-    public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
-        CustomerIOAppSyncConfig customerIOAppSyncConfig = (CustomerIOAppSyncConfig) pipelineConfig.getAppSyncConfig();
-        String objectName = ((CustomerIOAppSyncConfig) pipelineConfig.getAppSyncConfig()).getObject().getObjectName();
-
-        if (CustomerIOObject.EVENT.getName().equalsIgnoreCase(objectName)) {
-            enrichPipelineConfigForEventObject(pipelineConfig, customerIOAppSyncConfig);
-        }
-        if (CustomerIOObject.PERSON.getName().equalsIgnoreCase(objectName)) {
-            enrichPipelineConfigForPersonObject(pipelineConfig, customerIOAppSyncConfig);
-        }
-        return pipelineConfig;
-    }
-
-    private void enrichPipelineConfigForPersonObject(PipelineConfigDTO pipelineConfig, CustomerIOAppSyncConfig customerIOAppSyncConfig) throws BadRequestException {
-        String pk = Optional.ofNullable(customerIOAppSyncConfig.getPrimaryKey()).orElseThrow(() -> new BadRequestException("Primary key for the Destination App Record is mandatory"));
-        String personIdentifier = Optional.ofNullable(customerIOAppSyncConfig.getPersonIdentifier()).orElseThrow(() -> new BadRequestException("Column uniquely identifying the Person Records is mandatory"));
-
-        FieldMapping primaryKeyFieldMapping = ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(personIdentifier))
-                .findFirst().orElseThrow(() -> new BadRequestException("Mapping missing for the Destination App primary key"));
-
-        if (CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName().equalsIgnoreCase(pk)) {
-            primaryKeyFieldMapping.setAppField(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName());
-            pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(CustomerIOObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName()));
-        }
-        if (CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName().equalsIgnoreCase(pk)) {
-            primaryKeyFieldMapping.setAppField(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName());
-            pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName()));
-        }
-    }
-
-    private void enrichPipelineConfigForEventObject(PipelineConfigDTO pipelineConfig, CustomerIOAppSyncConfig customerIOAppSyncConfig) throws BadRequestException {
-        FieldMapping primaryKeyFieldMapping =  ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
-                .equalsIgnoreCase(customerIOAppSyncConfig.getEventId())).findFirst().orElseThrow(() -> new BadRequestException("Mapping missing for the Destination App primary key"));
-        primaryKeyFieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_ID.getFieldName());
-        String eventType = Optional.ofNullable(customerIOAppSyncConfig.getEventType()).orElseThrow(() -> new BadRequestException("Event type is mandatory"));
-
-        if ("event".equalsIgnoreCase(eventType)) {
-            ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
-                            .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getEventName()).orElseThrow(() -> new BadRequestException("Event Name is mandatory for Events"))))
-                    .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_NAME.getFieldName()));
-        }
-        if ("pageView".equalsIgnoreCase(eventType)) {
-            ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream().filter(fieldMapping -> fieldMapping.getWarehouseField()
-                            .equalsIgnoreCase(Optional.ofNullable(customerIOAppSyncConfig.getPageURL()).orElseThrow(() -> new BadRequestException("Page View is mandatory for Page View Events"))))
-                    .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName()));
-        }
-
-        pipelineConfig.getMapping().setPrimaryKeys(Collections.singletonList(CustomerIOObjectFields.EVENT_FIELDS.EVENT_ID.getFieldName()));
-        ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream()
-                .filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(customerIOAppSyncConfig.getCustomerId()))
-                .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName()));
-        ((TargetFieldsMapping)pipelineConfig.getMapping()).getFieldMappings().stream()
-                .filter(fieldMapping -> fieldMapping.getWarehouseField().equalsIgnoreCase(customerIOAppSyncConfig.getEventTimestamp()))
-                .findFirst().ifPresent(fieldMapping -> fieldMapping.setAppField(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName()));
     }
 }

@@ -1,0 +1,85 @@
+{
+  "warehouseType": {
+    "value": "POSTGRES",
+    "title": "Postgres",
+    "accessType": "PASSWORD",
+    "logoUrl": "https://cdn.castled.io/warehouses/postgres.png",
+    "docUrl": "https://docs.castled.io/getting-started/Sources/configure-postgres",
+    "count": 1
+  },
+  "values": {
+    "appSyncConfig": {
+      "object": {
+        "objectName": "Sheet1",
+        "sheetsId": 0
+      },
+      "appType": "GOOGLE_SHEETS"
+    },
+    "warehouseId": 37,
+    "sourceQuery": "SELECT * FROM USERS",
+    "appId": 70,
+    "mapping": {
+      "primaryKeys": ["id"],
+      "fieldMappings": [
+        {
+          "warehouseField": "id",
+          "appField": "id",
+          "skipped": false
+        },
+        {
+          "warehouseField": "first_name",
+          "appField": "first_name",
+          "skipped": false
+        },
+        {
+          "warehouseField": "last_name",
+          "appField": "last_name",
+          "skipped": false
+        },
+        {
+          "warehouseField": "email",
+          "appField": "email",
+          "skipped": false
+        },
+        {
+          "warehouseField": "company",
+          "appField": "company",
+          "skipped": false
+        }
+      ],
+      "type": "TARGET_FIELDS_MAPPING"
+    }
+  },
+  "isDemo": true,
+  "appType": {
+    "value": "GOOGLE_SHEETS",
+    "title": "Google Sheets",
+    "accessType": "GOOGLE_SERVICE_ACCOUNT",
+    "logoUrl": "https://cdn.castled.io/apps/gsheets.png",
+    "count": 1,
+    "mappingType": "TARGET_FIELDS_MAPPING"
+  },
+  "mappingInfo": {
+    "appType": "GOOGLE_SHEETS",
+    "id": {
+      "appField": "id",
+      "isPrimaryKey": true
+    },
+    "first_name": {
+      "appField": "first_name",
+      "isPrimaryKey": false
+    },
+    "last_name": {
+      "appField": "last_name",
+      "isPrimaryKey": false
+    },
+    "email": {
+      "appField": "email",
+      "isPrimaryKey": false
+    },
+    "company": {
+      "appField": "company",
+      "isPrimaryKey": false
+    }
+  }
+}

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 @Getter
 @Setter
 public class TargetFieldsMapping extends CastledDataMapping {
@@ -18,15 +20,16 @@ public class TargetFieldsMapping extends CastledDataMapping {
                 .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
     }
 
-    public Map<String, String> appWarehouseMapping() {
+    public Map<String, List<String>> appWarehouseMapping() {
         return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
+                .collect(groupingBy(FieldMapping::getAppField, mapping(FieldMapping::getWarehouseField, toList())));
     }
 
-    public Map<String, String> warehouseAppMapping() {
+    public Map<String, List<String>> warehouseAppMapping() {
         return fieldMappings.stream().filter(fieldMapping -> !fieldMapping.isSkipped())
-                .collect(Collectors.toMap(FieldMapping::getWarehouseField, FieldMapping::getAppField));
+                .collect(groupingBy(FieldMapping::getWarehouseField, mapping(FieldMapping::getAppField, toList())));
     }
+
 
     public void addAdditionalMappings(List<FieldMapping> additionalMappings) {
         fieldMappings.addAll(additionalMappings);
