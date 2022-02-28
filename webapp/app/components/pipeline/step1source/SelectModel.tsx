@@ -12,7 +12,7 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;
-  onSelect: (id: number) => void;
+  onSelect: (id: number, sourceQuery: string) => void;
   typeOption: ConnectorTypeDto;
 }
 
