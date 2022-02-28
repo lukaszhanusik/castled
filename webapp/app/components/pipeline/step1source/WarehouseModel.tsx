@@ -138,7 +138,7 @@ const WarehouseModel = ({
           <Form>
             <InputField
               type="textarea"
-              minRows={3}
+              minRows={10}
               title="Query"
               name="query"
               onChange={setQuery}

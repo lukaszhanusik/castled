@@ -22,6 +22,7 @@ const ModelType = ({
   steps,
   stepGroups,
   setCurWizardStep,
+  onFinish,
 }: PipelineWizardStepProps) => {
   const DEMO_QUERY = "SELECT * FROM USERS";
   const [demoQueries, setDemoQueries] = useState<string[] | undefined>();
@@ -35,16 +36,6 @@ const ModelType = ({
   );
   const { isOss } = useSession();
 
-  const nextStep = (): void => {
-    if (!query) {
-      bannerNotificationService.error("Please enter a query");
-      return;
-    }
-    _.set(pipelineWizContext, "values.sourceQuery", query);
-    setPipelineWizContext(pipelineWizContext);
-    setCurWizardStep("destination", "selectType");
-  };
-
   const modelTypes = [
     {
       name: "Custom SQL Query",
@@ -53,34 +44,22 @@ const ModelType = ({
   ];
 
   const onModelTypeSelect = (type: any) => {
-    setCurWizardStep("configure", "configureModel"); //console.log("")
+    setCurWizardStep("source", "configureModel");
   };
 
-  console.log(steps);
-  console.log(stepGroups);
-  console.log(curWizardStep);
-
   return (
-    <Layout
-      title={steps[curWizardStep].title}
-      subTitle={steps[curWizardStep].description}
-      centerTitle={true}
-      steps={steps}
-      stepGroups={stepGroups}
-    >
-      <div className="categories">
-        {modelTypes?.map((type, i) => (
-          <button
-            key={i}
-            className="btn list-group-item rounded"
-            onClick={() => onModelTypeSelect(type)}
-          >
-            <img src={type.icon} />
-            {type.name}
-          </button>
-        ))}
-      </div>
-    </Layout>
+    <div className="categories">
+      {modelTypes?.map((type, i) => (
+        <button
+          key={i}
+          className="btn list-group-item rounded"
+          onClick={() => onModelTypeSelect(type)}
+        >
+          <img src={type.icon} />
+          {type.name}
+        </button>
+      ))}
+    </div>
   );
 };
 
