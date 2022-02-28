@@ -1,31 +1,37 @@
 import React, { useEffect, useState } from "react";
-import Layout from "@/app/components/layout/Layout";
 import modelService from "@/app/services/modelService";
 import { ModelListDto } from "@/app/common/dtos/ModelListDto";
 import DefaultErrorPage from "next/error";
-import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
-import WarehouseModel from "./WarehouseModel";
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import { Col, Row } from "react-bootstrap";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
+import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
+import _ from "lodash";
+import { ConnectorCategory } from "@/app/common/utils/types";
+export interface SelectExistingConnectorProps {
+  category: ConnectorCategory;
+  onCreate: () => void;
+  onSelect: (id: number) => void;
+  typeOption: ConnectorTypeDto;
+}
 
 const SelectModel = ({
-  appBaseUrl,
-  curWizardStep,
-  steps,
-  stepGroups,
-  setCurWizardStep,
-}: PipelineWizardStepProps) => {
+  category,
+  onCreate,
+  onSelect,
+  typeOption,
+}: SelectExistingConnectorProps) => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
 
   useEffect(() => {
     modelService
-      .get()
+      .get(pipelineWizContext?.values?.warehouseId)
       .then(({ data }) => {
         console.log(data);
+        console.log(pipelineWizContext);
         setModels(data);
       })
       .catch(() => {
@@ -33,22 +39,16 @@ const SelectModel = ({
       });
   }, []);
 
-  const onModelSelect = (model: any) => {
+  const onModelSelect = (model: ModelListDto) => {
     console.log(model);
+    onSelect(model.id, model.modelDetails.sourceQuery);
   };
 
   if (models === null || (models && models.length === 0)) {
     return <p>No models found. Please create a model to continue.</p>;
   }
   return (
-    <Layout
-      title={steps[curWizardStep].title}
-      subTitle={steps[curWizardStep].description}
-      centerTitle={true}
-      steps={steps}
-      stepGroups={stepGroups}
-    >
-      {!models && <Loading />}
+    <div>
       {models && models.length > 0 && (
         <div className="categories">
           {models.map((model, idx) => (
@@ -72,7 +72,7 @@ const SelectModel = ({
           ))}
         </div>
       )}
-    </Layout>
+    </div>
   );
 };
 

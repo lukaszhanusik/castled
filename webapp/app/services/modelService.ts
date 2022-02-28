@@ -1,15 +1,19 @@
-import { ModelCreateRequestDto } from '../common/dtos/ModelCreateRequestDto';
+import { ModelCreateRequestDto } from "../common/dtos/ModelCreateRequestDto";
 import http from "@/app/services/http";
 import { AxiosResponse } from "axios";
 import { ModelListDto } from "../common/dtos/ModelListDto";
 
 export default {
-    get: (modelId?: number): Promise<AxiosResponse<ModelListDto[]>> => {
-        return http.get("/v1/models", { modelId }); //warehouseId=wId;
-    },
-    create: (
-        req: ModelCreateRequestDto
-      ): Promise<AxiosResponse<ModelCreateRequestDto>> => {
-        return http.post("/v1/models", req);
-    },
+  get: (warehouseId?: number): Promise<AxiosResponse<ModelListDto[]>> => {
+    if (warehouseId) {
+      return http.get("/v1/models?warehouseId=" + warehouseId); //warehouseId=wId;
+    } else {
+      return http.get("/v1/models");
+    }
+  },
+  create: (
+    req: ModelCreateRequestDto
+  ): Promise<AxiosResponse<ModelCreateRequestDto>> => {
+    return http.post("/v1/models", req);
+  },
 };

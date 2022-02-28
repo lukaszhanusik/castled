@@ -102,8 +102,12 @@ const PipelineWizard = ({
                 "Follow the guide on the right to set up your Source or invite a team member to do it for you",
             },
             model: {
-              title: "Select Model",
-              description: "Select a model to setup your pipeline sync.",
+              title: "Run Model",
+              description: "Run the query to preview the results.",
+            },
+            selectModelType: {
+              title: "Select Model Type",
+              description: "Select a model type to setup your pipeline sync.",
             },
           }}
           setCurWizardStep={setCurWizardStep}
