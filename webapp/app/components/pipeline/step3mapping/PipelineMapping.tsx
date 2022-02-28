@@ -15,13 +15,7 @@ import transformMapping from "./utils/transformMapping";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import mappingFieldValidations from "./utils/mappingFieldValidations";
 import misclValidation from "./utils/misclValidation";
-
-interface MappingInfo {
-  [warehouseKey: string]: {
-    appField: string;
-    isPrimaryKey: boolean;
-  };
-}
+import ErrorMessage from "./components/Layouts/ErrorMessage";
 
 const PipelineMapping = ({
   curWizardStep,
@@ -88,14 +82,10 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
-    console.log(values);
-    // console.log(validationResult);
+    // console.log(values);
+    console.log(validationResult);
     return errors;
   }
-
-  // Tells the type of App selected. For e.g. Hubspot, Customer.io etc.
-  // const initialMappingInfo: MappingInfo = (pipelineWizContext.mappingInfo ||
-  //   {}) as MappingInfo;
 
   const initialValuesForValidation: any = {
     appFieldRepeating: "",
@@ -151,16 +141,9 @@ const PipelineMapping = ({
                   setFieldValue={setFieldValue}
                   setFieldTouched={setFieldTouched}
                   setFieldError={setFieldError}
+                  errors={errors}
                 />
-                {errors && (
-                  <div className="alert alert-danger">
-                    <ul>
-                      {Object.keys(errors).map((key) => (
-                        <li key={key}>{errors[key]}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <ErrorMessage errors={errors} include={"appFieldRepeating"} />
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE
                 </ButtonSubmit>
