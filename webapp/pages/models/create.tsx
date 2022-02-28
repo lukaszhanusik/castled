@@ -35,31 +35,33 @@ const ModelCreate = ({ wizardStepKey, appBaseUrl, demo }: ModelCreateProps) => {
   const [wizardStepGroup, wizardStep] =
     wizardUtils.getWizardStepAndGroup(wizardStepKey);
   return (
-    <ModelWizard
-      appBaseUrl={appBaseUrl}
-      curWizardStepGroup={wizardStepGroup}
-      curWizardStep={wizardStep}
-      demo={demo}
-      steps={{
-        source: {
-          title: "Select Source",
-          description: "",
-          stepKey: "selectType",
-        },
-        configure: {
-          title: "Confiqure Model",
-          description: "Confiqure Model",
-          stepKey: "configureModel",
-        },
-      }}
-      onFinish={() => {
-        if (process.browser) {
-          router.push(`/models`).then(() => {
-            setPipelineWizContext({});
-          });
-        }
-      }}
-    />
+    <PipelineWizardProvider>
+      <ModelWizard
+        appBaseUrl={appBaseUrl}
+        curWizardStepGroup={wizardStepGroup}
+        curWizardStep={wizardStep}
+        demo={demo}
+        steps={{
+          source: {
+            title: "Select Source",
+            description: "",
+            stepKey: "selectType",
+          },
+          configure: {
+            title: "Confiqure Model",
+            description: "Confiqure Model",
+            stepKey: "configureModel",
+          },
+        }}
+        onFinish={() => {
+          if (process.browser) {
+            router.push(`/models`).then(() => {
+              setPipelineWizContext({});
+            });
+          }
+        }}
+      />
+    </PipelineWizardProvider>
   );
 };
 

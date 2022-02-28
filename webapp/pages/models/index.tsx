@@ -3,7 +3,6 @@ import Layout from "@/app/components/layout/Layout";
 import { Alert, Badge, Table } from "react-bootstrap";
 import modelService from "@/app/services/modelService";
 import { ModelListDto } from "@/app/common/dtos/ModelListDto";
-import Link from "next/link";
 import DefaultErrorPage from "next/error";
 import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
@@ -11,7 +10,6 @@ import { useRouter } from "next/router";
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const headers = ["Model Name", "Source", "Type", "Sync"];
-  const router = useRouter();
   useEffect(() => {
     modelService
       .get()

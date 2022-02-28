@@ -21,6 +21,7 @@ import pipelineService from "@/app/services/pipelineService";
 import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import modelService from "@/app/services/modelService";
 import Select from "react-select";
+import { NextRouter, useRouter } from "next/router";
 
 const CreateModel = ({
   curWizardStep,
@@ -31,6 +32,8 @@ const CreateModel = ({
   const [queryResults, setQueryResults] = useState<
     ExecuteQueryResultsDto | undefined
   >();
+
+  const router = useRouter();
   const DEMO_QUERY = "SELECT * FROM USERS";
   const [demoQueries, setDemoQueries] = useState<string[] | undefined>();
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
@@ -57,10 +60,20 @@ const CreateModel = ({
   const createModel = () => {
     console.log(modelName);
     console.log(primaryKeys);
+    console.log(pipelineSchema);
+    console.log(pipelineWizContext);
+
+    if (!modelName) {
+      bannerNotificationService.error("Model name cannpt be empty");
+    }
+
+    if (!primaryKeys || (primaryKeys && primaryKeys.length === 0)) {
+      bannerNotificationService.error("Please select atleast one primary key");
+    }
+
     modelService
       .create({
-        // warehouseId: warehouseId,
-        warehouseId: 1, //delete this after testing
+        warehouseId: pipelineWizContext.values?.warehouseId || 0, //delete this after testing
         modelName: modelName,
         modelType: "SQL_QUERY_EDITOR",
         modelDetails: {
@@ -72,6 +85,7 @@ const CreateModel = ({
         },
       })
       .then(({ data }) => {
+        router.push("/models");
         console.log(data);
       });
   };
@@ -141,7 +155,6 @@ const CreateModel = ({
           console.log(fields);
 
           setWarehouseFields(fields);
-          // _.set(pipelineWizContext, "values.sourceQuery", query);
         }
         setQueryResults(data);
       })
