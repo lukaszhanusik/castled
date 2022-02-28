@@ -12,7 +12,7 @@ import DropdownCaretDown from "@/app/components/bootstrap/DropdownCaretDown";
 import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 
-interface LeftSidebarProps { }
+interface LeftSidebarProps {}
 
 const sidebarLinks = [
   {
@@ -48,16 +48,15 @@ const LeftSidebar = (props: LeftSidebarProps) => {
       <div className="d-flex flex-column flex-shrink-0">
         <a href="/" className="d-block logo" title="">
           <img
-            src="/images/favicon/android-chrome-512x512.png"
-            width={40}
+            src="/images/castled-icon.svg"
+            width={20}
             className="rounded-circle"
           />
-          {/* Castled */}
         </a>
         <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
           {sidebarLinks
             .filter((li) => !isOss || li.enabledInOss == true)
-            .map((li, i) => {
+            .map((li, i: number) => {
               const Icon = li.icon;
 
               return (
@@ -75,7 +74,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                   >
                     <Link href={li.href}>
                       <a
-                        className={cn("nav-link py-3", {
+                        className={cn("nav-link", {
                           active: router.pathname.indexOf(li.href) === 0,
                         })}
                         aria-current="page"
@@ -84,10 +83,10 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                         data-bs-placement="right"
                         data-bs-original-title="Home"
                       >
-                        <div>
-                          <Icon size={18} className="sidebar-icon" />
+                        <div className="icons">
+                          <Icon size={24} stroke={1} className="sidebar-icon" />
                         </div>
-                        <div>{li.title}</div>
+                        {(i & 1) === 0 && <hr className="sidebar-divider" />}
                       </a>
                     </Link>
                   </li>
@@ -99,17 +98,19 @@ const LeftSidebar = (props: LeftSidebarProps) => {
               <Dropdown align="end">
                 <Dropdown.Toggle
                   id="logout-dropdown"
-                  className="ms-4 border-0 shadow-none p-0"
+                  className="ms-3 border-0 shadow-none p-0"
                 >
                   <img
                     src={`https://ui-avatars.com/api/?name=${user.name}`}
                     alt={user.name}
-                    height={44}
+                    height={28}
                     className="rounded-circle"
                   />
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="/auth/logout" className="text-primary">Logout</Dropdown.Item>
+                  <Dropdown.Item href="/auth/logout" className="text-primary">
+                    Logout
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             )}

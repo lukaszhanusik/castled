@@ -1,7 +1,7 @@
 @import "./colors";
 @import "./variables-custom";
 
-$sidebar-width: 6rem;
+$sidebar-width: 4rem;
 
 html,
 body,
@@ -91,59 +91,49 @@ body,
   .nav-pills .show > .nav-link {
     background-color: transparent;
     border-radius: 0;
+    padding: 0.4rem 0.7rem;
+
+    &.active div {
+      border-radius: $border-radius;
+      background-color: $blue-dark;
+    }
 
     .sidebar-icon {
-      color: $gray-300;
-    }
-
-    &:hover .sidebar-icon {
       color: $white;
     }
 
-    &.active .sidebar-icon {
-      color: $white;
+    .sidebar-divider {
+      position: relative;
+      bottom: -10px;
+      margin: 5px;
+      border-bottom: 2px solid $blue-semi;
     }
+  }
+
+  .icons {
+    padding: 0.5rem;
+  }
+
+  .icons:hover {
+    background-color: $blue-dark;
   }
 
   .logo {
     text-align: center;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #444;
+    padding: 1rem 0.5rem;
   }
 
   li {
     text-align: center;
-    padding-left: 0;
     margin-bottom: 10px;
-
-    a {
-      color: #eee;
-      border-left: 2px solid $gunmetal !important;
-      text-transform: uppercase;
-      font-size: 10px;
-    }
-
-    a:hover {
-      color: $white;
-      border-left: 2px solid $primary-color !important;
-    }
-
-    svg {
-      height: 2rem;
-      width: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .active {
-      border-left: 2px solid $primary-color !important;
-    }
   }
 
-  .profile-link {
-    position: absolute;
-    bottom: 1rem;
-    padding: 1.15rem;
+  #logout-dropdown {
+    background-color: $primary-color;
+  }
+
+  #logout-dropdown:after {
+    content: none;
   }
 }
 
@@ -156,7 +146,7 @@ body,
     transition: width 0.3s, left 0.3s;
     z-index: 600;
     width: $sidebar-width;
-    background-color: $gunmetal;
+    background-color: $primary-color;
     transform: translate3d(0, 0, 0);
   }
   .layout-holder {
