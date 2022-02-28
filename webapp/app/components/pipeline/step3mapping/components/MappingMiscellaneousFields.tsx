@@ -1,4 +1,6 @@
+import { IconTrash } from "@tabler/icons";
 import { useEffect, useState } from "react";
+import { Placeholder } from "react-bootstrap";
 import Select from "react-select";
 import {
   DestinationFieldRowsProps,
@@ -143,10 +145,9 @@ function AdditionalFields({
           onBlur={inputBlur}
         />
       </th>
-
-      <button onClick={handleDelete} className="btn btn-danger">
-        X
-      </button>
+      <Placeholder as="td">
+        <IconTrash onClick={handleDelete} />
+      </Placeholder>
     </tr>
   );
 }

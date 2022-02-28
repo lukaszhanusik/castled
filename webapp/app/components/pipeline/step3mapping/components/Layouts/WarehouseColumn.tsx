@@ -23,7 +23,7 @@ export default function WarehouseColumn({
             <thead>
               <tr>
                 <th>Warehouse Column</th>
-                <th>App Column</th>
+                <th>App Field</th>
               </tr>
             </thead>
             <tbody>{children}</tbody>

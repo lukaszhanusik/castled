@@ -1,6 +1,8 @@
 // Section 3 Mapping with formic
 
+import { IconTrash } from "@tabler/icons";
 import { useEffect, useState } from "react";
+import { Placeholder } from "react-bootstrap";
 import Select from "react-select";
 import {
   DestinationFieldRowsProps,
@@ -182,7 +184,11 @@ function DestinationFieldRows({
         />
       </th>
       {isDisabled && <span className="required-icon">*</span>}
-      {!isDisabled && <button onClick={handleDelete}>X</button>}
+      {!isDisabled && (
+        <Placeholder as="td">
+          <IconTrash onClick={handleDelete} />
+        </Placeholder>
+      )}
     </tr>
   );
 }
