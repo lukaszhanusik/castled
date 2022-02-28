@@ -9,7 +9,7 @@ import Loading from "@/app/components/common/Loading";
 import { ExecuteQueryRequestDto } from "@/app/common/dtos/ExecuteQueryRequestDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
-import { Table } from "react-bootstrap";
+import { ListGroup, Table } from "react-bootstrap";
 import _ from "lodash";
 import InputField from "@/app/components/forminputs/InputField";
 import { Button } from "react-bootstrap";
@@ -49,16 +49,18 @@ const ModelType = ({
 
   return (
     <div className="categories">
-      {modelTypes?.map((type, i) => (
-        <button
-          key={i}
-          className="btn list-group-item rounded"
-          onClick={() => onModelTypeSelect(type)}
-        >
-          <img src={type.icon} />
-          {type.name}
-        </button>
-      ))}
+      <ListGroup>
+        {modelTypes?.map((type, i) => (
+          <ListGroup.Item
+            key={i}
+            className="list-group-item rounded"
+            onClick={() => onModelTypeSelect(type)}
+          >
+            <img src={type.icon} />
+            <strong>{type.name}</strong>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   );
 };
