@@ -22,6 +22,7 @@ import org.jdbi.v3.core.Jdbi;
 import javax.ws.rs.BadRequestException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -113,14 +114,14 @@ public class QueryModelService {
     }
 
     private Map<Long, Warehouse> prepareWarehouseMap(List<QueryModel> queryModels) {
-        List<Long> warehouseList = queryModels.stream().map(QueryModel::getWarehouseId).collect(Collectors.toList());
-        List<Warehouse> warehouses = warehouseService.getWarehouses(warehouseList, true);
+        Set<Long> warehouseList = queryModels.stream().map(QueryModel::getWarehouseId).collect(Collectors.toSet());
+        List<Warehouse> warehouses = warehouseService.getWarehouses(Lists.newArrayList(warehouseList), true);
         return warehouses.stream().collect(Collectors.toMap(Warehouse::getId, Function.identity()));
     }
 
     private Map<Long, Integer> prepareModelToSyncCountMap(Long teamId, List<QueryModel> queryModels) {
-        List<Long> modelIdList = queryModels.stream().map(QueryModel::getId).collect(Collectors.toList());
-        List<ModelAggregate> modelAggregates = pipelineService.getModelAggregates(teamId, modelIdList);
+        Set<Long> modelIdList = queryModels.stream().map(QueryModel::getId).collect(Collectors.toSet());
+        List<ModelAggregate> modelAggregates = pipelineService.getModelAggregates(teamId, Lists.newArrayList(modelIdList));
         return modelAggregates.stream().collect(Collectors.toMap(ModelAggregate::getModelId, ModelAggregate::getPipelines));
     }
 }

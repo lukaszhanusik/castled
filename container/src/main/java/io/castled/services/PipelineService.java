@@ -13,6 +13,7 @@ import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.connectors.restapi.InvalidTemplateException;
 import io.castled.apps.connectors.restapi.RestApiAppSyncConfig;
+import io.castled.apps.connectors.restapi.RestApiTemplateParser;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.caches.PipelineCache;
 import io.castled.commons.models.PipelineSyncStats;
@@ -40,7 +41,6 @@ import io.castled.jarvis.taskmanager.models.requests.TaskCreateRequest;
 import io.castled.misc.PipelineScheduleManager;
 import io.castled.models.*;
 import io.castled.models.users.User;
-import io.castled.apps.connectors.restapi.RestApiTemplateParser;
 import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.PipelineUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
@@ -132,13 +132,6 @@ public class PipelineService {
                     pipelineConfigDTO.getWarehouseId(), e);
             throw new CastledRuntimeException(e);
         }
-    }
-
-    private void validPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
-        if (CollectionUtils.isEmpty(pipelineConfig.getMapping().getPrimaryKeys())) {
-            throw new BadRequestException("Atleast one primary key needs to be selected for creating a pipeline");
-        }
-
     }
 
     public void updatePipeline(Long pipelineId, PipelineUpdateRequest pipelineUpdateRequest) {
@@ -390,7 +383,7 @@ public class PipelineService {
     }
 
     public List<ModelAggregate> getModelAggregates(Long teamId, List<Long> modelIds) {
-        if(CollectionUtils.isNotEmpty(modelIds)) {
+        if (CollectionUtils.isNotEmpty(modelIds)) {
             return pipelineDAO.aggregateByModel(teamId, modelIds);
         }
         return pipelineDAO.aggregateByModel(teamId);
