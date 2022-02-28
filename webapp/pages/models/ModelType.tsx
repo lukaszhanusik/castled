@@ -35,30 +35,6 @@ const ModelType = ({
   );
   const { isOss } = useSession();
 
-  useEffect(() => {
-    if (!pipelineWizContext) return;
-    if (pipelineWizContext.isDemo) {
-      warehouseService.get().then(({ data }) => {
-        const demoWarehouseId = data.find((d) => d.demo)?.id;
-        if (!demoWarehouseId) {
-          setCurWizardStep("source", "selectType");
-        } else {
-          setWarehouseId(demoWarehouseId);
-          _.set(pipelineWizContext, "values.warehouseId", demoWarehouseId);
-          setPipelineWizContext(pipelineWizContext);
-        }
-      });
-    } else if (!warehouseId) {
-      setCurWizardStep("source", "selectType");
-    } else {
-      setWarehouseId(pipelineWizContext.values?.warehouseId);
-    }
-  }, [
-    !!pipelineWizContext,
-    warehouseId,
-    pipelineWizContext.values?.warehouseId,
-  ]);
-
   const nextStep = (): void => {
     if (!query) {
       bannerNotificationService.error("Please enter a query");
@@ -74,19 +50,15 @@ const ModelType = ({
       name: "Custom SQL Query",
       icon: "/images/sql-icon.svg",
     },
-    {
-      name: "Table/View Selector",
-      icon: "/images/table-icon.svg",
-    },
-    {
-      name: "Dbt Model Selector",
-      icon: "/images/dbt-icon.svg",
-    },
   ];
 
   const onModelTypeSelect = (type: any) => {
-    console.log(type);
+    setCurWizardStep("configure", "configureModel"); //console.log("")
   };
+
+  console.log(steps);
+  console.log(stepGroups);
+  console.log(curWizardStep);
 
   return (
     <Layout
@@ -99,6 +71,7 @@ const ModelType = ({
       <div className="categories">
         {modelTypes?.map((type, i) => (
           <button
+            key={i}
             className="btn list-group-item rounded"
             onClick={() => onModelTypeSelect(type)}
           >

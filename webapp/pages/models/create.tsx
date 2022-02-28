@@ -1,20 +1,19 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
-import PipelineWizard from "@/app/components/pipeline/PipelineWizard";
 import PipelineWizardProvider, {
   usePipelineWizContext,
 } from "@/app/common/context/pipelineWizardContext";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
+import ModelWizard from "./ModelWizard";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);
-
-  console.log(query);
-  console.log(wizardStep);
-
   const demo = routerUtils.getBoolean(query.demo);
+  console.log(wizardStep);
+  console.log(demo);
+
   return {
     props: {
       wizardStepKey: wizardStep,
@@ -24,53 +23,39 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   };
 }
 
-interface PipelineCreateProps {
+interface ModelCreateProps {
   wizardStepKey: string;
   appBaseUrl: string;
   demo: boolean;
 }
 
-const PipelineCreate = ({
-  wizardStepKey,
-  appBaseUrl,
-  demo,
-}: PipelineCreateProps) => {
+const ModelCreate = ({ wizardStepKey, appBaseUrl, demo }: ModelCreateProps) => {
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
   const [wizardStepGroup, wizardStep] =
     wizardUtils.getWizardStepAndGroup(wizardStepKey);
   return (
     <PipelineWizardProvider>
-      <PipelineWizard
+      <ModelWizard
         appBaseUrl={appBaseUrl}
         curWizardStepGroup={wizardStepGroup}
         curWizardStep={wizardStep}
         demo={demo}
         steps={{
           source: {
-            title: "Configure Source",
+            title: "Select Source",
             description: "",
-            stepKey: "source:selectType",
+            stepKey: "selectType",
           },
-          destination: {
-            title: "Configure Destination",
-            description: "",
-            stepKey: "destination:selectType",
-          },
-          mapping: {
-            title: "Mapping",
-            description: "",
-            stepKey: "mapping",
-          },
-          settings: {
-            title: "Final Settings",
-            description: "",
-            stepKey: "settings",
+          configure: {
+            title: "Confiqure Model",
+            description: "Confiqure Model",
+            stepKey: "configureModel",
           },
         }}
-        onFinish={(id) => {
+        onFinish={() => {
           if (process.browser) {
-            router.push(`/pipelines/${id}`).then(() => {
+            router.push(`/models`).then(() => {
               setPipelineWizContext({});
             });
           }
@@ -80,4 +65,4 @@ const PipelineCreate = ({
   );
 };
 
-export default PipelineCreate;
+export default ModelCreate;

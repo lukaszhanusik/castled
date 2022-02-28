@@ -3,17 +3,11 @@ import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
 import Loading from "@/app/components/common/Loading";
-import PipelineWizardDestination from "@/app/components/pipeline/step2destination/PipelineWizardDestination";
-import PipelineMapping from "@/app/components/pipeline/step3mapping/PipelineMapping";
-import PipelineSettings from "@/app/components/pipeline/step4settings/PipelineSettings";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import routerUtils from "@/app/common/utils/routerUtils";
 import _ from "lodash";
-import { AccessType } from "@/app/common/enums/AccessType";
-import { PipelineWizardContextDto } from "@/app/common/dtos/context/PipelineWizardContextDto";
-import warehouseService from "@/app/services/warehouseService";
 import SourceWizard from "./SourceWizard";
-
+import CreateModel from "./CreateModel";
 interface PipelineWizardProps {
   appBaseUrl: string;
   curWizardStepGroup: string | undefined;
@@ -47,6 +41,10 @@ const ModelWizard = ({
   const setCurWizardStep = (stepGroup: string | undefined, step: string) => {
     wizardUtils.setCurWizardStep(router, stepGroup, step);
   };
+
+  console.log(steps);
+  console.log(curWizardStep);
+
   useEffect(() => {
     if (!pipelineWizContext) return;
 
@@ -87,38 +85,20 @@ const ModelWizard = ({
           setCurWizardStep={setCurWizardStep}
         />
       )}
-      {curWizardStepGroup === undefined && curWizardStep === "configure" && (
-        <div>configure</div>
-        // <PipelineMapping
-        //   appBaseUrl={appBaseUrl}
-        //   curWizardStep={curWizardStep}
-        //   stepGroups={steps}
-        //   steps={{
-        //     mapping: {
-        //       title: "Map fields",
-        //       description:
-        //         "Map source columns to the fields in the destination. Select primary keys based on which deduplication should happen",
-        //     },
-        //   }}
-        //   setCurWizardStep={setCurWizardStep}
-        // />
-      )}
-      {curWizardStepGroup === undefined && curWizardStep === "settings" && (
-        <div>settings</div>
-        // <PipelineSettings
-        //   appBaseUrl={appBaseUrl}
-        //   curWizardStep={curWizardStep}
-        //   stepGroups={steps}
-        //   steps={{
-        //     settings: {
-        //       title: "Final Settings",
-        //       description:
-        //         "Almost there, give a name to your model and save for use in pipeline setup.",
-        //     },
-        //   }}
-        //   setCurWizardStep={setCurWizardStep}
-        //   onFinish={onFinish}
-        // />
+      {curWizardStep === "configureModel" && (
+        <CreateModel
+          appBaseUrl={appBaseUrl}
+          curWizardStep={curWizardStep}
+          stepGroups={steps}
+          steps={{
+            configureModel: {
+              title: "Create Model",
+              description: "",
+            },
+          }}
+          setCurWizardStep={setCurWizardStep}
+          onFinish={onFinish}
+        />
       )}
     </>
   );

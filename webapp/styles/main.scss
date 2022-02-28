@@ -193,7 +193,23 @@ form {
     text-transform: capitalize;
   }
   .list-group-item {
-    height: 73px;
+    min-height: 73px;
+  }
+  .model-item {
+    text-align: left;
+    img {
+      width: 45px;
+      height: 50px;
+      padding-top: 0.25rem;
+    }
+    .text-muted {
+      font-weight: 400;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+    }
   }
 }
 

@@ -6,9 +6,6 @@ export default {
     stepGroup: string | undefined,
     step: string
   ) {
-    console.log(stepGroup);
-    console.log(step);
-
     const stepKey = (stepGroup ? stepGroup + ":" : "") + step;
     process.browser &&
       router.push(router.pathname + "?wizardStep=" + stepKey).then();

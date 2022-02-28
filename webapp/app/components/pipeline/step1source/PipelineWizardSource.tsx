@@ -4,6 +4,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
+import SelectModel from "@/app/components/pipeline/step1source/SelectModel";
 import WarehouseModel from "@/app/components/pipeline/step1source/WarehouseModel";
 import Loading from "@/app/components/common/Loading";
 
@@ -41,7 +42,8 @@ const PipelineWizardSource = ({
         />
       )}
       {curWizardStep === "model" && (
-        <WarehouseModel
+        // <WarehouseModel
+        <SelectModel
           appBaseUrl={appBaseUrl}
           curWizardStep={curWizardStep}
           steps={steps}
