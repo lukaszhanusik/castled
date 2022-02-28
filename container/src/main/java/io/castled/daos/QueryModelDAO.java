@@ -89,7 +89,7 @@ public interface QueryModelDAO {
             QueryModelPK queryModelPK = JsonUtils.jsonStringToObject(rs.getString(TableFields.WAREHOUSE_PK), QueryModelPK.class);
             QueryModelDetails modelDetails = JsonUtils.jsonStringToObject(rs.getString(TableFields.QUERY_MODEL_DETAILS), QueryModelDetails.class);
 
-            return QueryModel.builder().id(rs.getLong(TableFields.ID)).modelName(rs.getString(TableFields.MODEL_NAME))
+            return QueryModel.builder().id(rs.getLong(TableFields.ID)).modelName(rs.getString(TableFields.MODEL_NAME)).modelType(rs.getString(TableFields.MODEL_TYPE))
                     .teamId(rs.getLong(TableFields.TEAM_ID)).modelDetails(modelDetails).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
                     .queryModelPK(queryModelPK).build();
         }
