@@ -44,8 +44,19 @@ const SelectModel = ({
     onSelect(model.id, model.modelDetails.sourceQuery);
   };
 
+  const goToModelCreate = () => {
+    router.push("/models/create");
+  };
+
   if (models === null || (models && models.length === 0)) {
-    return <p>No models found. Please create a model to continue.</p>;
+    return (
+      <div className="text-center">
+        <p>No models found. Please create a model to continue.</p>
+        <button className="btn btn-primary" onClick={goToModelCreate}>
+          Create Model
+        </button>
+      </div>
+    );
   }
   return (
     <div>
