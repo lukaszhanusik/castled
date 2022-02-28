@@ -384,7 +384,10 @@ public class PipelineService {
     }
 
     public List<ModelAggregate> getModelAggregates(Long teamId, List<Long> modelIds) {
-        return pipelineDAO.aggregateByModel(teamId, modelIds);
+        if(CollectionUtils.isNotEmpty(modelIds)) {
+            return pipelineDAO.aggregateByModel(teamId, modelIds);
+        }
+        return pipelineDAO.aggregateByModel(teamId);
     }
 
     public List<Pipeline> listPipelinesByModelId(Long teamid, Long modelId) {
