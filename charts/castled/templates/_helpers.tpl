@@ -66,13 +66,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "castled.webapp.apiBaseUrl" -}}
-{{- "http://castled-app-service:7050" -}}
-{{- end }}
+{{- printf "http://%s-%s:7050" (include "castled.fullname" .) "app-service" -}}
+{{- end -}}
 
 {{- define "castled.webapp.appBaseUrl" -}}
-{{- if .Values.webapp.appBaseUrl }}
-{{- .Values.webapp.appBaseUrl }}
+{{- if .Values.webapp.appBaseUrl -}}
+    {{- .Values.webapp.appBaseUrl -}}
 {{- else }}
-{{- "http://localhost:3000" }}
+    {{- "http://localhost:3000" -}}
 {{- end }}
 {{- end }}

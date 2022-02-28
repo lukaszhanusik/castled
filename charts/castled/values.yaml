@@ -119,7 +119,7 @@ webapp:
   affinity: {}
 
   ## @param webapp.appBaseUrl The webapp base url.
-  appBaseUrl: http://localhost:3000
+  appBaseUrl: ""
 
   ## @param webapp.logLevel Logging level of webapp instance.
   logLevel: INFO
