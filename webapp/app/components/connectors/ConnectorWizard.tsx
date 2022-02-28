@@ -39,9 +39,6 @@ const ConnectorWizard = ({
   oauthCallback,
   onFinish,
 }: ConnectorWizardProps) => {
-  console.log(steps);
-  console.log(curWizardStep);
-
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
   const typeOption =
@@ -106,12 +103,16 @@ const ConnectorWizard = ({
               setCurWizardStep(curWizardStepGroup, "selectModelType");
             }}
             onSelect={(id) => {
-              _.set(pipelineWizContext, "values.warehouseId", id);
-              setPipelineWizContext(pipelineWizContext);
-              if (category !== "Model") {
-                setCurWizardStep(curWizardStepGroup, "selectModelType");
+              if (category === "App") {
+                onFinish(id);
               } else {
-                setCurWizardStep(curWizardStepGroup, "modelType");
+                _.set(pipelineWizContext, "values.warehouseId", id);
+                setPipelineWizContext(pipelineWizContext);
+                if (category !== "Model") {
+                  setCurWizardStep(curWizardStepGroup, "selectModelType");
+                } else {
+                  setCurWizardStep(curWizardStepGroup, "modelType");
+                }
               }
             }}
           />
@@ -121,11 +122,9 @@ const ConnectorWizard = ({
             category={category}
             typeOption={typeOption}
             onCreate={() => {
-              console.log("on create here???");
               setCurWizardStep(curWizardStepGroup, "model");
             }}
             onSelect={(id: number, sourceQuery: string) => {
-              console.log("fail here???", category);
               if (category !== "Model") {
                 _.set(pipelineWizContext, "values.modelId", id);
                 _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
@@ -143,6 +142,7 @@ const ConnectorWizard = ({
             curWizardStep={curWizardStep}
             steps={steps}
             setCurWizardStep={setCurWizardStep}
+            // onSelect={onFinish}
           ></ModelType>
         )}
         {curWizardStep === "configure" && typeOption && (
