@@ -1,11 +1,12 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: castled-configs
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-1"
-data:
+type: "Opaque"
+stringData:
   "config.yml": |
     server:
       applicationConnectors:
@@ -18,10 +19,8 @@ data:
       rootPath: /backend
 
     redis_config:
-      host: {{ .Values.redis.host }}
-      port: {{ .Values.redis.port }}
-
-    kafka_servers: {{ .Values.kafka.host }}:{{ .Values.kafka.port }}
+      host: {{ template "castled.redis.host" . }}
+      port: {{ template "castled.redis.port" . }}
 
     jarvis_task_config:
       priority_cool_down_mins: 1
@@ -47,9 +46,9 @@ data:
         org.quartz.jobStore.isClustered: true
         org.quartz.jobStore.clusterCheckinInterval: 60000
         org.quartz.dataSource.quartzDataSource.driver: com.mysql.cj.jdbc.Driver
-        org.quartz.dataSource.quartzDataSource.URL: {{ .Values.db.url }}
-        org.quartz.dataSource.quartzDataSource.user: {{ .Values.db.user }}
-        org.quartz.dataSource.quartzDataSource.password: {{ .Values.db.password }}
+        org.quartz.dataSource.quartzDataSource.URL: {{ template "castled.database.url" . }}
+        org.quartz.dataSource.quartzDataSource.user: {{ template "castled.database.user" .  }}
+        org.quartz.dataSource.quartzDataSource.password: {{ template "castled.database.password" . }}
         org.quartz.dataSource.quartzDataSource.maxConnections: 5
 
       schedule_overrides:
@@ -63,13 +62,13 @@ data:
       driverClass: com.mysql.cj.jdbc.Driver
 
       # the username
-      user: {{ .Values.db.user }}
+      user: {{ template "castled.database.user" .  }}
 
       # the password
-      password: {{ .Values.db.password }}
+      password: {{ template "castled.database.password" . }}
 
       # the JDBC URL
-      url: {{ .Values.db.url }}
+      url: {{ template "castled.database.url" . }}
 
       # any properties specific to your JDBC driver:
       properties:
@@ -116,7 +115,7 @@ data:
       gzipEnabled: false
 
     kafka_config:
-      bootstrap_servers: {{ .Values.kafka.host }}:{{ .Values.kafka.port }}
+      bootstrap_servers: {{ template "castled.kafka.url_no_protocol" . }}
 
     jwt_auth_configuration:
       secret_key: secret

@@ -8,15 +8,11 @@ metadata:
 data:
   VERSION: {{ .Values.version | default .Chart.AppVersion }}
 
-  ZOOKEEPER_PORT: {{ .Values.zookeeper.port | quote }}
-  ZOOKEEPER_HOST: {{ .Values.zookeeper.host }}
-  KAFKA_PORT: {{ .Values.kafka.port | quote }}
-  KAFKA_HOST: {{ .Values.kafka.host }}
-  REDIS_PORT: {{ .Values.redis.port | quote }}
-  REDIS_HOST: {{ .Values.redis.host }}
+  REDIS_PORT: {{ template "castled.redis.port" . }}
+  REDIS_HOST: {{ template "castled.redis.host" . }}
 
-  APP_BASE_URL: {{ .Values.webapp.appBaseUrl }}
-  API_BASE: {{ .Values.webapp.apiBase }}
-  API_BASE_URL: {{ .Values.webapp.apiBaseUrl }}
+  APP_BASE_URL: {{ template "castled.webapp.appBaseUrl" . }}
+  API_BASE: {{ template "castled.webapp.apiBase" . }}
+  API_BASE_URL: {{ template "castled.webapp.apiBaseUrl" . }}
   LOG_LEVEL: {{ .Values.webapp.logLevel }}
   IS_OSS: {{ ternary "true" "false" .Values.webapp.isOss | quote }}

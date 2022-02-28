@@ -42,8 +42,8 @@ const InputField = ({
     <div className={className ? className : cn({ "mb-3": !isHidden })}>
       {title && !isHidden && (
         <label htmlFor={props.id || props.name} className="form-label">
-          {required && <span className="required-icon">*</span>}
           {title}
+          {required && <span className="required-icon">*</span>}
         </label>
       )}
       {getInput(field, meta, onChange, props, optionsRef, required)}
@@ -82,7 +82,8 @@ function getInput(
     );
   } else {
     return (
-      <input type={props.type}
+      <input
+        type={props.type}
         onChange={(e) => {
           field.onChange(e);
           onChange?.(e.currentTarget.value);

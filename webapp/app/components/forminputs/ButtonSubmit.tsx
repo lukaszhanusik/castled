@@ -20,7 +20,7 @@ const ButtonSubmit = ({
         type="submit"
         {...props}
         disabled={submitting}
-        className={cn("mt-2 btn ext-logo-btn", props.className)}
+        className={cn("mt-2 btn ext-logo-btn btn-shadow", props.className)}
       >
         <img src="/images/fb-btn.png" alt="Login with Facebook" />
         {submitting === true ? <IconLoader className="spinner-icon" /> : ""}
@@ -32,7 +32,7 @@ const ButtonSubmit = ({
         type="submit"
         {...props}
         disabled={submitting}
-        className={cn("mt-2 btn ext-logo-btn", props.className)}
+        className={cn("mt-2 btn ext-logo-btn btn-shadow", props.className)}
       >
         <img src="/images/google-btn.png" alt="Login with Google" />
         {submitting === true ? <IconLoader className="spinner-icon" /> : ""}
@@ -44,7 +44,7 @@ const ButtonSubmit = ({
         type="submit"
         {...props}
         disabled={submitting}
-        className={cn("mt-2 btn btn-primary", props.className)}
+        className={cn("mt-2 btn btn-primary btn-shadow", props.className)}
       >
         {children === "Run Query" ? (
           <IconPlayerPlay size={14} style={{ marginRight: "5px" }} />

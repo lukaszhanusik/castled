@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "castled.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.webapp.autoscaling.enabled }}
   replicas: {{ .Values.webapp.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       castled: webapp
@@ -51,6 +49,9 @@ spec:
                   key: IS_OSS
           resources:
             {{- toYaml .Values.webapp.resources | nindent 12 }}
+          {{- if .Values.app.securityContext  }}
+          securityContext: {{- toYaml .Values.webapp.securityContext | nindent 12 }}
+          {{- end }}
       {{- with .Values.webapp.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}

@@ -90,6 +90,19 @@ body {
 
 .btn {
   text-transform: uppercase;
+  font-size: $font-size-md;
+  border-radius: $border-radius-sm;
+  padding: 0.35rem 1.5rem;
+  svg {
+    margin-top: -2px;
+  }
+}
+
+.btn-shadow:hover {
+  box-shadow: 0px 4px 10px $button-shadow;
+}
+.btn-lg {
+  font-size: $font-size-md;
 }
 
 .btn-link-danger {
@@ -114,11 +127,15 @@ form {
     width: 100%;
     resize: none;
   }
+  input:checked {
+    filter: hue-rotate(45deg);
+  }
 }
 
-.form-top-label {
+.form-label {
   display: block;
-  font-size: $font-size-sm;
+  font-size: $h4-font-size;
+  font-weight: $font-weight-base;
   margin-bottom: 0.25rem;
 }
 
@@ -270,8 +287,6 @@ form {
   }
 
   .btn {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-bold;
     color: inherit;
   }
 }
@@ -280,6 +295,7 @@ form {
   margin-bottom: 0.75rem;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
+  padding: 0.5rem 0.7rem;
 }
 
 .list-group-item:hover {
@@ -306,9 +322,8 @@ form {
   border: 1px solid $gray-100;
   thead tr,
   thead th {
-    // border-top: 1px solid $gray-200;
     border-bottom: 2px solid $primary-lite-2x !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: $font-size-sm;
     background: $primary-lite-2x;
     font-weight: $font-weight-bolder;
@@ -489,14 +504,6 @@ form {
     margin-bottom: 0.5rem;
     font-size: 0.8rem;
   }
-}
-
-#logout-dropdown {
-  background-color: $gunmetal;
-}
-
-#logout-dropdown:after {
-  content: none;
 }
 
 #edit-email {
