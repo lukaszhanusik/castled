@@ -134,6 +134,7 @@ function AdditionalFields({
           onChange={onChange}
           onBlur={onBlur}
           isClearable
+          placeholder={"Select a column"}
         />
       </th>
       <th className="w-50">

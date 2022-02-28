@@ -166,6 +166,7 @@ function DestinationFieldRows({
           onChange={onChangeWarehouse}
           onBlur={onBlur}
           isClearable={isClearable}
+          placeholder={"Select a column"}
         />
       </th>
       <th className="w-50">
@@ -181,6 +182,7 @@ function DestinationFieldRows({
           onBlur={onBlur}
           isClearable={isClearable}
           onChange={onChangeAppField}
+          placeholder={"Select a field from dropdown"}
         />
       </th>
       {isDisabled && <span className="required-icon">*</span>}

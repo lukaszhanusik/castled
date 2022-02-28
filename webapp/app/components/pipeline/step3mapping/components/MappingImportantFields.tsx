@@ -46,6 +46,7 @@ export default function MappingImportantFields({
                   setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
                 }
                 isClearable={field.optional}
+                placeholder={"Select a column..."}
               />
             </div>
           </div>

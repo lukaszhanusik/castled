@@ -35,6 +35,7 @@ export default function MappingPrimaryKeyFields({
                   onBlur={() =>
                     setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                   }
+                  placeholder={"Select a column"}
                 />
               </th>
               <th className="w-50">
@@ -49,6 +50,7 @@ export default function MappingPrimaryKeyFields({
                   onBlur={() =>
                     setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                   }
+                  placeholder={"Select a field from dropdown"}
                 />
               </th>
             </tr>
