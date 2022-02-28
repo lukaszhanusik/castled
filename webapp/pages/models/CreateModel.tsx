@@ -70,7 +70,7 @@ const CreateModel = ({
       .create({
         warehouseId: pipelineWizContext.values?.warehouseId || 0, //delete this after testing
         modelName: modelName,
-        modelType: "SQL_QUERY_EDITOR",
+        modelType: "SQL",
         modelDetails: {
           type: "SQL_QUERY_EDITOR",
           sourceQuery: query || "",
@@ -85,7 +85,9 @@ const CreateModel = ({
         bannerNotificationService.success("Model created successfully");
       })
       .catch(({ err }) => {
-        bannerNotificationService.error(err?.response?.data?.message);
+        bannerNotificationService.error(
+          "Something went wrong. Try again after some time. If problem persists, please contact us."
+        );
       });
   };
 
@@ -188,10 +190,10 @@ const CreateModel = ({
             enableReinitialize
           >
             {({ isSubmitting }) => (
-              <Form>
+              <Form className="create-model">
                 <InputField
                   type="textarea"
-                  minRows={20}
+                  minRows={17}
                   title="Query"
                   name="query"
                   onChange={setQuery}
@@ -200,7 +202,7 @@ const CreateModel = ({
                 />
                 {queryResults && queryResults.status === "SUCCEEDED" && (
                   <>
-                    <label>Model Name</label>
+                    <label className="mt-2">Model Name</label>
                     <input
                       placeholder="Key"
                       type="text"
@@ -210,7 +212,7 @@ const CreateModel = ({
                       }}
                     />
 
-                    <label>Primary Keys</label>
+                    <label className="mt-2">Primary Keys</label>
                     <Select
                       onChange={(event) => handleChange(event)}
                       options={warehouseFields!}
@@ -234,7 +236,6 @@ const CreateModel = ({
                     <Button
                       type="button"
                       className="btn btn-outline-primary mt-2 ms-2"
-                      // onClick={() => onFinish()}
                       onClick={() => createModel()}
                     >
                       Save
@@ -250,7 +251,7 @@ const CreateModel = ({
           {queryResults ? (
             renderQueryResults(queryResults)
           ) : (
-            <img className="w-100" src="/images/model.svg" />
+            <img className="w-100 ht-400" src="/images/model.svg" />
           )}
         </div>
       </div>
