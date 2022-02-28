@@ -27,7 +27,6 @@ import io.castled.schema.models.RecordSchema;
 import io.castled.services.PipelineService;
 import io.castled.services.QueryModelService;
 import io.castled.utils.DataMappingUtils;
-import io.castled.utils.PipelineUtils;
 import io.castled.warehouses.WarehouseConnector;
 import io.castled.warehouses.WarehouseService;
 import io.castled.warehouses.WarehouseSyncFailureListener;
@@ -60,7 +59,7 @@ public class PipelineExecutor implements TaskExecutor {
     public PipelineExecutor(PipelineService pipelineService, Map<WarehouseType, WarehouseConnector> warehouseConnectors,
                             WarehouseService warehouseService, Map<ExternalAppType, ExternalAppConnector> externalAppConnectors,
                             ExternalAppService externalAppService, EncryptionManager encryptionManager,
-                            MonitoredDataSink monitoredDataSink,QueryModelService queryModelService) {
+                            MonitoredDataSink monitoredDataSink, QueryModelService queryModelService) {
         this.pipelineService = pipelineService;
         this.warehouseConnectors = warehouseConnectors;
         this.warehouseService = warehouseService;
