@@ -1,4 +1,4 @@
-import { ConnectorSchema, PipelineSchemaResponseDto } from "../dtos/PipelineSchemaResponseDto";
+import { ConnectorSchema, PipelineSchemaResponseDto } from "../dtos/PipelineSchemaResponseDto2";
 import { SelectOptionDto } from "../dtos/SelectOptionDto";
 
 const getAppSchemaFields = (
