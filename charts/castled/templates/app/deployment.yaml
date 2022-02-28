@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "castled.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.app.autoscaling.enabled }}
   replicas: {{ .Values.app.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       castled: app
@@ -22,8 +20,8 @@ spec:
     spec:
       volumes:
         - name: configs
-          configMap:
-            name: castled-configs
+          secret:
+            secretName: castled-configs
       containers:
         - name: castled-app-container
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
@@ -34,6 +32,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
+          {{- if .Values.app.securityContext  }}
+          securityContext: {{- toYaml .Values.app.securityContext | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: configs
               readOnly: true

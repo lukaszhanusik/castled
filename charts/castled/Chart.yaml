@@ -29,3 +29,22 @@ dependencies:
     tags:
       - bitnami-common
     version: 1.x.x
+
+  - name: mysql
+    version: 8.8.24
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+
+  - name: redis
+    version: 14.6.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+
+  - name: kafka
+    version: 12.6.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: kafka.enabled
+
+maintainers:
+  - name: frank
+    email: frank@castled.io
