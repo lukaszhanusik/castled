@@ -6,6 +6,7 @@ import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import Loading from "@/app/components/common/Loading";
 import ModelType from "./ModelType";
+import CreateModel from "./CreateModel";
 
 const CUR_WIZARD_STEP_GROUP = "source";
 
@@ -15,13 +16,13 @@ const SourceWizard = ({
   steps,
   stepGroups,
   setCurWizardStep,
+  onFinish,
 }: PipelineWizardStepProps) => {
-
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
   return (
     <>
-      {curWizardStep !== "modelType" && (
+      {curWizardStep !== "configureModel" && (
         <ConnectorWizard
           appBaseUrl={appBaseUrl}
           category={"Model"}
@@ -35,20 +36,27 @@ const SourceWizard = ({
             setPipelineWizContext(pipelineWizContext);
           }}
           onFinish={(id) => {
+            console.log("--here---");
             _.set(pipelineWizContext, "values.warehouseId", id);
             setPipelineWizContext(pipelineWizContext);
-            setCurWizardStep(CUR_WIZARD_STEP_GROUP, "modelType");
+            setCurWizardStep(CUR_WIZARD_STEP_GROUP, "configureModel");
           }}
         />
       )}
 
-      {curWizardStep === "modelType" && (
-        <ModelType
+      {curWizardStep === "configureModel" && (
+        <CreateModel
           appBaseUrl={appBaseUrl}
           curWizardStep={curWizardStep}
-          steps={steps}
-          stepGroups={stepGroups}
+          stepGroups={steps}
+          steps={{
+            configureModel: {
+              title: "Create Model",
+              description: "",
+            },
+          }}
           setCurWizardStep={setCurWizardStep}
+          onFinish={onFinish}
         />
       )}
     </>
