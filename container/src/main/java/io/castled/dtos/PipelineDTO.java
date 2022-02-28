@@ -25,7 +25,8 @@ public class PipelineDTO {
 
     private JobSchedule jobSchedule;
 
-    private String sourceQuery;
+    //private String sourceQuery;
+    private Long modelId;
     private PipelineStatus status;
     private PipelineSyncStatus syncStatus;
 

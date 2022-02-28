@@ -164,6 +164,13 @@ public class WarehouseService {
         return this.warehouseDAO.getWarehouse(warehouseId);
     }
 
+    public List<Warehouse> getWarehouses(List<Long> warehouseIds, boolean cached) {
+        if (cached) {
+            return warehouseIds.stream().map(warehouseCache::getValue).collect(Collectors.toList());
+        }
+        return this.warehouseDAO.listWarehouses(warehouseIds);
+    }
+
     public void updateWarehouseConfig(Long warehouseId, WarehouseConfig warehouseConfig, long teamId) {
         try {
             Warehouse warehouse = getWarehouse(warehouseId, false);
