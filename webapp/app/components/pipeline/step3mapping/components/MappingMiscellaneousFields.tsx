@@ -32,7 +32,8 @@ export default function MappingMiscellaneousFields({
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
 
-  function addRow() {
+  function addRow(e: any) {
+    e.preventDefault();
     const randomKey = Math.random().toString(15).substring(2, 15);
     setAdditionalRow((prevState) => [
       ...prevState,
@@ -95,7 +96,7 @@ export default function MappingMiscellaneousFields({
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
             {additionalRow}
-            <button onClick={() => addRow()} className="btn btn-primary">
+            <button onClick={addRow} className="btn btn-primary">
               Add row
             </button>
           </WarehouseColumn>
