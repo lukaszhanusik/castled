@@ -12,6 +12,7 @@ export interface MappingFieldsProps {
     shouldValidate?: boolean
   ) => void;
   setFieldError?: (field: string, value: string | undefined) => void;
+  errors: any;
 }
 
 export interface SchemaOptions {

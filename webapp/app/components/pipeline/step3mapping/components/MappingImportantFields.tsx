@@ -1,6 +1,7 @@
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import Select from "react-select";
 import { MappingFieldsProps } from "../types/componentTypes";
+import ErrorMessage from "./Layouts/ErrorMessage";
 
 export default function MappingImportantFields({
   options,
@@ -8,7 +9,8 @@ export default function MappingImportantFields({
   values,
   setFieldValue,
   setFieldTouched,
-  setFieldError
+  setFieldError,
+  errors,
 }: MappingFieldsProps) {
   // SECTION - 1 - Mandatory fields filter from warehouseSchema
   const importantParamsSection = mappingGroups.filter((fields) => {
@@ -48,6 +50,7 @@ export default function MappingImportantFields({
             </div>
           </div>
         ))}
+      <ErrorMessage errors={errors} include={"important"} />
     </div>
   );
 }
