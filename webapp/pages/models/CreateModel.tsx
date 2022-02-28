@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import Loading from "@/app/components/common/Loading";
-import { ExecuteQueryRequestDto } from "@/app/common/dtos/ExecuteQueryRequestDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
@@ -58,17 +57,14 @@ const CreateModel = ({
   };
 
   const createModel = () => {
-    console.log(modelName);
-    console.log(primaryKeys);
-    console.log(pipelineSchema);
-    console.log(pipelineWizContext);
-
     if (!modelName) {
-      bannerNotificationService.error("Model name cannpt be empty");
+      bannerNotificationService.error("Model name cannot be empty");
+      return;
     }
 
     if (!primaryKeys || (primaryKeys && primaryKeys.length === 0)) {
       bannerNotificationService.error("Please select atleast one primary key");
+      return;
     }
 
     modelService
@@ -85,8 +81,12 @@ const CreateModel = ({
         },
       })
       .then(({ data }) => {
+        setPipelineWizContext({});
         router.push("/models");
-        console.log(data);
+        bannerNotificationService.success("Model created successfully");
+      })
+      .catch(({ err }) => {
+        bannerNotificationService.error(err?.response?.data?.message);
       });
   };
 
@@ -97,11 +97,6 @@ const CreateModel = ({
       setValue(_.map(event, "value"));
     }
   };
-
-  console.log("---configure---");
-  console.log(steps);
-  console.log(curWizardStep);
-  console.log("---configure---");
 
   useEffect(() => {
     if (!pipelineWizContext) return;
@@ -137,8 +132,7 @@ const CreateModel = ({
         if (data.status === "PENDING") {
           setTimeout(() => getQueryResults(queryId), 1000);
         }
-        console.log(data);
-        console.log(query);
+
         if (
           data &&
           data.queryResults &&
@@ -151,8 +145,6 @@ const CreateModel = ({
               return { label: el, value: el, title: el };
             }
           );
-
-          console.log(fields);
 
           setWarehouseFields(fields);
         }
@@ -199,7 +191,7 @@ const CreateModel = ({
               <Form>
                 <InputField
                   type="textarea"
-                  minRows={3}
+                  minRows={20}
                   title="Query"
                   name="query"
                   onChange={setQuery}

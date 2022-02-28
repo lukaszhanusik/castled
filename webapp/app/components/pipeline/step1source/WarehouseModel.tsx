@@ -45,6 +45,12 @@ const WarehouseModel = ({
   };
   useEffect(() => {
     if (!pipelineWizContext) return;
+
+    if (pipelineWizContext.values?.sourceQuery) {
+      setQuery(pipelineWizContext.values?.sourceQuery);
+      return;
+    }
+
     if (pipelineWizContext.isDemo) {
       warehouseService.get().then(({ data }) => {
         const demoWarehouseId = data.find((d) => d.demo)?.id;
@@ -100,11 +106,11 @@ const WarehouseModel = ({
       steps={steps}
       stepGroups={stepGroups}
     >
-      {!!demoQueries?.length && (
+      {/* {!!demoQueries?.length && (
         <p className="mb-1">
           Run the prefilled query below for the demo warehouse.
         </p>
-      )}
+      )} */}
       <Formik
         initialValues={
           {
