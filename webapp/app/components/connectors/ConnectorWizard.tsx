@@ -11,6 +11,7 @@ import Loading from "@/app/components/common/Loading";
 import _ from "lodash";
 import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
+import SelectModel from "../pipeline/step1source/SelectModel";
 
 interface ConnectorWizardProps {
   appBaseUrl: string;
@@ -98,9 +99,30 @@ const ConnectorWizard = ({
             category={category}
             typeOption={typeOption}
             onCreate={() => {
-              setCurWizardStep(curWizardStepGroup, "configure");
+              setCurWizardStep(curWizardStepGroup, "selectModelType");
             }}
-            onSelect={onFinish}
+            onSelect={(id) => {
+              _.set(pipelineWizContext, "values.warehouseId", id);
+              setPipelineWizContext(pipelineWizContext);
+              setCurWizardStep(curWizardStepGroup, "selectModelType");
+            }}
+          />
+        )}
+        {curWizardStep === "selectModelType" && typeOption && (
+          <SelectModel
+            category={category}
+            typeOption={typeOption}
+            onCreate={() => {
+              setCurWizardStep(curWizardStepGroup, "model");
+            }}
+            // onSelect={onFinish}
+
+            onSelect={(id: number, sourceQuery?: string) => {
+              _.set(pipelineWizContext, "values.modelId", id);
+              _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
+              setPipelineWizContext(pipelineWizContext);
+              setCurWizardStep(curWizardStepGroup, "model");
+            }}
           />
         )}
         {curWizardStep === "configure" && typeOption && (

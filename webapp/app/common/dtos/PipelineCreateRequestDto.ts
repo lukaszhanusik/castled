@@ -9,6 +9,7 @@ export interface PipelineCreateRequestDto {
   schedule?: PipelineSchedule;
   appId?: number;
   warehouseId?: number;
+  modelId?: number;
   sourceQuery?: string;
   queryMode?: QueryMode;
   appSyncConfig: {
