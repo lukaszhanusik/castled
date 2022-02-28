@@ -5,8 +5,6 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import Loading from "@/app/components/common/Loading";
-import ModelType from "./ModelType";
-import CreateModel from "./CreateModel";
 
 const CUR_WIZARD_STEP_GROUP = "source";
 
@@ -41,22 +39,6 @@ const SourceWizard = ({
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(CUR_WIZARD_STEP_GROUP, "configureModel");
           }}
-        />
-      )}
-
-      {curWizardStep === "configureModel" && (
-        <CreateModel
-          appBaseUrl={appBaseUrl}
-          curWizardStep={curWizardStep}
-          stepGroups={steps}
-          steps={{
-            configureModel: {
-              title: "Create Model",
-              description: "",
-            },
-          }}
-          setCurWizardStep={setCurWizardStep}
-          onFinish={onFinish}
         />
       )}
     </>

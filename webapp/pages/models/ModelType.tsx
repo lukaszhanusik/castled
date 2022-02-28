@@ -44,7 +44,7 @@ const ModelType = ({
   ];
 
   const onModelTypeSelect = (type: any) => {
-    setCurWizardStep("source", "configureModel");
+    setCurWizardStep("configure", "configureModel");
   };
 
   return (
