@@ -6,6 +6,7 @@ import {
   DestinationFieldRowsProps,
   MappingFieldsProps,
 } from "../types/componentTypes";
+import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingImportantFields({
@@ -14,6 +15,7 @@ export default function MappingImportantFields({
   values,
   setFieldValue,
   setFieldTouched,
+  errors,
 }: MappingFieldsProps) {
   const [optionalRow, setOptionalRow] = useState<JSX.Element[]>([]);
   const [optionalFieldsElement, setOptionalFieldsElement] = useState<
@@ -135,6 +137,7 @@ export default function MappingImportantFields({
             <button type="button" onClick={addRow} className="btn btn-primary">
               Add Row
             </button>
+            <ErrorMessage errors={errors} include={"destination"} />
           </WarehouseColumn>
         ))}
     </div>

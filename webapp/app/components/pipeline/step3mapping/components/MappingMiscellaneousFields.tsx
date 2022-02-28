@@ -4,6 +4,7 @@ import {
   DestinationFieldRowsProps,
   MappingFieldsProps,
 } from "../types/componentTypes";
+import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
 export default function MappingMiscellaneousFields({
@@ -12,6 +13,7 @@ export default function MappingMiscellaneousFields({
   values,
   setFieldValue,
   setFieldTouched,
+  errors,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   const [addOptionalRow, setAddOptionalRow] = useState(true);
@@ -99,6 +101,7 @@ export default function MappingMiscellaneousFields({
             <button onClick={addRow} className="btn btn-primary">
               Add row
             </button>
+            <ErrorMessage errors={errors} include={"miscl"} />
           </WarehouseColumn>
         ))}
     </div>

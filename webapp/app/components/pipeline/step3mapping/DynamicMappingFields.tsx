@@ -8,9 +8,7 @@ import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto
 import _ from "lodash";
 import { FormFieldType } from "@/app/common/enums/FormFieldType";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
-import {
-  PipelineSchemaResponseDto,
-} from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
 import MappingPrimaryKeyFields from "./components/MappingPrimaryKeyFields";
@@ -28,9 +26,7 @@ export interface DynamicMappingFieldsProps {
     shouldValidate?: boolean
   ) => void;
   setFieldError?: (field: string, message: string | undefined) => void;
-  // dataFetcher?: (
-  //   optionsRef: string
-  // ) => Promise<AxiosResponse<DataFetcherResponseDto>>;
+  errors: any;
 }
 
 const fieldRenderers: {
@@ -48,9 +44,13 @@ const DynamicMappingFields = ({
   mappingFields,
   values,
   setFieldValue,
+  errors
 }: // dataFetcher,
 DynamicMappingFieldsProps) => {
-  if (!mappingFields?.warehouseSchema.fields || !mappingFields?.mappingGroups.length)
+  if (
+    !mappingFields?.warehouseSchema.fields ||
+    !mappingFields?.mappingGroups.length
+  )
     return null;
 
   const { warehouseSchema, mappingGroups } = mappingFields;
@@ -59,7 +59,6 @@ DynamicMappingFieldsProps) => {
 
   // Display
   for (const fieldInfo of mappingGroups) {
-
     const fieldRenderer = fieldRenderers[fieldInfo.type];
 
     if (!fieldRenderer) {
@@ -84,6 +83,7 @@ DynamicMappingFieldsProps) => {
         defaultValue=""
         values={values}
         setFieldValue={setFieldValue}
+        errors={errors}
         // required={field.validations.required}
         // {...field.fieldProps}
         // {...props}

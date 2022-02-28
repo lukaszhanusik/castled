@@ -12,6 +12,7 @@ import _ from "lodash";
 import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
 import SelectModel from "../pipeline/step1source/SelectModel";
+import ModelType from "@/pages/models/ModelType";
 
 interface ConnectorWizardProps {
   appBaseUrl: string;
@@ -38,6 +39,9 @@ const ConnectorWizard = ({
   oauthCallback,
   onFinish,
 }: ConnectorWizardProps) => {
+  console.log(steps);
+  console.log(curWizardStep);
+
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
   const typeOption =
@@ -104,7 +108,11 @@ const ConnectorWizard = ({
             onSelect={(id) => {
               _.set(pipelineWizContext, "values.warehouseId", id);
               setPipelineWizContext(pipelineWizContext);
-              setCurWizardStep(curWizardStepGroup, "selectModelType");
+              if (category !== "Model") {
+                setCurWizardStep(curWizardStepGroup, "selectModelType");
+              } else {
+                setCurWizardStep(curWizardStepGroup, "modelType");
+              }
             }}
           />
         )}
@@ -113,17 +121,29 @@ const ConnectorWizard = ({
             category={category}
             typeOption={typeOption}
             onCreate={() => {
+              console.log("on create here???");
               setCurWizardStep(curWizardStepGroup, "model");
             }}
-            // onSelect={onFinish}
-
             onSelect={(id: number, sourceQuery?: string) => {
-              _.set(pipelineWizContext, "values.modelId", id);
-              _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
-              setPipelineWizContext(pipelineWizContext);
-              setCurWizardStep(curWizardStepGroup, "model");
+              console.log("fail here???", category);
+              if (category !== "Model") {
+                _.set(pipelineWizContext, "values.modelId", id);
+                _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
+                setPipelineWizContext(pipelineWizContext);
+                setCurWizardStep(curWizardStepGroup, "model");
+              } else {
+                onFinish(id);
+              }
             }}
           />
+        )}
+        {curWizardStep === "modelType" && category == "Model" && (
+          <ModelType
+            appBaseUrl={appBaseUrl}
+            curWizardStep={curWizardStep}
+            steps={steps}
+            setCurWizardStep={setCurWizardStep}
+          ></ModelType>
         )}
         {curWizardStep === "configure" && typeOption && (
           <ConnectorForm

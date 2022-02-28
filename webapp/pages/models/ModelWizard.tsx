@@ -7,7 +7,6 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import routerUtils from "@/app/common/utils/routerUtils";
 import _ from "lodash";
 import SourceWizard from "./SourceWizard";
-import CreateModel from "./CreateModel";
 interface PipelineWizardProps {
   appBaseUrl: string;
   curWizardStepGroup: string | undefined;
@@ -41,9 +40,6 @@ const ModelWizard = ({
   const setCurWizardStep = (stepGroup: string | undefined, step: string) => {
     wizardUtils.setCurWizardStep(router, stepGroup, step);
   };
-
-  console.log(steps);
-  console.log(curWizardStep);
 
   useEffect(() => {
     if (!pipelineWizContext) return;
@@ -81,19 +77,9 @@ const ModelWizard = ({
               title: "Select Model Type",
               description: "Select the type of model you want to create.",
             },
-          }}
-          setCurWizardStep={setCurWizardStep}
-        />
-      )}
-      {curWizardStep === "configureModel" && (
-        <CreateModel
-          appBaseUrl={appBaseUrl}
-          curWizardStep={curWizardStep}
-          stepGroups={steps}
-          steps={{
             configureModel: {
-              title: "Create Model",
-              description: "",
+              title: "Configure Model",
+              description: "Configure your model and save it.",
             },
           }}
           setCurWizardStep={setCurWizardStep}
