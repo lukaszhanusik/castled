@@ -22,18 +22,18 @@ export default function MappingImportantFields({
       {importantParamsSection.length > 0 &&
         importantParamsSection[0].fields?.map((field) => (
           <div className="flex-column align-self-center my-2">
-            <div className="flex-column mx-4 my-2">
-              <div className="row">
+            <div className="flex-column mx-1 my-2">
+              {/* <div className="row"> */}
                 <label className="font-weight-bold">
-                  {!field.optional && <span className="required-icon">*</span>}
+                  {!field.optional && <span className="required-icon"> * </span>}
                   {field.title}
                 </label>
-              </div>
-              <div className="row description text-muted">
+              {/* </div> */}
+              <div className="row description text-muted px-3">
                 {field.description}
               </div>
             </div>
-            <div className="w-50">
+            <div className="w-50 px-2">
               <Select
                 options={options}
                 onChange={(e) =>
@@ -52,6 +52,7 @@ export default function MappingImportantFields({
           </div>
         ))}
       <ErrorMessage errors={errors} include={"important"} />
+      <hr className='solid'/>
     </div>
   );
 }
