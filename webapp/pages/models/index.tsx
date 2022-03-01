@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
-import { Alert, Badge, Table } from "react-bootstrap";
+import { Alert, Badge, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import modelService from "@/app/services/modelService";
 import { ModelListDto } from "@/app/common/dtos/ModelListDto";
 import DefaultErrorPage from "next/error";
@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
-  const headers = ["Model Name", "Source", "Type", "Sync"];
+  const headers = ["Model Name", "Source", "Type", "Pipelines"];
   useEffect(() => {
     modelService
       .get()
@@ -51,7 +51,32 @@ const Models = () => {
             <tbody>
               {models.map((model, idx) => (
                 <tr key={idx}>
-                  <td>{model.modelName}</td>
+                  <td>
+                    <div className="w-50">
+                      {model.modelName}
+
+                      <div
+                        className="text-muted"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        <OverlayTrigger
+                          placement="right"
+                          key={`sidebar-${idx}`}
+                          overlay={
+                            <Tooltip id={`sidebar-${idx}`}>
+                              {model.modelDetails.sourceQuery}
+                            </Tooltip>
+                          }
+                        >
+                          <div>
+                            {model.modelDetails.sourceQuery.substring(0, 30)}{" "}
+                            {model.modelDetails.sourceQuery.length >= 30 &&
+                              `...`}
+                          </div>
+                        </OverlayTrigger>
+                      </div>
+                    </div>
+                  </td>
                   <td>
                     <div className="d-flex">
                       <img

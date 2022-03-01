@@ -6,7 +6,7 @@ import PipelineWizardProvider, {
 } from "@/app/common/context/pipelineWizardContext";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
-import ModelWizard from "./ModelWizard";
+import ModelWizard from "../../app/components/model/ModelWizard";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);
