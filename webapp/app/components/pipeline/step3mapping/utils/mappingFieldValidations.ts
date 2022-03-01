@@ -22,7 +22,6 @@ export default function mappingFieldValidations(
     (group) => group.type == "IMPORTANT_PARAMS"
   );
 
-
   // AppField repeating schema validation
   function appFieldRepeatingValidations() {
     for (let i = 0; i < fieldMappings.length; i++) {
@@ -89,25 +88,26 @@ export default function mappingFieldValidations(
       (group) => group.type == "IMPORTANT_PARAMS"
     )[0];
 
-    let importantParamsFieldsCount = hasImportantParams?.fields?.reduce(
-      (acc, group) => !group.optional ? acc + 1 : acc,
-      0
-    );
-    
     if (hasImportantParams) {
+      let importantParamsFieldsCount = hasImportantParams.fields?.reduce(
+        (acc, group) => (!group.optional ? acc + 1 : acc),
+        0
+      );
+
       for (let [key, value] of Object.entries(obj)) {
         if (key.includes("IMPORTANT_PARAMS")) {
           importantParamsCount += 1;
         }
       }
-    }
-    if (
-      hasImportantParams &&
-      !(importantParamsCount == importantParamsFieldsCount)
-    ) {
-      errors.push({
-        importantParamsMandatory: "All Important Params App Field is mandatory",
-      });
+
+      if (importantParamsFieldsCount) {
+        if (importantParamsCount < importantParamsFieldsCount) {
+          errors.push({
+            importantParamsMandatory:
+              "All mandatory questions needs to be answered.",
+          });
+        }
+      }
     }
   }
 

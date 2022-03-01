@@ -16,6 +16,8 @@ import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import mappingFieldValidations from "./utils/mappingFieldValidations";
 import misclValidation from "./utils/misclValidation";
 import ErrorMessage from "./components/Layouts/ErrorMessage";
+import PipelineMappingDefault from "./types/PipelineMappingDefault";
+import PipelineMappingRestApi from "./types/PipelineMappingRestApi";
 
 const PipelineMapping = ({
   curWizardStep,
@@ -108,6 +110,20 @@ const PipelineMapping = ({
     Object.assign(initialValuesForValidation, kafkaInitialValues);
   }
 
+  if (pipelineWizContext.appType?.value === "RESTAPI") {
+    return (
+      <PipelineMappingRestApi
+        appBaseUrl={appBaseUrl}
+        curWizardStep={curWizardStep}
+        steps={steps}
+        stepGroups={stepGroups}
+        setCurWizardStep={setCurWizardStep}
+        pipelineSchema={pipelineSchema}
+        isLoading={isLoading}
+      />
+    );
+  }
+  
   return (
     <Layout
       title={steps[curWizardStep].title}
