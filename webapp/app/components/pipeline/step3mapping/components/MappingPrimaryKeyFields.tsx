@@ -63,8 +63,9 @@ export default function MappingPrimaryKeyFields({
                   </Placeholder>
                 </th>
               </tr>
-              <ErrorMessage errors={errors} include={"rimary"} />
             </WarehouseColumn>
+            <ErrorMessage errors={errors} include={"rimary"} />
+            <hr className='solid'/>
           </>
         ))}
     </div>

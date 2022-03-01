@@ -106,43 +106,53 @@ export default function MappingImportantFields({
     <div className="row py-2">
       {destinationFieldSection.length > 0 &&
         destinationFieldSection.map((field) => (
-          <WarehouseColumn title={field.title} description={field.description}>
-            {field.mandatoryFields!.length > 0 &&
-              field.mandatoryFields?.map((mandatoryField, i) => (
-                <DestinationFieldRows
-                  key={mandatoryField.fieldName}
-                  options={options}
-                  defaultValue={{
-                    value: mandatoryField.fieldName,
-                    label:
-                      mandatoryField.fieldDisplayName ||
-                      mandatoryField.fieldName,
-                  }}
-                  isDisabled={!mandatoryField.optional}
-                  onChangeWarehouse={(e) => {
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
-                      e?.value
-                    );
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-appField-${i}`,
-                      mandatoryField.fieldName
-                    );
-                  }}
-                  onBlur={() =>
-                    setFieldTouched?.(
-                      `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
-                      true
-                    )
-                  }
-                />
-              ))}
-            {optionalRow}
-            <button type="button" onClick={addRow} className="btn btn-primary mx-2">
-              Add Row
-            </button>
+          <>
+            <WarehouseColumn
+              title={field.title}
+              description={field.description}
+            >
+              {field.mandatoryFields!.length > 0 &&
+                field.mandatoryFields?.map((mandatoryField, i) => (
+                  <DestinationFieldRows
+                    key={mandatoryField.fieldName}
+                    options={options}
+                    defaultValue={{
+                      value: mandatoryField.fieldName,
+                      label:
+                        mandatoryField.fieldDisplayName ||
+                        mandatoryField.fieldName,
+                    }}
+                    isDisabled={!mandatoryField.optional}
+                    onChangeWarehouse={(e) => {
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
+                        e?.value
+                      );
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-appField-${i}`,
+                        mandatoryField.fieldName
+                      );
+                    }}
+                    onBlur={() =>
+                      setFieldTouched?.(
+                        `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
+                        true
+                      )
+                    }
+                  />
+                ))}
+              {optionalRow}
+              <button
+                type="button"
+                onClick={addRow}
+                className="btn btn-primary mx-2"
+              >
+                Add Row
+              </button>
+            </WarehouseColumn>
             <ErrorMessage errors={errors} include={"destination"} />
-          </WarehouseColumn>
+            <hr className="solid" />
+          </>
         ))}
     </div>
   );
@@ -198,7 +208,7 @@ function DestinationFieldRows({
         )}
         {!isDisabled && (
           <Placeholder as="td">
-            <IconTrash onClick={handleDelete} className="delete-btn"/>
+            <IconTrash onClick={handleDelete} className="delete-btn" />
           </Placeholder>
         )}
       </th>

@@ -31,7 +31,6 @@ export default function WarehouseColumn({
           </Table>
         </div>
       </div>
-      <hr className='solid'/>
     </>
   );
 }

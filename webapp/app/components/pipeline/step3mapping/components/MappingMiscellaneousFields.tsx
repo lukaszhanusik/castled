@@ -78,36 +78,42 @@ export default function MappingMiscellaneousFields({
     <div className="row py-2">
       {miscellaneousFieldSection.length > 0 &&
         miscellaneousFieldSection?.map((field) => (
-          <WarehouseColumn title={field.title} description={field.description}>
-            <AdditionalFields
-              key={"0x0x0x0x0x0x0x"}
-              options={options}
-              onChange={(e) => {
-                setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
-                // addRow(true);
-              }}
-              onBlur={() =>
-                setFieldTouched?.(keyValueDefault("warehouseField"), true)
-              }
-              handleDelete={(e) => {
-                e.preventDefault();
-                deleteRow("0x0x0x0x0x0x0x");
-                setFieldValue?.(keyValueDefault("warehouseField"), "");
-                setFieldValue?.(keyValueDefault("appField"), "");
-              }}
-              inputChange={(e) => {
-                setFieldValue?.(keyValueDefault("appField"), e.target.value);
-              }}
-              inputBlur={() =>
-                setFieldTouched?.(keyValueDefault("appField"), true)
-              }
-            />
-            {additionalRow}
-            <button onClick={addRow} className="btn btn-primary my-3 mx-2">
-              Add row
-            </button>
+          <>
+            <WarehouseColumn
+              title={field.title}
+              description={field.description}
+            >
+              <AdditionalFields
+                key={"0x0x0x0x0x0x0x"}
+                options={options}
+                onChange={(e) => {
+                  setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
+                  // addRow(true);
+                }}
+                onBlur={() =>
+                  setFieldTouched?.(keyValueDefault("warehouseField"), true)
+                }
+                handleDelete={(e) => {
+                  e.preventDefault();
+                  deleteRow("0x0x0x0x0x0x0x");
+                  setFieldValue?.(keyValueDefault("warehouseField"), "");
+                  setFieldValue?.(keyValueDefault("appField"), "");
+                }}
+                inputChange={(e) => {
+                  setFieldValue?.(keyValueDefault("appField"), e.target.value);
+                }}
+                inputBlur={() =>
+                  setFieldTouched?.(keyValueDefault("appField"), true)
+                }
+              />
+              {additionalRow}
+              <button onClick={addRow} className="btn btn-primary my-3 mx-2">
+                Add row
+              </button>
+            </WarehouseColumn>
             <ErrorMessage errors={errors} include={"miscl"} />
-          </WarehouseColumn>
+            <hr className="solid" />
+          </>
         ))}
     </div>
   );
