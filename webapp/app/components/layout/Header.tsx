@@ -80,6 +80,7 @@ const Header = ({
                   >
                     {(rightBtn.title === "Create" ||
                       rightBtn.title === "Add Warehouse" ||
+                      rightBtn.title === "Create Model" ||
                       rightBtn.title === "Add App") && (
                       <IconPlus size={16} className="me-1" />
                     )}

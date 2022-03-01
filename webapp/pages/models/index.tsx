@@ -67,7 +67,7 @@ const Models = () => {
                       </div>
                     </div>
                   </td>
-                  <td>{model.modelDetails.type}</td>
+                  <td>{model.modelType}</td>
                   <td>{model.activeSyncsCount}</td>
                 </tr>
               ))}

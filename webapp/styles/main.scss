@@ -276,6 +276,7 @@ form {
     .nav-item:first-child {
       position: absolute;
       left: -7.77rem;
+      top: 0.25rem;
     }
   }
 
@@ -340,9 +341,9 @@ form {
   border: 1px solid $gray-100;
   thead tr,
   thead th {
-    border-bottom: 2px solid $primary-lite-2x !important;
+    border-bottom: 1px solid $primary-lite-2x !important;
     text-transform: capitalize;
-    font-size: $font-size-sm;
+    font-size: $font-size-md;
     background: $primary-lite-2x;
     font-weight: $font-weight-bolder;
   }
@@ -352,7 +353,10 @@ form {
     padding-bottom: 1rem;
   }
 
-  tbody td:hover {
+  tbody td > a {
+    color: blue;
+  }
+  tbody td > a:hover {
     cursor: pointer;
   }
 
@@ -428,7 +432,6 @@ form {
   color: #f74c3c;
   font-size: 20px;
   position: relative;
-  top: -3px;
 }
 
 .required-field {

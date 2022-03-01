@@ -144,6 +144,7 @@ const WarehouseModel = ({
               onChange={setQuery}
               placeholder="Enter Query..."
               className="border-0 border-bottom mono-font"
+              disabled={pipelineWizContext.values?.modelId ? true : false}
             />
             <div className="d-flex align-items-center">
               <Button
