@@ -80,13 +80,10 @@ export default function MappingMiscellaneousFields({
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
             <AdditionalFields
-              key={'0x0x0x0x0x0x0x'}
+              key={"0x0x0x0x0x0x0x"}
               options={options}
               onChange={(e) => {
-                setFieldValue?.(
-                  keyValueDefault("warehouseField"),
-                  e?.value
-                );
+                setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
                 // addRow(true);
               }}
               onBlur={() =>
@@ -99,10 +96,7 @@ export default function MappingMiscellaneousFields({
                 setFieldValue?.(keyValueDefault("appField"), "");
               }}
               inputChange={(e) => {
-                setFieldValue?.(
-                  keyValueDefault("appField"),
-                  e.target.value
-                );
+                setFieldValue?.(keyValueDefault("appField"), e.target.value);
               }}
               inputBlur={() =>
                 setFieldTouched?.(keyValueDefault("appField"), true)
@@ -147,7 +141,7 @@ function AdditionalFields({
       <th className="w-50">
         <input
           type="text"
-          placeholder="Enter a field"
+          placeholder="Enter a field..."
           className="form-control p-2"
           onChange={inputChange}
           onBlur={inputBlur}

@@ -182,7 +182,7 @@ function DestinationFieldRows({
           onBlur={onBlur}
           isClearable={isClearable}
           onChange={onChangeAppField}
-          placeholder={"Select a field from dropdown"}
+          placeholder={"Select a field..."}
         />
       </th>
       {isDisabled && <span className="required-icon">*</span>}

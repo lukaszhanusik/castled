@@ -50,7 +50,7 @@ export default function MappingPrimaryKeyFields({
                   onBlur={() =>
                     setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                   }
-                  placeholder={"Select a field from dropdown"}
+                  placeholder={"Select a field..."}
                 />
               </th>
             </tr>
