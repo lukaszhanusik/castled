@@ -147,7 +147,7 @@ export default function MappingImportantFields({
                 variant="outline-primary"
                 className="mx-2 my-2"
               >
-                Add Row
+                Add mapping row
               </Button>
             </WarehouseColumn>
             <ErrorMessage errors={errors} include={"destination"} />

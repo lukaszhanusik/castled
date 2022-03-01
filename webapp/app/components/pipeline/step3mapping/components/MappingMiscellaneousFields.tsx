@@ -112,7 +112,7 @@ export default function MappingMiscellaneousFields({
                 variant="outline-primary"
                 className="my-2 mx-2"
               >
-                Add row
+                Add mapping row
               </Button>
             </WarehouseColumn>
             <ErrorMessage errors={errors} include={"miscl"} />
