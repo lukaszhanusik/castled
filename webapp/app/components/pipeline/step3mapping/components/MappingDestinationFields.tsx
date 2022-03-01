@@ -2,7 +2,7 @@
 
 import { IconTrash } from "@tabler/icons";
 import { useEffect, useState } from "react";
-import { Placeholder } from "react-bootstrap";
+import { Button, Placeholder } from "react-bootstrap";
 import Select from "react-select";
 import {
   DestinationFieldRowsProps,
@@ -142,13 +142,13 @@ export default function MappingImportantFields({
                   />
                 ))}
               {optionalRow}
-              <button
-                type="button"
+              <Button
                 onClick={addRow}
-                className="btn btn-primary mx-2 my-2"
+                variant="outline-primary"
+                className="mx-2 my-2"
               >
                 Add Row
-              </button>
+              </Button>
             </WarehouseColumn>
             <ErrorMessage errors={errors} include={"destination"} />
             <hr className="solid" />

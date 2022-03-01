@@ -1,6 +1,6 @@
 import { IconTrash } from "@tabler/icons";
 import { useEffect, useState } from "react";
-import { Placeholder } from "react-bootstrap";
+import { Button, Placeholder } from "react-bootstrap";
 import Select from "react-select";
 import {
   DestinationFieldRowsProps,
@@ -107,9 +107,13 @@ export default function MappingMiscellaneousFields({
                 }
               />
               {additionalRow}
-              <button onClick={addRow} className="btn btn-primary my-2 mx-2">
+              <Button
+                onClick={addRow}
+                variant="outline-primary"
+                className="my-2 mx-2"
+              >
                 Add row
-              </button>
+              </Button>
             </WarehouseColumn>
             <ErrorMessage errors={errors} include={"miscl"} />
             <hr className="solid" />
