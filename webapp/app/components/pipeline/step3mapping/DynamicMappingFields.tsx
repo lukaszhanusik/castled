@@ -1,13 +1,3 @@
-import { FormFieldMeta, FormFieldsDto } from "@/app/common/dtos/FormFieldsDto";
-import InputCheckbox from "../../forminputs/InputCheckbox";
-import InputField from "../../forminputs/InputField";
-import InputFile from "../../forminputs/InputFile";
-import InputSelect from "@/app/components/forminputs/InputSelect";
-import { AxiosResponse } from "axios";
-import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
-import _ from "lodash";
-import { FormFieldType } from "@/app/common/enums/FormFieldType";
-import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
 import MappingImportantFields from "./components/MappingImportantFields";
 import MappingMiscellaneousFields from "./components/MappingMiscellaneousFields";
@@ -45,7 +35,7 @@ const DynamicMappingFields = ({
   values,
   setFieldValue,
   errors
-}: // dataFetcher,
+}: 
 DynamicMappingFieldsProps) => {
   if (
     !mappingFields?.warehouseSchema.fields ||
@@ -68,7 +58,7 @@ DynamicMappingFieldsProps) => {
 
     const appSchemaOptions = warehouseSchema.fields.map((field) => ({
       value: field.fieldName,
-      label: field.fieldName,
+      label: field.fieldDisplayName || field.fieldName,
     }));
 
     const { renderer: Input } = fieldRenderer;
@@ -84,13 +74,6 @@ DynamicMappingFieldsProps) => {
         values={values}
         setFieldValue={setFieldValue}
         errors={errors}
-        // required={field.validations.required}
-        // {...field.fieldProps}
-        // {...props}
-        // dValues={depValues}
-        // dataFetcher={dataFetcher}
-        // deps={formFields.groupActivators[field.group]?.dependencies}
-        // title={field.fieldProps.title || key}
       />
     );
   }

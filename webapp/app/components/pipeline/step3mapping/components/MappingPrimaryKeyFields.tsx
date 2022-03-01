@@ -1,3 +1,4 @@
+import { Placeholder } from "react-bootstrap";
 import Select from "react-select";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
@@ -23,39 +24,49 @@ export default function MappingPrimaryKeyFields({
     <div className="row py-2">
       {primaryKeysSection.length > 0 &&
         primaryKeysSection.map((field) => (
-          <WarehouseColumn title={field.title} description={field.description}>
-            {/* {field.primaryKeys!.map((primaryKeys, index) => ( */}
-            <tr>
-              <th className="w-50">
-                <Select
-                  options={options}
-                  onChange={(e) =>
-                    setFieldValue?.(`PRIMARY_KEYS-warehouseField-0`, e?.value)
-                  }
-                  onBlur={() =>
-                    setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
-                  }
-                  placeholder={"Select a column"}
-                />
-              </th>
-              <th className="w-50">
-                <Select
-                  options={field.primaryKeys?.map((key) => ({
-                    value: key.fieldName,
-                    label: key.fieldName,
-                  }))}
-                  onChange={(e) =>
-                    setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value)
-                  }
-                  onBlur={() =>
-                    setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
-                  }
-                  placeholder={"Select a field..."}
-                />
-              </th>
-            </tr>
+          <>
+            <WarehouseColumn
+              title={field.title}
+              description={field.description}
+            >
+              <tr>
+                <th className="col-6">
+                  <Select
+                    options={options}
+                    onChange={(e) =>
+                      setFieldValue?.(`PRIMARY_KEYS-warehouseField-0`, e?.value)
+                    }
+                    onBlur={() =>
+                      setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
+                    }
+                    placeholder={"Select a column"}
+                  />
+                </th>
+                <th className="col-6">
+                  <Select
+                    options={field.primaryKeys?.map((key) => ({
+                      value: key.fieldName,
+                      label: key.fieldDisplayName || key.fieldName,
+                    }))}
+                    onChange={(e) =>
+                      setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value)
+                    }
+                    onBlur={() =>
+                      setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
+                    }
+                    placeholder={"Select a field"}
+                  />
+                </th>
+                <th className="col-2">
+                  <Placeholder as="td">
+                    <span className="required-icon">*</span>
+                  </Placeholder>
+                </th>
+              </tr>
+            </WarehouseColumn>
             <ErrorMessage errors={errors} include={"rimary"} />
-          </WarehouseColumn>
+            <hr className='solid'/>
+          </>
         ))}
     </div>
   );

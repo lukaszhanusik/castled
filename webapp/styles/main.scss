@@ -430,6 +430,7 @@ form {
 
 .required-icon {
   color: #f74c3c;
+  font-size: 20px;
   position: relative;
 }
 
@@ -535,4 +536,9 @@ form {
   img {
     width: 200px;
   }
+}
+
+.delete-btn {
+  width: 20px;
+  height: 20px;
 }

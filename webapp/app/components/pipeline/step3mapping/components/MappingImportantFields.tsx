@@ -18,17 +18,15 @@ export default function MappingImportantFields({
   });
 
   return (
-    <div className="row py-2">
+    <div className="row py-1">
       {importantParamsSection.length > 0 &&
         importantParamsSection[0].fields?.map((field) => (
           <div className="flex-column align-self-center my-2">
             <div className="flex-column mx-1 my-2">
-              {/* <div className="row"> */}
-                <label className="font-weight-bold">
-                  {!field.optional && <span className="required-icon"> * </span>}
-                  {field.title}
-                </label>
-              {/* </div> */}
+              <div className="column">
+                {!field.optional && <label className="required-icon"> * </label>}
+                <label className="font-weight-bold mx-1">{field.title}</label>
+              </div>
               <div className="row description text-muted px-3">
                 {field.description}
               </div>
@@ -46,13 +44,13 @@ export default function MappingImportantFields({
                   setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
                 }
                 isClearable={field.optional}
-                placeholder={"Select a column..."}
+                placeholder={"Select a column"}
               />
             </div>
           </div>
         ))}
       <ErrorMessage errors={errors} include={"important"} />
-      <hr className='solid'/>
+      <hr className="solid" />
     </div>
   );
 }

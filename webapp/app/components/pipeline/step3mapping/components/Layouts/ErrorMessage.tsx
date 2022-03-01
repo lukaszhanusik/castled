@@ -7,7 +7,7 @@ export default function ErrorMessage({
 }) {
   return (
     <>
-      <ul>
+      <ul className="mx-4">
         {Object.keys(errors).map(
           (key) =>
             key.includes(include) && (

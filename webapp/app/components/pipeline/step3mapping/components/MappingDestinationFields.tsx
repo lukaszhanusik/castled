@@ -106,41 +106,53 @@ export default function MappingImportantFields({
     <div className="row py-2">
       {destinationFieldSection.length > 0 &&
         destinationFieldSection.map((field) => (
-          <WarehouseColumn title={field.title} description={field.description}>
-            {field.mandatoryFields!.length > 0 &&
-              field.mandatoryFields?.map((mandatoryField, i) => (
-                <DestinationFieldRows
-                  key={mandatoryField.fieldName}
-                  options={options}
-                  defaultValue={{
-                    value: mandatoryField.fieldName,
-                    label: mandatoryField.fieldName,
-                  }}
-                  isDisabled={!mandatoryField.optional}
-                  onChangeWarehouse={(e) => {
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
-                      e?.value
-                    );
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-appField-${i}`,
-                      mandatoryField.fieldName
-                    );
-                  }}
-                  onBlur={() =>
-                    setFieldTouched?.(
-                      `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
-                      true
-                    )
-                  }
-                />
-              ))}
-            {optionalRow}
-            <button type="button" onClick={addRow} className="btn btn-primary">
-              Add Row
-            </button>
+          <>
+            <WarehouseColumn
+              title={field.title}
+              description={field.description}
+            >
+              {field.mandatoryFields!.length > 0 &&
+                field.mandatoryFields?.map((mandatoryField, i) => (
+                  <DestinationFieldRows
+                    key={mandatoryField.fieldName}
+                    options={options}
+                    defaultValue={{
+                      value: mandatoryField.fieldName,
+                      label:
+                        mandatoryField.fieldDisplayName ||
+                        mandatoryField.fieldName,
+                    }}
+                    isDisabled={!mandatoryField.optional}
+                    onChangeWarehouse={(e) => {
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
+                        e?.value
+                      );
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-appField-${i}`,
+                        mandatoryField.fieldName
+                      );
+                    }}
+                    onBlur={() =>
+                      setFieldTouched?.(
+                        `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
+                        true
+                      )
+                    }
+                  />
+                ))}
+              {optionalRow}
+              <button
+                type="button"
+                onClick={addRow}
+                className="btn btn-primary mx-2"
+              >
+                Add Row
+              </button>
+            </WarehouseColumn>
             <ErrorMessage errors={errors} include={"destination"} />
-          </WarehouseColumn>
+            <hr className="solid" />
+          </>
         ))}
     </div>
   );
@@ -160,7 +172,7 @@ function DestinationFieldRows({
 }: DestinationFieldRowsProps) {
   return (
     <tr>
-      <th className="w-50">
+      <th className="col-6">
         <Select
           options={options}
           onChange={onChangeWarehouse}
@@ -169,12 +181,15 @@ function DestinationFieldRows({
           placeholder={"Select a column"}
         />
       </th>
-      <th className="w-50">
+      <th className="col-6">
         <Select
           options={
             destinationFieldSection &&
             destinationFieldSection[0].optionalFields?.map((items: any) => {
-              return { value: items.fieldName, label: items.fieldName };
+              return {
+                value: items.fieldName,
+                label: items.fieldDisplayName || items.fieldName,
+              };
             })
           }
           defaultValue={defaultValue}
@@ -182,15 +197,21 @@ function DestinationFieldRows({
           onBlur={onBlur}
           isClearable={isClearable}
           onChange={onChangeAppField}
-          placeholder={"Select a field..."}
+          placeholder={"Select a field"}
         />
       </th>
-      {isDisabled && <span className="required-icon">*</span>}
-      {!isDisabled && (
-        <Placeholder as="td">
-          <IconTrash onClick={handleDelete} />
-        </Placeholder>
-      )}
+      <th className="col-2">
+        {isDisabled && (
+          <Placeholder as="td">
+            <span className="required-icon">*</span>
+          </Placeholder>
+        )}
+        {!isDisabled && (
+          <Placeholder as="td">
+            <IconTrash onClick={handleDelete} className="delete-btn" />
+          </Placeholder>
+        )}
+      </th>
     </tr>
   );
 }

@@ -19,6 +19,7 @@ export interface ImportantParamsField {
   optional: boolean;
   title: string;
   description: string;
+  fieldDisplayName?: string;
 }
 
 export enum Type {
@@ -30,11 +31,13 @@ export interface FieldElement {
   fieldName: string;
   type: Type;
   optional: boolean;
+  fieldDisplayName?: string;
 }
 export interface PrimaryKeyElement {
   fieldName: string;
   type: string;
   optional: boolean;
+  fieldDisplayName?: string;
 }
 export interface WarehouseSchema {
   fields: FieldElement[];

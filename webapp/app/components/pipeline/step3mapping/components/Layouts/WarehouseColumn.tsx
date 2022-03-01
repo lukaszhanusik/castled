@@ -13,10 +13,10 @@ export default function WarehouseColumn({
 }: WarehouseColumnProps) {
   return (
     <>
-      <div className="flex-column align-self-center py-2">
+      <div className="flex-column align-self-center">
         <div className="flex-column mx-4">
-          <div className="row py-1 font-weight-bold">{title}</div>
-          <div className="row description text-muted pb-3">{description}</div>
+          <label className="row py-1 font-weight-bold">{title}</label>
+          <label className="row description text-muted pb-3">{description}</label>
         </div>
         <div>
           <Table hover>
@@ -24,13 +24,13 @@ export default function WarehouseColumn({
               <tr>
                 <th>Warehouse Column</th>
                 <th>App Field</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>{children}</tbody>
           </Table>
         </div>
       </div>
-      <hr className='solid'/>
     </>
   );
 }

@@ -82,17 +82,19 @@
       "fields": [
         {
           "fieldName": "customer_id",
+          "fieldDisplayName": "ID",
           "type": "String",
           "optional": false,
           "title": "Column identifying Customer.io id (customer_id) of the person",
-          "description": "Column identifying Customer.io id (customer_id) of the person"
+          "description": "This field will be used to uniquely identifying the person associated with the event"
         },
         {
           "fieldName": "timestamp",
+          "fieldDisplayName": "Event Timestamp",
           "type": "String",
           "optional": false,
           "title": "Column identifying the Event Timestamp",
-          "description": "Column identifying the Event Timestamp"
+          "description": "If selected this field will be used as the event timestamp else API will default the time event reaches the server"
         }
       ]
     }
