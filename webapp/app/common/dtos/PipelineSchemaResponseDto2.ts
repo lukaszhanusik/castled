@@ -7,11 +7,11 @@ export interface ConnectorSchema {
   }[];
 }
 
-export interface PipelineSchemaResponseDto {
+export interface PipelineSchemaResponseRestApiDto {
   warehouseSchema: ConnectorSchema;
   appSchema: ConnectorSchema;
   pkEligibles: {
-    eligibles : string[],
-    autoDetect : boolean
-  }
+    eligibles: string[];
+    autoDetect: boolean;
+  };
 }
