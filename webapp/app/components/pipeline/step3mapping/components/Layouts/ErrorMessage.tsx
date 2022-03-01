@@ -7,11 +7,11 @@ export default function ErrorMessage({
 }) {
   return (
     <>
-      <ul>
+      <ul className="ml-4 my-2">
         {Object.keys(errors).map(
           (key) =>
             key.includes(include) && (
-              <li key={key} className="text-danger">
+              <li key={key} className="text-danger text-sm">
                 {errors[key]}
               </li>
             )

@@ -68,7 +68,7 @@ DynamicMappingFieldsProps) => {
 
     const appSchemaOptions = warehouseSchema.fields.map((field) => ({
       value: field.fieldName,
-      label: field.fieldName,
+      label: field.fieldDisplayName,
     }));
 
     const { renderer: Input } = fieldRenderer;

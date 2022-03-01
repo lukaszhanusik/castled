@@ -114,7 +114,9 @@ export default function MappingImportantFields({
                   options={options}
                   defaultValue={{
                     value: mandatoryField.fieldName,
-                    label: mandatoryField.fieldName,
+                    label:
+                      mandatoryField.fieldDisplayName ||
+                      mandatoryField.fieldName,
                   }}
                   isDisabled={!mandatoryField.optional}
                   onChangeWarehouse={(e) => {
@@ -136,7 +138,7 @@ export default function MappingImportantFields({
                 />
               ))}
             {optionalRow}
-            <button type="button" onClick={addRow} className="btn btn-primary">
+            <button type="button" onClick={addRow} className="btn btn-primary mx-2">
               Add Row
             </button>
             <ErrorMessage errors={errors} include={"destination"} />
@@ -160,7 +162,7 @@ function DestinationFieldRows({
 }: DestinationFieldRowsProps) {
   return (
     <tr>
-      <th className="w-50">
+      <th className="col-6">
         <Select
           options={options}
           onChange={onChangeWarehouse}
@@ -169,12 +171,15 @@ function DestinationFieldRows({
           placeholder={"Select a column"}
         />
       </th>
-      <th className="w-50">
+      <th className="col-6">
         <Select
           options={
             destinationFieldSection &&
             destinationFieldSection[0].optionalFields?.map((items: any) => {
-              return { value: items.fieldName, label: items.fieldName };
+              return {
+                value: items.fieldName,
+                label: items.fieldDisplayName || items.fieldName,
+              };
             })
           }
           defaultValue={defaultValue}
@@ -182,15 +187,21 @@ function DestinationFieldRows({
           onBlur={onBlur}
           isClearable={isClearable}
           onChange={onChangeAppField}
-          placeholder={"Select a field..."}
+          placeholder={"Select a field"}
         />
       </th>
-      {isDisabled && <span className="required-icon">*</span>}
-      {!isDisabled && (
-        <Placeholder as="td">
-          <IconTrash onClick={handleDelete} />
-        </Placeholder>
-      )}
+      <th className="col-2">
+        {isDisabled && (
+          <Placeholder as="td">
+            <span className="required-icon">*</span>
+          </Placeholder>
+        )}
+        {!isDisabled && (
+          <Placeholder as="td">
+            <IconTrash onClick={handleDelete} className="delete-btn"/>
+          </Placeholder>
+        )}
+      </th>
     </tr>
   );
 }

@@ -103,7 +103,7 @@ export default function MappingMiscellaneousFields({
               }
             />
             {additionalRow}
-            <button onClick={addRow} className="btn btn-primary">
+            <button onClick={addRow} className="btn btn-primary my-3 mx-2">
               Add row
             </button>
             <ErrorMessage errors={errors} include={"miscl"} />
@@ -129,7 +129,7 @@ function AdditionalFields({
 }: AdditionalFieldsProps) {
   return (
     <tr>
-      <th className="w-50">
+      <th className="col-6">
         <Select
           options={options}
           onChange={onChange}
@@ -138,17 +138,17 @@ function AdditionalFields({
           placeholder={"Select a column"}
         />
       </th>
-      <th className="w-50">
+      <th className="col-6">
         <input
           type="text"
-          placeholder="Enter a field..."
+          placeholder="Enter a field"
           className="form-control p-2"
           onChange={inputChange}
           onBlur={inputBlur}
         />
       </th>
       <Placeholder as="td">
-        <IconTrash onClick={handleDelete} />
+        <IconTrash onClick={handleDelete} className="delete-btn" />
       </Placeholder>
     </tr>
   );
