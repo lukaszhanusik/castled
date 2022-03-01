@@ -66,7 +66,6 @@ const PipelineMapping = ({
       : mappingFieldValidations(values);
 
     // moving misclValidation to other function for modularity
-
     const misclValidationResult = pipelineSchema
       ? misclValidation(values, pipelineSchema.mappingGroups)
       : misclValidation(values);
@@ -82,8 +81,6 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
-    // console.log(values);
-    console.log(validationResult);
     return errors;
   }
 
@@ -116,8 +113,6 @@ const PipelineMapping = ({
               if (!pipelineWizContext.values) return setSubmitting(false);
 
               pipelineWizContext.values.mapping = transformMapping(values);
-              console.log(values);
-              // console.log(transformMapping(values));
 
               pipelineWizContext.values.mapping.type =
                 PipelineMappingType.TARGET_FIELDS_MAPPING;
