@@ -13,7 +13,7 @@ public class FbAdUtils {
         RecordSchema.Builder schemaBuilder = RecordSchema.builder().name(OBJECT_NAME);
         // All field treated as strings
         Arrays.stream(FbAudienceUserFields.values())
-                .forEach(enumVal -> schemaBuilder.put(enumVal.getDisplayName(), SchemaConstants.OPTIONAL_STRING_SCHEMA));
+                .forEach(enumVal -> schemaBuilder.put(enumVal.getName(), SchemaConstants.OPTIONAL_STRING_SCHEMA));
         return schemaBuilder.build();
     }
 }
