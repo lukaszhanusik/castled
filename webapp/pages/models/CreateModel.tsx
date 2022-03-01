@@ -25,6 +25,7 @@ const CreateModel = ({
   curWizardStep,
   steps,
   setCurWizardStep,
+  stepGroups,
   onFinish,
 }: PipelineWizardStepProps) => {
   const [queryResults, setQueryResults] = useState<
@@ -81,8 +82,8 @@ const CreateModel = ({
       })
       .then(({ data }) => {
         setPipelineWizContext({});
-        router.push("/models");
         bannerNotificationService.success("Model created successfully");
+        router.push("/models");
       })
       .catch(({ err }) => {
         bannerNotificationService.error(
@@ -163,6 +164,7 @@ const CreateModel = ({
       centerTitle={true}
       steps={steps}
       isFluid={true}
+      stepGroups={stepGroups}
     >
       <div className="row">
         <div className="col-6">
