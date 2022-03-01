@@ -119,6 +119,14 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
 
         List<QuestionnaireGroupField> questionnaireGroupFields = Lists.newArrayList();
         questionnaireGroupFields.add(QuestionnaireGroupField.builder()
+                .title("Column identifying the event being synced")
+                .description("This field will be used to uniquely identifying the event being synced at the destination")
+                .name(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName())
+                .displayName(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldTitle())
+                .optional(false)
+                .build());
+
+        questionnaireGroupFields.add(QuestionnaireGroupField.builder()
                 .title("Column identifying the user associated with the event")
                 .description("This field will be used to uniquely identifying the user associated with the event")
                 .name(MixpanelObjectFields.EVENT_FIELDS.DISTINCT_ID.getFieldName())
