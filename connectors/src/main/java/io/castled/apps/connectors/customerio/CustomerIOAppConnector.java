@@ -84,7 +84,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
-                    .optional(false)
+                    .optional(true)
                     .build());
 
         }
@@ -110,7 +110,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
                     .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
-                    .optional(false)
+                    .optional(true)
                     .build());
 
         }

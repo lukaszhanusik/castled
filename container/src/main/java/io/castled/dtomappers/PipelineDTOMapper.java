@@ -11,6 +11,7 @@ import io.castled.dtos.WarehouseDetails;
 import io.castled.models.Pipeline;
 import io.castled.models.Warehouse;
 import io.castled.services.PipelineService;
+import io.castled.services.QueryModelService;
 import io.castled.warehouses.WarehouseService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,6 +24,7 @@ public interface PipelineDTOMapper {
     @Mapping(target = "app", source = "appId", qualifiedByName = "getAppDetails")
     @Mapping(target = "warehouse", source = "warehouseId", qualifiedByName = "getWarehouseDetails")
     @Mapping(target = "lastRunDetails", source = "pipeline", qualifiedByName = "getLastRunDetails")
+    @Mapping(target = "sourceQuery", source = "modelId", qualifiedByName = "getSourceQuery")
     PipelineDTO toDetailedDTO(Pipeline pipeline);
 
     @Mapping(target = "app", source = "appId", qualifiedByName = "getAppDetails")
@@ -45,5 +47,9 @@ public interface PipelineDTOMapper {
     default PipelineRunDetails getLastRunDetails(Pipeline pipeline) {
         return new PipelineRunDetails(ObjectRegistry.getInstance(PipelineService.class).getPipelineRuns(pipeline.getId(), 10));
 
+    }
+
+    default String getSourceQuery(Long modelId) {
+        return ObjectRegistry.getInstance(QueryModelService.class).getSourceQuery(modelId);
     }
 }
