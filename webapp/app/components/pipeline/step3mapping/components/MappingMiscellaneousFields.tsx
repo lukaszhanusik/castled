@@ -18,18 +18,6 @@ export default function MappingMiscellaneousFields({
   errors,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
-  const [addOptionalRow, setAddOptionalRow] = useState(true);
-
-  // useEffect(() => {
-  //   addRow(false);
-  // }, []);
-  useEffect(() => {
-    if (!additionalRow.length) {
-      setAddOptionalRow(true);
-    } else {
-      setAddOptionalRow(false);
-    }
-  }, [additionalRow]);
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
@@ -44,13 +32,6 @@ export default function MappingMiscellaneousFields({
       additionalFields(randomKey),
     ]);
   }
-
-  // function addOptional() {
-  //   if (addOptionalRow) {
-  //     addRow();
-  //     setAddOptionalRow(!addOptionalRow);
-  //   }
-  // }
 
   function deleteRow(key: string) {
     // filter items based on key
@@ -92,13 +73,41 @@ export default function MappingMiscellaneousFields({
       }
     />
   );
-  // console.log(additionalRow);
 
   return (
     <div className="row py-2">
       {miscellaneousFieldSection.length > 0 &&
         miscellaneousFieldSection?.map((field) => (
           <WarehouseColumn title={field.title} description={field.description}>
+            <AdditionalFields
+              key={'0x0x0x0x0x0x0x'}
+              options={options}
+              onChange={(e) => {
+                setFieldValue?.(
+                  keyValueDefault("warehouseField"),
+                  e?.value
+                );
+                // addRow(true);
+              }}
+              onBlur={() =>
+                setFieldTouched?.(keyValueDefault("warehouseField"), true)
+              }
+              handleDelete={(e) => {
+                e.preventDefault();
+                deleteRow("0x0x0x0x0x0x0x");
+                setFieldValue?.(keyValueDefault("warehouseField"), "");
+                setFieldValue?.(keyValueDefault("appField"), "");
+              }}
+              inputChange={(e) => {
+                setFieldValue?.(
+                  keyValueDefault("appField"),
+                  e.target.value
+                );
+              }}
+              inputBlur={() =>
+                setFieldTouched?.(keyValueDefault("appField"), true)
+              }
+            />
             {additionalRow}
             <button onClick={addRow} className="btn btn-primary">
               Add row
@@ -124,8 +133,6 @@ function AdditionalFields({
   inputChange,
   inputBlur,
 }: AdditionalFieldsProps) {
-  const [isSelected, setIsSelected] = useState(false);
-
   return (
     <tr>
       <th className="w-50">
