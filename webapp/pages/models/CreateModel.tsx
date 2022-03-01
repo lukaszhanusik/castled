@@ -57,6 +57,16 @@ const CreateModel = ({
   };
 
   const createModel = () => {
+    if (
+      !modelName &&
+      (!primaryKeys || (primaryKeys && primaryKeys.length === 0))
+    ) {
+      bannerNotificationService.error(
+        "Please enter model name and select atleast one primary key"
+      );
+      return;
+    }
+
     if (!modelName) {
       bannerNotificationService.error("Model name cannot be empty");
       return;
@@ -81,9 +91,10 @@ const CreateModel = ({
         },
       })
       .then(({ data }) => {
-        setPipelineWizContext({});
         bannerNotificationService.success("Model created successfully");
-        router.push("/models");
+        {
+          onFinish && onFinish(data.warehouseId);
+        }
       })
       .catch((err: any) => {
         bannerNotificationService.error(err?.response?.data?.message);
