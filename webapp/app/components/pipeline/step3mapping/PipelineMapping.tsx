@@ -81,8 +81,6 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
-    console.log(validationResult);
-    console.log(values);
     return errors;
   }
 
@@ -128,14 +126,13 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
 
-              console.log(values);
-              // pipelineWizContext.values.mapping = transformMapping(values);
+              pipelineWizContext.values.mapping = transformMapping(values);
 
-              // pipelineWizContext.values.mapping.type =
-              //   PipelineMappingType.TARGET_FIELDS_MAPPING;
-              // setPipelineWizContext(pipelineWizContext);
-              // setCurWizardStep(undefined, "settings");
-              // setSubmitting(false);
+              pipelineWizContext.values.mapping.type =
+                PipelineMappingType.TARGET_FIELDS_MAPPING;
+              setPipelineWizContext(pipelineWizContext);
+              setCurWizardStep(undefined, "settings");
+              setSubmitting(false);
             }}
           >
             {({
