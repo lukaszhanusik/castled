@@ -100,7 +100,7 @@ const ConnectorWizard = ({
             category={category}
             typeOption={typeOption}
             onCreate={() => {
-              setCurWizardStep(curWizardStepGroup, "selectModelType");
+              setCurWizardStep(curWizardStepGroup, "configure");
             }}
             onSelect={(id) => {
               if (category === "App") {
@@ -142,7 +142,6 @@ const ConnectorWizard = ({
             curWizardStep={curWizardStep}
             steps={steps}
             setCurWizardStep={setCurWizardStep}
-            // onSelect={onFinish}
           ></ModelType>
         )}
         {curWizardStep === "configure" && typeOption && (
