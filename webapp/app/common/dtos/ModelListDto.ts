@@ -5,6 +5,7 @@ export interface ModelListDto {
   activeSyncsCount: number;
   warehouse: ConnectorDetails;
   modelName: string;
+  modelType: string;
   modelDetails: {
     sourceQuery: string;
     type: string;
