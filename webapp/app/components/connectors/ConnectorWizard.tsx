@@ -142,7 +142,6 @@ const ConnectorWizard = ({
             curWizardStep={curWizardStep}
             steps={steps}
             setCurWizardStep={setCurWizardStep}
-            // onSelect={onFinish}
           ></ModelType>
         )}
         {curWizardStep === "configure" && typeOption && (
