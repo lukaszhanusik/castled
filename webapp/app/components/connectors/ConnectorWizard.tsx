@@ -12,7 +12,7 @@ import _ from "lodash";
 import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
 import SelectModel from "../pipeline/step1source/SelectModel";
-import ModelType from "@/pages/models/ModelType";
+import ModelType from "@/app/components/connectors/ModelType";
 
 interface ConnectorWizardProps {
   appBaseUrl: string;
