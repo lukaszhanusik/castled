@@ -85,10 +85,8 @@ const CreateModel = ({
         bannerNotificationService.success("Model created successfully");
         router.push("/models");
       })
-      .catch(({ err }) => {
-        bannerNotificationService.error(
-          "Something went wrong. Try again after some time. If problem persists, please contact us."
-        );
+      .catch((err: any) => {
+        bannerNotificationService.error(err?.response?.data?.message);
       });
   };
 
@@ -204,7 +202,9 @@ const CreateModel = ({
                 />
                 {queryResults && queryResults.status === "SUCCEEDED" && (
                   <>
-                    <label className="mt-2">Model Name</label>
+                    <label className="mt-2 form-label">
+                      Model Name <span className="required-icon">*</span>
+                    </label>
                     <input
                       placeholder="Key"
                       type="text"
@@ -214,7 +214,9 @@ const CreateModel = ({
                       }}
                     />
 
-                    <label className="mt-2">Primary Keys</label>
+                    <label className="mt-2 form-label">
+                      Primary Keys <span className="required-icon">*</span>
+                    </label>
                     <Select
                       onChange={(event) => handleChange(event)}
                       options={warehouseFields!}
@@ -241,7 +243,6 @@ const CreateModel = ({
                       onClick={() => createModel()}
                     >
                       Save
-                      <IconChevronRight size={16} />
                     </Button>
                   )}
                 </div>
@@ -253,7 +254,7 @@ const CreateModel = ({
           {queryResults ? (
             renderQueryResults(queryResults)
           ) : (
-            <img className="w-100 ht-400" src="/images/model.svg" />
+            <img className="ht-400" src="/images/model.png" />
           )}
         </div>
       </div>
@@ -266,7 +267,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
     return (
       <div>
         <p>Query in progress...</p>
-        <div className="table-responsive mx-auto mt-2">
+        <div className="table-responsive mx-auto mt-1">
           <Table hover>
             <tbody>
               <tr className="pt-4 pb-4">
