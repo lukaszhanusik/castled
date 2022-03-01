@@ -45,8 +45,8 @@ const ModelCreate = ({ wizardStepKey, appBaseUrl, demo }: ModelCreateProps) => {
             stepKey: "selectType",
           },
           configure: {
-            title: "Confiqure Model",
-            description: "Confiqure Model",
+            title: "Confgure Model",
+            description: "Configure Model",
             stepKey: "configureModel",
           },
         }}
