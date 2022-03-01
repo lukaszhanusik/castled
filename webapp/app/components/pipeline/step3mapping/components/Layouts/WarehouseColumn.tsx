@@ -23,6 +23,7 @@ export default function WarehouseColumn({
             <thead>
               <tr>
                 <th>Warehouse Column</th>
+                <th></th>
                 <th>App Field</th>
                 <th></th>
               </tr>

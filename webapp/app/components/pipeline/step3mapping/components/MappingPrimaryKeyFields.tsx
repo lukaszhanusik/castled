@@ -1,5 +1,6 @@
 import { Placeholder } from "react-bootstrap";
 import Select from "react-select";
+import Image from "react-bootstrap/image";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
@@ -40,6 +41,13 @@ export default function MappingPrimaryKeyFields({
                       setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                     placeholder={"Select a column"}
+                  />
+                </th>
+                <th>
+                  <Image
+                    src="/images/arrow-right.svg"
+                    alt="Right Arrow for Mapping"
+                    className="py-2"
                   />
                 </th>
                 <th className="col-6">

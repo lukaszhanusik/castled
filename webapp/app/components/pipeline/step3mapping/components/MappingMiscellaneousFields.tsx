@@ -1,6 +1,7 @@
 import { IconTrash } from "@tabler/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Placeholder } from "react-bootstrap";
+import Image from "react-bootstrap/image";
 import Select from "react-select";
 import {
   DestinationFieldRowsProps,
@@ -146,6 +147,13 @@ function AdditionalFields({
           onBlur={onBlur}
           isClearable
           placeholder={"Select a column"}
+        />
+      </th>
+      <th>
+        <Image
+          src="/images/arrow-right.svg"
+          alt="Right Arrow for Mapping"
+          className="py-2"
         />
       </th>
       <th className="col-6">
