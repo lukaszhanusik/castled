@@ -24,8 +24,6 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
     private final FbRestClient fbRestClient;
     private final ErrorOutputStream errorOutputStream;
     private final AppSyncStats syncStats;
-    // display name -> schema name
-    private final Map<String, String> nameMap;
     private final FbErrorParser errorParser;
 
     public FbCustomAudienceCustomerSink(FbAppConfig appConfig, FbCustomAudAppSyncConfig syncConfig,
@@ -34,8 +32,6 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
         this.fbRestClient = new FbRestClient(appConfig, syncConfig);
         this.syncStats = new AppSyncStats();
         this.errorOutputStream = errorOutputStream;
-        this.nameMap = Arrays.stream(FbAudienceUserFields.values())
-                .collect(Collectors.toMap(field -> field.getDisplayName(), field -> field.getName()));
         this.errorParser = ObjectRegistry.getInstance(FbErrorParser.class);
     }
 
@@ -74,7 +70,7 @@ public class FbCustomAudienceCustomerSink extends BufferedObjectSink<Message> {
 
     protected  List<String> getSchema(List<Message> records) {
         Message msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Empty records list!"));
-        return msg.getRecord().getFields().stream().map(field -> nameMap.get(field.getName())).collect(Collectors.toList());
+        return msg.getRecord().getFields().stream().map(Field::getName).collect(Collectors.toList());
     }
 
     protected List<List<String>> getData(List<Message> msgs) {

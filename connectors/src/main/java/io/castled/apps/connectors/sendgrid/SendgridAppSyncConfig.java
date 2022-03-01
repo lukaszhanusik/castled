@@ -18,7 +18,7 @@ public class SendgridAppSyncConfig extends BaseAppSyncConfig {
     private GenericSyncObject object;
 
     @FormField(title = "Lists", type = FormFieldType.DROP_DOWN, description = "An array of Lists that this contact will be added to", group = "listId",
-            optionsRef = @OptionsRef(value = OptionsReferences.SENDGRID_LISTS, type = OptionsRefType.DYNAMIC))
+            optionsRef = @OptionsRef(value = OptionsReferences.SENDGRID_LISTS, type = OptionsRefType.DYNAMIC), required = false)
     private String listIds;
 
     @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,

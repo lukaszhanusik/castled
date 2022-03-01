@@ -78,7 +78,7 @@ public class MarketoGenericObjectSink extends BufferedObjectSink<Message> {
         String pkDisplayName = this.primaryKeys.stream().findFirst().orElse(null);
         Message msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Records empty!"));
         // Marketo apis are weird!
-        return (String) msg.getRecord().getField(pkDisplayName).getParams().get("fieldName");
+        return (String) msg.getRecord().getField(pkDisplayName).getParams().get("internalName");
     }
 
     private String getMarketoSyncMode() {

@@ -9,8 +9,11 @@ import io.castled.apps.connectors.activecampaign.client.ActiveCampaignRestClient
 import io.castled.apps.connectors.activecampaign.dto.CustomDataAttribute;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,11 +38,10 @@ public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCa
     @Override
     public ExternalAppSchema getSchema(ActiveCampaignAppConfig config, ActiveCampaignAppSyncConfig mailchimpAppSyncConfig) {
 
-        ActiveCampaignRestClient activeCampaignRestClient = new ActiveCampaignRestClient(config.getApiURL(),config.getApiKey());
-        List<CustomDataAttribute>  customAttributes = activeCampaignRestClient.getContactCustomFields();
+        ActiveCampaignRestClient activeCampaignRestClient = new ActiveCampaignRestClient(config.getApiURL(), config.getApiKey());
+        List<CustomDataAttribute> customAttributes = activeCampaignRestClient.getContactCustomFields();
 
-        return new ExternalAppSchema(ActiveCampaignUtils.getSchema(ActiveCampaignObject.CONTACT,customAttributes),
-                Lists.newArrayList(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName()));
+        return new ExternalAppSchema(ActiveCampaignUtils.getSchema(ActiveCampaignObject.CONTACT, customAttributes));
     }
 
     public List<AppSyncMode> getSyncModes(ActiveCampaignAppConfig config, ActiveCampaignAppSyncConfig activeCampaignAppSyncConfig) {
@@ -53,5 +55,22 @@ public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCa
     @Override
     public Class<ActiveCampaignAppConfig> getAppConfigType() {
         return ActiveCampaignAppConfig.class;
+    }
+
+    public List<MappingGroup> getMappingGroups(ActiveCampaignAppConfig config, ActiveCampaignAppSyncConfig activeCampaignAppSyncConfig) {
+
+        ActiveCampaignRestClient activeCampaignRestClient = new ActiveCampaignRestClient(config.getApiURL(), config.getApiKey());
+        List<CustomDataAttribute> customAttributes = activeCampaignRestClient.getContactCustomFields();
+
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList();
+        primaryKeyGroupFields.add(PrimaryKeyGroupField.builder()
+                .name(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldName())
+                .displayName(ActiveCampaignObjectFields.CONTACTS_FIELDS.EMAIL.getFieldTitle())
+                .optional(false)
+                .build());
+
+        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields
+                (ActiveCampaignUtils.getAppFieldDetails(ActiveCampaignObject.CONTACT, customAttributes)).build().getMappingGroups();
     }
 }

@@ -16,6 +16,7 @@ import org.jdbi.v3.sqlobject.config.RegisterArgumentFactory;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -31,11 +32,12 @@ import java.util.List;
 @RegisterRowMapper(PipelineDAO.PipelineRowMapper.class)
 @RegisterRowMapper(PipelineDAO.WarehouseAggregateRowMapper.class)
 @RegisterRowMapper(PipelineDAO.AppAggregateRowMapper.class)
+@RegisterRowMapper(PipelineDAO.ModelAggregateRowMapper.class)
 public interface PipelineDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into pipelines(name, user_id, team_id, schedule, source_query, mapping, app_sync_config, app_id, warehouse_id, uuid, status, sync_status, query_mode)" +
-            " values(:pipeline.name, :user.id, :user.teamId, :pipeline.schedule, :pipeline.sourceQuery," +
+    @SqlUpdate("insert into pipelines(name, user_id, team_id, schedule, model_id, mapping, app_sync_config, app_id, warehouse_id, uuid, status, sync_status, query_mode)" +
+            " values(:pipeline.name, :user.id, :user.teamId, :pipeline.schedule, :pipeline.modelId," +
             " :pipeline.mapping, :pipeline.appSyncConfig, :pipeline.appId, :pipeline.warehouseId, :uuid, 'OK', 'ACTIVE', :pipeline.queryMode)")
     long createPipeline(@BindBean("pipeline") PipelineConfigDTO pipelineConfigDTO, @BindBean("user") User user, @Bind("uuid") String uuid);
 
@@ -60,6 +62,9 @@ public interface PipelineDAO {
     @SqlQuery("select * from pipelines where team_id = :teamId and app_id = :appId and is_deleted = 0 ")
     List<Pipeline> listPipelines(@Bind("teamId") Long teamId, @Bind("appId") Long appId);
 
+    @SqlQuery("select * from pipelines where team_id = :teamId and model_id = :modelId and is_deleted = 0 ")
+    List<Pipeline> listPipelinesByModelId(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
+
     @SqlUpdate("update pipelines set sync_status = :syncStatus where id = :id")
     void updateSyncStatus(@Bind("id") Long id, @Bind("syncStatus") PipelineSyncStatus syncStatus);
 
@@ -77,6 +82,12 @@ public interface PipelineDAO {
 
     @SqlQuery("select app_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by app_id")
     List<AppAggregate> aggregateByApp(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId and model_id in (<modelIds>) group by model_id")
+    List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId, @BindList("modelIds") List<Long> modelIds);
+
+    @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by model_id")
+    List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId);
 
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 
@@ -134,6 +145,14 @@ public interface PipelineDAO {
         }
     }
 
+    class ModelAggregateRowMapper implements RowMapper<ModelAggregate> {
+        @Override
+        public ModelAggregate map(ResultSet rs, StatementContext ctx) throws SQLException {
+            return new ModelAggregate(rs.getLong("model_id"),
+                    rs.getInt("pipelines"));
+        }
+    }
+
     class PipelineRowMapper implements RowMapper<Pipeline> {
 
         @Override
@@ -146,7 +165,7 @@ public interface PipelineDAO {
                     .status(PipelineStatus.valueOf(rs.getString(TableFields.STATUS)))
                     .seqId(rs.getLong(TableFields.SEQ_ID)).appSyncConfig(appSyncConfig)
                     .dataMapping(mapping).uuid(rs.getString(TableFields.UUID)).isDeleted(rs.getBoolean(TableFields.ID))
-                    .jobSchedule(jobSchedule).sourceQuery(rs.getString("source_query"))
+                    .jobSchedule(jobSchedule).modelId(rs.getLong("model_id"))
                     .teamId(rs.getLong(TableFields.TEAM_ID)).queryMode(QueryMode.valueOf(rs.getString("query_mode")))
                     .appId(rs.getLong(TableFields.APP_ID)).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
                     .syncStatus(PipelineSyncStatus.valueOf(rs.getString("sync_status"))).build();

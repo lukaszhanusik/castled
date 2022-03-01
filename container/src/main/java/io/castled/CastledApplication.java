@@ -22,17 +22,13 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Feature;
 import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CastledApplication extends Application<CastledConfiguration> {
 
@@ -71,6 +67,9 @@ public class CastledApplication extends Application<CastledConfiguration> {
 
     @Inject
     private TestResource testResource;
+
+    @Inject
+    private QueryModelResource queryModelResource;
 
     public static void main(String[] args) throws Exception {
         new CastledApplication().run(args);
@@ -115,6 +114,7 @@ public class CastledApplication extends Application<CastledConfiguration> {
         environment.jersey().register(migrationsResource);
         environment.jersey().register(testResource);
         environment.lifecycle().manage(lifecycleManager);
+        environment.jersey().register(queryModelResource);
 
         environment.jersey().register(new AuthDynamicFeature(castledAuthFilter));
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));

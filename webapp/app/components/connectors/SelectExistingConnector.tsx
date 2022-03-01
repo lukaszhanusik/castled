@@ -35,7 +35,7 @@ const SelectExistingConnector = ({
   return (
     <div className="categories">
       <ListGroup>
-        {connectors !== undefined && (
+        {connectors !== undefined && category !== "Model" && (
           <button
             className="btn list-group-item rounded"
             onClick={() => onCreate()}

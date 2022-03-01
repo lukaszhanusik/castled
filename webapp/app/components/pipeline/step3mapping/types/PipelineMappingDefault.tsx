@@ -2,7 +2,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import Layout from "@/app/components/layout/Layout";
 import React from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { Table } from "react-bootstrap";
 import { IconTrash } from "@tabler/icons";
@@ -226,3 +226,4 @@ const PipelineMappingDefault = ({
 };
 
 export default PipelineMappingDefault;
+

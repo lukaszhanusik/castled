@@ -137,6 +137,11 @@ form {
   font-size: $h4-font-size;
   font-weight: $font-weight-base;
   margin-bottom: 0.25rem;
+  .required-icon {
+    position: absolute;
+    margin-top: -2px;
+    margin-left: 3px;
+  }
 }
 
 .pagination {
@@ -189,6 +194,18 @@ form {
   }
 }
 
+.ht-400 {
+  height: 375px;
+  object-fit: cover;
+  width: 100%;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-sm;
+}
+
+.create-model {
+  margin-top: -1.3rem;
+}
+
 .categories {
   width: 50%;
   margin: auto;
@@ -201,15 +218,32 @@ form {
   }
   img {
     width: 55px;
-    margin-right: 1rem;
+    margin-right: 0.25rem;
     padding: 0.75rem;
     border-radius: $border-radius;
   }
   .btn {
     width: 100%;
+    text-transform: capitalize;
   }
   .list-group-item {
-    height: 73px;
+    min-height: 73px;
+  }
+  .model-item {
+    text-align: left;
+    img {
+      width: 45px;
+      height: 50px;
+      padding-top: 0.25rem;
+    }
+    .text-muted {
+      font-weight: 400;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+    }
   }
 }
 
@@ -241,6 +275,7 @@ form {
     .nav-item:first-child {
       position: absolute;
       left: -7.77rem;
+      top: 0.25rem;
     }
   }
 
@@ -305,9 +340,9 @@ form {
   border: 1px solid $gray-100;
   thead tr,
   thead th {
-    border-bottom: 2px solid $primary-lite-2x !important;
+    border-bottom: 1px solid $primary-lite-2x !important;
     text-transform: capitalize;
-    font-size: $font-size-sm;
+    font-size: $font-size-md;
     background: $primary-lite-2x;
     font-weight: $font-weight-bolder;
   }
@@ -317,7 +352,10 @@ form {
     padding-bottom: 1rem;
   }
 
-  tbody td:hover {
+  tbody td > a {
+    color: blue;
+  }
+  tbody td > a:hover {
     cursor: pointer;
   }
 
@@ -391,9 +429,8 @@ form {
 
 .required-icon {
   color: #f74c3c;
-  font-size: 10px;
+  font-size: 20px;
   position: relative;
-  top: -3px;
 }
 
 .required-field {
@@ -498,4 +535,9 @@ form {
   img {
     width: 200px;
   }
+}
+
+.delete-btn {
+  width: 20px;
+  height: 20px;
 }

@@ -2,7 +2,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useRef, useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import { Button, Col, ListGroup, Row, Table } from "react-bootstrap";
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import InputField from "@/app/components/forminputs/InputField";

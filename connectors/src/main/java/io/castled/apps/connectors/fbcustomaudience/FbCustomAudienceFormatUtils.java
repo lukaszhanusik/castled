@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class FbCustomAudienceFormatUtils {
 
     public static Map<String, FbAudienceUserFields> fieldEnumMap = Arrays.stream(FbAudienceUserFields.values())
-            .collect(Collectors.toMap(FbAudienceUserFields::getDisplayName, Function.identity()));
+            .collect(Collectors.toMap(FbAudienceUserFields::getName, Function.identity()));
 
     public static String formatValue(Object value, String fieldName) {
         FbAudienceUserFields field = fieldEnumMap.get(fieldName);

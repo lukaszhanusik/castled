@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.List;
 
-
 @Data
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -20,6 +19,4 @@ public class CastledDataMapping {
 
     private List<String> primaryKeys;
     private DataMappingType type;
-
-
 }

@@ -2,6 +2,7 @@ package io.castled.migrations;
 
 import io.castled.constants.TableFields;
 import io.castled.migrations.models.PipelineAndMapping;
+import io.castled.models.Pipeline;
 import io.castled.utils.JsonUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -22,6 +23,9 @@ public interface MigrationsDAO {
 
     @SqlUpdate("update pipelines set mapping =:mapping where id = :pipelineId")
     void updateMapping(@Bind("pipelineId") Long pipelineId, @Bind("mapping") String mappingStr);
+
+    @SqlQuery("select * from pipelines where source_query is not null and model_id is null and is_deleted = 0 ")
+    List<Pipeline> listPipelinesTobeMigrated();
 
 
     class PipelineAndMappingRowMapper implements RowMapper<PipelineAndMapping> {

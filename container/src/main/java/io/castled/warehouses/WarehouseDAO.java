@@ -12,6 +12,7 @@ import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -43,6 +44,9 @@ public interface WarehouseDAO {
 
     @SqlQuery("select * from warehouses where team_id = :teamId and is_deleted = 0 order by id desc")
     List<Warehouse> listWarehouses(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select * from warehouses where id in (<whIds>) and is_deleted = 0 order by id desc")
+    List<Warehouse> listWarehouses(@BindList("whIds") List<Long> whIds);
 
 
     @Slf4j

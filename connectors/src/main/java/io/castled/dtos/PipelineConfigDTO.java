@@ -27,7 +27,8 @@ public class PipelineConfigDTO {
     private Long warehouseId;
 
     @NotNull
-    private String sourceQuery;
+    private Long modelId;
+    //private String sourceQuery;
 
     @NotNull
     private QueryMode queryMode;

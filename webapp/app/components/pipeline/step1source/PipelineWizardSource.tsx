@@ -14,7 +14,7 @@ const PipelineWizardSource = ({
   curWizardStep,
   steps,
   stepGroups,
-  setCurWizardStep
+  setCurWizardStep,
 }: PipelineWizardStepProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
@@ -34,6 +34,7 @@ const PipelineWizardSource = ({
             setPipelineWizContext(pipelineWizContext);
           }}
           onFinish={(id) => {
+            console.log(id);
             _.set(pipelineWizContext, "values.warehouseId", id);
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(CUR_WIZARD_STEP_GROUP, "model");
@@ -42,6 +43,7 @@ const PipelineWizardSource = ({
       )}
       {curWizardStep === "model" && (
         <WarehouseModel
+          // <SelectModel
           appBaseUrl={appBaseUrl}
           curWizardStep={curWizardStep}
           steps={steps}

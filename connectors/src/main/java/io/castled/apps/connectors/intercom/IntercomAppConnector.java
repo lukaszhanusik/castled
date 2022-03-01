@@ -5,8 +5,14 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
+import io.castled.apps.OAuthAppConfig;
+import io.castled.apps.connectors.salesforce.SalesforceAppSyncConfig;
+import io.castled.apps.connectors.salesforce.client.SFDCRestClient;
+import io.castled.apps.connectors.salesforce.client.SFDCUtils;
+import io.castled.apps.connectors.salesforce.client.dtos.SFDCObjectField;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.apps.connectors.intercom.client.IntercomObjectFields;
 import io.castled.apps.connectors.intercom.client.IntercomRestClient;
@@ -15,6 +21,9 @@ import io.castled.apps.connectors.intercom.client.models.IntercomModel;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +31,10 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class IntercomAppConnector implements ExternalAppConnector<IntercomAppConfig, IntercomDataSink,
-        GenericObjectRadioGroupConfig> {
+        IntercomAppSyncConfig> {
 
     @Override
-    public List<FormFieldOption> getAllObjects(IntercomAppConfig config, GenericObjectRadioGroupConfig mappingConfig) {
+    public List<FormFieldOption> getAllObjects(IntercomAppConfig config, IntercomAppSyncConfig mappingConfig) {
         return Arrays.stream(IntercomObject.values()).map(intercomObject -> new FormFieldOption(new GenericSyncObject(intercomObject.getName(),
                 ExternalAppType.INTERCOM), intercomObject.getName())).collect(Collectors.toList());
     }
@@ -36,21 +45,20 @@ public class IntercomAppConnector implements ExternalAppConnector<IntercomAppCon
     }
 
     @Override
-    public ExternalAppSchema getSchema(IntercomAppConfig config, GenericObjectRadioGroupConfig mappingConfig) {
+    public ExternalAppSchema getSchema(IntercomAppConfig config, IntercomAppSyncConfig mappingConfig) {
         IntercomRestClient intercomRestClient = new IntercomRestClient(config.getAccessToken());
         IntercomObject intercomObject = IntercomObject.getObjectByName(mappingConfig.getObject().getObjectName());
         IntercomModel intercomModel = IntercomUtils.getIntercomModel(intercomObject);
         List<DataAttribute> dataAttributes = intercomRestClient.listAttributes(intercomModel);
-        return new ExternalAppSchema(IntercomUtils.getSchema(intercomObject, dataAttributes),
-                getDeduplicationKeyEligibles(intercomModel));
+        return new ExternalAppSchema(IntercomUtils.getSchema(intercomObject, dataAttributes));
     }
 
     @Override
-    public Class<GenericObjectRadioGroupConfig> getMappingConfigType() {
-        return GenericObjectRadioGroupConfig.class;
+    public Class<IntercomAppSyncConfig> getMappingConfigType() {
+        return IntercomAppSyncConfig.class;
     }
 
-    public List<String> getDeduplicationKeyEligibles(IntercomModel intercomModel) {
+    public List<String> getPrimaryKeyEligibles(IntercomModel intercomModel) {
         switch (intercomModel) {
             case CONTACT:
                 return Lists.newArrayList(IntercomObjectFields.EMAIL, IntercomObjectFields.EXTERNAL_USER_ID);
@@ -63,6 +71,32 @@ public class IntercomAppConnector implements ExternalAppConnector<IntercomAppCon
 
     public List<AppSyncMode> getSyncModes(IntercomAppConfig config, GenericObjectRadioGroupConfig mappingConfig) {
         return Lists.newArrayList(AppSyncMode.UPDATE, AppSyncMode.UPSERT);
+    }
+
+    public List<MappingGroup> getMappingGroups(IntercomAppConfig intercomAppConfig, IntercomAppSyncConfig intercomAppSyncConfig) {
+        IntercomRestClient intercomRestClient = new IntercomRestClient(intercomAppConfig.getAccessToken());
+        IntercomObject intercomObject = IntercomObject.getObjectByName(intercomAppSyncConfig.getObject().getObjectName());
+        IntercomModel intercomModel = IntercomUtils.getIntercomModel(intercomObject);
+        List<DataAttribute> dataAttributes = intercomRestClient.listAttributes(intercomModel);
+        return MappingGroupAggregator.builder().addPrimaryKeyFields(getPrimaryKeyGroupFields(intercomModel))
+                .addFixedAppFields(getFixedGroupAppFields(intercomModel, dataAttributes)).build().getMappingGroups();
+
+    }
+
+    private List<PrimaryKeyGroupField> getPrimaryKeyGroupFields(IntercomModel intercomModel) {
+        return getPrimaryKeyEligibles(intercomModel).stream().map(field -> new PrimaryKeyGroupField(field, field, true))
+                .collect(Collectors.toList());
+
+    }
+
+    private List<FixedGroupAppField> getFixedGroupAppFields(IntercomModel intercomModel, List<DataAttribute> dataAttributes) {
+        if (intercomModel == IntercomModel.CONTACT) {
+            return dataAttributes.stream().map(DataAttribute::getName).map(field -> new FixedGroupAppField(field, field, true))
+                    .collect(Collectors.toList());
+        }
+        return dataAttributes.stream().map(DataAttribute::getName).filter(field -> !getPrimaryKeyEligibles(intercomModel).contains(field))
+                .map(field -> new FixedGroupAppField(field, field, true)).collect(Collectors.toList());
+
     }
 
     @Override

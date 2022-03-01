@@ -11,6 +11,8 @@ import Loading from "@/app/components/common/Loading";
 import _ from "lodash";
 import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
+import SelectModel from "../pipeline/step1source/SelectModel";
+import ModelType from "@/app/components/connectors/ModelType";
 
 interface ConnectorWizardProps {
   appBaseUrl: string;
@@ -98,10 +100,50 @@ const ConnectorWizard = ({
             category={category}
             typeOption={typeOption}
             onCreate={() => {
-              setCurWizardStep(curWizardStepGroup, "configure");
+              setCurWizardStep(curWizardStepGroup, "selectModelType");
             }}
-            onSelect={onFinish}
+            onSelect={(id) => {
+              if (category === "App") {
+                onFinish(id);
+              } else {
+                _.set(pipelineWizContext, "values.warehouseId", id);
+                setPipelineWizContext(pipelineWizContext);
+                if (category !== "Model") {
+                  setCurWizardStep(curWizardStepGroup, "selectModelType");
+                } else {
+                  setCurWizardStep(curWizardStepGroup, "modelType");
+                }
+              }
+            }}
           />
+        )}
+        {curWizardStep === "selectModelType" && typeOption && (
+          <SelectModel
+            category={category}
+            typeOption={typeOption}
+            onCreate={() => {
+              setCurWizardStep(curWizardStepGroup, "model");
+            }}
+            onSelect={(id: number, sourceQuery: string) => {
+              if (category !== "Model") {
+                _.set(pipelineWizContext, "values.modelId", id);
+                _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
+                setPipelineWizContext(pipelineWizContext);
+                setCurWizardStep(curWizardStepGroup, "model");
+              } else {
+                onFinish(id);
+              }
+            }}
+          />
+        )}
+        {curWizardStep === "modelType" && category == "Model" && (
+          <ModelType
+            appBaseUrl={appBaseUrl}
+            curWizardStep={curWizardStep}
+            steps={steps}
+            setCurWizardStep={setCurWizardStep}
+            // onSelect={onFinish}
+          ></ModelType>
         )}
         {curWizardStep === "configure" && typeOption && (
           <ConnectorForm

@@ -27,7 +27,8 @@ public class Pipeline {
 
     private CastledDataMapping dataMapping;
 
-    private String sourceQuery;
+    //private String sourceQuery;
+    private Long modelId;
     private PipelineStatus status;
     private PipelineSyncStatus syncStatus;
 

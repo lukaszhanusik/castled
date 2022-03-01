@@ -12,4 +12,5 @@ public class LeadAttributesResponse {
     private String requestId;
     private List<GenericAttribute> result;
     private Boolean success;
+    List<ErrorResponse> errors;
 }

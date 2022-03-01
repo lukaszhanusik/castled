@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupProfileAndError {
-    private String groupID;
+    private Object groupID;
     private List<String> failureReasons;
 }
