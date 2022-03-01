@@ -9,6 +9,7 @@ import {
 } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
+import PrePopulatedFields from "./PrePopulatedFields";
 
 export default function MappingMiscellaneousFields({
   options,
@@ -17,6 +18,7 @@ export default function MappingMiscellaneousFields({
   setFieldValue,
   setFieldTouched,
   errors,
+  appType,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
 
@@ -33,6 +35,44 @@ export default function MappingMiscellaneousFields({
       additionalFields(randomKey),
     ]);
   }
+
+  const prePopulatedRow = options.map((field) => {
+    return (
+      <PrePopulatedFields
+        key={field.value}
+        options={options}
+        onChange={(e) => {
+          setFieldValue?.(
+            keyValueDefault("warehouseField", field.value),
+            e?.value
+          );
+        }}
+        onBlur={() =>
+          setFieldTouched?.(
+            keyValueDefault("warehouseField", field.value),
+            true
+          )
+        }
+        handleDelete={(e) => {
+          e.preventDefault();
+          deleteRow(field.value);
+          setFieldValue?.(keyValueDefault("warehouseField", field.value), "");
+          setFieldValue?.(keyValueDefault("appField", field.value), "");
+        }}
+        inputChange={(e) => {
+          setFieldValue?.(
+            keyValueDefault("appField", field.value),
+            e.target.value
+          );
+        }}
+        inputBlur={() =>
+          setFieldTouched?.(keyValueDefault("appField", field.value), true)
+        }
+        inputDefaultValue={field.value}
+        selectDefaultValue={{ value: field.value, label: field.label }}
+      />
+    );
+  });
 
   function deleteRow(key: string) {
     // filter items based on key
@@ -84,6 +124,8 @@ export default function MappingMiscellaneousFields({
               title={field.title}
               description={field.description}
             >
+              {appType === "KAFKA" && prePopulatedRow}
+
               <AdditionalFields
                 key={"0x0x0x0x0x0x0x"}
                 options={options}
@@ -124,7 +166,7 @@ export default function MappingMiscellaneousFields({
   );
 }
 
-interface AdditionalFieldsProps extends DestinationFieldRowsProps {
+export interface AdditionalFieldsProps extends DestinationFieldRowsProps {
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

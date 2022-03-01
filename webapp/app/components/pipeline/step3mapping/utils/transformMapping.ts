@@ -106,8 +106,8 @@ export default function transformMapping(obj: any): MappingReturnObject {
       if (key.includes("IMPORTANT_PARAMS")) {
         let toReplace = "IMPORTANT_PARAMS-";
         let arrObjVal = {
-          warehouseField: key.replace(toReplace, ""),
-          appField: value,
+          warehouseField: value,
+          appField: key.replace(toReplace, ""),
           skipped: false,
         };
         arr[count] = Object.assign({}, arrObjVal);

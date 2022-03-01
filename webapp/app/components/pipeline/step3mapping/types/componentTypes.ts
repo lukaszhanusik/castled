@@ -13,11 +13,12 @@ export interface MappingFieldsProps {
   ) => void;
   setFieldError?: (field: string, value: string | undefined) => void;
   errors: any;
+  appType?: string;
 }
 
 export interface SchemaOptions {
   value: any;
-  description?: string;
+  label: string;
 }
 
 export interface DestinationFieldRowsProps {
