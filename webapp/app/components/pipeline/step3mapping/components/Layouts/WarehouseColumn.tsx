@@ -15,7 +15,7 @@ export default function WarehouseColumn({
     <>
       <div className="flex-column align-self-center">
         <div className="flex-column mx-4">
-          <label className="row py-1 font-weight-bold">{title}</label>
+          <label className="row py-1">{title}</label>
           <label className="row description text-muted pb-3">{description}</label>
         </div>
         <div>

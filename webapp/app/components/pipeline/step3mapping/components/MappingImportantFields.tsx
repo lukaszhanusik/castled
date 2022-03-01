@@ -24,8 +24,8 @@ export default function MappingImportantFields({
           <div className="flex-column align-self-center my-2">
             <div className="flex-column mx-1 my-2">
               <div className="column">
-                {!field.optional && <label className="required-icon"> * </label>}
                 <label className="font-weight-bold mx-1">{field.title}</label>
+                {!field.optional && <label className="required-icon"> * </label>}
               </div>
               <div className="row description text-muted px-3">
                 {field.description}

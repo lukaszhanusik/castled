@@ -103,7 +103,7 @@ export default function MappingImportantFields({
   }
 
   return (
-    <div className="row py-2">
+    <div className="row">
       {destinationFieldSection.length > 0 &&
         destinationFieldSection.map((field) => (
           <>
@@ -145,7 +145,7 @@ export default function MappingImportantFields({
               <button
                 type="button"
                 onClick={addRow}
-                className="btn btn-primary mx-2"
+                className="btn btn-primary mx-2 my-2"
               >
                 Add Row
               </button>
@@ -200,18 +200,15 @@ function DestinationFieldRows({
           placeholder={"Select a field"}
         />
       </th>
-      <th className="col-2">
-        {isDisabled && (
-          <Placeholder as="td">
-            <span className="required-icon">*</span>
-          </Placeholder>
-        )}
-        {!isDisabled && (
-          <Placeholder as="td">
-            <IconTrash onClick={handleDelete} className="delete-btn" />
-          </Placeholder>
-        )}
-      </th>
+      {isDisabled ? (
+        <Placeholder as="td" className="pb-0">
+          <label className="required-icon">*</label>
+        </Placeholder>
+      ) : (
+        <Placeholder as="td">
+          <IconTrash onClick={handleDelete} className="delete-btn" />
+        </Placeholder>
+      )}
     </tr>
   );
 }

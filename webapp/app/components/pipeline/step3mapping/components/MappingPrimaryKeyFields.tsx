@@ -21,7 +21,7 @@ export default function MappingPrimaryKeyFields({
   });
 
   return (
-    <div className="row py-2">
+    <div className="row">
       {primaryKeysSection.length > 0 &&
         primaryKeysSection.map((field) => (
           <>
@@ -57,15 +57,13 @@ export default function MappingPrimaryKeyFields({
                     placeholder={"Select a field"}
                   />
                 </th>
-                <th className="col-2">
-                  <Placeholder as="td">
-                    <span className="required-icon">*</span>
-                  </Placeholder>
-                </th>
+                <Placeholder as="td" className="pb-0">
+                  <label className="required-icon">*</label>
+                </Placeholder>
               </tr>
             </WarehouseColumn>
             <ErrorMessage errors={errors} include={"rimary"} />
-            <hr className='solid'/>
+            <hr className="solid" />
           </>
         ))}
     </div>

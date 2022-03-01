@@ -107,7 +107,7 @@ export default function MappingMiscellaneousFields({
                 }
               />
               {additionalRow}
-              <button onClick={addRow} className="btn btn-primary my-3 mx-2">
+              <button onClick={addRow} className="btn btn-primary my-2 mx-2">
                 Add row
               </button>
             </WarehouseColumn>
