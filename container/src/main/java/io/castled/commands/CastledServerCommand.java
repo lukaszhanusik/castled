@@ -55,9 +55,7 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
 
     private void runCodeLevelMigrations(){
         Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(DataMigratorAggregator.class).getDataMigratorMap();
-        migratorList.entrySet().forEach( migrator -> {
-            migrator.getValue().runDataMigration();
-        });
+        migratorList.forEach((key, value) -> value.runDataMigration());
     }
 
     private void createNewInstallationIfRequired() {
