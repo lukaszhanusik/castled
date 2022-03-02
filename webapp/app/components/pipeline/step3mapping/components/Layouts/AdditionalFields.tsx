@@ -1,6 +1,6 @@
 import { IconTrash } from "@tabler/icons";
 import { Placeholder } from "react-bootstrap";
-import Image from "react-bootstrap/image";
+import Image from "react-bootstrap/Image";
 import Select from "react-select";
 import { DestinationFieldRowsProps } from "../../types/componentTypes";
 

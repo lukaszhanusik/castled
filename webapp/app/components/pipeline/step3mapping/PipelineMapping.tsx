@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from "react";
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import Layout from "@/app/components/layout/Layout";
-import React, { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";

@@ -2,7 +2,7 @@ import Select from "react-select";
 import { AdditionalFieldsProps } from "./AdditionalFields";
 import { IconTrash } from "@tabler/icons";
 import { Placeholder } from "react-bootstrap";
-import Image from "react-bootstrap/image";
+import Image from "react-bootstrap/Image";
 
 interface PrePopulatedFieldsProps
   extends Omit<AdditionalFieldsProps, "defaultValue"> {

@@ -1,6 +1,6 @@
 import { Placeholder } from "react-bootstrap";
 import Select from "react-select";
-import Image from "react-bootstrap/image";
+import Image from "react-bootstrap/Image";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
