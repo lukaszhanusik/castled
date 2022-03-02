@@ -1,5 +1,6 @@
 package io.castled.commands;
 
+import com.google.inject.multibindings.MapBinder;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import io.castled.CastledApplication;
 import io.castled.CastledConfiguration;
@@ -8,14 +9,21 @@ import io.castled.ObjectRegistry;
 import io.castled.daos.InstallationDAO;
 import io.castled.events.CastledEventsClient;
 import io.castled.events.NewInstallationEvent;
+import io.castled.migrations.DataMigrator;
+import io.castled.migrations.MigrationType;
+import io.castled.migrations.MigratorAggregator;
 import io.castled.services.UsersService;
 import io.castled.utils.AsciiArtUtils;
+import io.castled.warehouses.WarehouseConnector;
+import io.castled.warehouses.WarehouseType;
+import io.castled.warehouses.connectors.redshift.RedshiftConnector;
 import io.dropwizard.cli.ServerCommand;
 import io.dropwizard.setup.Environment;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
@@ -26,6 +34,7 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
 
     protected void run(Environment environment, Namespace namespace, CastledConfiguration configuration) throws Exception {
         runMigrations(configuration);
+        runCodeLevelMigrations();
         super.run(environment, namespace, configuration);
         AsciiArtUtils.drawCastled();
 
@@ -46,6 +55,13 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
         }
         createNewInstallationIfRequired();
 
+    }
+
+    private void runCodeLevelMigrations(){
+        Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(MigratorAggregator.class).getMigratorList();
+        migratorList.entrySet().forEach( migrator -> {
+            migrator.getValue().migrateData();
+        });
     }
 
     private void createNewInstallationIfRequired() {

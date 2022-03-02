@@ -36,6 +36,12 @@ public interface QueryModelDAO {
             " :modelDTO.modelDetails, :modelDTO.queryModelPK, :modelDTO.demo)")
     long createModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @BindBean("user") User user);
 
+    @GetGeneratedKeys
+    @SqlUpdate("insert into query_model(team_id,warehouse_id,model_name,model_type,model_details,query_pk,demo)" +
+            " values(:teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
+            " :modelDTO.modelDetails, :modelDTO.queryModelPK, :modelDTO.demo)")
+    long createQueryModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @Bind("teamId") Long teamId);
+
     @SqlQuery("select * from query_model where model_name = :modelName and is_deleted = 0")
     QueryModel getQueryModelByModelName(@Bind("modelName") String modelName);
 
