@@ -7,6 +7,7 @@ export interface MappingGroup {
   title: string;
   description: string;
   type: string;
+  autoMap?: boolean;
   primaryKeys?: FieldElement[];
   mandatoryFields?: FieldElement[];
   optionalFields?: FieldElement[];

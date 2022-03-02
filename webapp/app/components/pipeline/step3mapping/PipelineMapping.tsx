@@ -95,20 +95,6 @@ const PipelineMapping = ({
     misclFieldsValidation: "",
   };
 
-  if (pipelineSchema && pipelineWizContext.appType?.value === "KAFKA") {
-    const kafkaInitialValues = {};
-    for (let ele of pipelineSchema?.warehouseSchema.fields) {
-      let key = ele.fieldName;
-      let value = ele.fieldName;
-      const initialFieldValues = {
-        [`MISCELLANEOUS_FIELDS-warehouseField-${key}`]: value,
-        [`MISCELLANEOUS_FIELDS-appField-${key}`]: value,
-      };
-      Object.assign(kafkaInitialValues, initialFieldValues);
-    }
-    Object.assign(initialValuesForValidation, kafkaInitialValues);
-  }
-
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -127,6 +113,7 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
 
+              // console.log(values);
               pipelineWizContext.values.mapping = transformMapping(values);
 
               pipelineWizContext.values.mapping.type =
@@ -152,7 +139,6 @@ const PipelineMapping = ({
                   setFieldTouched={setFieldTouched}
                   setFieldError={setFieldError}
                   errors={errors}
-                  appType={pipelineWizContext.appType?.value}
                 />
                 <ErrorMessage errors={errors} include={"appFieldRepeating"} />
                 <ButtonSubmit submitting={isSubmitting}>
