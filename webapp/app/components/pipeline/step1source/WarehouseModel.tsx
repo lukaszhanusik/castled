@@ -16,6 +16,7 @@ import { Button } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
+import modelService from "@/app/services/modelService";
 
 const WarehouseModel = ({
   curWizardStep,
@@ -38,28 +39,30 @@ const WarehouseModel = ({
   );
   const { isOss } = useSession();
 
-  const updateDemoQueries = (whId: number) => {
-    warehouseService.demoQueries(whId).then(({ data }) => {
-      setDemoQueries(data);
-    });
-  };
   useEffect(() => {
     if (!pipelineWizContext) return;
 
     if (pipelineWizContext.values?.sourceQuery) {
+      setDemoQueries([pipelineWizContext.values?.sourceQuery]);
       setQuery(pipelineWizContext.values?.sourceQuery);
       return;
     }
 
     if (pipelineWizContext.isDemo) {
-      warehouseService.get().then(({ data }) => {
-        const demoWarehouseId = data.find((d) => d.demo)?.id;
-        if (!demoWarehouseId) {
+      modelService.get().then(({ data }) => {
+        const demoModel = data.find((d) => d.demo);
+        
+        if (!demoModel) {
           setCurWizardStep("source", "selectType");
         } else {
-          getDemoQuery(demoWarehouseId);
-          setWarehouseId(demoWarehouseId);
-          _.set(pipelineWizContext, "values.warehouseId", demoWarehouseId);
+          setQuery(demoModel.modelDetails?.sourceQuery);
+          _.set(
+            pipelineWizContext,
+            "values.warehouseId",
+            demoModel.warehouse.id
+          );
+          _.set(pipelineWizContext, "values.modelId", demoModel.id);
+          setWarehouseId(demoModel.warehouse.id);
           setPipelineWizContext(pipelineWizContext);
         }
       });
@@ -73,9 +76,7 @@ const WarehouseModel = ({
     warehouseId,
     pipelineWizContext.values?.warehouseId,
   ]);
-  const getDemoQuery = async (warehouseId: number) => {
-    updateDemoQueries(warehouseId!);
-  };
+
   const getQueryResults = (queryId: string) => {
     warehouseService
       .executeQueryResults(queryId)
