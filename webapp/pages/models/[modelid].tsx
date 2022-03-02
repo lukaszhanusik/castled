@@ -112,36 +112,14 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
           {/* <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView> */}
         </Tab>
         <Tab eventKey="Details" title="Column Details">
-          {/* {(() => {
-            if (pipeline && pipeline.app && pipeline.app.type == "RESTAPI") {
-              return (
-                <PipelineMappingViewRestApi
-                  sourceQuery={pipelineRestApi?.sourceQuery}
-                  dataMapping={pipelineRestApi?.dataMapping}
-                ></PipelineMappingViewRestApi>
-              );
-            } else {
-              return (
-                <PipelineMappingView
-                  sourceQuery={pipeline?.sourceQuery}
-                  dataMapping={pipeline?.dataMapping}
-                ></PipelineMappingView>
-              );
-            }
-          })()} */}
+
         </Tab>
         <Tab eventKey="Syncs" title="Syncs">
           <ModelSyncView
             activeSyncDetails={model ? model.activeSyncDetails : []}
             activeSyncsCount={model ? model.activeSyncsCount : 0}
           />
-          {/* <PipelineSettingsView
-            key={pipeline?.id}
-            pipelineId={pipeline?.id}
-            name={pipeline?.name}
-            schedule={pipeline?.jobSchedule}
-            queryMode={pipeline?.queryMode}
-          ></PipelineSettingsView> */}
+
         </Tab>
       </Tabs>
     </Layout>

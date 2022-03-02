@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
+  const router = useRouter();
   const headers = ["Model Name", "Source", "Type", "Pipelines"];
   useEffect(() => {
     modelService
@@ -50,7 +51,7 @@ const Models = () => {
             </thead>
             <tbody>
               {models.map((model, idx) => (
-                <tr key={idx}>
+                <tr key={idx} onClick={() => router.push(`/models/${model.id}`)}>
                   <td>
                     <div className="w-50">
                       {model.modelName}
