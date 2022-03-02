@@ -1,15 +1,10 @@
-import { IconTrash } from "@tabler/icons";
-import { useState } from "react";
-import { Button, Placeholder } from "react-bootstrap";
-import Image from "react-bootstrap/image";
-import Select from "react-select";
-import {
-  DestinationFieldRowsProps,
-  MappingFieldsProps,
-} from "../types/componentTypes";
+import { useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
+import { MappingFieldsProps } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
-import PrePopulatedFields from "./PrePopulatedFields";
+import PrePopulatedFields from "./Layouts/PrePopulatedFields";
+import { AdditionalFields } from "./Layouts/AdditionalFields";
 
 export default function MappingMiscellaneousFields({
   options,
@@ -21,6 +16,12 @@ export default function MappingMiscellaneousFields({
   appType,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
+  const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    if (prePopulatedRow)
+      setPopulatedRow((prev) => [...prev, ...prePopulatedRow]);
+  }, []);
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
   const miscellaneousFieldSection = mappingGroups.filter((fields) => {
@@ -55,7 +56,7 @@ export default function MappingMiscellaneousFields({
         }
         handleDelete={(e) => {
           e.preventDefault();
-          deleteRow(field.value);
+          deletePopulatedRow(field.value);
           setFieldValue?.(keyValueDefault("warehouseField", field.value), "");
           setFieldValue?.(keyValueDefault("appField", field.value), "");
         }}
@@ -73,6 +74,15 @@ export default function MappingMiscellaneousFields({
       />
     );
   });
+
+  function deletePopulatedRow(key: string) {
+    // filter items based on key
+    setPopulatedRow((prevState) =>
+      prevState.filter((item) => {
+        return item.key !== key;
+      })
+    );
+  }
 
   function deleteRow(key: string) {
     // filter items based on key
@@ -124,7 +134,7 @@ export default function MappingMiscellaneousFields({
               title={field.title}
               description={field.description}
             >
-              {appType === "KAFKA" && prePopulatedRow}
+              {appType === "KAFKA" && populatedRow}
 
               <AdditionalFields
                 key={"0x0x0x0x0x0x0x"}
@@ -163,53 +173,5 @@ export default function MappingMiscellaneousFields({
           </>
         ))}
     </div>
-  );
-}
-
-export interface AdditionalFieldsProps extends DestinationFieldRowsProps {
-  inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-function AdditionalFields({
-  options,
-  values,
-  onChange,
-  onBlur,
-  handleDelete,
-  inputChange,
-  inputBlur,
-}: AdditionalFieldsProps) {
-  return (
-    <tr>
-      <th className="col-6">
-        <Select
-          options={options}
-          onChange={onChange}
-          onBlur={onBlur}
-          isClearable
-          placeholder={"Select a column"}
-        />
-      </th>
-      <th>
-        <Image
-          src="/images/arrow-right.svg"
-          alt="Right Arrow for Mapping"
-          className="py-2"
-        />
-      </th>
-      <th className="col-6">
-        <input
-          type="text"
-          placeholder="Enter a field"
-          className="form-control p-2"
-          onChange={inputChange}
-          onBlur={inputBlur}
-        />
-      </th>
-      <Placeholder as="td">
-        <IconTrash onClick={handleDelete} className="delete-btn" />
-      </Placeholder>
-    </tr>
   );
 }

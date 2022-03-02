@@ -1,7 +1,7 @@
 import Select from "react-select";
-import { AdditionalFieldsProps } from "./MappingMiscellaneousFields";
+import { AdditionalFieldsProps } from "./AdditionalFields";
 import { IconTrash } from "@tabler/icons";
-import { Button, Placeholder } from "react-bootstrap";
+import { Placeholder } from "react-bootstrap";
 import Image from "react-bootstrap/image";
 
 interface PrePopulatedFieldsProps
@@ -54,4 +54,4 @@ export default function PrePopulatedFields({
       </Placeholder>
     </tr>
   );
-} 
+}
