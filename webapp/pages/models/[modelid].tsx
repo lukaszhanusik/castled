@@ -38,6 +38,8 @@ import { ScheduleType } from "@/app/common/enums/ScheduleType";
 import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
 import TimeAgo from "react-timeago";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
+import ModelQueryView from "@/app/components/model/ModelQueryView";
+import { ModelSyncView } from "@/app/components/model/ModelSyncView";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const modelid = routerUtils.getInt(query.modelid);
@@ -106,6 +108,7 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       </div>
       <Tabs defaultActiveKey="Query" className="mb-3">
         <Tab eventKey="Query" title="Query">
+          <ModelQueryView source={model?.modelDetails.sourceQuery} />
           {/* <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView> */}
         </Tab>
         <Tab eventKey="Details" title="Column Details">
@@ -127,7 +130,11 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
             }
           })()} */}
         </Tab>
-        <Tab eventKey="Schedule" title="Schedule">
+        <Tab eventKey="Syncs" title="Syncs">
+          <ModelSyncView
+            activeSyncDetails={model ? model.activeSyncDetails : []}
+            activeSyncsCount={model ? model.activeSyncsCount : 0}
+          />
           {/* <PipelineSettingsView
             key={pipeline?.id}
             pipelineId={pipeline?.id}
