@@ -19,6 +19,7 @@ export default function MappingPrimaryKeyFields({
 }: MappingPrimaryKeyFieldsProps) {
   const [form, setForm] = useState({});
 
+  // On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
     if (getLocalStorageItem) {
@@ -31,6 +32,7 @@ export default function MappingPrimaryKeyFields({
     return fields.type === "PRIMARY_KEYS" && fields;
   });
 
+  // AddKeys to localStorage
   function addKeysToState(e: any, type: string) {
     const form = {};
     if (primaryKeysSection.length > 0) {
@@ -47,6 +49,7 @@ export default function MappingPrimaryKeyFields({
     localStorage.setItem("primaryKeysForm", JSON.stringify(combineAllItems));
   }
 
+  // Get default values from localStorage
   function defaultValue(field: string, type: string) {
     const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
     if (getLocalStorageItem) {
