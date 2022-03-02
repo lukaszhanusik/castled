@@ -1,4 +1,4 @@
-export interface ModelsResponseDto {
+export interface ModelResponseDto {
   id:                number;
   teamId:            number;
   warehouse:         Warehouse;
