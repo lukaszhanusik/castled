@@ -43,6 +43,7 @@ const WarehouseModel = ({
     if (!pipelineWizContext) return;
 
     if (pipelineWizContext.values?.sourceQuery) {
+      setDemoQueries([pipelineWizContext.values?.sourceQuery]);
       setQuery(pipelineWizContext.values?.sourceQuery);
       return;
     }
@@ -50,7 +51,7 @@ const WarehouseModel = ({
     if (pipelineWizContext.isDemo) {
       modelService.get().then(({ data }) => {
         const demoModel = data.find((d) => d.demo);
-        console.log(demoModel);
+        
         if (!demoModel) {
           setCurWizardStep("source", "selectType");
         } else {
@@ -61,6 +62,7 @@ const WarehouseModel = ({
             demoModel.warehouse.id
           );
           _.set(pipelineWizContext, "values.modelId", demoModel.id);
+          setWarehouseId(demoModel.warehouse.id);
           setPipelineWizContext(pipelineWizContext);
         }
       });
