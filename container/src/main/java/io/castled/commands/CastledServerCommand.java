@@ -10,7 +10,7 @@ import io.castled.events.CastledEventsClient;
 import io.castled.events.NewInstallationEvent;
 import io.castled.migrations.DataMigrator;
 import io.castled.migrations.MigrationType;
-import io.castled.migrations.MigratorAggregator;
+import io.castled.migrations.DataMigratorAggregator;
 import io.castled.services.UsersService;
 import io.castled.utils.AsciiArtUtils;
 import io.dropwizard.cli.ServerCommand;
@@ -54,7 +54,7 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
     }
 
     private void runCodeLevelMigrations(){
-        Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(MigratorAggregator.class).getMigratorList();
+        Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(DataMigratorAggregator.class).getDataMigratorMap();
         migratorList.entrySet().forEach( migrator -> {
             migrator.getValue().runDataMigration();
         });
