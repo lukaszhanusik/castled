@@ -5,7 +5,16 @@ import Select from "react-select";
 import { DestinationFieldRowsProps } from "../../types/componentTypes";
 
 export default function DestinationFieldRows({
-  options, destinationFieldSection, defaultValue, isDisabled, onChangeWarehouse, onChangeAppField, onBlur, handleDelete, values, isClearable,
+  options,
+  destinationFieldSection,
+  defaultValue,
+  isDisabled,
+  onChangeWarehouse,
+  onChangeAppField,
+  onBlur,
+  handleDelete,
+  values,
+  isClearable,
 }: DestinationFieldRowsProps) {
   return (
     <tr>
@@ -15,29 +24,34 @@ export default function DestinationFieldRows({
           onChange={onChangeWarehouse}
           onBlur={onBlur}
           isClearable={isClearable}
-          placeholder={"Select a column"} />
+          placeholder={"Select a column"}
+        />
       </th>
       <th>
         <Image
           src="/images/arrow-right.svg"
           alt="Right Arrow for Mapping"
-          className="py-2" />
+          className="py-2"
+        />
       </th>
       <th className="col-6">
         <Select
-          options={destinationFieldSection &&
+          options={
+            destinationFieldSection &&
             destinationFieldSection[0].optionalFields?.map((items: any) => {
               return {
                 value: items.fieldName,
                 label: items.fieldDisplayName || items.fieldName,
               };
-            })}
+            })
+          }
           defaultValue={defaultValue}
           isDisabled={isDisabled}
           onBlur={onBlur}
           isClearable={isClearable}
           onChange={onChangeAppField}
-          placeholder={"Select a field"} />
+          placeholder={"Select a field"}
+        />
       </th>
       {isDisabled ? (
         <Placeholder as="td" className="pb-0">
