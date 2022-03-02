@@ -17,7 +17,6 @@ export interface DynamicMappingFieldsProps {
   ) => void;
   setFieldError?: (field: string, message: string | undefined) => void;
   errors: any;
-  appType?: string;
 }
 
 const fieldRenderers: {
@@ -36,7 +35,6 @@ const DynamicMappingFields = ({
   values,
   setFieldValue,
   errors,
-  appType
 }: 
 DynamicMappingFieldsProps) => {
   if (
@@ -76,7 +74,6 @@ DynamicMappingFieldsProps) => {
         values={values}
         setFieldValue={setFieldValue}
         errors={errors}
-        appType={appType}
       />
     );
   }

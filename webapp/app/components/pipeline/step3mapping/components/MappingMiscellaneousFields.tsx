@@ -13,14 +13,25 @@ export default function MappingMiscellaneousFields({
   setFieldValue,
   setFieldTouched,
   errors,
-  appType,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    if (prePopulatedRow)
+    if (prePopulatedRow) {
       setPopulatedRow((prev) => [...prev, ...prePopulatedRow]);
+      const initialValues = {};
+      for (let ele of options) {
+        let key = ele.value;
+        let value = ele.value;
+        const initialFieldValues = {
+          [`MISCELLANEOUS_FIELDS-warehouseField-${key}`]: value,
+          [`MISCELLANEOUS_FIELDS-appField-${key}`]: value,
+        };
+        Object.assign(initialValues, initialFieldValues);
+      }
+      Object.assign(values, initialValues);
+    }
   }, []);
 
   // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
@@ -37,43 +48,45 @@ export default function MappingMiscellaneousFields({
     ]);
   }
 
-  const prePopulatedRow = options.map((field) => {
-    return (
-      <PrePopulatedFields
-        key={field.value}
-        options={options}
-        onChange={(e) => {
-          setFieldValue?.(
-            keyValueDefault("warehouseField", field.value),
-            e?.value
-          );
-        }}
-        onBlur={() =>
-          setFieldTouched?.(
-            keyValueDefault("warehouseField", field.value),
-            true
-          )
-        }
-        handleDelete={(e) => {
-          e.preventDefault();
-          deletePopulatedRow(field.value);
-          setFieldValue?.(keyValueDefault("warehouseField", field.value), "");
-          setFieldValue?.(keyValueDefault("appField", field.value), "");
-        }}
-        inputChange={(e) => {
-          setFieldValue?.(
-            keyValueDefault("appField", field.value),
-            e.target.value
-          );
-        }}
-        inputBlur={() =>
-          setFieldTouched?.(keyValueDefault("appField", field.value), true)
-        }
-        inputDefaultValue={field.value}
-        selectDefaultValue={{ value: field.value, label: field.label }}
-      />
-    );
-  });
+  const prePopulatedRow =
+    miscellaneousFieldSection[0].autoMap &&
+    options.map((field) => {
+      return (
+        <PrePopulatedFields
+          key={field.value}
+          options={options}
+          onChange={(e) => {
+            setFieldValue?.(
+              keyValueDefault("warehouseField", field.value),
+              e?.value
+            );
+          }}
+          onBlur={() =>
+            setFieldTouched?.(
+              keyValueDefault("warehouseField", field.value),
+              true
+            )
+          }
+          handleDelete={(e) => {
+            e.preventDefault();
+            deletePopulatedRow(field.value);
+            setFieldValue?.(keyValueDefault("warehouseField", field.value), "");
+            setFieldValue?.(keyValueDefault("appField", field.value), "");
+          }}
+          inputChange={(e) => {
+            setFieldValue?.(
+              keyValueDefault("appField", field.value),
+              e.target.value
+            );
+          }}
+          inputBlur={() =>
+            setFieldTouched?.(keyValueDefault("appField", field.value), true)
+          }
+          inputDefaultValue={field.value}
+          selectDefaultValue={{ value: field.value, label: field.label }}
+        />
+      );
+    });
 
   function deletePopulatedRow(key: string) {
     // filter items based on key
@@ -134,7 +147,7 @@ export default function MappingMiscellaneousFields({
               title={field.title}
               description={field.description}
             >
-              {appType === "KAFKA" && populatedRow}
+              {miscellaneousFieldSection[0].autoMap && populatedRow}
 
               <AdditionalFields
                 key={"0x0x0x0x0x0x0x"}
