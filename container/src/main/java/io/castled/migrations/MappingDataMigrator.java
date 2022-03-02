@@ -7,6 +7,7 @@ import io.castled.ObjectRegistry;
 import io.castled.daos.PipelineDAO;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
+import io.castled.migrations.models.MigrationDetails;
 import io.castled.models.Pipeline;
 import io.castled.models.QueryModelPK;
 import io.castled.models.TargetFieldsMapping;
@@ -14,14 +15,15 @@ import io.castled.models.Warehouse;
 import io.castled.services.PipelineService;
 import io.castled.services.QueryModelService;
 import io.castled.warehouses.WarehouseService;
-import io.jsonwebtoken.lang.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MappingDataMigrator implements DataMigrator{
+@Slf4j
+public class MappingDataMigrator implements DataMigrator {
     @Override
     public MigrationType getMigrationType() {
         return MigrationType.MAPPING_MIGRATION;
@@ -30,102 +32,93 @@ public class MappingDataMigrator implements DataMigrator{
     @Override
     public MigrationResult migrateData() {
 
-        PipelineDAO migrationsDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(PipelineDAO.class);
+        MigrationsDAO migrationsDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(MigrationsDAO.class);
 
-        PipelineService pipelineService = ObjectRegistry.getInstance(PipelineService.class);
-        WarehouseService warehouseService = ObjectRegistry.getInstance(WarehouseService.class);
-        pipelineService.getPipeline(1l);
+        MigrationDetails migrationDetails = migrationsDAO.getMigrationDetails(getMigrationType());
+        if(migrationDetails!=null && migrationDetails.getStatus().equals(getMigrationType())){
+            return new MigrationResult();
+        }
 
-        QueryModelService queryModelService = ObjectRegistry.getInstance(QueryModelService.class);
+        Long migrationDetailsId = null;
+        if(migrationDetails==null){
+            migrationDetailsId =  migrationsDAO.createMigrationDetails(getMigrationType());
+        }
+
+        try{
+            PipelineDAO pipelineDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(PipelineDAO.class);
+            PipelineService pipelineService = ObjectRegistry.getInstance(PipelineService.class);
+            WarehouseService warehouseService = ObjectRegistry.getInstance(WarehouseService.class);
+            QueryModelService queryModelService = ObjectRegistry.getInstance(QueryModelService.class);
 
 
-        List<Pipeline> pipelineList = migrationsDAO.listPipelinesTobeMigrated();
+            List<Pipeline> pipelineList = pipelineDAO.fetchPipelinesWithoutModelId();
 
-        Map<Long, Set<Long>> warehousePipelineMap = Maps.newHashMap();
-        Map<Long,Pipeline> pipelineMap = Maps.newHashMap();
+            Map<Long, Set<Long>> warehousePipelineMap = Maps.newHashMap();
+            Map<Long, Pipeline> pipelineMap = Maps.newHashMap();
+            Map<Long, Map<String, Long>> handledQueryMap = Maps.newHashMap();
 
-        Map<Long,Map<String,Long>> handledQueryMap = Maps.newHashMap();
-
-        pipelineList.stream().forEach(pipeline -> {
-
-            pipelineMap.put(pipeline.getId(),pipeline);
-
-            if(!warehousePipelineMap.containsKey(pipeline.getWarehouseId())){
-                warehousePipelineMap.put(pipeline.getWarehouseId(), Sets.newHashSet());
-            }
-            warehousePipelineMap.get(pipeline.getWarehouseId()).add(pipeline.getId());
-
-        });
-
-        warehousePipelineMap.entrySet().forEach(warehousePipelineMapEntrySet ->{
-            Set<Long> pipelines = warehousePipelineMapEntrySet.getValue();
-            Long warehouseId = warehousePipelineMapEntrySet.getKey();
-
-            Warehouse warehouse = warehouseService.getWarehouse(warehouseId);
-
-            pipelines.forEach(pipelineId->{
-                Pipeline pipeline = pipelineMap.get(pipelineId);
-                String sourceQuery = pipeline.getSourceQuery();
-
-                Long modelId = null;
-
-                if(!handledQueryMap.containsKey(warehouseId)){
-                    handledQueryMap.put(warehouseId,Maps.newHashMap());
+            pipelineList.stream().forEach(pipeline -> {
+                pipelineMap.put(pipeline.getId(), pipeline);
+                if (!warehousePipelineMap.containsKey(pipeline.getWarehouseId())) {
+                    warehousePipelineMap.put(pipeline.getWarehouseId(), Sets.newHashSet());
                 }
-
-                if(handledQueryMap.containsKey(warehouseId) && handledQueryMap.get(warehouseId).containsKey(sourceQuery)
-                        && handledQueryMap.get(warehouseId).get(sourceQuery)!=null){
-                    //model already created, can you the same model iD
-                    modelId = handledQueryMap.get(warehouseId).get(sourceQuery);
-                }
-
-
-
-                if(modelId==null){
-                    List<String> oldAppPKs = pipeline.getDataMapping().getPrimaryKeys();
-
-                    Set<String> newWarehousePKs = Sets.newHashSet();
-
-                    if(pipeline.getDataMapping() instanceof TargetFieldsMapping){
-                        TargetFieldsMapping targetFieldsMapping = (TargetFieldsMapping) pipeline.getDataMapping();
-                        targetFieldsMapping.getFieldMappings().forEach(fieldMapping -> {
-                            if(oldAppPKs.contains(fieldMapping.getAppField())){
-                                newWarehousePKs.add(fieldMapping.getWarehouseField());
-                            }
-                        });
-                    }
-
-
-                    ModelInputDTO modelInputDTO = new ModelInputDTO();
-                    modelInputDTO.setWarehouseId(warehouseId);
-                    modelInputDTO.setModelName("Model-"+pipelineId);
-                    modelInputDTO.setModelType("SQL");
-                    modelInputDTO.setDemo(warehouse.isDemo());
-
-                    SqlQueryModelDetails sqlQueryModelDetails = new SqlQueryModelDetails();
-                    sqlQueryModelDetails.setSourceQuery(sourceQuery);
-                    modelInputDTO.setModelDetails(sqlQueryModelDetails);
-
-                    QueryModelPK queryModelPK = new QueryModelPK();
-                    //What to do?
-                    if(Collections.isEmpty(newWarehousePKs)){
-
-                    }
-                    queryModelPK.setPrimaryKeys(Lists.newArrayList(newWarehousePKs));
-                    modelInputDTO.setQueryModelPK(queryModelPK);
-
-                    modelId = queryModelService.createQueryModel(modelInputDTO,pipeline.getTeamId());
-                    handledQueryMap.get(warehouseId).put(sourceQuery,modelId);
-
-                }
-                //update modelId in pipeline
-                if(modelId!=null){
-
-                }
+                warehousePipelineMap.get(pipeline.getWarehouseId()).add(pipeline.getId());
             });
-        });
 
+            warehousePipelineMap.forEach((warehouseId, pipelines) -> {
+                Warehouse warehouse = warehouseService.getWarehouse(warehouseId);
+                pipelines.forEach(pipelineId -> {
+                    Long modelId = null;
 
+                    Pipeline pipeline = pipelineMap.get(pipelineId);
+                    String sourceQuery = pipeline.getSourceQuery();
+                    if (!handledQueryMap.containsKey(warehouseId)) {
+                        handledQueryMap.put(warehouseId, Maps.newHashMap());
+                    }
+
+                    if (handledQueryMap.containsKey(warehouseId) && handledQueryMap.get(warehouseId).containsKey(sourceQuery)
+                            && handledQueryMap.get(warehouseId).get(sourceQuery) != null) {
+                        //model already created, can you the same model iD
+                        modelId = handledQueryMap.get(warehouseId).get(sourceQuery);
+                    }
+
+                    if (modelId == null) {
+                        List<String> oldAppPKs = pipeline.getDataMapping().getPrimaryKeys();
+                        Set<String> newWarehousePKs = Sets.newHashSet();
+
+                        if (pipeline.getDataMapping() instanceof TargetFieldsMapping) {
+                            TargetFieldsMapping targetFieldsMapping = (TargetFieldsMapping) pipeline.getDataMapping();
+                            targetFieldsMapping.getFieldMappings().forEach(fieldMapping -> {
+                                if (oldAppPKs.contains(fieldMapping.getAppField())) {
+                                    newWarehousePKs.add(fieldMapping.getWarehouseField());
+                                }
+                            });
+                        }
+
+                        ModelInputDTO modelInputDTO = new ModelInputDTO();
+                        modelInputDTO.setWarehouseId(warehouseId);
+                        modelInputDTO.setModelName("Model-" + pipeline.getName());
+                        modelInputDTO.setModelType("SQL");
+                        modelInputDTO.setDemo(warehouse.isDemo());
+                        SqlQueryModelDetails sqlQueryModelDetails = new SqlQueryModelDetails();
+                        sqlQueryModelDetails.setSourceQuery(sourceQuery);
+                        modelInputDTO.setModelDetails(sqlQueryModelDetails);
+                        QueryModelPK queryModelPK = new QueryModelPK();
+                        queryModelPK.setPrimaryKeys(Lists.newArrayList(newWarehousePKs));
+                        modelInputDTO.setQueryModelPK(queryModelPK);
+                        modelId = queryModelService.createQueryModel(modelInputDTO, pipeline.getTeamId());
+                        handledQueryMap.get(warehouseId).put(sourceQuery, modelId);
+                    }
+                    //update modelId in pipeline
+                    if (modelId != null) {
+                        pipelineDAO.updateModelIdForPipeline(pipelineId, modelId);
+                    }
+                });
+            });
+            migrationsDAO.updateMigrationStatus(getMigrationType(),MigrationStatus.SUCCESS);
+        }catch(Exception ex){
+            migrationsDAO.updateMigrationStatus(getMigrationType(),MigrationStatus.FAILURE);
+        }
         return null;
     }
 }

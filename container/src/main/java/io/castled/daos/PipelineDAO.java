@@ -89,8 +89,11 @@ public interface PipelineDAO {
     @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by model_id")
     List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId);
 
-    @SqlQuery("select * from pipelines where source_query is not null and is_deleted = 0 ")
-    List<Pipeline> listPipelinesTobeMigrated();
+    @SqlQuery("select * from pipelines where source_query is not null and model_id is null and is_deleted = 0 ")
+    List<Pipeline> fetchPipelinesWithoutModelId();
+
+    @SqlUpdate("update pipelines set model_id =:modelId where id = :id")
+    void updateModelIdForPipeline(@Bind("id") Long id, @Bind("modelId") Long modelId);
 
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 
