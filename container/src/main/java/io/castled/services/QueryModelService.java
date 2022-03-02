@@ -15,6 +15,7 @@ import io.castled.models.QueryModel;
 import io.castled.models.Warehouse;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
+import io.castled.schema.models.FieldSchema;
 import io.castled.warehouses.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
@@ -117,9 +118,19 @@ public class QueryModelService {
 
     private ModelDetailsDTO convertToModelDetailsDTO(Long teamId, QueryModel queryModel) {
         Warehouse warehouse = warehouseService.getWarehouse(queryModel.getWarehouseId());
+        List<FieldSchema> fieldSchemas = null;
+        QueryModelDetails modelDetails = queryModel.getModelDetails();
+        if (modelDetails instanceof SqlQueryModelDetails) {
+            SqlQueryModelDetails sqlQueryModelDetails = (SqlQueryModelDetails) modelDetails;
+            try {
+                fieldSchemas = warehouseService.fetchSchema(warehouse.getId(), sqlQueryModelDetails.getSourceQuery()).getFieldSchemas();
+            } catch (Exception e) {
+                log.error("Warehouse column details fetch failed {}",e.getMessage());
+            }
+        }
         List<Pipeline> pipelines = pipelineService.listPipelinesByModelId(teamId, queryModel.getId());
         List<PipelineDTO> pipelineDTOS = pipelines.stream().map(PipelineDTOMapper.INSTANCE::toDetailedDTO).collect(Collectors.toList());
-        return QueryModelDTOMapper.toDetailedDTO(queryModel, warehouse, pipelineDTOS);
+        return QueryModelDTOMapper.toDetailedDTO(queryModel, warehouse, fieldSchemas, pipelineDTOS);
     }
 
     private Map<Long, Warehouse> prepareWarehouseMap(List<QueryModel> queryModels) {

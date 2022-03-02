@@ -5,6 +5,7 @@ import io.castled.dtos.WarehouseDetails;
 import io.castled.dtos.querymodel.ModelDetailsDTO;
 import io.castled.models.QueryModel;
 import io.castled.models.Warehouse;
+import io.castled.schema.models.FieldSchema;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
@@ -32,14 +33,14 @@ public class QueryModelDTOMapper {
         return modelDetailsDTO.build();
     }
 
-    public static ModelDetailsDTO toDetailedDTO(QueryModel queryModel, Warehouse warehouse, List<PipelineDTO> pipelineDTOs) {
+    public static ModelDetailsDTO toDetailedDTO(QueryModel queryModel, Warehouse warehouse, List<FieldSchema> warehouseFieldSchemas, List<PipelineDTO> pipelineDTOs) {
         if (queryModel == null) {
             return null;
         }
 
         ModelDetailsDTO.ModelDetailsDTOBuilder modelDetailsDTO = ModelDetailsDTO.builder();
         modelDetailsDTO.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
-                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build());
+                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).columnDetails(warehouseFieldSchemas).build());
         modelDetailsDTO.id(queryModel.getId());
         modelDetailsDTO.userId(queryModel.getUserId());
         modelDetailsDTO.teamId(queryModel.getTeamId());

@@ -1,10 +1,13 @@
 package io.castled.dtos;
 
+import io.castled.schema.models.FieldSchema;
 import io.castled.warehouses.WarehouseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -16,4 +19,5 @@ public class WarehouseDetails {
     private String name;
     private WarehouseType type;
     private String logoUrl;
+    List<FieldSchema> columnDetails;
 }
