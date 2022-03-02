@@ -31,9 +31,9 @@ import java.util.List;
 public interface QueryModelDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into query_model(user_id, team_id,warehouse_id,model_name,model_type,model_details,query_pk)" +
+    @SqlUpdate("insert into query_model(user_id, team_id,warehouse_id,model_name,model_type,model_details,query_pk,demo)" +
             " values(:user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
-            " :modelDTO.modelDetails, :modelDTO.queryModelPK)")
+            " :modelDTO.modelDetails, :modelDTO.queryModelPK, :modelDTO.demo)")
     long createModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @BindBean("user") User user);
 
     @SqlQuery("select * from query_model where model_name = :modelName and is_deleted = 0")
@@ -89,9 +89,10 @@ public interface QueryModelDAO {
             QueryModelPK queryModelPK = JsonUtils.jsonStringToObject(rs.getString(TableFields.WAREHOUSE_PK), QueryModelPK.class);
             QueryModelDetails modelDetails = JsonUtils.jsonStringToObject(rs.getString(TableFields.QUERY_MODEL_DETAILS), QueryModelDetails.class);
 
-            return QueryModel.builder().id(rs.getLong(TableFields.ID)).modelName(rs.getString(TableFields.MODEL_NAME)).modelType(rs.getString(TableFields.MODEL_TYPE))
-                    .teamId(rs.getLong(TableFields.TEAM_ID)).modelDetails(modelDetails).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
-                    .queryModelPK(queryModelPK).build();
+            return QueryModel.builder().id(rs.getLong(TableFields.ID)).modelName(rs.getString(TableFields.MODEL_NAME))
+                    .modelType(rs.getString(TableFields.MODEL_TYPE)).teamId(rs.getLong(TableFields.TEAM_ID))
+                    .modelDetails(modelDetails).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
+                    .queryModelPK(queryModelPK).demo(rs.getBoolean(TableFields.DEMO_MODEL)).build();
         }
     }
 }
