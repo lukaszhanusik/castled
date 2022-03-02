@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MigrationDetails {
+    private Long id;
     private MigrationType migrationType;
     private MigrationStatus status;
     private String details;

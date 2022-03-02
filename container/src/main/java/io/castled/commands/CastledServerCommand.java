@@ -1,6 +1,5 @@
 package io.castled.commands;
 
-import com.google.inject.multibindings.MapBinder;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import io.castled.CastledApplication;
 import io.castled.CastledConfiguration;
@@ -14,9 +13,6 @@ import io.castled.migrations.MigrationType;
 import io.castled.migrations.MigratorAggregator;
 import io.castled.services.UsersService;
 import io.castled.utils.AsciiArtUtils;
-import io.castled.warehouses.WarehouseConnector;
-import io.castled.warehouses.WarehouseType;
-import io.castled.warehouses.connectors.redshift.RedshiftConnector;
 import io.dropwizard.cli.ServerCommand;
 import io.dropwizard.setup.Environment;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -60,7 +56,7 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
     private void runCodeLevelMigrations(){
         Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(MigratorAggregator.class).getMigratorList();
         migratorList.entrySet().forEach( migrator -> {
-            migrator.getValue().migrateData();
+            migrator.getValue().runDataMigration();
         });
     }
 
