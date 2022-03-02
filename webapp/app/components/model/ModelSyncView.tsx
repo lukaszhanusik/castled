@@ -1,11 +1,13 @@
 import { Col, Row, Table } from "react-bootstrap";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
+import { useRouter } from "next/router";
 
 export const ModelSyncView = ({
   activeSyncDetails,
   activeSyncsCount,
 }: Pick<ModelResponseDto, "activeSyncDetails" | "activeSyncsCount">) => {
-  // generate hours and minutes from seconds
+  const router = useRouter();
+
   const generateTime = (seconds: number) => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor(seconds / 3600);
@@ -38,7 +40,10 @@ export const ModelSyncView = ({
         <tbody>
           {activeSyncDetails &&
             activeSyncDetails.map((field, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                onClick={() => router.push(`/pipelines/${field.id}`)}
+              >
                 <td>{field.id}</td>
                 <td>{field.name}</td>
                 <td>
@@ -56,7 +61,7 @@ export const ModelSyncView = ({
                 </td>
                 <td>{generateTime(field.jobSchedule.frequency)}</td>
                 <td>{field.syncStatus}</td>
-                <td>{" > "}</td>
+                <td>{">"}</td>
               </tr>
             ))}
         </tbody>
