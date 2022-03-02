@@ -35,9 +35,6 @@ public interface MigrationDetailsDAO {
 
         @Override
         public MigrationDetails map(ResultSet rs, StatementContext ctx) throws SQLException {
-            QueryModelPK queryModelPK = JsonUtils.jsonStringToObject(rs.getString(TableFields.WAREHOUSE_PK), QueryModelPK.class);
-            QueryModelDetails modelDetails = JsonUtils.jsonStringToObject(rs.getString(TableFields.QUERY_MODEL_DETAILS), QueryModelDetails.class);
-
             return MigrationDetails.builder().id(rs.getLong(TableFields.ID))
                     .migrationType(MigrationType.valueOf(rs.getString("migration_type")))
                     .status(MigrationStatus.valueOf(rs.getString("migration_status")))

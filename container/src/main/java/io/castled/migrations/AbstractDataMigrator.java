@@ -32,7 +32,7 @@ public abstract class AbstractDataMigrator implements DataMigrator {
     }
 
     private boolean isMigrationPending(MigrationDetails migrationDetails) {
-        if (migrationDetails == null || (migrationDetails != null && migrationDetails.getStatus().equals(getMigrationType()))) {
+        if (migrationDetails == null || (migrationDetails != null && migrationDetails.getStatus().equals(MigrationStatus.FAILURE))) {
             return true;
         }
         return false;

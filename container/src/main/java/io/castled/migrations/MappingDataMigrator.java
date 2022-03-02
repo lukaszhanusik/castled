@@ -31,7 +31,7 @@ public class MappingDataMigrator extends AbstractDataMigrator {
     @Override
     public void migrateData() {
 
-        PipelineDAO pipelineDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(PipelineDAO.class);
+        MigrationsDAO pipelineDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(MigrationsDAO.class);
         PipelineService pipelineService = ObjectRegistry.getInstance(PipelineService.class);
         WarehouseService warehouseService = ObjectRegistry.getInstance(WarehouseService.class);
         QueryModelService queryModelService = ObjectRegistry.getInstance(QueryModelService.class);
