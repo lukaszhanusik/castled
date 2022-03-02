@@ -1,10 +1,7 @@
 package io.castled.migrations;
 
 import io.castled.constants.TableFields;
-import io.castled.dtos.querymodel.QueryModelDetails;
 import io.castled.migrations.models.MigrationDetails;
-import io.castled.models.QueryModelPK;
-import io.castled.utils.JsonUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
