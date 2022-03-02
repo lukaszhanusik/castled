@@ -52,7 +52,7 @@ public class MixpanelEventSink extends MixpanelObjectSink<Message> {
     public MixpanelEventSink(DataSinkRequest dataSinkRequest) {
         this.mixpanelRestClient = new MixpanelRestClient(((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getProjectToken(),
                 ((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiSecret());
-        this.mixpanelAppSyncConfig = (MixpanelAppSyncConfig)dataSinkRequest.getAppSyncConfig();
+        this.mixpanelAppSyncConfig = (MixpanelAppSyncConfig) dataSinkRequest.getAppSyncConfig();
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.mixpanelErrorParser = ObjectRegistry.getInstance(MixpanelErrorParser.class);
     }
@@ -61,7 +61,7 @@ public class MixpanelEventSink extends MixpanelObjectSink<Message> {
         List<EventAndError> failedRecords = this.mixpanelRestClient.insertEventDetails(
                 messages.stream().map(Message::getRecord).map(this::constructEventDetails).collect(Collectors.toList()));
 
-        Map<String, Message> eventIDMapper = messages.stream().filter(message -> getEventID(message.getRecord()) != null)
+        Map<Object, Message> eventIDMapper = messages.stream().filter(message -> getEventID(message.getRecord()) != null)
                 .collect(Collectors.toMap(message -> getEventID(message.getRecord()), Function.identity()));
 
         failedRecords.forEach(failedRecord ->
@@ -85,8 +85,8 @@ public class MixpanelEventSink extends MixpanelObjectSink<Message> {
         }
     }
 
-    private String getEventID(Tuple record) {
-        return (String) record.getValue(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName());
+    private Object getEventID(Tuple record) {
+        return record.getValue(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName());
     }
 
     private Map<String, Object> constructEventDetails(Tuple record) {

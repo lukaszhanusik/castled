@@ -1,6 +1,7 @@
 package io.castled.warehouses.connectors.bigquery;
 
 import com.google.cloud.bigquery.*;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.common.collect.Lists;
@@ -22,8 +23,11 @@ import io.castled.warehouses.models.WarehousePollContext;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Singleton
 @Slf4j
@@ -42,14 +46,15 @@ public class BigQueryConnector extends BaseWarehouseConnector<BigQueryWarehouseC
     public void testConnectionForDataPoll(BigQueryWarehouseConfig config) throws ConnectException {
         BigQuery bigQuery = this.gcpClientFactory.getBigQuery(config.getServiceAccount(),
                 config.getProjectId());
-
+        String blobName = "castled_" + UUID.randomUUID();
+        Bucket bucket = null;
         try {
             BigQueryUtils.getOrCreateDataset(ConnectorExecutionConstants.CASTLED_CONTAINER, bigQuery, config.getLocation());
             BigQueryUtils.listTables(ConnectorExecutionConstants.CASTLED_CONTAINER, bigQuery);
             Storage storage = this.gcpClientFactory.getGcsClient(config.getServiceAccount(),
                             config.getProjectId())
                     .getStorage();
-            Bucket bucket = storage.get(config.getBucketName());
+            bucket = storage.get(config.getBucketName());
             if (bucket == null) {
                 throw new ConnectException(ConnectionError.INVALID_STORAGE, String.format("Bucket %s not found", config.getBucketName()));
             }
@@ -57,11 +62,33 @@ public class BigQueryConnector extends BaseWarehouseConnector<BigQueryWarehouseC
                 throw new ConnectException(ConnectionError.INVALID_STORAGE,
                         String.format("GCS bucket %s needs to be created on the configured location %s", config.getBucketName(), config.getLocation()));
             }
+
+            bucket.create(blobName, "test".getBytes(StandardCharsets.UTF_8));
+            for (Blob blob : bucket.list(Storage.BlobListOption.prefix(blobName)).getValues()) {
+                if (blob.getName().equals(blobName)) {
+                    blob.downloadTo(new ByteArrayOutputStream());
+                }
+            }
             Optional.ofNullable(storage.get(config.getBucketName()))
                     .orElseThrow(() -> new ConnectException(ConnectionError.INVALID_STORAGE, "Bucket not found"));
         } catch (Exception e) {
+            if (bucket != null) {
+                tryDeleteBlob(blobName, bucket);
+            }
             log.warn("Test connection failed for Big query service account {}", config.getServiceAccount(), e);
             throw new ConnectException(ConnectionError.UNKNOWN, e.getMessage());
+        }
+    }
+
+    private void tryDeleteBlob(String blobName, Bucket bucket) {
+        try {
+            for (Blob blob : bucket.list(Storage.BlobListOption.prefix(blobName)).getValues()) {
+                if (blob.getName().equals(blobName)) {
+                    blob.downloadTo(new ByteArrayOutputStream());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete blob {}", blobName, e);
         }
     }
 
@@ -131,7 +158,7 @@ public class BigQueryConnector extends BaseWarehouseConnector<BigQueryWarehouseC
         return BigQueryWarehouseConfig.class;
     }
 
-    public BigQueryWarehouseConfig filterRestrictedConfigDetails(BigQueryWarehouseConfig bigQueryWarehouseConfig){
+    public BigQueryWarehouseConfig filterRestrictedConfigDetails(BigQueryWarehouseConfig bigQueryWarehouseConfig) {
         return bigQueryWarehouseConfig;
     }
 }

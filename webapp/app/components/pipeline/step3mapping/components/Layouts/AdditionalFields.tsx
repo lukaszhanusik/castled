@@ -1,15 +1,15 @@
-import Select from "react-select";
-import { AdditionalFieldsProps } from "./MappingMiscellaneousFields";
 import { IconTrash } from "@tabler/icons";
-import { Button, Placeholder } from "react-bootstrap";
-import Image from "react-bootstrap/image";
+import { Placeholder } from "react-bootstrap";
+import Image from "react-bootstrap/Image";
+import Select from "react-select";
+import { DestinationFieldRowsProps } from "../../types/componentTypes";
 
-interface PrePopulatedFieldsProps
-  extends Omit<AdditionalFieldsProps, "defaultValue"> {
-  inputDefaultValue?: string;
-  selectDefaultValue?: { value: string; label: string };
+export interface AdditionalFieldsProps extends DestinationFieldRowsProps {
+  inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-export default function PrePopulatedFields({
+
+export function AdditionalFields({
   options,
   values,
   onChange,
@@ -17,9 +17,7 @@ export default function PrePopulatedFields({
   handleDelete,
   inputChange,
   inputBlur,
-  inputDefaultValue,
-  selectDefaultValue,
-}: PrePopulatedFieldsProps) {
+}: AdditionalFieldsProps) {
   return (
     <tr>
       <th className="col-6">
@@ -29,7 +27,6 @@ export default function PrePopulatedFields({
           onBlur={onBlur}
           isClearable
           placeholder={"Select a column"}
-          defaultValue={selectDefaultValue}
         />
       </th>
       <th>
@@ -46,7 +43,6 @@ export default function PrePopulatedFields({
           className="form-control p-2"
           onChange={inputChange}
           onBlur={inputBlur}
-          defaultValue={inputDefaultValue}
         />
       </th>
       <Placeholder as="td">
@@ -54,4 +50,4 @@ export default function PrePopulatedFields({
       </Placeholder>
     </tr>
   );
-} 
+}
