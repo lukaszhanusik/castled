@@ -36,7 +36,7 @@ public class RestApiAppConnector implements ExternalAppConnector<RestApiAppConfi
 
     @Override
     public List<MappingGroup> getMappingGroups(RestApiAppConfig config, RestApiAppSyncConfig restApiAppSyncConfig) {
-        throw new UnsupportedOperationException("Mapping Groups not supported for Rest api");
+        return Lists.newArrayList();
     }
 
     public Class<RestApiAppSyncConfig> getMappingConfigType() {
