@@ -106,8 +106,8 @@ const InputSelect = ({
         >
           {title && (
             <label htmlFor={props.id || props.name} className="form-label">
-              {required && <span className="required-icon">*</span>}
               {title}
+              {required && <span className="required-icon">*</span>}
             </label>
           )}
           <div className="row">
@@ -141,10 +141,11 @@ const InputSelect = ({
         </div>
       </div>
       {dataFetcher && (
-        <div className="ms-2 my-auto">
+        <div className={cn("ms-2 my-auto", meta.error ? " pt-4" : " pt-5" )}>
           <IconRefresh
             size={24}
             role="button"
+            strokeWidth={1}
             onClick={() => setKey(key + 1)}
           />
         </div>

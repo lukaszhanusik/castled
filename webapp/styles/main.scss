@@ -114,6 +114,9 @@ form {
     width: 100%;
     resize: none;
   }
+  input:checked{
+    filter: hue-rotate(45deg);
+  }
   .card{
     border: 1px solid $gray-200;
   }
@@ -130,10 +133,11 @@ form {
   }
 }
 
-.form-top-label {
+.form-label {
   display: block;
-  font-size: $font-size-sm;
-  margin-bottom: 0.25rem;
+  font-size: $h4-font-size;
+  font-weight: $font-weight-base;
+  margin-bottom: 0;
 }
 
 .pagination {
@@ -184,6 +188,16 @@ form {
   .list-group-item {
     line-height: 50px;
   }
+}
+
+
+.form-check-input:focus{
+  border-color: $primary-color;
+  box-shadow: none;
+}
+.form-check-input:checked{
+  border-color: $primary-color;
+  background-color: $primary-color;
 }
 
 .categories {
@@ -391,9 +405,7 @@ form {
 
 .required-icon {
   color: #f74c3c;
-  font-size: 10px;
-  position: relative;
-  top: -3px;
+  font-size: 20px;
 }
 
 .required-field {
