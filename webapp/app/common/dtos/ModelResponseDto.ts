@@ -8,6 +8,7 @@ export interface ModelResponseDto {
   queryModelPK:      QueryModelPK;
   activeSyncDetails: ActiveSyncDetail[];
   activeSyncsCount:  number;
+  demo:              boolean;
 }
 
 export interface ActiveSyncDetail {
@@ -30,17 +31,29 @@ export interface ActiveSyncDetail {
 }
 
 export interface Warehouse {
-  id:      number;
-  type:    string;
-  name:    string;
-  logoUrl: string;
+  id:             number;
+  type:           string;
+  name:           string;
+  logoUrl:        string;
+  columnDetails?: ColumnDetail[];
+}
+
+export interface ColumnDetail {
+  name:   string;
+  schema: Schema;
+}
+
+export interface Schema {
+  type:         string;
+  allowedTypes: string[];
+  optional:     boolean;
+  maxLength?:   number;
 }
 
 export interface AppSyncConfig {
-  appType:   string;
-  object:    Object;
-  eventType: string;
-  mode:      string;
+  appType: string;
+  object:  Object;
+  mode:    string;
 }
 
 export interface Object {
@@ -48,7 +61,7 @@ export interface Object {
 }
 
 export interface DataMapping {
-  primaryKeys:   any[];
+  primaryKeys:   string[];
   type:          string;
   fieldMappings: FieldMapping[];
 }
@@ -65,7 +78,8 @@ export interface JobSchedule {
 }
 
 export interface LastRunDetails {
-  lastRuns: LastRun[];
+  lastRuns:  LastRun[];
+  lastRunTs: number;
 }
 
 export interface LastRun {
@@ -74,6 +88,7 @@ export interface LastRun {
   stage:             string;
   pipelineId:        number;
   pipelineSyncStats: PipelineSyncStats;
+  processedTs:       number;
   createdTs:         number;
 }
 
