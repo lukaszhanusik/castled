@@ -19,10 +19,21 @@ export default function MappingImportantFields({
   const [optionalFieldsElement, setOptionalFieldsElement] = useState<
     JSX.Element[]
   >([]);
+  const [form, setForm] = useState({});
 
   useEffect(() => {
     if (optionalFields) setOptionalFieldsElement(optionalFields);
   }, []);
+
+  // On mount check if fields are there in localStorage
+  useEffect(() => {
+    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
+    if (getLocalStorageItem) {
+      const primaryKeysForm = JSON.parse(getLocalStorageItem);
+      Object.assign(values, primaryKeysForm);
+    }
+  }, []);
+
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
@@ -40,12 +51,14 @@ export default function MappingImportantFields({
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             e?.value
           );
+          addKeysToState(e, "optional-warehouseField", i);
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-appField-${i}`,
             e?.value
           );
+          addKeysToState(e, "optional-appField", i);
         }}
         handleDelete={(e) => {
           e.preventDefault();
@@ -62,7 +75,14 @@ export default function MappingImportantFields({
             true
           )
         }
-        defaultValue={undefined}
+        defaultAppValue={{
+          value: defaultValue("optional-appField", i),
+          label: defaultValue("optional-appField", i),
+        }}
+        defaultWarehouseValue={{
+          value: defaultValue("optional-warehouseField", i),
+          label: defaultValue("optional-warehouseField", i),
+        }}
         isClearable={true}
       />
     )
@@ -98,6 +118,35 @@ export default function MappingImportantFields({
     }
   }
 
+  // AddKeys to localStorage
+  function addKeysToState(e: any, type: string, index: number) {
+    const form = {};
+    if (destinationFieldSection.length > 0) {
+      Object.assign(form, {
+        [`DESTINATION_FIELDS-${type}-${index}`]: e?.value,
+      });
+      setForm((prev) => ({ ...prev, ...form }));
+    }
+
+    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
+    const combineAllItems = getLocalStorageItem
+      ? Object.assign(JSON.parse(getLocalStorageItem), form)
+      : form;
+    localStorage.setItem(
+      "destinationFieldForm",
+      JSON.stringify(combineAllItems)
+    );
+  }
+
+  // Get default values from localStorage
+  function defaultValue(type: string, index: number) {
+    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
+    if (getLocalStorageItem) {
+      const primaryKeysForm = JSON.parse(getLocalStorageItem);
+      return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
+    }
+  }
+
   return (
     <div className="row">
       {destinationFieldSection.length > 0 &&
@@ -112,11 +161,15 @@ export default function MappingImportantFields({
                   <DestinationFieldRows
                     key={mandatoryField.fieldName}
                     options={options}
-                    defaultValue={{
+                    defaultAppValue={{
                       value: mandatoryField.fieldName,
                       label:
                         mandatoryField.fieldDisplayName ||
                         mandatoryField.fieldName,
+                    }}
+                    defaultWarehouseValue={{
+                      value: defaultValue("mandatory-warehouseField", i),
+                      label: defaultValue("mandatory-warehouseField", i),
                     }}
                     isDisabled={!mandatoryField.optional}
                     onChangeWarehouse={(e) => {
@@ -127,6 +180,12 @@ export default function MappingImportantFields({
                       setFieldValue?.(
                         `DESTINATION_FIELDS-mandatory-appField-${i}`,
                         mandatoryField.fieldName
+                      );
+                      addKeysToState(e, "mandatory-warehouseField", i);
+                      addKeysToState(
+                        { value: mandatoryField.fieldName },
+                        "mandatory-appField",
+                        i
                       );
                     }}
                     onBlur={() =>

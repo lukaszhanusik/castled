@@ -7,7 +7,8 @@ import { DestinationFieldRowsProps } from "../../types/componentTypes";
 export default function DestinationFieldRows({
   options,
   destinationFieldSection,
-  defaultValue,
+  defaultWarehouseValue,
+  defaultAppValue,
   isDisabled,
   onChangeWarehouse,
   onChangeAppField,
@@ -25,6 +26,7 @@ export default function DestinationFieldRows({
           onBlur={onBlur}
           isClearable={isClearable}
           placeholder={"Select a column"}
+          defaultValue={defaultWarehouseValue}
         />
       </th>
       <th>
@@ -45,7 +47,7 @@ export default function DestinationFieldRows({
               };
             })
           }
-          defaultValue={defaultValue}
+          defaultValue={defaultAppValue}
           isDisabled={isDisabled}
           onBlur={onBlur}
           isClearable={isClearable}
