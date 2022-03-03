@@ -22,4 +22,7 @@ export default {
   ): Promise<AxiosResponse<ModelCreateRequestDto>> => {
     return http.post("/v1/models", req);
   },
+  delete: (modelId: number): Promise<AxiosResponse<void>> => {
+    return http.delete(`/v1/models/${modelId}`);
+  },
 };

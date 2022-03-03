@@ -1,42 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
-import {
-  Badge,
-  Dropdown,
-  Form,
-  OverlayTrigger,
-  Tooltip,
-  Tabs,
-  Tab,
-  Col,
-  Row,
-} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import modelService from "@/app/services/modelService";
-import PipelineRunView from "@/app/components/pipeline/PipelineRunView";
-import PipelineMappingView from "@/app/components/pipeline/PipelineMappingView";
-import PipelineMappingViewRestApi from "@/app/components/pipeline/PipelineMappingViewRestApi";
-import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
-import { PipelineResponseRestApiDto } from "@/app/common/dtos/PipelineResponseRestApiDto";
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
 import DefaultErrorPage from "next/error";
 import Loading from "@/app/components/common/Loading";
-import pipelineRunsService from "@/app/services/pipelineRunsService";
-import { PipelineRunDto } from "@/app/common/dtos/PipelineRunDto";
-import bannerNotificationService from "@/app/services/bannerNotificationService";
-import { IconArrowRight, IconDots } from "@tabler/icons";
-import Image from "react-bootstrap/Image";
-import {
-  PipelineSyncStatus,
-  PipelineSyncStatusLabel,
-} from "@/app/common/enums/PipelineSyncStatus";
-import _ from "lodash";
-import DropdownPlain from "@/app/components/bootstrap/DropdownPlain";
 import { NextRouter, useRouter } from "next/router";
-import PipelineSettingsView from "@/app/components/pipeline/PipelineSettingsView";
-import { ScheduleType } from "@/app/common/enums/ScheduleType";
-import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
-import TimeAgo from "react-timeago";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
 import { ModelSyncView } from "@/app/components/model/ModelSyncView";
@@ -48,7 +18,6 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
     props: { modelid },
   };
 }
-
 interface ModelInfoProps {
   modelid: number;
 }
@@ -76,7 +45,6 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
 
   if (model === null) return <DefaultErrorPage statusCode={404} />;
 
-  console.log(model);
   return (
     <Layout
       title={renderTitle(model, router, setModel, setReloadKey)}
@@ -88,19 +56,21 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
         isLoading: isLoading,
         onClick: () => {
           setIsLoading(true);
-          // pipelineService.triggerRun(pipelineId).then(() => {
-          //   setReloadKey(Math.random());
-          //   bannerNotificationService.success("Triggered Run");
-          // });
         },
       }}
     >
       {!model && <Loading />}
       <div className="categories m-0">
         <img src={model?.warehouse.logoUrl} />
-        <span className="col-md-10 ps-0 px-4 font-weight-bold">{model?.warehouse.name}</span>
-        <span className="col-md-10 ps-0 px-4 text-muted">{model?.warehouse.type}</span>
-        <span className="col-md-10 ps-0 px-4">Total Syncs - {model?.activeSyncsCount}</span>
+        <span className="col-md-10 ps-0 px-4 font-weight-bold">
+          {model?.warehouse.name}
+        </span>
+        <span className="col-md-10 ps-0 px-4 text-muted">
+          {model?.warehouse.type}
+        </span>
+        <span className="col-md-10 ps-0 px-4">
+          Total Syncs - {model?.activeSyncsCount}
+        </span>
       </div>
       <Tabs defaultActiveKey="Query" className="mb-3">
         <Tab eventKey="Query" title="Query">
@@ -130,23 +100,24 @@ function renderTitle(
   setReloadKey: (value: any) => void
 ) {
   if (!model) return "";
-  // const isActive = model.syncStatus === PipelineSyncStatus.ACTIVE;
   return (
     <>
       <span>{model.id} | </span> <span>{model.modelName}</span>
       <div className="float-end">
         <button
           className="btn btn-outline-primary mx-2"
-          // onClick={() => {
-          //   pipelineRunsService
-          //     .getByPipelineId(pipeline.id)
-          //     .then(({ data }) => {
-          //       setPipelineRuns(data);
-          //     })
-          //     .catch(() => {
-          //       setPipelineRuns(null);
-          //     });
-          // }}
+          onClick={() => {
+            if (confirm("Are you sure you want to delete this model?")) {
+              modelService
+                .delete(model.id)
+                .then(({ data }) => {
+                  router.push("/models");
+                })
+                .catch(() => {
+                  alert("Error deleting model. Please try again.");
+                });
+            }
+          }}
         >
           Delete Model
         </button>
