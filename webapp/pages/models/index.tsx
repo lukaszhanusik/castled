@@ -6,10 +6,13 @@ import { ModelListDto } from "@/app/common/dtos/ModelListDto";
 import DefaultErrorPage from "next/error";
 import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
+import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
+  const { setPipelineWizContext } = usePipelineWizContext();
+
   const headers = ["Model Name", "Source", "Type", "Pipelines"];
   useEffect(() => {
     modelService
@@ -22,7 +25,7 @@ const Models = () => {
       });
   }, []);
   if (models === null) return <DefaultErrorPage statusCode={404} />;
-
+  console.log(models);
   return (
     <Layout
       title="Model List"
@@ -51,7 +54,14 @@ const Models = () => {
             </thead>
             <tbody>
               {models.map((model, idx) => (
-                <tr key={idx} onClick={() => router.push(`/models/${model.id}`)}>
+                <tr
+                  key={idx}
+                  onClick={() =>
+                    router
+                      .push(`/models/${model.id}`)
+                      .then(() => setPipelineWizContext({}))
+                  }
+                >
                   <td>
                     <div className="w-50">
                       {model.modelName}

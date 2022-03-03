@@ -1,3 +1,4 @@
+import { ModelTitle } from "./../../app/components/model/ModelTitle";
 import React, { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import { Tabs, Tab } from "react-bootstrap";
@@ -11,6 +12,12 @@ import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
 import { ModelSyncView } from "@/app/components/model/ModelSyncView";
 import ModelColumnDetailsView from "@/app/components/model/ModelColumnDetailsView";
+import PipelineWizardProvider, {
+  usePipelineWizContext,
+} from "@/app/common/context/pipelineWizardContext";
+import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
+import { AccessType } from "@/app/common/enums/AccessType";
+import { PipelineCreateRequestDto } from "@/app/common/dtos/PipelineCreateRequestDto";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const modelid = routerUtils.getInt(query.modelid);
@@ -24,9 +31,9 @@ interface ModelInfoProps {
 
 const PipelineInfo = ({ modelid }: ModelInfoProps) => {
   const router = useRouter();
-  const [reloadKey, setReloadKey] = useState<number>(0);
   const [model, setModel] = useState<ModelResponseDto | undefined | null>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
 
   useEffect(() => {
     modelService
@@ -37,62 +44,79 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       .catch(() => {
         setModel(null);
       });
-  }, [reloadKey]);
+  }, []);
 
   if (model === null) return <DefaultErrorPage statusCode={404} />;
 
   return (
-    <Layout
-      title={renderTitle(model, router)}
-      subTitle={undefined}
-      pageTitle={model ? "Pipeline " + model.modelName : ""}
-      rightBtn={{
-        id: "create_pipeline_button",
-        title: "Create Pipeline",
-        isLoading: isLoading,
-        onClick: () => {
-          setIsLoading(true);
-        },
-      }}
-    >
-      {!model && <Loading />}
-      <div className="categories m-0">
-        <img src={model?.warehouse.logoUrl} />
-        <span className="col-md-10 ps-0 px-4 font-weight-bold">
-          {model?.warehouse.name}
-        </span>
-        <span className="col-md-10 ps-0 px-4 text-muted">
-          {model?.warehouse.type}
-        </span>
-        <span className="col-md-10 ps-0 px-4">
-          Total Syncs - {model?.activeSyncsCount}
-        </span>
-      </div>
-      <Tabs defaultActiveKey="Query" className="mb-3">
-        <Tab eventKey="Query" title="Query">
-          <ModelQueryView source={model?.modelDetails.sourceQuery} />
-        </Tab>
-        <Tab eventKey="Details" title="Column Details">
-          <ModelColumnDetailsView
-            warehouse={model?.warehouse}
-            queryModelPK={model?.queryModelPK}
-          />
-        </Tab>
-        <Tab eventKey="Syncs" title="Syncs">
-          <ModelSyncView
-            activeSyncDetails={model ? model.activeSyncDetails : []}
-            activeSyncsCount={model ? model.activeSyncsCount : 0}
-          />
-        </Tab>
-      </Tabs>
-    </Layout>
+    <PipelineWizardProvider>
+      <Layout
+        title={renderTitle(model, router)}
+        subTitle={undefined}
+        pageTitle={model ? "Pipeline " + model.modelName : ""}
+        rightBtn={{
+          id: "create_pipeline_button",
+          title: "Create Pipeline",
+          isLoading: isLoading,
+          onClick: () => {
+            setIsLoading(true);
+            if (model && pipelineWizContext) {
+              const warehouseType: ConnectorTypeDto = {
+                value: model.warehouse.type,
+                title:
+                  model.warehouse.type[0] +
+                  model.warehouse.type.slice(1).toLowerCase(),
+                accessType: AccessType.PASSWORD,
+                logoUrl: model.warehouse.logoUrl,
+                docUrl: "",
+                count: 1,
+              };
+
+              const values: PipelineCreateRequestDto = {
+                warehouseId: model.warehouse.id,
+                modelId: model.id,
+                sourceQuery: model.modelDetails.sourceQuery,
+                appSyncConfig: {
+                  appType: undefined,
+                },
+              };
+              pipelineWizContext.warehouseType = warehouseType;
+              pipelineWizContext.values = values;
+              setPipelineWizContext(pipelineWizContext);
+            }
+            console.log(pipelineWizContext);
+            router.push("/pipelines/create?wizardStep=source:model");
+          },
+        }}
+      >
+        {!model && <Loading />}
+        <ModelTitle
+          warehouse={model?.warehouse}
+          activeSyncsCount={model?.activeSyncsCount}
+        />
+        <Tabs defaultActiveKey="Query" className="mb-3">
+          <Tab eventKey="Query" title="Query">
+            <ModelQueryView source={model?.modelDetails.sourceQuery} />
+          </Tab>
+          <Tab eventKey="Details" title="Column Details">
+            <ModelColumnDetailsView
+              warehouse={model?.warehouse}
+              queryModelPK={model?.queryModelPK}
+            />
+          </Tab>
+          <Tab eventKey="Syncs" title="Syncs">
+            <ModelSyncView
+              activeSyncDetails={model ? model.activeSyncDetails : []}
+              activeSyncsCount={model ? model.activeSyncsCount : 0}
+            />
+          </Tab>
+        </Tabs>
+      </Layout>
+    </PipelineWizardProvider>
   );
 };
 
-function renderTitle(
-  model: ModelResponseDto | undefined,
-  router: NextRouter,
-) {
+function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
   if (!model) return "";
   return (
     <>
