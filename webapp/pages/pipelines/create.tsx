@@ -10,10 +10,6 @@ import wizardUtils from "@/app/common/utils/wizardUtils";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);
-
-  console.log(query);
-  console.log(wizardStep);
-
   const demo = routerUtils.getBoolean(query.demo);
   return {
     props: {

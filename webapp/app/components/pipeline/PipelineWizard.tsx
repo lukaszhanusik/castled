@@ -64,6 +64,7 @@ const PipelineWizard = ({
   const setCurWizardStep = (stepGroup: string | undefined, step: string) => {
     wizardUtils.setCurWizardStep(router, stepGroup, step);
   };
+
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (!wizardStepKey && demo) {
@@ -72,6 +73,7 @@ const PipelineWizard = ({
       setPipelineWizContext({});
     }
   }, [wizardStepKey, !!pipelineWizContext, demo]);
+
   if (!curWizardStepGroup && !curWizardStep) {
     if (demo) {
       setCurWizardStep("source", "model");

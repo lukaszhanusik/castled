@@ -10,7 +10,7 @@ import ModelWizard from "../../app/components/model/ModelWizard";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);
-  const demo = routerUtils.getBoolean(query.demo);
+  const demo = false;
   return {
     props: {
       wizardStepKey: wizardStep,

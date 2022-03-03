@@ -25,4 +25,5 @@ public class ModelDetailsDTO {
     private QueryModelPK queryModelPK;
     private List<PipelineDTO> activeSyncDetails;
     private Integer activeSyncsCount;
+    private boolean demo;
 }

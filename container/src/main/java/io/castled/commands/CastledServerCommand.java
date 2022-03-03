@@ -8,6 +8,9 @@ import io.castled.ObjectRegistry;
 import io.castled.daos.InstallationDAO;
 import io.castled.events.CastledEventsClient;
 import io.castled.events.NewInstallationEvent;
+import io.castled.migrations.DataMigrator;
+import io.castled.migrations.MigrationType;
+import io.castled.migrations.DataMigratorAggregator;
 import io.castled.services.UsersService;
 import io.castled.utils.AsciiArtUtils;
 import io.dropwizard.cli.ServerCommand;
@@ -16,6 +19,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
@@ -26,6 +30,7 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
 
     protected void run(Environment environment, Namespace namespace, CastledConfiguration configuration) throws Exception {
         runMigrations(configuration);
+        runCodeLevelMigrations();
         super.run(environment, namespace, configuration);
         AsciiArtUtils.drawCastled();
 
@@ -46,6 +51,11 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
         }
         createNewInstallationIfRequired();
 
+    }
+
+    private void runCodeLevelMigrations(){
+        Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(DataMigratorAggregator.class).getDataMigratorMap();
+        migratorList.forEach((key, value) -> value.runDataMigration());
     }
 
     private void createNewInstallationIfRequired() {

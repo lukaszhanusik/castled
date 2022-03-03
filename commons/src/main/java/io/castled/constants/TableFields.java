@@ -30,5 +30,6 @@ public class TableFields {
     public static final String MODEL_TYPE = "model_type";
     public static final String WAREHOUSE_PK = "query_pk";
     public static final String QUERY_MODEL_DETAILS = "model_details";
+    public static final String DEMO_MODEL = "demo";
 
 }

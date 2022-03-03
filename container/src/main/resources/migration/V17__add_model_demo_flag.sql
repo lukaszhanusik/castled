@@ -1,0 +1,1 @@
+alter table query_model add column demo boolean not null default false;
