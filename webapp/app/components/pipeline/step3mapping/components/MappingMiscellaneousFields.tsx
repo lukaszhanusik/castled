@@ -5,6 +5,7 @@ import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 import PrePopulatedFields from "./Layouts/PrePopulatedFields";
 import { AdditionalFields } from "./Layouts/AdditionalFields";
+import { identity } from "lodash";
 
 export default function MappingMiscellaneousFields({
   options,
@@ -43,6 +44,18 @@ export default function MappingMiscellaneousFields({
     if (getLocalStorageItem) {
       const misclFieldsForm = JSON.parse(getLocalStorageItem);
       Object.assign(values, misclFieldsForm);
+      for (let [key, value] of Object.entries(misclFieldsForm)) {
+        const [field, type, identity] = key.split("-");
+        if (
+          !identity.includes("0x0x0x0x0x") &&
+          key.includes("warehouseField")
+        ) {
+          setAdditionalRow((prevState) => [
+            ...prevState,
+            additionalFields(identity),
+          ]);
+        }
+      }
     }
   }, []);
 
@@ -51,12 +64,12 @@ export default function MappingMiscellaneousFields({
     return fields.type === "MISCELLANEOUS_FIELDS" && fields;
   });
 
-  function addRow(e: any) {
+  function addRow(e: any, key?: string) {
     e.preventDefault();
     const randomKey = Math.random().toString(15).substring(2, 15);
     setAdditionalRow((prevState) => [
       ...prevState,
-      additionalFields(randomKey),
+      additionalFields(key || randomKey),
     ]);
   }
 
