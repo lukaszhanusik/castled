@@ -24,12 +24,8 @@ interface ModelInfoProps {
 
 const PipelineInfo = ({ modelid }: ModelInfoProps) => {
   const router = useRouter();
-  const MAX_RELOAD_COUNT = 100;
   const [reloadKey, setReloadKey] = useState<number>(0);
-  const [reloadCount, setReloadCount] = useState<number>(0);
-
   const [model, setModel] = useState<ModelResponseDto | undefined | null>();
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,7 +43,7 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
 
   return (
     <Layout
-      title={renderTitle(model, router, setModel, setReloadKey)}
+      title={renderTitle(model, router)}
       subTitle={undefined}
       pageTitle={model ? "Pipeline " + model.modelName : ""}
       rightBtn={{
@@ -96,8 +92,6 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
 function renderTitle(
   model: ModelResponseDto | undefined,
   router: NextRouter,
-  setModel: (value: any) => void,
-  setReloadKey: (value: any) => void
 ) {
   if (!model) return "";
   return (
