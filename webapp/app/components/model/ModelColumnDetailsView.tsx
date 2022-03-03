@@ -1,7 +1,4 @@
-import {
-  ColumnDetail,
-  ModelResponseDto,
-} from "@/app/common/dtos/ModelResponseDto";
+import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import { Table } from "react-bootstrap";
 import { useState, useEffect, ChangeEvent, useMemo } from "react";
 import { debounce } from "lodash";
@@ -21,15 +18,18 @@ function ModelColumnDetailsView({
     if (warehouse && warehouse.columnDetails) {
       const warehouseResults = warehouse.columnDetails.map((field, index) => (
         <tr key={`${field.name}-${index}`}>
-          <td>{columnNameTransform(field.name)}</td>
-          <td>
+          <td className="col-4">{columnNameTransform(field.name)}</td>
+          <td className="col-6">
             <input
               type="text"
+              className="px-2 py-1 w-75"
               value={stringTransform(field.schema.type)}
               disabled
             />
           </td>
-          <td>{queryModelPK?.primaryKeys.includes(field.name) && "YES"}</td>
+          <td className="col-2">
+            {queryModelPK?.primaryKeys.includes(field.name) && "YES"}
+          </td>
         </tr>
       ));
 
@@ -65,24 +65,32 @@ function ModelColumnDetailsView({
           All the warehouse columns used in the query associated with the model.
         </p>
       </div>
-      <div>
-        <input
-          type="text"
-          className="mb-1 mt-4"
-          placeholder="Search Column"
-          onChange={debounceHandler}
-        />
+      <div className="container py-4">
+        <div className="row height d-flex justify-content-center align-items-center">
+          <div className="col-md-8">
+            <div className="search">
+              <input
+                type="text"
+                className="form-control search-input"
+                placeholder="Search Column"
+                onChange={debounceHandler}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <Table hover>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Primary Key</th>
-          </tr>
-        </thead>
-        <tbody>{searchResults}</tbody>
-      </Table>
+      <div className="container">
+        <Table hover>
+          <thead>
+            <tr>
+              <th>NAME</th>
+              <th>TYPE</th>
+              <th>PRIMARY KEY</th>
+            </tr>
+          </thead>
+          <tbody>{searchResults}</tbody>
+        </Table>
+      </div>
     </>
   );
 }
