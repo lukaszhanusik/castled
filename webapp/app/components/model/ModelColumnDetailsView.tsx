@@ -3,7 +3,8 @@ import {
   ModelResponseDto,
 } from "@/app/common/dtos/ModelResponseDto";
 import { Table } from "react-bootstrap";
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, useMemo } from "react";
+import { debounce } from "lodash";
 
 type ModelColumnDetailsViewProps = Partial<
   Pick<ModelResponseDto, "warehouse" | "queryModelPK">
@@ -45,6 +46,9 @@ function ModelColumnDetailsView({
       .map((e) => e[0].toUpperCase() + e.slice(1))
       .join(" ");
 
+  // used to delay processing of input change event if data is big
+  const debounceHandler = useMemo(() => debounce(searchRows, 200), []);
+
   function searchRows(e: ChangeEvent<HTMLInputElement>) {
     setSearchResults(
       warehouseRows.filter((item) =>
@@ -52,6 +56,7 @@ function ModelColumnDetailsView({
       )
     );
   }
+
   return (
     <>
       <div className="text-center">
@@ -65,7 +70,7 @@ function ModelColumnDetailsView({
           type="text"
           className="mb-1 mt-4"
           placeholder="Search Column"
-          onChange={(e) => searchRows(e)}
+          onChange={debounceHandler}
         />
       </div>
       <Table hover>
