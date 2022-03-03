@@ -40,6 +40,7 @@ import TimeAgo from "react-timeago";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
 import { ModelSyncView } from "@/app/components/model/ModelSyncView";
+import ModelColumnDetailsView from "@/app/components/model/ModelColumnDetailsView";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const modelid = routerUtils.getInt(query.modelid);
@@ -109,17 +110,18 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       <Tabs defaultActiveKey="Query" className="mb-3">
         <Tab eventKey="Query" title="Query">
           <ModelQueryView source={model?.modelDetails.sourceQuery} />
-          {/* <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView> */}
         </Tab>
         <Tab eventKey="Details" title="Column Details">
-
+          <ModelColumnDetailsView
+            warehouse={model?.warehouse}
+            queryModelPK={model?.queryModelPK}
+          />
         </Tab>
         <Tab eventKey="Syncs" title="Syncs">
           <ModelSyncView
             activeSyncDetails={model ? model.activeSyncDetails : []}
             activeSyncsCount={model ? model.activeSyncsCount : 0}
           />
-
         </Tab>
       </Tabs>
     </Layout>
