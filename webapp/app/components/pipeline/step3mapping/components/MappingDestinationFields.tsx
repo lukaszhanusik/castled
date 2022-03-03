@@ -29,8 +29,8 @@ export default function MappingImportantFields({
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
     if (getLocalStorageItem) {
-      const primaryKeysForm = JSON.parse(getLocalStorageItem);
-      Object.assign(values, primaryKeysForm);
+      const destinationFieldsForm = JSON.parse(getLocalStorageItem);
+      Object.assign(values, destinationFieldsForm);
     }
   }, []);
 

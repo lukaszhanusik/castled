@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { MappingFieldsProps } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
@@ -16,7 +16,10 @@ export default function MappingMiscellaneousFields({
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
+  const [form, setForm] = useState({});
 
+  const countRef = useRef(0);
+  // useEffect for pre_populated_rows
   useEffect(() => {
     if (prePopulatedRow) {
       setPopulatedRow((prev) => [...prev, ...prePopulatedRow]);
@@ -31,6 +34,15 @@ export default function MappingMiscellaneousFields({
         Object.assign(initialValues, initialFieldValues);
       }
       Object.assign(values, initialValues);
+    }
+  }, []);
+
+  // On mount check if fields are there in localStorage
+  useEffect(() => {
+    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
+    if (getLocalStorageItem) {
+      const misclFieldsForm = JSON.parse(getLocalStorageItem);
+      Object.assign(values, misclFieldsForm);
     }
   }, []);
 
@@ -106,10 +118,10 @@ export default function MappingMiscellaneousFields({
     );
   }
 
-  function keyValueDefault(s: string, key?: string): string {
+  function keyValueDefault(type: string, key?: string): string {
     return key
-      ? `MISCELLANEOUS_FIELDS-${s}-${key}`
-      : `MISCELLANEOUS_FIELDS-${s}-0x0x0x0x0x0x0x`;
+      ? `MISCELLANEOUS_FIELDS-${type}-${key}`
+      : `MISCELLANEOUS_FIELDS-${type}-0`;
   }
 
   const additionalFields = (key: string) => (
@@ -118,6 +130,7 @@ export default function MappingMiscellaneousFields({
       options={options}
       onChange={(e) => {
         setFieldValue?.(keyValueDefault("warehouseField", key), e?.value);
+        addKeysToState(e, "warehouseField", key);
         // addRow(true);
       }}
       onBlur={() =>
@@ -131,12 +144,44 @@ export default function MappingMiscellaneousFields({
       }}
       inputChange={(e) => {
         setFieldValue?.(keyValueDefault("appField", key), e.target.value);
+        addKeysToState(e.target, "appField", key);
       }}
       inputBlur={() =>
         setFieldTouched?.(keyValueDefault("appField", key), true)
       }
+      defaultWarehouseValue={{
+        value: defaultValue("warehouseField", key),
+        label: defaultValue("warehouseField", key),
+      }}
+      defaultAppValue={defaultValue("appField", key)}
     />
   );
+
+  // AddKeys to localStorage
+  function addKeysToState(e: any, type: string, index: number | string) {
+    const form = {};
+    if (miscellaneousFieldSection.length > 0) {
+      Object.assign(form, {
+        [`MISCELLANEOUS_FIELDS-${type}-${index}`]: e?.value,
+      });
+      setForm((prev) => ({ ...prev, ...form }));
+    }
+
+    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
+    const combineAllItems = getLocalStorageItem
+      ? Object.assign(JSON.parse(getLocalStorageItem), form)
+      : form;
+    localStorage.setItem("misclFieldForm", JSON.stringify(combineAllItems));
+  }
+
+  // Get default values from localStorage
+  function defaultValue(type: string, index: number | string) {
+    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
+    if (getLocalStorageItem) {
+      const primaryKeysForm = JSON.parse(getLocalStorageItem);
+      return primaryKeysForm[`MISCELLANEOUS_FIELDS-${type}-${index}`];
+    }
+  }
 
   return (
     <div className="row py-2">
@@ -150,10 +195,11 @@ export default function MappingMiscellaneousFields({
               {miscellaneousFieldSection[0].autoMap && populatedRow}
 
               <AdditionalFields
-                key={"0x0x0x0x0x0x0x"}
+                key={"0x0x0x0x0x"}
                 options={options}
                 onChange={(e) => {
                   setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
+                  addKeysToState(e, "warehouseField", "0x0x0x0x0x");
                   // addRow(true);
                 }}
                 onBlur={() =>
@@ -161,16 +207,22 @@ export default function MappingMiscellaneousFields({
                 }
                 handleDelete={(e) => {
                   e.preventDefault();
-                  deleteRow("0x0x0x0x0x0x0x");
+                  deleteRow("0x0x0x0x0x");
                   setFieldValue?.(keyValueDefault("warehouseField"), "");
                   setFieldValue?.(keyValueDefault("appField"), "");
                 }}
                 inputChange={(e) => {
                   setFieldValue?.(keyValueDefault("appField"), e.target.value);
+                  addKeysToState(e.target, "appField", "0x0x0x0x0x");
                 }}
                 inputBlur={() =>
                   setFieldTouched?.(keyValueDefault("appField"), true)
                 }
+                defaultWarehouseValue={{
+                  value: defaultValue("warehouseField", "0x0x0x0x0x"),
+                  label: defaultValue("warehouseField", "0x0x0x0x0x"),
+                }}
+                defaultAppValue={defaultValue("appField", "0x0x0x0x0x")}
               />
               {additionalRow}
               <Button

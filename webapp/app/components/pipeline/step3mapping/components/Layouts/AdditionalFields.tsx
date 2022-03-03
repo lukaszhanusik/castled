@@ -4,9 +4,11 @@ import Image from "react-bootstrap/Image";
 import Select from "react-select";
 import { DestinationFieldRowsProps } from "../../types/componentTypes";
 
-export interface AdditionalFieldsProps extends DestinationFieldRowsProps {
+export interface AdditionalFieldsProps
+  extends Omit<DestinationFieldRowsProps, "defaultAppValue"> {
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultAppValue?: string;
 }
 
 export function AdditionalFields({
@@ -17,6 +19,8 @@ export function AdditionalFields({
   handleDelete,
   inputChange,
   inputBlur,
+  defaultWarehouseValue,
+  defaultAppValue,
 }: AdditionalFieldsProps) {
   return (
     <tr>
@@ -27,6 +31,7 @@ export function AdditionalFields({
           onBlur={onBlur}
           isClearable
           placeholder={"Select a column"}
+          defaultValue={defaultWarehouseValue}
         />
       </th>
       <th>
@@ -43,6 +48,7 @@ export function AdditionalFields({
           className="form-control p-2"
           onChange={inputChange}
           onBlur={inputBlur}
+          defaultValue={defaultAppValue}
         />
       </th>
       <Placeholder as="td">
