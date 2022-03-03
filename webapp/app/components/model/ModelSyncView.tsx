@@ -19,13 +19,17 @@ export const ModelSyncView = ({
 
   return (
     <>
-      <h3 className="mb-1 mt-4 font-weight-bold">Syncs</h3>
-      <p className="mb-1 mt-4">
-        All the active pipelines created using this model
-      </p>
-      <span className="text-muted">
-        Number of syncs: {activeSyncsCount && activeSyncsCount}
-      </span>
+      <div className="text-center">
+        <h2 className="mb-1 mt-4 font-weight-bold">Syncs</h2>
+        <p className="mb-1 mt-2">
+          All the active pipelines created using this model
+        </p>
+      </div>
+      <div className="my-2">
+        <span className="text-muted">
+          Number of syncs: {activeSyncsCount && activeSyncsCount}
+        </span>
+      </div>
       <Table hover>
         <thead>
           <tr>
@@ -42,26 +46,31 @@ export const ModelSyncView = ({
             activeSyncDetails.map((field, index) => (
               <tr
                 key={index}
+                className="align-middle my-1"
                 onClick={() => router.push(`/pipelines/${field.id}`)}
               >
-                <td>{field.id}</td>
-                <td>{field.name}</td>
-                <td>
-                  <div className="categories">
-                    <Row>
-                      <Col className="col-md-2">
-                        <img src={field.app.logoUrl} />
-                      </Col>
-                      <Col className="col-md-10">
-                        {field.app.name}
-                        <div className="text-muted">{field.app.type}</div>
-                      </Col>
-                    </Row>
+                <td className="col-1 p-1">{field.id}</td>
+                <td className="col-3 p-1">{field.name}</td>
+                <td className="col-3 p-1">
+                  <div className="d-flex align-items-center">
+                    <img className="app-logo-url" src={field.app.logoUrl} />
+                    <div className="px-2">
+                      <span className="font-weight-bold">{field.app.name}</span>
+                      <div className="text-muted ">{field.app.type}</div>
+                    </div>
                   </div>
                 </td>
-                <td>{generateTime(field.jobSchedule.frequency)}</td>
-                <td>{field.syncStatus}</td>
-                <td>{">"}</td>
+                <td className="col-2 p-1">
+                  {generateTime(field.jobSchedule.frequency)}
+                </td>
+                <td className="col-1 p-1">{field.syncStatus}</td>
+                <td className="col-1 p-1 text-center">
+                  <img
+                    className="w-25 h-25"
+                    src="/images/right-arrow-warehouse.svg"
+                    alt="Right Arrow for Warehouse"
+                  />
+                </td>
               </tr>
             ))}
         </tbody>

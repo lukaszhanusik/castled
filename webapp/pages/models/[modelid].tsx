@@ -96,16 +96,11 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       }}
     >
       {!model && <Loading />}
-      <div className="categories">
-        <Row>
-          <Col className="col-md-2">
-            <img src={model?.warehouse.logoUrl} />
-          </Col>
-          <Col className="col-md-10 ps-0">
-            {model?.warehouse.type}
-            <div className="text-muted">{model?.modelType}</div>
-          </Col>
-        </Row>
+      <div className="categories m-0">
+        <img src={model?.warehouse.logoUrl} />
+        <span className="col-md-10 ps-0 px-4 font-weight-bold">{model?.warehouse.name}</span>
+        <span className="col-md-10 ps-0 px-4 text-muted">{model?.warehouse.type}</span>
+        <span className="col-md-10 ps-0 px-4">Total Syncs - {model?.activeSyncsCount}</span>
       </div>
       <Tabs defaultActiveKey="Query" className="mb-3">
         <Tab eventKey="Query" title="Query">
