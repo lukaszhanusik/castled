@@ -20,20 +20,30 @@ function ModelColumnDetailsView({
     if (warehouse && warehouse.columnDetails) {
       const warehouseResults = warehouse.columnDetails.map((field, index) => (
         <tr key={`${field.name}-${index}`}>
-          <td>{field.name}</td>
+          <td>{columnNameTransform(field.name)}</td>
           <td>
-            <input type="text" value={pascalCase(field.schema.type)} disabled />
+            <input
+              type="text"
+              value={stringTransform(field.schema.type)}
+              disabled
+            />
           </td>
           <td>{queryModelPK?.primaryKeys.includes(field.name) && "YES"}</td>
         </tr>
       ));
 
-      setWarehouseRows((prev) => [...prev, ...warehouseResults]);
-      setSearchResults((prev) => [...prev, ...warehouseResults]);
+      setWarehouseRows(warehouseResults);
+      setSearchResults(warehouseResults);
     }
   }, [warehouse]);
 
-  const pascalCase = (str: string) => str[0] + str.slice(1).toLowerCase();
+  const stringTransform = (str: string) => str[0] + str.slice(1).toLowerCase();
+
+  const columnNameTransform = (str: string) =>
+    str
+      .split("_")
+      .map((e) => e[0].toUpperCase() + e.slice(1))
+      .join(" ");
 
   function searchRows(e: ChangeEvent<HTMLInputElement>) {
     setSearchResults(
