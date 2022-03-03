@@ -1,6 +1,6 @@
 CREATE TABLE `query_model` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NULL,
   `team_id` bigint(20) NOT NULL,
   `warehouse_id` varchar(255) NOT NULL,
   `model_name` varchar(50) NOT NULL,

@@ -6,6 +6,7 @@ export interface ModelListDto {
   warehouse: ConnectorDetails;
   modelName: string;
   modelType: string;
+  demo: boolean;
   modelDetails: {
     sourceQuery: string;
     type: string;

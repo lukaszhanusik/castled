@@ -165,7 +165,7 @@ public interface PipelineDAO {
                     .status(PipelineStatus.valueOf(rs.getString(TableFields.STATUS)))
                     .seqId(rs.getLong(TableFields.SEQ_ID)).appSyncConfig(appSyncConfig)
                     .dataMapping(mapping).uuid(rs.getString(TableFields.UUID)).isDeleted(rs.getBoolean(TableFields.ID))
-                    .jobSchedule(jobSchedule).modelId(rs.getLong("model_id"))
+                    .jobSchedule(jobSchedule).modelId(rs.getLong("model_id")).sourceQuery(rs.getString("source_query"))
                     .teamId(rs.getLong(TableFields.TEAM_ID)).queryMode(QueryMode.valueOf(rs.getString("query_mode")))
                     .appId(rs.getLong(TableFields.APP_ID)).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
                     .syncStatus(PipelineSyncStatus.valueOf(rs.getString("sync_status"))).build();

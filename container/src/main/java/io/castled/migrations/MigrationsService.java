@@ -4,9 +4,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.migrations.models.PipelineAndMapping;
 import io.castled.models.DataMappingType;
+import io.castled.models.Pipeline;
 import io.castled.models.TargetFieldsMapping;
 import io.castled.utils.JsonUtils;
 import org.jdbi.v3.core.Jdbi;
+
+import java.util.List;
 
 
 @Singleton
@@ -27,5 +30,9 @@ public class MigrationsService {
             targetFieldsMapping.setPrimaryKeys(pipelineAndMapping.getMapping().getPrimaryKeys());
             this.migrationsDAO.updateMapping(pipelineAndMapping.getId(), JsonUtils.objectToString(targetFieldsMapping));
         }
+    }
+
+    public void migratePipelineChanges() {
+        List<Pipeline> pipelineList = this.migrationsDAO.listPipelinesTobeMigrated();
     }
 }

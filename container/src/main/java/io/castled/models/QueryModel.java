@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,4 +19,5 @@ public class QueryModel {
     private String modelType;
     private QueryModelDetails modelDetails;
     private QueryModelPK queryModelPK;
+    private boolean demo;
 }

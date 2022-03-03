@@ -34,7 +34,6 @@ const SourceWizard = ({
             setPipelineWizContext(pipelineWizContext);
           }}
           onFinish={(id) => {
-            console.log("--here---");
             _.set(pipelineWizContext, "values.warehouseId", id);
             setPipelineWizContext(pipelineWizContext);
             setCurWizardStep(CUR_WIZARD_STEP_GROUP, "configureModel");

@@ -21,4 +21,6 @@ public class ModelInputDTO {
 
     @NotNull
     private QueryModelPK queryModelPK;
+
+    private boolean demo;
 }
