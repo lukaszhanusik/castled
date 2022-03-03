@@ -21,7 +21,6 @@ public class IntercomUtils {
         switch (intercomObject) {
             case LEAD:
             case USER:
-            case CONTACT:
                 return IntercomModel.CONTACT;
             case COMPANY:
                 return IntercomModel.COMPANY;
@@ -42,6 +41,9 @@ public class IntercomUtils {
                 }
             }
         }
+        if (dataAttributes.stream().noneMatch(dataAttribute -> dataAttribute.getName().equals(IntercomObjectFields.COMPANY_ID))) {
+            schemaBuilder.put(IntercomObjectFields.COMPANY_ID, SchemaConstants.OPTIONAL_STRING_SCHEMA);
+        }
         return schemaBuilder.build();
     }
 
@@ -56,13 +58,11 @@ public class IntercomUtils {
                 return null;
             }
         }
-        if (intercomObject == IntercomObject.CONTACT && dataAttribute.getName().equals(IntercomObjectFields.ROLE)) {
-            return SchemaConstants.STRING_SCHEMA;
 
-        }
+
         switch (dataAttribute.getDataType()) {
             case "string":
-                return SchemaConstants.OPTIONAL_STRING_SCHEMA;
+                return SchemaConstants.STRING_SCHEMA;
             case "integer":
                 return SchemaConstants.OPTIONAL_LONG_SCHEMA;
             case "float":
@@ -70,7 +70,7 @@ public class IntercomUtils {
             case "boolean":
                 return SchemaConstants.OPTIONAL_BOOL_SCHEMA;
             case "date":
-                return SchemaConstants.ZONED_TIMESTAMP_SCHEMA;
+                return SchemaConstants.OPTIONAL_ZONED_TIMESTAMP_SCHEMA;
             default:
                 log.warn(String.format("Invalid data type %s", dataAttribute.getDataType()));
                 return null;

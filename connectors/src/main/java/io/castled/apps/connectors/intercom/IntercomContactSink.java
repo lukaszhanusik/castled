@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -53,9 +54,19 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         public void accept(ObjectIdAndMessage objectIdAndMessage) {
             if (objectIdAndMessage.getId() == null) {
                 createContact(objectIdAndMessage.getMessage());
+            } else {
+                updateContact(objectIdAndMessage.getMessage(), objectIdAndMessage.getId());
+            }
+        }
+
+        private void attachCompanyIfRequired(Message message, String contactId) throws IntercomRestException {
+            String companyId = Optional.ofNullable(message.getRecord().getField(IntercomObjectFields.COMPANY_ID))
+                    .map(Field::getValue).map(Object::toString).orElse(null);
+            if (companyId == null) {
                 return;
             }
-            updateContact(objectIdAndMessage.getMessage(), objectIdAndMessage.getId());
+            String internalCompanyId = intercomRestClient.getIntercomCompanyId(companyId);
+            intercomRestClient.attachCompany(contactId, internalCompanyId);
         }
 
         private void createContact(Message message) {
@@ -64,7 +75,9 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
             }
             try {
-                intercomRestClient.createContact(contactProperties, customAttributes);
+                String contactId = intercomRestClient.createContact(contactProperties, customAttributes);
+                attachCompanyIfRequired(message, contactId);
+
             } catch (IntercomRestException e) {
                 CastledError pipelineError = intercomErrorParser.parseIntercomError(e.getErrorResponse());
                 errorOutputStream.writeFailedRecord(message, pipelineError);
@@ -78,7 +91,8 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
             }
             try {
-                intercomRestClient.updateContact(id, contactProperties, customAttributes);
+                String contactId = intercomRestClient.updateContact(id, contactProperties, customAttributes);
+                attachCompanyIfRequired(message, contactId);
             } catch (IntercomRestException e) {
                 CastledError pipelineError = intercomErrorParser.parseIntercomError(e.getErrorResponse());
                 errorOutputStream.writeFailedRecord(message, pipelineError);
@@ -95,10 +109,8 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         this.intercomObject = intercomObject;
         this.primaryKeys = primaryKeys;
 
-
         this.customAttributes = intercomRestClient.listAttributes(IntercomModel.CONTACT)
                 .stream().filter(DataAttribute::isCustom).map(DataAttribute::getName).collect(Collectors.toList());
-
         this.primaryKeyIdMapper = constructPrimaryKeyIdMapper(appSyncConfig);
         this.errorOutputStream = errorOutputStream;
 
@@ -119,7 +131,6 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             errorOutputStream.writeFailedRecord(message,
                     new UnclassifiedError("Internal error!! Unable to publish records to records queue. Please contact support"));
         }
-
     }
 
     @Override
@@ -149,6 +160,9 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         for (Field field : record.getFields()) {
             Object value = record.getValue(field.getName());
             if (value != null) {
+                if (field.getName().equals(IntercomObjectFields.COMPANY_ID)) {
+                    continue;
+                }
                 if (SchemaUtils.isZonedTimestamp(field.getSchema())) {
                     recordProperties.put(field.getName(), ((ZonedDateTime) value).toEpochSecond());
                 } else {

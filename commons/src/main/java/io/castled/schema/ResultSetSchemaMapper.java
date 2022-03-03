@@ -26,8 +26,9 @@ public class ResultSetSchemaMapper {
             Schema columnSchema = getColumnSchema(columnType, typeName, scale, precision);
             if (columnSchema != null) {
                 columnSchema.setOptional(true);
+                schemaBuilder.put(columnLabel, columnSchema);
             }
-            schemaBuilder.put(columnLabel, columnSchema);
+
         }
         return schemaBuilder.build();
     }
