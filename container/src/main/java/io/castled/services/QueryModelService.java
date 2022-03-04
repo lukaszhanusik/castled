@@ -59,8 +59,7 @@ public class QueryModelService {
         if (queryModel != null) {
             throw new BadRequestException("Model name already taken,enter another model name");
         }
-        Long modelId = this.queryModelDAO.createQueryModel(modelInputDTO, teamId);
-        return modelId;
+        return this.queryModelDAO.createQueryModel(modelInputDTO, teamId);
     }
 
     public ModelDetailsDTO getQueryModel(Long modelId, Long teamId) {
