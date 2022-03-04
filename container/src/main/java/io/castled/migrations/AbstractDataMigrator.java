@@ -1,6 +1,7 @@
 package io.castled.migrations;
 
 import io.castled.ObjectRegistry;
+import io.castled.exceptions.CastledRuntimeException;
 import io.castled.migrations.models.DataMigration;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
@@ -31,6 +32,8 @@ public abstract class AbstractDataMigrator implements DataMigrator {
             migrationsDAO.markMigrationProcessed(getMigrationType());
         } catch (Exception e) {
             migrationsDAO.markMigrationFailed(getMigrationType(), e.getMessage());
+            throw new CastledRuntimeException(String.format("Data Migration %s failed with error %s",
+                    getMigrationType(), e.getMessage()));
         }
     }
 

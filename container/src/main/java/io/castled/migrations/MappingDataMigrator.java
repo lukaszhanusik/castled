@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
+import io.castled.exceptions.CastledRuntimeException;
 import io.castled.models.Pipeline;
 import io.castled.models.QueryModelPK;
 import io.castled.models.TargetFieldsMapping;
@@ -30,7 +31,6 @@ public class MappingDataMigrator extends AbstractDataMigrator {
 
     @Override
     public void doMigrateData() {
-
         MigrationsDAO pipelineDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(MigrationsDAO.class);
         WarehouseService warehouseService = ObjectRegistry.getInstance(WarehouseService.class);
         QueryModelService queryModelService = ObjectRegistry.getInstance(QueryModelService.class);
