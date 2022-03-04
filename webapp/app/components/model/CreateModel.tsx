@@ -217,7 +217,7 @@ const CreateModel = ({
                       Model Name <span className="required-icon">*</span>
                     </label>
                     <input
-                      placeholder="Key"
+                      placeholder="Model Name"
                       type="text"
                       className="form-control form-control-md"
                       onChange={(e) => {
