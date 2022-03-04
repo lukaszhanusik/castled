@@ -45,6 +45,9 @@ import io.castled.jarvis.taskmanager.models.TaskGroup;
 import io.castled.kafka.KafkaApplicationConfig;
 import io.castled.kafka.producer.CastledKafkaProducer;
 import io.castled.kafka.producer.KafkaProducerConfiguration;
+import io.castled.migrations.DataMigrator;
+import io.castled.migrations.MappingDataMigrator;
+import io.castled.migrations.MigrationType;
 import io.castled.models.JarvisTaskConfiguration;
 import io.castled.models.RedisConfig;
 import io.castled.optionsfetchers.appsync.AppSyncOptionsFetcher;
@@ -93,7 +96,14 @@ public class CastledModule extends AbstractModule {
         bindCastledEventHandlers();
         bindAppConnectors();
         bindWarehouseConnectors();
+        bindDataMigrators();
 
+    }
+
+    private void bindDataMigrators() {
+        MapBinder<MigrationType, DataMigrator> dataMigrators = MapBinder.newMapBinder(binder(),
+                MigrationType.class, DataMigrator.class);
+        dataMigrators.addBinding(MigrationType.MAPPING_MIGRATION).to(MappingDataMigrator.class);
     }
 
     private void bindWarehouseConnectors() {
@@ -186,9 +196,9 @@ public class CastledModule extends AbstractModule {
         jedisPoolConfig.setMaxTotal(20);
         jedisPoolConfig.setMaxIdle(20);
         jedisPoolConfig.setMaxWaitMillis(TimeUtils.secondsToMillis(10));
-        if(Objects.nonNull(redisConfig.getPassword())){
+        if (Objects.nonNull(redisConfig.getPassword())) {
             // if add password  timeout with 60 . maybe with one conf
-            return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort(),60,redisConfig.getPassword());
+            return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort(), 60, redisConfig.getPassword());
         }
         return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort());
     }
@@ -245,7 +255,7 @@ public class CastledModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public DocConfiguration providesDocConfiguration(){
+    public DocConfiguration providesDocConfiguration() {
         return castledConfiguration.getDocConfiguration();
     }
 }

@@ -2,8 +2,6 @@ package io.castled.migrations;
 
 import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.constants.TableFields;
-import io.castled.dtos.querymodel.ModelInputDTO;
-import io.castled.migrations.models.MigrationDetails;
 import io.castled.migrations.models.PipelineAndMapping;
 import io.castled.models.*;
 import io.castled.models.jobschedule.JobSchedule;
@@ -12,8 +10,6 @@ import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 

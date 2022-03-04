@@ -8,20 +8,28 @@ import io.castled.ObjectRegistry;
 import io.castled.daos.InstallationDAO;
 import io.castled.events.CastledEventsClient;
 import io.castled.events.NewInstallationEvent;
+import io.castled.exceptions.CastledRuntimeException;
 import io.castled.migrations.DataMigrator;
 import io.castled.migrations.MigrationType;
-import io.castled.migrations.DataMigratorAggregator;
+import io.castled.migrations.DataMigratorFactory;
 import io.castled.services.UsersService;
 import io.castled.utils.AsciiArtUtils;
+import io.castled.utils.FileUtils;
 import io.dropwizard.cli.ServerCommand;
 import io.dropwizard.setup.Environment;
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Slf4j
 public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
 
     public CastledServerCommand(CastledApplication castledApplication) {
@@ -53,9 +61,18 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
 
     }
 
-    private void runCodeLevelMigrations(){
-        Map<MigrationType,DataMigrator> migratorList = ObjectRegistry.getInstance(DataMigratorAggregator.class).getDataMigratorMap();
-        migratorList.forEach((key, value) -> value.runDataMigration());
+    private void runCodeLevelMigrations() {
+        try {
+            DataMigratorFactory dataMigratorFactory = ObjectRegistry.getInstance(DataMigratorFactory.class);
+            List<MigrationType> allMigrations = Objects.requireNonNull(FileUtils.getResourceFileLines("java_migrations"))
+                    .stream().map(MigrationType::valueOf).collect(Collectors.toList());
+            for (MigrationType migrationType : allMigrations) {
+                dataMigratorFactory.getDataMigrator(migrationType).migrateData();
+            }
+        } catch (IOException e) {
+            log.error("Code level data migration failed", e);
+            throw new CastledRuntimeException(e.getMessage());
+        }
     }
 
     private void createNewInstallationIfRequired() {
