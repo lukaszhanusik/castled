@@ -87,10 +87,12 @@ export default function MappingImportantFields({
                 }
                 isClearable={field.optional}
                 placeholder={"Select a column"}
-                defaultValue={{
-                  value: defaultValue(field),
-                  label: defaultValue(field),
-                }}
+                defaultValue={
+                  defaultValue(field) && {
+                    value: defaultValue(field),
+                    label: defaultValue(field),
+                  }
+                }
               />
             </div>
           </div>

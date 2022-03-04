@@ -162,10 +162,12 @@ export default function MappingMiscellaneousFields({
       inputBlur={() =>
         setFieldTouched?.(keyValueDefault("appField", key), true)
       }
-      defaultWarehouseValue={{
-        value: defaultValue("warehouseField", key),
-        label: defaultValue("warehouseField", key),
-      }}
+      defaultWarehouseValue={
+        defaultValue("warehouseField", key) && {
+          value: defaultValue("warehouseField", key),
+          label: defaultValue("warehouseField", key),
+        }
+      }
       defaultAppValue={defaultValue("appField", key)}
     />
   );
@@ -231,10 +233,12 @@ export default function MappingMiscellaneousFields({
                 inputBlur={() =>
                   setFieldTouched?.(keyValueDefault("appField"), true)
                 }
-                defaultWarehouseValue={{
-                  value: defaultValue("warehouseField", "0x0x0x0x0x"),
-                  label: defaultValue("warehouseField", "0x0x0x0x0x"),
-                }}
+                defaultWarehouseValue={
+                  defaultValue("warehouseField", "0x0x0x0x0x") && {
+                    value: defaultValue("warehouseField", "0x0x0x0x0x"),
+                    label: defaultValue("warehouseField", "0x0x0x0x0x"),
+                  }
+                }
                 defaultAppValue={defaultValue("appField", "0x0x0x0x0x")}
               />
               {additionalRow}

@@ -1,5 +1,3 @@
-// Section 3 Mapping with formic
-
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MappingFieldsProps } from "../types/componentTypes";
@@ -19,10 +17,16 @@ export default function MappingImportantFields({
   const [optionalFieldsElement, setOptionalFieldsElement] = useState<
     JSX.Element[]
   >([]);
+  const [trackFieldsElement, setTrackFieldsElement] = useState<JSX.Element[]>(
+    []
+  );
   const [form, setForm] = useState({});
 
   useEffect(() => {
-    if (optionalFields) setOptionalFieldsElement(optionalFields);
+    if (optionalFields) {
+      setOptionalFieldsElement((prev) => [...prev, ...optionalFields]);
+      setTrackFieldsElement((prev) => [...prev, ...optionalFields]);
+    }
   }, []);
 
   // On mount check if fields are there in localStorage
@@ -31,9 +35,26 @@ export default function MappingImportantFields({
     if (getLocalStorageItem) {
       const destinationFieldsForm = JSON.parse(getLocalStorageItem);
       Object.assign(values, destinationFieldsForm);
-    }
-  }, []);
 
+      for (let key of Object.keys(destinationFieldsForm)) {
+        const [fieldName, status, type, index] = key.split("-");
+        if (key.includes("optional-warehouseField")) {
+          const elementToAdd = trackFieldsElement.filter(
+            (ele) => ele.key === index
+          );
+          // console.log(elementToAdd[0]);
+          if (elementToAdd[0]) {
+            setOptionalRow((prev) => [...prev, elementToAdd[0]]);
+            setOptionalFieldsElement((prevState) =>
+              prevState.filter((field) => field.key !== elementToAdd[0].key)
+            );
+          }
+        }
+      }
+    }
+  }, [trackFieldsElement]);
+
+  console.log(optionalRow);
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
@@ -42,7 +63,7 @@ export default function MappingImportantFields({
   const optionalFields = destinationFieldSection[0].optionalFields?.map(
     (optionalField, i) => (
       <DestinationFieldRows
-        key={optionalField.fieldName}
+        key={i}
         options={options}
         destinationFieldSection={destinationFieldSection}
         isDisabled={!optionalField.optional}
@@ -62,7 +83,7 @@ export default function MappingImportantFields({
         }}
         handleDelete={(e) => {
           e.preventDefault();
-          deleteRow(optionalField.fieldName);
+          deleteRow(i.toString());
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             ""
@@ -75,14 +96,18 @@ export default function MappingImportantFields({
             true
           )
         }
-        defaultAppValue={{
-          value: defaultValue("optional-appField", i),
-          label: defaultValue("optional-appField", i),
-        }}
-        defaultWarehouseValue={{
-          value: defaultValue("optional-warehouseField", i),
-          label: defaultValue("optional-warehouseField", i),
-        }}
+        defaultAppValue={
+          defaultValue("optional-appField", i) && {
+            value: defaultValue("optional-appField", i),
+            label: defaultValue("optional-appField", i),
+          }
+        }
+        defaultWarehouseValue={
+          defaultValue("optional-warehouseField", i) && {
+            value: defaultValue("optional-warehouseField", i),
+            label: defaultValue("optional-warehouseField", i),
+          }
+        }
         isClearable={true}
       />
     )
@@ -167,10 +192,12 @@ export default function MappingImportantFields({
                         mandatoryField.fieldDisplayName ||
                         mandatoryField.fieldName,
                     }}
-                    defaultWarehouseValue={{
-                      value: defaultValue("mandatory-warehouseField", i),
-                      label: defaultValue("mandatory-warehouseField", i),
-                    }}
+                    defaultWarehouseValue={
+                      defaultValue("mandatory-warehouseField", i) && {
+                        value: defaultValue("mandatory-warehouseField", i),
+                        label: defaultValue("mandatory-warehouseField", i),
+                      }
+                    }
                     isDisabled={!mandatoryField.optional}
                     onChangeWarehouse={(e) => {
                       setFieldValue?.(

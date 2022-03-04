@@ -82,10 +82,12 @@ export default function MappingPrimaryKeyFields({
                       setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                     placeholder={"Select a column"}
-                    defaultValue={{
-                      value: defaultValue("0", "warehouseField"),
-                      label: defaultValue("0", "warehouseField"),
-                    }}
+                    defaultValue={
+                      defaultValue("0", "warehouseField") && {
+                        value: defaultValue("0", "warehouseField"),
+                        label: defaultValue("0", "warehouseField"),
+                      }
+                    }
                   />
                 </th>
                 <th>
@@ -109,10 +111,12 @@ export default function MappingPrimaryKeyFields({
                       setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                     }
                     placeholder={"Select a field"}
-                    defaultValue={{
-                      value: defaultValue("0", "appField"),
-                      label: defaultValue("0", "appField"),
-                    }}
+                    defaultValue={
+                      defaultValue("0", "appField") && {
+                        value: defaultValue("0", "appField"),
+                        label: defaultValue("0", "appField"),
+                      }
+                    }
                   />
                 </th>
                 <Placeholder as="td" className="pb-0">
