@@ -19,5 +19,5 @@ public class WarehouseDetails {
     private String name;
     private WarehouseType type;
     private String logoUrl;
-    List<FieldSchema> columnDetails;
+    private List<FieldSchema> columnDetails;
 }
