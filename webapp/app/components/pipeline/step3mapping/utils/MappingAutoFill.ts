@@ -36,56 +36,81 @@ function deleteItemFromLocalStorage(key: string, type: string) {
   }
 }
 
-interface IDefaultValueProps {
-  form: string;
-  type?: string;
-  index?: number | string;
-  field?: string;
-}
-
-function defaultValue({
-  form,
-  field,
-  type,
-  index,
-}: IDefaultValueProps): string {
-
+function defaultValue(
+  form: string,
+  field: string,
+  type: string,
+  index: string | number
+) {
   const getLocalStorageItem = localStorage.getItem(`${form}`);
 
   if (getLocalStorageItem) {
-    const primaryKeysForm = JSON.parse(getLocalStorageItem);
-
+    const responseJson = JSON.parse(getLocalStorageItem);
     switch (form) {
-      case "destinationFieldForm":
-        return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
+      case "importantParamsForm":
+        return responseJson[`IMPORTANT_PARAMS-${field}`];
       case "primaryKeysForm":
-
-    }
-  }
-
-
-  function defaultValue(field: string, type: string) {
-    const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
-    if (getLocalStorageItem) {
-      const primaryKeysForm = JSON.parse(getLocalStorageItem);
-      return primaryKeysForm[`PRIMARY_KEYS-${type}-${field}`];
-    }
-  }
-
-  function defaultValue(field: string) {
-    const getLocalStorageItem = localStorage.getItem("importantParamsForm");
-    if (getLocalStorageItem) {
-      const importantParamsForm = JSON.parse(getLocalStorageItem);
-      return importantParamsForm[`IMPORTANT_PARAMS-${field}`];
-    }
-  }
-
-  function defaultValue(type: string, index: number | string) {
-    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
-    if (getLocalStorageItem) {
-      const primaryKeysForm = JSON.parse(getLocalStorageItem);
-      return primaryKeysForm[`MISCELLANEOUS_FIELDS-${type}-${index}`];
+        return responseJson[`PRIMARY_KEYS-${type}-${field}`];
+      case "destinationFieldForm":
+        return responseJson[`DESTINATION_FIELDS-${type}-${index}`];
+      case "misclFieldForm":
+        return responseJson[`MISCELLANEOUS_FIELDS-${type}-${index}`];
     }
   }
 }
-export { removeAllLocalStorageMapping, deleteItemFromLocalStorage };
+
+function getAndSetLocalStorage(
+  formType: string,
+  form: { [key: string]: string }
+) {
+  const getLocalStorageItem = localStorage.getItem(formType);
+  const combineAllItems = getLocalStorageItem
+    ? Object.assign(JSON.parse(getLocalStorageItem), form)
+    : form;
+  localStorage.setItem(formType, JSON.stringify(combineAllItems));
+}
+
+function addkeysToLocalStorage(
+  input: string,
+  formType: string,
+  field: string,
+  type: string,
+  index: string | number
+) {
+  const form = {};
+
+  if (formType === "importantParamsForm") {
+    Object.assign(form, {
+      [`IMPORTANT_PARAMS-${field}`]: input,
+    });
+    getAndSetLocalStorage(formType, form);
+  }
+
+  if (formType === "primaryKeysForm") {
+    Object.assign(form, {
+      [`PRIMARY_KEYS-${type}-0`]: input,
+    });
+    getAndSetLocalStorage(formType, form);
+  }
+
+  if (formType === "destinationFieldForm") {
+    Object.assign(form, {
+      [`DESTINATION_FIELDS-${type}-${index}`]: input,
+    });
+    getAndSetLocalStorage(formType, form);
+  }
+
+  if (formType === "misclFieldForm") {
+    Object.assign(form, {
+      [`MISCELLANEOUS_FIELDS-${type}-${index}`]: input,
+    });
+    getAndSetLocalStorage(formType, form);
+  }
+}
+
+export {
+  removeAllLocalStorageMapping,
+  deleteItemFromLocalStorage,
+  defaultValue,
+  addkeysToLocalStorage,
+};

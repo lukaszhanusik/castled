@@ -5,6 +5,7 @@ import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 import { useState, useEffect } from "react";
+import { addkeysToLocalStorage, defaultValue } from "../utils/MappingAutoFill";
 interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
   onlyOptions?: SchemaOptions[];
 }
@@ -32,32 +33,6 @@ export default function MappingPrimaryKeyFields({
     return fields.type === "PRIMARY_KEYS" && fields;
   });
 
-  // AddKeys to localStorage
-  function addKeysToState(e: any, type: string) {
-    const form = {};
-    if (primaryKeysSection.length > 0) {
-      Object.assign(form, {
-        [`PRIMARY_KEYS-${type}-0`]: e?.value,
-      });
-      setForm((prev) => ({ ...prev, ...form }));
-    }
-
-    const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
-    const combineAllItems = getLocalStorageItem
-      ? Object.assign(JSON.parse(getLocalStorageItem), form)
-      : form;
-    localStorage.setItem("primaryKeysForm", JSON.stringify(combineAllItems));
-  }
-
-  // Get default values from localStorage
-  function defaultValue(field: string, type: string) {
-    const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
-    if (getLocalStorageItem) {
-      const primaryKeysForm = JSON.parse(getLocalStorageItem);
-      return primaryKeysForm[`PRIMARY_KEYS-${type}-${field}`];
-    }
-  }
-
   return (
     <div className="row">
       {primaryKeysSection.length > 0 &&
@@ -76,16 +51,37 @@ export default function MappingPrimaryKeyFields({
                         `PRIMARY_KEYS-warehouseField-0`,
                         e?.value
                       );
-                      addKeysToState(e, "warehouseField");
+                      addkeysToLocalStorage(
+                        e?.value,
+                        "primaryKeysForm",
+                        "",
+                        "warehouseField",
+                        ""
+                      );
                     }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                     placeholder={"Select a column"}
                     defaultValue={
-                      defaultValue("0", "warehouseField") && {
-                        value: defaultValue("0", "warehouseField"),
-                        label: defaultValue("0", "warehouseField"),
+                      defaultValue(
+                        "primaryKeysForm",
+                        "0",
+                        "warehouseField",
+                        ""
+                      ) && {
+                        value: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "warehouseField",
+                          ""
+                        ),
+                        label: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "warehouseField",
+                          ""
+                        ),
                       }
                     }
                   />
@@ -105,16 +101,32 @@ export default function MappingPrimaryKeyFields({
                     }))}
                     onChange={(e) => {
                       setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value);
-                      addKeysToState(e, "appField");
+                      addkeysToLocalStorage(
+                        e?.value,
+                        "primaryKeysForm",
+                        "",
+                        "appField",
+                        ""
+                      );
                     }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                     }
                     placeholder={"Select a field"}
                     defaultValue={
-                      defaultValue("0", "appField") && {
-                        value: defaultValue("0", "appField"),
-                        label: defaultValue("0", "appField"),
+                      defaultValue("primaryKeysForm", "0", "appField", "") && {
+                        value: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "appField",
+                          ""
+                        ),
+                        label: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "appField",
+                          ""
+                        ),
                       }
                     }
                   />

@@ -2,7 +2,7 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import { MappingFieldsProps } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
-import { ImportantParamsField } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { addkeysToLocalStorage, defaultValue } from "../utils/MappingAutoFill";
 
 export default function MappingImportantFields({
   options,
@@ -26,34 +26,6 @@ export default function MappingImportantFields({
   const importantParamsSection = mappingGroups.filter((fields) => {
     return fields.type === "IMPORTANT_PARAMS" && fields.fields;
   });
-
-  function addKeysToState(e: any, field: ImportantParamsField) {
-    const form = {};
-    if (importantParamsSection.length > 0) {
-      Object.assign(form, {
-        [`IMPORTANT_PARAMS-${field.fieldName}`]: e?.value,
-      });
-      setForm((prev) => ({ ...prev, ...form }));
-    }
-
-    const getLocalStorageItem = localStorage.getItem("importantParamsForm");
-    const combineAllItems = getLocalStorageItem
-      ? Object.assign(JSON.parse(getLocalStorageItem), form)
-      : form;
-    localStorage.setItem(
-      "importantParamsForm",
-      JSON.stringify(combineAllItems)
-    );
-  }
-  // console.log(form);
-
-  function defaultValue(field: string) {
-    const getLocalStorageItem = localStorage.getItem("importantParamsForm");
-    if (getLocalStorageItem) {
-      const importantParamsForm = JSON.parse(getLocalStorageItem);
-      return importantParamsForm[`IMPORTANT_PARAMS-${field}`];
-    }
-  }
 
   return (
     <div className="row py-1">
@@ -80,7 +52,13 @@ export default function MappingImportantFields({
                     `IMPORTANT_PARAMS-${field.fieldName}`,
                     e?.value
                   );
-                  addKeysToState(e, field);
+                  addkeysToLocalStorage(
+                    e?.value,
+                    "importantParamsForm",
+                    field.fieldName,
+                    "",
+                    ""
+                  );
                 }}
                 onBlur={() =>
                   setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
@@ -88,9 +66,24 @@ export default function MappingImportantFields({
                 isClearable={field.optional}
                 placeholder={"Select a column"}
                 defaultValue={
-                  defaultValue(field.fieldName) && {
-                    value: defaultValue(field.fieldName),
-                    label: defaultValue(field.fieldName),
+                  defaultValue(
+                    "importantParamsForm",
+                    field.fieldName,
+                    "",
+                    ""
+                  ) && {
+                    value: defaultValue(
+                      "importantParamsForm",
+                      field.fieldName,
+                      "",
+                      ""
+                    ),
+                    label: defaultValue(
+                      "importantParamsForm",
+                      field.fieldName,
+                      "",
+                      ""
+                    ),
                   }
                 }
               />

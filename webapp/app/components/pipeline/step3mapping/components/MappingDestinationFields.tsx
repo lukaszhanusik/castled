@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MappingFieldsProps } from "../types/componentTypes";
-import { deleteItemFromLocalStorage } from "../utils/MappingAutoFill";
+import {
+  addkeysToLocalStorage,
+  defaultValue,
+  deleteItemFromLocalStorage,
+} from "../utils/MappingAutoFill";
 import DestinationFieldRows from "./Layouts/DestinationFieldRows";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
@@ -73,14 +77,26 @@ export default function MappingImportantFields({
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             e?.value
           );
-          addKeysToState(e, "optional-warehouseField", i);
+          addkeysToLocalStorage(
+            e?.value,
+            "destinationFieldForm",
+            "",
+            "optional-warehouseField",
+            i
+          );
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-appField-${i}`,
             e?.value
           );
-          addKeysToState(e, "optional-appField", i);
+          addkeysToLocalStorage(
+            e?.value,
+            "destinationFieldForm",
+            "",
+            "optional-appField",
+            i
+          );
         }}
         handleDelete={(e) => {
           e.preventDefault();
@@ -99,18 +115,43 @@ export default function MappingImportantFields({
           )
         }
         defaultAppValue={
-          defaultValue("optional-appField", i) && {
-            value: defaultValue("optional-appField", i),
-            label: defaultValue("optional-appField", i)
+          defaultValue("destinationFieldForm", "", "optional-appField", i) && {
+            value: defaultValue(
+              "destinationFieldForm",
+              "",
+              "optional-appField",
+              i
+            ),
+            label: defaultValue(
+              "destinationFieldForm",
+              "",
+              "optional-appField",
+              i
+            )
               .split("_")
               .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
               .join(" "),
           }
         }
         defaultWarehouseValue={
-          defaultValue("optional-warehouseField", i) && {
-            value: defaultValue("optional-warehouseField", i),
-            label: defaultValue("optional-warehouseField", i)
+          defaultValue(
+            "destinationFieldForm",
+            "",
+            "optional-warehouseField",
+            i
+          ) && {
+            value: defaultValue(
+              "destinationFieldForm",
+              "",
+              "optional-warehouseField",
+              i
+            ),
+            label: defaultValue(
+              "destinationFieldForm",
+              "",
+              "optional-warehouseField",
+              i
+            )
               .split("_")
               .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
               .join(" "),
@@ -151,34 +192,6 @@ export default function MappingImportantFields({
     }
   }
 
-  // AddKeys to localStorage
-  function addKeysToState(e: any, type: string, index: number) {
-    const form = {};
-    if (destinationFieldSection.length > 0) {
-      Object.assign(form, {
-        [`DESTINATION_FIELDS-${type}-${index}`]: e?.value,
-      });
-    }
-
-    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
-    const combineAllItems = getLocalStorageItem
-      ? Object.assign(JSON.parse(getLocalStorageItem), form)
-      : form;
-    localStorage.setItem(
-      "destinationFieldForm",
-      JSON.stringify(combineAllItems)
-    );
-  }
-
-  // Get default values from localStorage
-  function defaultValue(type: string, index: number) {
-    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
-    if (getLocalStorageItem) {
-      const primaryKeysForm = JSON.parse(getLocalStorageItem);
-      return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
-    }
-  }
-
   return (
     <div className="row">
       {destinationFieldSection.length > 0 &&
@@ -200,9 +213,24 @@ export default function MappingImportantFields({
                         mandatoryField.fieldName,
                     }}
                     defaultWarehouseValue={
-                      defaultValue("mandatory-warehouseField", i) && {
-                        value: defaultValue("mandatory-warehouseField", i),
-                        label: defaultValue("mandatory-warehouseField", i)
+                      defaultValue(
+                        "destinationFieldForm",
+                        "",
+                        "mandatory-warehouseField",
+                        i
+                      ) && {
+                        value: defaultValue(
+                          "destinationFieldForm",
+                          "",
+                          "mandatory-warehouseField",
+                          i
+                        ),
+                        label: defaultValue(
+                          "destinationFieldForm",
+                          "",
+                          "mandatory-warehouseField",
+                          i
+                        )
                           .split("_")
                           .map(
                             (word: string[]) =>
@@ -221,9 +249,17 @@ export default function MappingImportantFields({
                         `DESTINATION_FIELDS-mandatory-appField-${i}`,
                         mandatoryField.fieldName
                       );
-                      addKeysToState(e, "mandatory-warehouseField", i);
-                      addKeysToState(
-                        { value: mandatoryField.fieldName },
+                      addkeysToLocalStorage(
+                        e?.value,
+                        "destinationFieldForm",
+                        "",
+                        "mandatory-warehouseField",
+                        i
+                      );
+                      addkeysToLocalStorage(
+                        mandatoryField.fieldName,
+                        "destinationFieldForm",
+                        "",
                         "mandatory-appField",
                         i
                       );
