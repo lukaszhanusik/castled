@@ -6,6 +6,7 @@ import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import WarehouseModel from "@/app/components/pipeline/step1source/WarehouseModel";
 import Loading from "@/app/components/common/Loading";
+import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 
 const CUR_WIZARD_STEP_GROUP = "source";
 
@@ -32,6 +33,7 @@ const PipelineWizardSource = ({
           onConnectorTypeSelect={(type: ConnectorTypeDto) => {
             _.set(pipelineWizContext, "warehouseType", type);
             setPipelineWizContext(pipelineWizContext);
+            removeAllLocalStorageMapping();
           }}
           onFinish={(id) => {
             _.set(pipelineWizContext, "values.warehouseId", id);

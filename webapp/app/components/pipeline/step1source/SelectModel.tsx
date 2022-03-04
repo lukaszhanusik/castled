@@ -9,6 +9,7 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import _ from "lodash";
 import { ConnectorCategory } from "@/app/common/utils/types";
+import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;
@@ -42,6 +43,7 @@ const SelectModel = ({
   const onModelSelect = (model: ModelListDto) => {
     console.log(model);
     onSelect(model.id, model.modelDetails.sourceQuery);
+    removeAllLocalStorageMapping();
   };
 
   const goToModelCreate = () => {

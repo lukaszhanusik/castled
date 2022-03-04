@@ -20,10 +20,6 @@ const PipelineWizardDestination = ({
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
 
-  useEffect(() => {
-    removeAllLocalStorageMapping();
-  }, []);
-
   return (
     <>
       {curWizardStep !== "settings" && (
@@ -43,6 +39,7 @@ const PipelineWizardDestination = ({
             );
             _.set(pipelineWizContext, "appType", type);
             setPipelineWizContext(pipelineWizContext);
+            removeAllLocalStorageMapping();
           }}
           onFinish={(id) => {
             _.set(pipelineWizContext, "values.appId", id);

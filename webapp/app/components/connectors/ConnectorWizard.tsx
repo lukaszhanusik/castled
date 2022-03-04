@@ -13,6 +13,7 @@ import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
 import SelectModel from "../pipeline/step1source/SelectModel";
 import ModelType from "@/app/components/connectors/ModelType";
+import { removeAllLocalStorageMapping } from "../pipeline/step3mapping/utils/MappingAutoFill";
 
 interface ConnectorWizardProps {
   appBaseUrl: string;
@@ -103,6 +104,7 @@ const ConnectorWizard = ({
               setCurWizardStep(curWizardStepGroup, "configure");
             }}
             onSelect={(id) => {
+              removeAllLocalStorageMapping();
               if (category === "App") {
                 onFinish(id);
               } else {

@@ -11,6 +11,7 @@ import bannerNotificationService from "@/app/services/bannerNotificationService"
 import Loading from "@/app/components/common/Loading";
 import _ from "lodash";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
+import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 
 const DestinationSettings = ({
   curWizardStep,
@@ -55,6 +56,12 @@ const DestinationSettings = ({
           setCurWizardStep(undefined, "mapping");
         }}
         validate={(values) => {
+          if (
+            JSON.stringify(pipelineWizContext.values?.appSyncConfig.object) !==
+            JSON.stringify(values.object.objectName)
+          ) {
+            removeAllLocalStorageMapping();
+          }
           _.set(pipelineWizContext, "values.appSyncConfig", values);
           setPipelineWizContext(pipelineWizContext);
           return dynamicFormUtils.getValidationErrors(
