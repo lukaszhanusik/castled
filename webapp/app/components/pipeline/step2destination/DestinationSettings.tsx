@@ -58,7 +58,7 @@ const DestinationSettings = ({
         validate={(values) => {
           if (
             JSON.stringify(pipelineWizContext.values?.appSyncConfig.object) !==
-            JSON.stringify(values.object.objectName)
+            JSON.stringify(values.object)
           ) {
             removeAllLocalStorageMapping();
           }
