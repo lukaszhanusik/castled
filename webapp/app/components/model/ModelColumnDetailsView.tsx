@@ -28,7 +28,14 @@ function ModelColumnDetailsView({
             />
           </td>
           <td className="col-2">
-            {queryModelPK?.primaryKeys.includes(field.name) && "YES"}
+            {queryModelPK?.primaryKeys.includes(field.name) && (
+              <div className="d-flex align-items-center">
+                <img
+                  className="status-mark"
+                  src="/images/check-good-mark.svg"
+                />
+              </div>
+            )}
           </td>
         </tr>
       ));
