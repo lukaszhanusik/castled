@@ -203,6 +203,7 @@ public class CastledModule extends AbstractModule {
         return new JedisPool(jedisPoolConfig, redisConfig.getHost(), redisConfig.getPort());
     }
 
+
     @Provides
     @Singleton
     public JarvisTaskConfiguration providesJarvisTaskConfig() {
