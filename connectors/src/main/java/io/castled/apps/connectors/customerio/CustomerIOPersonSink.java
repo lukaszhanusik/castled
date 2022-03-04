@@ -8,6 +8,7 @@ import io.castled.apps.models.GenericSyncObject;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetQueue;
@@ -48,14 +49,14 @@ public class CustomerIOPersonSink implements  CustomerIOObjectSink<String> {
 
     private long lastProcessedOffset = 0;
 
-    private final CastledOffsetQueue<Message> companyRecordsBuffer =
+    private final CastledOffsetQueue<DataSinkMessage> companyRecordsBuffer =
             new CastledOffsetQueue<>(new CustomerIOPersonSink.PersonConsumer(), 10, 10, true);
 
 
-    private class PersonConsumer implements Consumer<Message> {
+    private class PersonConsumer implements Consumer<DataSinkMessage> {
 
         @Override
-        public void accept(Message message) {
+        public void accept(DataSinkMessage message) {
             Map<String, Object> companyProperties = constructProperties(message.getRecord());
             try {
                 customerIORestClient.upsertPersonDetails(companyProperties,primaryKeys);
@@ -90,7 +91,7 @@ public class CustomerIOPersonSink implements  CustomerIOObjectSink<String> {
         return (String) record.getValue(CustomerIOObjectFields.CONTACTS_FIELDS.ID.getFieldName());
     }
 
-    public void createOrUpdateObject(Message message) {
+    public void createOrUpdateObject(DataSinkMessage message) {
         try {
             companyRecordsBuffer.writePayload(message, 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {

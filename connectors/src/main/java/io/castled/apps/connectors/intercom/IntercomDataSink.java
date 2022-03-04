@@ -9,6 +9,7 @@ import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.schema.models.Message;
 
 import java.util.List;
@@ -33,13 +34,13 @@ public class IntercomDataSink implements DataSink {
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
 
-        GenericSyncObject intercomSyncObject = ((GenericObjectRadioGroupConfig) dataSinkRequest.getAppSyncConfig()).getObject();
+        GenericSyncObject intercomSyncObject = ((IntercomAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
         IntercomObject intercomObject = IntercomObject.getObjectByName(intercomSyncObject.getObjectName());
         this.intercomObjectSink =
                 this.intercomObjectSinks.get(intercomObject).initialize(intercomObject, dataSinkRequest.getAppSyncConfig(),
                         (IntercomAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getErrorOutputStream(),
                         dataSinkRequest.getPrimaryKeys());
-        Message message;
+        DataSinkMessage message;
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             if (!this.writeRecord(message, dataSinkRequest.getAppSyncConfig(), intercomObjectSink,
                     dataSinkRequest.getPrimaryKeys())) {
@@ -56,7 +57,7 @@ public class IntercomDataSink implements DataSink {
                         statsRef.getOffset(), skippedRecords)).orElse(new AppSyncStats(0, 0, 0));
     }
 
-    private boolean writeRecord(Message message, AppSyncConfig appSyncConfig,
+    private boolean writeRecord(DataSinkMessage message, AppSyncConfig appSyncConfig,
                                 IntercomObjectSink intercomObjectSink, List<String> primaryKeys) {
 
         List<Object> primaryKeyValues = primaryKeys.stream().map(pk -> message.getRecord().getValue(pk)).collect(Collectors.toList());

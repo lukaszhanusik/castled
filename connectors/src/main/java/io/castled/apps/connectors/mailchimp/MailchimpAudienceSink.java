@@ -9,6 +9,7 @@ import io.castled.apps.connectors.mailchimp.client.dtos.MailchimpMember;
 import io.castled.apps.connectors.mailchimp.client.dtos.MemberAddress;
 import io.castled.apps.connectors.mailchimp.client.dtos.MemberMergeFields;
 import io.castled.apps.connectors.mailchimp.client.models.MemberAndError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.schema.models.Message;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 
 @Singleton
-public class MailchimpAudienceSink extends BufferedObjectSink<Message> {
+public class MailchimpAudienceSink extends BufferedObjectSink<DataSinkMessage> {
 
     private final MailchimpRestClient mailchimpRestClient;
     private final MailchimpErrorParser mailchimpErrorParser;
@@ -41,12 +42,12 @@ public class MailchimpAudienceSink extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
 
-        Map<String, Message> emailRecordMapper = messages.stream().filter(message -> getEmail(message.getRecord()) != null)
+        Map<String, DataSinkMessage> emailRecordMapper = messages.stream().filter(message -> getEmail(message.getRecord()) != null)
                 .collect(Collectors.toMap(message -> getEmail(message.getRecord()), Function.identity()));
         List<MemberAndError> failedRecords = this.mailchimpRestClient.upsertMembers(
-                audienceSyncObject.getAudienceId(), messages.stream().map(Message::getRecord).map(this::getMailchimpMember).collect(Collectors.toList()));
+                audienceSyncObject.getAudienceId(), messages.stream().map(DataSinkMessage::getRecord).map(this::getMailchimpMember).collect(Collectors.toList()));
         for (MemberAndError recordAndError : failedRecords) {
             this.errorOutputStream.writeFailedRecord(emailRecordMapper.get(recordAndError.getMember().getEmailAddress()),
                     mailchimpErrorParser.getPipelineError(recordAndError.getOperationError()));

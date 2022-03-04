@@ -97,7 +97,6 @@ public class ConnectorsModule extends AbstractModule {
         MapBinder<IntercomObject, IntercomObjectSink> pipelineDataSinks = MapBinder.newMapBinder(binder(),
                 IntercomObject.class, IntercomObjectSink.class);
         pipelineDataSinks.addBinding(IntercomObject.COMPANY).to(IntercomCompanySink.class);
-        pipelineDataSinks.addBinding(IntercomObject.CONTACT).to(IntercomContactSink.class);
         pipelineDataSinks.addBinding(IntercomObject.USER).to(IntercomContactSink.class);
         pipelineDataSinks.addBinding(IntercomObject.LEAD).to(IntercomContactSink.class);
     }

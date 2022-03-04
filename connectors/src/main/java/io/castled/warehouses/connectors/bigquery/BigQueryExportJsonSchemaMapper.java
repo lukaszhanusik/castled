@@ -13,6 +13,9 @@ import java.util.Date;
 public class BigQueryExportJsonSchemaMapper extends SchemaMapper {
 
     public Object transformValue(Object value, Schema schema) throws IncompatibleValueException {
+        if (value == null) {
+            return null;
+        }
         if (schema.getType() == SchemaType.ZONED_TIMESTAMP) {
             return ZonedDateTime.parse((String) value);
         }

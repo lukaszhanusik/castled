@@ -8,6 +8,7 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.connectors.mixpanel.dto.GroupProfileAndError;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @Slf4j
-public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
+public class MixpanelGroupProfileSink extends MixpanelObjectSink<DataSinkMessage> {
 
     private final MixpanelRestClient mixpanelRestClient;
     private final MixpanelErrorParser mixpanelErrorParser;
@@ -40,7 +41,7 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
     private long lastProcessedOffset = 0;
     private final MixpanelAppSyncConfig syncConfig;
 
-    private final CastledOffsetListQueue<Message> requestsBuffer =
+    private final CastledOffsetListQueue<DataSinkMessage> requestsBuffer =
             new CastledOffsetListQueue<>(new UpsertGroupProfileConsumer(), 10, 10, true);
 
     public MixpanelGroupProfileSink(DataSinkRequest dataSinkRequest) {
@@ -53,12 +54,12 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
         try {
             requestsBuffer.writePayload(Lists.newArrayList(messages), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
             log.error("Unable to publish records to records queue", e);
-            for (Message record : messages) {
+            for (DataSinkMessage record : messages) {
                 errorOutputStream.writeFailedRecord(record,
                         new UnclassifiedError("Internal error!! Unable to publish records to records queue. Please contact support"));
             }
@@ -108,9 +109,9 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
         requestsBuffer.flush(TimeUtils.minutesToMillis(10));
     }
 
-    private class UpsertGroupProfileConsumer implements Consumer<List<Message>> {
+    private class UpsertGroupProfileConsumer implements Consumer<List<DataSinkMessage>> {
         @Override
-        public void accept(List<Message> messages) {
+        public void accept(List<DataSinkMessage> messages) {
             if (CollectionUtils.isEmpty(messages)) {
                 return;
             }
@@ -118,11 +119,11 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<Message> {
         }
     }
 
-    private void processBulkGroupProfileUpdate(List<Message> messages) {
+    private void processBulkGroupProfileUpdate(List<DataSinkMessage> messages) {
         List<GroupProfileAndError> failedRecords = this.mixpanelRestClient.upsertGroupProfileDetails(
-                messages.stream().map(Message::getRecord).map(this::constructGroupProfileDetails).collect(Collectors.toList()));
+                messages.stream().map(DataSinkMessage::getRecord).map(this::constructGroupProfileDetails).collect(Collectors.toList()));
 
-        Map<Object, Message> groupProfileRecordMapper = messages.stream().filter(message -> getGroupID(message.getRecord()) != null)
+        Map<Object, DataSinkMessage> groupProfileRecordMapper = messages.stream().filter(message -> getGroupID(message.getRecord()) != null)
                 .collect(Collectors.toMap(message -> getGroupID(message.getRecord()), Function.identity()));
 
         failedRecords.forEach(failedRecord ->

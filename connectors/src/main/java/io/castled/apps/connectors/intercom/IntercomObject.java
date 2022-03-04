@@ -8,7 +8,6 @@ import java.util.Arrays;
 public enum IntercomObject {
     LEAD("Lead"),
     USER("User"),
-    CONTACT("Contact"),
     COMPANY("Company");
 
     @Getter

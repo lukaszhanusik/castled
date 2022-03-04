@@ -2,6 +2,7 @@ package io.castled.apps.models;
 
 import io.castled.apps.ExternalApp;
 import io.castled.apps.syncconfigs.AppSyncConfig;
+import io.castled.commons.streams.DataSinkMessageInputStream;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStream;;
 import io.castled.models.CastledDataMapping;
@@ -17,7 +18,7 @@ import java.util.List;
 public class DataSinkRequest {
 
     private ExternalApp externalApp;
-    private MessageInputStream messageInputStream;
+    private DataSinkMessageInputStream messageInputStream;
     private ErrorOutputStream errorOutputStream;
     private AppSyncConfig appSyncConfig;
     private List<String> mappedFields;

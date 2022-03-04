@@ -9,6 +9,7 @@ import com.google.ads.googleads.v7.enums.OfflineUserDataJobTypeEnum;
 import com.google.ads.googleads.v7.resources.OfflineUserDataJob;
 import com.google.ads.googleads.v7.services.*;
 import io.castled.ObjectRegistry;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.oauth.OAuthDAO;
@@ -86,7 +87,7 @@ public class CustomerMatchObjectSink extends GadsObjectSink {
 
     }
 
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
         List<OfflineUserDataJobOperation> userDataJobOperations = messages.stream().map(this::getUserDataOperation)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -104,7 +105,7 @@ public class CustomerMatchObjectSink extends GadsObjectSink {
         this.lastProcessedMessageId = Math.min(lastProcessedMessageId, messages.get(messages.size() - 1).getOffset());
     }
 
-    private OfflineUserDataJobOperation getUserDataOperation(Message message) {
+    private OfflineUserDataJobOperation getUserDataOperation(DataSinkMessage message) {
 
         UserIdentifier userIdentifier = getUserIdentifier(message.getRecord());
         if (userIdentifier == null) {

@@ -9,6 +9,7 @@ import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.functionalinterfaces.ThrowingConsumer;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MarketoLeadSink extends BufferedObjectSink<Message> {
+public class MarketoLeadSink extends BufferedObjectSink<DataSinkMessage> {
 
     // Marketo API Limits
     // Maximum bulk request file size
@@ -60,7 +61,7 @@ public class MarketoLeadSink extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> msgs) {
+    protected void writeRecords(List<DataSinkMessage> msgs) {
         List<MarketoSyncError> upsertErrors;
         long skipped = 0;
         if (syncConfig.getMode() == AppSyncMode.UPSERT) {
@@ -94,7 +95,7 @@ public class MarketoLeadSink extends BufferedObjectSink<Message> {
         }
     }
 
-    private ByteArrayOutputStream constructLeadFormData(List<Message> msgs) {
+    private ByteArrayOutputStream constructLeadFormData(List<DataSinkMessage> msgs) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedWriter baosWriter = new BufferedWriter(new OutputStreamWriter(baos));
         // Use first tuple to get all the possible fields for this sync.
@@ -116,7 +117,7 @@ public class MarketoLeadSink extends BufferedObjectSink<Message> {
                         .collect(Collectors.toList()).toArray());
             };
             // Write rows to CSV byte stream
-            for (Message msgRef : msgs) {
+            for (DataSinkMessage msgRef : msgs) {
                 writeTuple.accept(msgRef.getRecord());
             }
             csvPrinter.close();
@@ -126,13 +127,13 @@ public class MarketoLeadSink extends BufferedObjectSink<Message> {
         return baos;
     }
 
-    BatchLeadUpdateRequest constructLeadUpdateRequest(List<Message> records) {
+    BatchLeadUpdateRequest constructLeadUpdateRequest(List<DataSinkMessage> records) {
         BatchLeadUpdateRequest request = new BatchLeadUpdateRequest();
         request.setAction(getMarketoSyncMode());
         request.setLookupField(getDedupeKey(records));
         List<Map<String, Object>> input = Lists.newArrayList();
 
-        for (Message msg : records) {
+        for (DataSinkMessage msg : records) {
             Map<String, Object> inputRec = Maps.newHashMap();
             msg.getRecord().getFields()
                     .forEach(fieldRef -> inputRec.put((String) fieldRef.getParams().get("name"),
@@ -144,8 +145,8 @@ public class MarketoLeadSink extends BufferedObjectSink<Message> {
     }
 
     // Get api name from display name
-    private String getDedupeKey(List<Message> records) {
-        Message msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Records empty!"));
+    private String getDedupeKey(List<DataSinkMessage> records) {
+        DataSinkMessage msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Records empty!"));
         return (String) msg.getRecord().getField(pkDisplayName).getParams().get("name");
     }
 
