@@ -136,7 +136,7 @@ export default function MappingMiscellaneousFields({
   function keyValueDefault(type: string, key?: string): string {
     return key
       ? `MISCELLANEOUS_FIELDS-${type}-${key}`
-      : `MISCELLANEOUS_FIELDS-${type}-0`;
+      : `MISCELLANEOUS_FIELDS-${type}-0x0x0x0x0x`;
   }
 
   const additionalFields = (key: string) => (
