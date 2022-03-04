@@ -5,7 +5,6 @@ import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 import PrePopulatedFields from "./Layouts/PrePopulatedFields";
 import { AdditionalFields } from "./Layouts/AdditionalFields";
-import { identity } from "lodash";
 
 export default function MappingMiscellaneousFields({
   options,
@@ -17,9 +16,7 @@ export default function MappingMiscellaneousFields({
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
-  const [form, setForm] = useState({});
 
-  const countRef = useRef(0);
   // useEffect for pre_populated_rows
   useEffect(() => {
     if (prePopulatedRow) {
@@ -152,6 +149,7 @@ export default function MappingMiscellaneousFields({
       handleDelete={(e) => {
         e.preventDefault();
         deleteRow(key);
+        deleteFromLocalStorage(key);
         setFieldValue?.(keyValueDefault("warehouseField", key), "");
         setFieldValue?.(keyValueDefault("appField", key), "");
       }}
@@ -179,7 +177,6 @@ export default function MappingMiscellaneousFields({
       Object.assign(form, {
         [`MISCELLANEOUS_FIELDS-${type}-${index}`]: e?.value,
       });
-      setForm((prev) => ({ ...prev, ...form }));
     }
 
     const getLocalStorageItem = localStorage.getItem("misclFieldForm");
@@ -195,6 +192,16 @@ export default function MappingMiscellaneousFields({
     if (getLocalStorageItem) {
       const primaryKeysForm = JSON.parse(getLocalStorageItem);
       return primaryKeysForm[`MISCELLANEOUS_FIELDS-${type}-${index}`];
+    }
+  }
+
+  function deleteFromLocalStorage(key: string) {
+    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
+    if (getLocalStorageItem) {
+      const parseStorageItems = JSON.parse(getLocalStorageItem);
+      delete parseStorageItems[`MISCELLANEOUS_FIELDS-warehouseField-${key}`];
+      delete parseStorageItems[`MISCELLANEOUS_FIELDS-appField-${key}`];
+      localStorage.setItem("misclFieldForm", JSON.stringify(parseStorageItems));
     }
   }
 
@@ -223,6 +230,7 @@ export default function MappingMiscellaneousFields({
                 handleDelete={(e) => {
                   e.preventDefault();
                   deleteRow("0x0x0x0x0x");
+                  deleteFromLocalStorage("0x0x0x0x0x");
                   setFieldValue?.(keyValueDefault("warehouseField"), "");
                   setFieldValue?.(keyValueDefault("appField"), "");
                 }}

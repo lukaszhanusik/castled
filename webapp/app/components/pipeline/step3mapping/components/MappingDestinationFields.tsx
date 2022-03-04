@@ -36,13 +36,13 @@ export default function MappingImportantFields({
       const destinationFieldsForm = JSON.parse(getLocalStorageItem);
       Object.assign(values, destinationFieldsForm);
 
+      // Loop over localStorage items to auto add rows
       for (let key of Object.keys(destinationFieldsForm)) {
         const [fieldName, status, type, index] = key.split("-");
         if (key.includes("optional-warehouseField")) {
           const elementToAdd = trackFieldsElement.filter(
             (ele) => ele.key === index
           );
-          // console.log(elementToAdd[0]);
           if (elementToAdd[0]) {
             setOptionalRow((prev) => [...prev, elementToAdd[0]]);
             setOptionalFieldsElement((prevState) =>
@@ -54,7 +54,6 @@ export default function MappingImportantFields({
     }
   }, [trackFieldsElement]);
 
-  console.log(optionalRow);
   // SECTION - 3 - Other fields to match the destination object
   const destinationFieldSection = mappingGroups.filter((fields) => {
     return fields.type === "DESTINATION_FIELDS" && fields;
@@ -84,6 +83,7 @@ export default function MappingImportantFields({
         handleDelete={(e) => {
           e.preventDefault();
           deleteRow(i.toString());
+          deleteFromLocalStorage(i.toString());
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             ""
@@ -169,6 +169,16 @@ export default function MappingImportantFields({
     if (getLocalStorageItem) {
       const primaryKeysForm = JSON.parse(getLocalStorageItem);
       return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
+    }
+  }
+
+  function deleteFromLocalStorage(key: string) {
+    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
+    if (getLocalStorageItem) {
+      const parseStorageItems = JSON.parse(getLocalStorageItem);
+      delete parseStorageItems[`DESTINATION_FIELDS-optional-warehouseField-${key}`];
+      delete parseStorageItems[`DESTINATION_FIELDS-optional-appField-${key}`];
+      localStorage.setItem("destinationFieldForm", JSON.stringify(parseStorageItems));
     }
   }
 
