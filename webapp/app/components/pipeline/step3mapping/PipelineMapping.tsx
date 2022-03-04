@@ -58,7 +58,7 @@ const PipelineMapping = ({
     return <Loading />;
   }
 
-  console.log(pipelineSchema);
+  // console.log(pipelineSchema);
 
   function validate(values: any) {
     const errors = {};
@@ -82,6 +82,7 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
+    // console.log(values);
     return errors;
   }
 
@@ -107,7 +108,7 @@ const PipelineMapping = ({
         <div className="container">
           <Formik
             initialValues={initialValuesForValidation}
-            // validate={validate}
+            validate={validate}
             validateOnChange={false}
             validateOnBlur={false}
             onSubmit={(values, { setSubmitting }) => {

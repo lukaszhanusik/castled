@@ -22,6 +22,9 @@ export default function MappingMiscellaneousFields({
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
 
+  useEffect(() => {
+    setAdditionalRow((prevState) => [...prevState, defaultMisclRow]);
+  }, []);
   // useEffect for pre_populated_rows
   useEffect(() => {
     if (prePopulatedRow) {
@@ -136,7 +139,7 @@ export default function MappingMiscellaneousFields({
   function keyValueDefault(type: string, key?: string): string {
     return key
       ? `MISCELLANEOUS_FIELDS-${type}-${key}`
-      : `MISCELLANEOUS_FIELDS-${type}-0`;
+      : `MISCELLANEOUS_FIELDS-${type}-0x0x0x0x0x`;
   }
 
   const additionalFields = (key: string) => (
@@ -189,6 +192,67 @@ export default function MappingMiscellaneousFields({
     />
   );
 
+  const defaultMisclRow = (
+    <AdditionalFields
+      key={"0x0x0x0x0x"}
+      options={options}
+      onChange={(e) => {
+        setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
+        addkeysToLocalStorage(
+          e?.value,
+          "misclFieldForm",
+          "",
+          "warehouseField",
+          "0x0x0x0x0x"
+        );
+      }}
+      onBlur={() => setFieldTouched?.(keyValueDefault("warehouseField"), true)}
+      handleDelete={(e) => {
+        e.preventDefault();
+        deleteRow("0x0x0x0x0x");
+        deleteItemFromLocalStorage("0x0x0x0x0x", "misclFieldForm");
+        setFieldValue?.(keyValueDefault("warehouseField"), "");
+        setFieldValue?.(keyValueDefault("appField"), "");
+      }}
+      inputChange={(e) => {
+        setFieldValue?.(keyValueDefault("appField"), e.target.value);
+        addkeysToLocalStorage(
+          e.target.value,
+          "misclFieldForm",
+          "",
+          "appField",
+          "0x0x0x0x0x"
+        );
+      }}
+      inputBlur={() => setFieldTouched?.(keyValueDefault("appField"), true)}
+      defaultWarehouseValue={
+        defaultValue("misclFieldForm", "", "warehouseField", "0x0x0x0x0x") && {
+          value: defaultValue(
+            "misclFieldForm",
+            "",
+            "warehouseField",
+            "0x0x0x0x0x"
+          ),
+          label: defaultValue(
+            "misclFieldForm",
+            "",
+            "warehouseField",
+            "0x0x0x0x0x"
+          )
+            .split("_")
+            .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
+            .join(" "),
+        }
+      }
+      defaultAppValue={defaultValue(
+        "misclFieldForm",
+        "",
+        "appField",
+        "0x0x0x0x0x"
+      )}
+    />
+  );
+
   return (
     <div className="row py-2">
       {miscellaneousFieldSection.length > 0 &&
@@ -200,76 +264,6 @@ export default function MappingMiscellaneousFields({
             >
               {miscellaneousFieldSection[0].autoMap && populatedRow}
 
-              <AdditionalFields
-                key={"0x0x0x0x0x"}
-                options={options}
-                onChange={(e) => {
-                  setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
-                  addkeysToLocalStorage(
-                    e?.value,
-                    "misclFieldForm",
-                    "",
-                    "warehouseField",
-                    "0x0x0x0x0x"
-                  );
-                }}
-                onBlur={() =>
-                  setFieldTouched?.(keyValueDefault("warehouseField"), true)
-                }
-                handleDelete={(e) => {
-                  e.preventDefault();
-                  deleteRow("0x0x0x0x0x");
-                  deleteItemFromLocalStorage("0x0x0x0x0x", "misclFieldForm");
-                  setFieldValue?.(keyValueDefault("warehouseField"), "");
-                  setFieldValue?.(keyValueDefault("appField"), "");
-                }}
-                inputChange={(e) => {
-                  setFieldValue?.(keyValueDefault("appField"), e.target.value);
-                  addkeysToLocalStorage(
-                    e.target.value,
-                    "misclFieldForm",
-                    "",
-                    "appField",
-                    "0x0x0x0x0x"
-                  );
-                }}
-                inputBlur={() =>
-                  setFieldTouched?.(keyValueDefault("appField"), true)
-                }
-                defaultWarehouseValue={
-                  defaultValue(
-                    "misclFieldForm",
-                    "",
-                    "warehouseField",
-                    "0x0x0x0x0x"
-                  ) && {
-                    value: defaultValue(
-                      "misclFieldForm",
-                      "",
-                      "warehouseField",
-                      "0x0x0x0x0x"
-                    ),
-                    label: defaultValue(
-                      "misclFieldForm",
-                      "",
-                      "warehouseField",
-                      "0x0x0x0x0x"
-                    )
-                      .split("_")
-                      .map(
-                        (word: string[]) =>
-                          word[0].toUpperCase() + word.slice(1)
-                      )
-                      .join(" "),
-                  }
-                }
-                defaultAppValue={defaultValue(
-                  "misclFieldForm",
-                  "",
-                  "appField",
-                  "0x0x0x0x0x"
-                )}
-              />
               {additionalRow}
               <Button
                 onClick={addRow}

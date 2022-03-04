@@ -2,7 +2,7 @@ import { Col, Row, Table } from "react-bootstrap";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import { useRouter } from "next/router";
 
-export const ModelSyncView = ({
+export const ModelPipelineView = ({
   activeSyncDetails,
   activeSyncsCount,
 }: Pick<ModelResponseDto, "activeSyncDetails" | "activeSyncsCount">) => {
@@ -20,7 +20,7 @@ export const ModelSyncView = ({
   return (
     <>
       <div className="text-center">
-        <h2 className="mb-1 mt-4 font-weight-bold">Syncs</h2>
+        <h2 className="mb-1 mt-4 font-weight-bold">Pipelines</h2>
         <p className="mb-1 mt-2">
           All the active pipelines created using this model
         </p>
