@@ -3,6 +3,7 @@ package io.castled.migrations;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Sets;
 import com.google.common.collect.Maps;
+import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
@@ -20,14 +21,15 @@ import java.util.Map;
 import java.util.Set;
 
 @Slf4j
+@Singleton
 public class MappingDataMigrator extends AbstractDataMigrator {
-    @Override
-    public MigrationType getMigrationType() {
-        return MigrationType.MAPPING_MIGRATION;
+
+    public MappingDataMigrator() {
+        super(MigrationType.MAPPING_MIGRATION);
     }
 
     @Override
-    public void migrateData() {
+    public void doMigrateData() {
 
         MigrationsDAO pipelineDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(MigrationsDAO.class);
         WarehouseService warehouseService = ObjectRegistry.getInstance(WarehouseService.class);
@@ -38,7 +40,7 @@ public class MappingDataMigrator extends AbstractDataMigrator {
         Map<Long, Pipeline> pipelineMap = Maps.newHashMap();
         Map<Long, Map<String, Long>> warehouseIdHandledQueryMap = Maps.newHashMap();
 
-        pipelineList.stream().forEach(pipeline -> {
+        pipelineList.forEach(pipeline -> {
             pipelineMap.put(pipeline.getId(), pipeline);
             if (!warehouseIdPipelineIdMap.containsKey(pipeline.getWarehouseId())) {
                 warehouseIdPipelineIdMap.put(pipeline.getWarehouseId(), Sets.newHashSet());

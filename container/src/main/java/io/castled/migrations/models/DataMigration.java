@@ -11,9 +11,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MigrationDetails {
+public class DataMigration {
     private Long id;
-    private MigrationType migrationType;
+    private MigrationType type;
     private MigrationStatus status;
-    private String details;
+    private String failureMessage;
+
+    public boolean isPending() {
+        return status != MigrationStatus.PROCESSED;
+    }
+
+    public boolean isCompleted() {
+        return status == MigrationStatus.PROCESSED;
+    }
 }
