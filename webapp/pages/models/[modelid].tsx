@@ -80,12 +80,18 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
                   appType: undefined,
                 },
               };
+
               pipelineWizContext.warehouseType = warehouseType;
               pipelineWizContext.values = values;
-              setPipelineWizContext(pipelineWizContext);
+
+              sessionStorage.setItem(
+                "PIPELINE_WIZARD_PROVIDER",
+                JSON.stringify(pipelineWizContext)
+              );
+
+              router.push("/pipelines/create?wizardStep=source:model");
             }
             console.log(pipelineWizContext);
-            router.push("/pipelines/create?wizardStep=source:model");
           },
         }}
       >
