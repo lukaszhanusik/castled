@@ -43,26 +43,34 @@ interface IDefaultValueProps {
   field?: string;
 }
 
-function defaultValue({ form, field, type, index }: IDefaultValueProps): string {
+function defaultValue({
+  form,
+  field,
+  type,
+  index,
+}: IDefaultValueProps): string {
 
   const getLocalStorageItem = localStorage.getItem(`${form}`);
-  
-  switch (form) {
-    case "destinationFieldForm":
-      if (getLocalStorageItem) {
-        const primaryKeysForm = JSON.parse(getLocalStorageItem);
+
+  if (getLocalStorageItem) {
+    const primaryKeysForm = JSON.parse(getLocalStorageItem);
+
+    switch (form) {
+      case "destinationFieldForm":
         return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
-      }
+      case "primaryKeysForm":
 
-    case "primaryKeysForm":
-      const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
-      if (getLocalStorageItem) {
-        const primaryKeysForm = JSON.parse(getLocalStorageItem);
-        return primaryKeysForm[`PRIMARY_KEYS-${type}-${field}`];
-      }
+    }
+  }
 
 
-  
+  function defaultValue(field: string, type: string) {
+    const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
+    if (getLocalStorageItem) {
+      const primaryKeysForm = JSON.parse(getLocalStorageItem);
+      return primaryKeysForm[`PRIMARY_KEYS-${type}-${field}`];
+    }
+  }
 
   function defaultValue(field: string) {
     const getLocalStorageItem = localStorage.getItem("importantParamsForm");
