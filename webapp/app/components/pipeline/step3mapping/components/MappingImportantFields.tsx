@@ -47,11 +47,11 @@ export default function MappingImportantFields({
   }
   // console.log(form);
 
-  function defaultValue(field: ImportantParamsField) {
+  function defaultValue(field: string) {
     const getLocalStorageItem = localStorage.getItem("importantParamsForm");
     if (getLocalStorageItem) {
       const importantParamsForm = JSON.parse(getLocalStorageItem);
-      return importantParamsForm[`IMPORTANT_PARAMS-${field.fieldName}`];
+      return importantParamsForm[`IMPORTANT_PARAMS-${field}`];
     }
   }
 
@@ -88,9 +88,9 @@ export default function MappingImportantFields({
                 isClearable={field.optional}
                 placeholder={"Select a column"}
                 defaultValue={
-                  defaultValue(field) && {
-                    value: defaultValue(field),
-                    label: defaultValue(field),
+                  defaultValue(field.fieldName) && {
+                    value: defaultValue(field.fieldName),
+                    label: defaultValue(field.fieldName),
                   }
                 }
               />

@@ -5,6 +5,7 @@ import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 import PrePopulatedFields from "./Layouts/PrePopulatedFields";
 import { AdditionalFields } from "./Layouts/AdditionalFields";
+import { deleteItemFromLocalStorage } from "../utils/MappingAutoFill";
 
 export default function MappingMiscellaneousFields({
   options,
@@ -149,7 +150,7 @@ export default function MappingMiscellaneousFields({
       handleDelete={(e) => {
         e.preventDefault();
         deleteRow(key);
-        deleteFromLocalStorage(key);
+        deleteItemFromLocalStorage(key, "misclFieldForm");
         setFieldValue?.(keyValueDefault("warehouseField", key), "");
         setFieldValue?.(keyValueDefault("appField", key), "");
       }}
@@ -198,16 +199,6 @@ export default function MappingMiscellaneousFields({
     }
   }
 
-  function deleteFromLocalStorage(key: string) {
-    const getLocalStorageItem = localStorage.getItem("misclFieldForm");
-    if (getLocalStorageItem) {
-      const parseStorageItems = JSON.parse(getLocalStorageItem);
-      delete parseStorageItems[`MISCELLANEOUS_FIELDS-warehouseField-${key}`];
-      delete parseStorageItems[`MISCELLANEOUS_FIELDS-appField-${key}`];
-      localStorage.setItem("misclFieldForm", JSON.stringify(parseStorageItems));
-    }
-  }
-
   return (
     <div className="row py-2">
       {miscellaneousFieldSection.length > 0 &&
@@ -233,7 +224,7 @@ export default function MappingMiscellaneousFields({
                 handleDelete={(e) => {
                   e.preventDefault();
                   deleteRow("0x0x0x0x0x");
-                  deleteFromLocalStorage("0x0x0x0x0x");
+                  deleteItemFromLocalStorage("0x0x0x0x0x", "misclFieldForm");
                   setFieldValue?.(keyValueDefault("warehouseField"), "");
                   setFieldValue?.(keyValueDefault("appField"), "");
                 }}

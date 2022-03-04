@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MappingFieldsProps } from "../types/componentTypes";
+import { deleteItemFromLocalStorage } from "../utils/MappingAutoFill";
 import DestinationFieldRows from "./Layouts/DestinationFieldRows";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
@@ -84,7 +85,7 @@ export default function MappingImportantFields({
         handleDelete={(e) => {
           e.preventDefault();
           deleteRow(i.toString());
-          deleteFromLocalStorage(i.toString());
+          deleteItemFromLocalStorage(i.toString(), "destinationFieldForm");
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             ""
@@ -175,21 +176,6 @@ export default function MappingImportantFields({
     if (getLocalStorageItem) {
       const primaryKeysForm = JSON.parse(getLocalStorageItem);
       return primaryKeysForm[`DESTINATION_FIELDS-${type}-${index}`];
-    }
-  }
-
-  function deleteFromLocalStorage(key: string) {
-    const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
-    if (getLocalStorageItem) {
-      const parseStorageItems = JSON.parse(getLocalStorageItem);
-      delete parseStorageItems[
-        `DESTINATION_FIELDS-optional-warehouseField-${key}`
-      ];
-      delete parseStorageItems[`DESTINATION_FIELDS-optional-appField-${key}`];
-      localStorage.setItem(
-        "destinationFieldForm",
-        JSON.stringify(parseStorageItems)
-      );
     }
   }
 

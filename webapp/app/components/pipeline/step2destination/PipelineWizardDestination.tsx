@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ConnectorWizard from "@/app/components/connectors/ConnectorWizard";
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import _ from "lodash";
@@ -6,6 +6,7 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import DestinationSettings from "@/app/components/pipeline/step2destination/DestinationSettings";
 import Loading from "@/app/components/common/Loading";
+import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 
 const CUR_WIZARD_STEP_GROUP = "destination";
 
@@ -14,10 +15,15 @@ const PipelineWizardDestination = ({
   curWizardStep,
   steps,
   stepGroups,
-  setCurWizardStep
+  setCurWizardStep,
 }: PipelineWizardStepProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   if (!pipelineWizContext) return <Loading />;
+
+  useEffect(() => {
+    removeAllLocalStorageMapping();
+  }, []);
+
   return (
     <>
       {curWizardStep !== "settings" && (
