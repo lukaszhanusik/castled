@@ -27,7 +27,10 @@ export default function mappingFieldValidations(
     for (let i = 0; i < fieldMappings.length; i++) {
       for (let j = i + 1; j < fieldMappings.length; j++) {
         if (fieldMappings[i].appField == fieldMappings[j].appField) {
-          errors.push({ appFieldRepeating: "App Field Repeating ERROR" });
+          errors.push({
+            appFieldRepeating:
+              "Multiple warehouse columns cannot be mapped to the same app field.",
+          });
         }
       }
     }
@@ -55,7 +58,8 @@ export default function mappingFieldValidations(
     }
     if (hasPrimaryKey && (appFieldCount == 0 || warehouseFieldCount == 0)) {
       errors.push({
-        fillBothPrimaryFields: "Both Primary key fields must be filled",
+        fillBothPrimaryFields:
+          "Both warehouse column and app field are mandatory.",
       });
     }
   }
@@ -76,7 +80,8 @@ export default function mappingFieldValidations(
     }
     if (hasPrimaryKey && !primaryCount) {
       errors.push({
-        primaryKeyMandatory: "Primary Key App Field is mandatory",
+        primaryKeyMandatory:
+          "All questions marked mandatory (*) needs to be answered.",
       });
     }
   }
@@ -104,7 +109,7 @@ export default function mappingFieldValidations(
         if (importantParamsCount < importantParamsFieldsCount) {
           errors.push({
             importantParamsMandatory:
-              "All mandatory questions needs to be answered.",
+              "All questions marked mandatory (*) needs to be answered.",
           });
         }
       }
@@ -131,7 +136,7 @@ export default function mappingFieldValidations(
         if (mandatoryFieldsCount !== countOptionalFields * 2) {
           errors.push({
             destinationFieldsMandatory:
-              "All mandatory Fields of Destination Fields must be filled.",
+              "All questions marked mandatory (*) needs to be answered.",
           });
         }
       }
@@ -178,7 +183,7 @@ export default function mappingFieldValidations(
           if (trackedOptionalFields.length * 2 !== optionalFieldsTrack) {
             errors.push({
               destinationFieldsOptional:
-                "Both Fields of Optional Destination Fields must be filled.",
+                "Both Warehouse Column and App Fields must be filled.",
             });
           }
         }

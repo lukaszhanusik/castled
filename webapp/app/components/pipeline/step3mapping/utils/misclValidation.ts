@@ -49,7 +49,7 @@ export default function misclValidation(
       if (trackedAllMisclFields.length * 2 !== misclFieldsTrack) {
         errors.push({
           misclFieldsValidation:
-            "Both sides of Miscellaneous Fields must be filled.",
+            "Both Warehouse Column and App Fields must be filled.",
         });
       }
     }
