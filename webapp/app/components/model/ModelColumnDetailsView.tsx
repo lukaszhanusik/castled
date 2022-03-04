@@ -28,7 +28,14 @@ function ModelColumnDetailsView({
             />
           </td>
           <td className="col-2">
-            {queryModelPK?.primaryKeys.includes(field.name) && "YES"}
+            {queryModelPK?.primaryKeys.includes(field.name) && (
+              <div className="d-flex align-items-center">
+                <img
+                  className="status-mark"
+                  src="/images/check-good-mark.svg"
+                />
+              </div>
+            )}
           </td>
         </tr>
       ));
@@ -47,7 +54,7 @@ function ModelColumnDetailsView({
       .join(" ");
 
   // used to delay processing of input change event if data is big
-  const debounceHandler = useMemo(() => debounce(searchRows, 200), []);
+  // const debounceHandler = useMemo(() => debounce(searchRows, 200), []);
 
   function searchRows(e: ChangeEvent<HTMLInputElement>) {
     setSearchResults(
@@ -73,7 +80,7 @@ function ModelColumnDetailsView({
                 type="text"
                 className="form-control search-input"
                 placeholder="Search Column"
-                onChange={debounceHandler}
+                onChange={searchRows}
               />
             </div>
           </div>

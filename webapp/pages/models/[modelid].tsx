@@ -10,7 +10,7 @@ import Loading from "@/app/components/common/Loading";
 import { NextRouter, useRouter } from "next/router";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
-import { ModelSyncView } from "@/app/components/model/ModelSyncView";
+import { ModelPipelineView } from "@/app/components/model/ModelPipelineView";
 import ModelColumnDetailsView from "@/app/components/model/ModelColumnDetailsView";
 import PipelineWizardProvider, {
   usePipelineWizContext,
@@ -110,8 +110,8 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
               queryModelPK={model?.queryModelPK}
             />
           </Tab>
-          <Tab eventKey="Syncs" title="Syncs">
-            <ModelSyncView
+          <Tab eventKey="Pipelines" title="Pipelines">
+            <ModelPipelineView
               activeSyncDetails={model ? model.activeSyncDetails : []}
               activeSyncsCount={model ? model.activeSyncsCount : 0}
             />
