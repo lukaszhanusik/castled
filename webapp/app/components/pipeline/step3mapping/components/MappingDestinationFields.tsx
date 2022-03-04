@@ -17,10 +17,11 @@ export default function MappingImportantFields({
   const [optionalFieldsElement, setOptionalFieldsElement] = useState<
     JSX.Element[]
   >([]);
+  // This is just to provide initial rerender on auto add rows in useEffect.
+  // After inital onmount returns undefined, we need to populate it on next render.
   const [trackFieldsElement, setTrackFieldsElement] = useState<JSX.Element[]>(
     []
   );
-  const [form, setForm] = useState({});
 
   useEffect(() => {
     if (optionalFields) {
@@ -99,13 +100,19 @@ export default function MappingImportantFields({
         defaultAppValue={
           defaultValue("optional-appField", i) && {
             value: defaultValue("optional-appField", i),
-            label: defaultValue("optional-appField", i),
+            label: defaultValue("optional-appField", i)
+              .split("_")
+              .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
+              .join(" "),
           }
         }
         defaultWarehouseValue={
           defaultValue("optional-warehouseField", i) && {
             value: defaultValue("optional-warehouseField", i),
-            label: defaultValue("optional-warehouseField", i),
+            label: defaultValue("optional-warehouseField", i)
+              .split("_")
+              .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
+              .join(" "),
           }
         }
         isClearable={true}
@@ -150,7 +157,6 @@ export default function MappingImportantFields({
       Object.assign(form, {
         [`DESTINATION_FIELDS-${type}-${index}`]: e?.value,
       });
-      setForm((prev) => ({ ...prev, ...form }));
     }
 
     const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
@@ -176,9 +182,14 @@ export default function MappingImportantFields({
     const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
     if (getLocalStorageItem) {
       const parseStorageItems = JSON.parse(getLocalStorageItem);
-      delete parseStorageItems[`DESTINATION_FIELDS-optional-warehouseField-${key}`];
+      delete parseStorageItems[
+        `DESTINATION_FIELDS-optional-warehouseField-${key}`
+      ];
       delete parseStorageItems[`DESTINATION_FIELDS-optional-appField-${key}`];
-      localStorage.setItem("destinationFieldForm", JSON.stringify(parseStorageItems));
+      localStorage.setItem(
+        "destinationFieldForm",
+        JSON.stringify(parseStorageItems)
+      );
     }
   }
 
@@ -205,7 +216,13 @@ export default function MappingImportantFields({
                     defaultWarehouseValue={
                       defaultValue("mandatory-warehouseField", i) && {
                         value: defaultValue("mandatory-warehouseField", i),
-                        label: defaultValue("mandatory-warehouseField", i),
+                        label: defaultValue("mandatory-warehouseField", i)
+                          .split("_")
+                          .map(
+                            (word: string[]) =>
+                              word[0].toUpperCase() + word.slice(1)
+                          )
+                          .join(" "),
                       }
                     }
                     isDisabled={!mandatoryField.optional}

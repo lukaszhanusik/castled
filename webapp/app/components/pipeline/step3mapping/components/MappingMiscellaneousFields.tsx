@@ -163,7 +163,10 @@ export default function MappingMiscellaneousFields({
       defaultWarehouseValue={
         defaultValue("warehouseField", key) && {
           value: defaultValue("warehouseField", key),
-          label: defaultValue("warehouseField", key),
+          label: defaultValue("warehouseField", key)
+            .split("_")
+            .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
+            .join(" "),
         }
       }
       defaultAppValue={defaultValue("appField", key)}
@@ -244,7 +247,13 @@ export default function MappingMiscellaneousFields({
                 defaultWarehouseValue={
                   defaultValue("warehouseField", "0x0x0x0x0x") && {
                     value: defaultValue("warehouseField", "0x0x0x0x0x"),
-                    label: defaultValue("warehouseField", "0x0x0x0x0x"),
+                    label: defaultValue("warehouseField", "0x0x0x0x0x")
+                      .split("_")
+                      .map(
+                        (word: string[]) =>
+                          word[0].toUpperCase() + word.slice(1)
+                      )
+                      .join(" "),
                   }
                 }
                 defaultAppValue={defaultValue("appField", "0x0x0x0x0x")}
