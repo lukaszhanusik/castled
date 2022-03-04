@@ -541,3 +541,21 @@ form {
   width: 20px;
   height: 20px;
 }
+
+.search-input {
+  background-image: url('/images/search-icon.svg');
+  background-repeat: no-repeat, no-repeat;
+  background-size: 15px, 15px;
+  background-position: 7px 6px, 43em 9px;
+  padding-left: 2rem;
+}
+
+.app-logo-url {
+  width: 2rem;
+  height: 2rem;
+}
+
+.status-mark {
+  width: 1rem;
+  height: 1rem;
+}
