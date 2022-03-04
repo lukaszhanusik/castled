@@ -47,7 +47,7 @@ function ModelColumnDetailsView({
       .join(" ");
 
   // used to delay processing of input change event if data is big
-  const debounceHandler = useMemo(() => debounce(searchRows, 200), []);
+  // const debounceHandler = useMemo(() => debounce(searchRows, 200), []);
 
   function searchRows(e: ChangeEvent<HTMLInputElement>) {
     setSearchResults(
@@ -73,7 +73,7 @@ function ModelColumnDetailsView({
                 type="text"
                 className="form-control search-input"
                 placeholder="Search Column"
-                onChange={debounceHandler}
+                onChange={searchRows}
               />
             </div>
           </div>
