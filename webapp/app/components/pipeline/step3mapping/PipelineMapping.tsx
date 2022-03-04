@@ -107,13 +107,13 @@ const PipelineMapping = ({
         <div className="container">
           <Formik
             initialValues={initialValuesForValidation}
-            validate={validate}
+            // validate={validate}
             validateOnChange={false}
             validateOnBlur={false}
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
 
-              // console.log(values);
+              console.log(values);
               pipelineWizContext.values.mapping = transformMapping(values);
 
               pipelineWizContext.values.mapping.type =

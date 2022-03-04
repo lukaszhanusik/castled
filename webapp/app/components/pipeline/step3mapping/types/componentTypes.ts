@@ -24,7 +24,8 @@ export interface SchemaOptions {
 export interface DestinationFieldRowsProps {
   options: SchemaOptions[];
   destinationFieldSection?: MappingGroup[];
-  defaultValue?: { value: string; label: string };
+  defaultWarehouseValue?: { value: string; label: string };
+  defaultAppValue?: { value: string; label: string };
   isDisabled?: boolean;
   onChange?: (value: any) => void;
   onChangeWarehouse?: (value: any) => void;

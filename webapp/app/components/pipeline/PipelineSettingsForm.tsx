@@ -14,6 +14,7 @@ import { PipelineSchedule } from "@/app/common/dtos/PipelineCreateRequestDto";
 import { Col, Row } from "react-bootstrap";
 import pipelineScheduleUtils from "@/app/common/utils/pipelineScheduleUtils";
 import * as Yup from "yup";
+import { removeAllLocalStorageMapping } from "./step3mapping/utils/MappingAutoFill";
 export interface PipelineSettingsProps {
   initialValues: PipelineSettingsConfig;
   submitLabel: string;
@@ -45,6 +46,7 @@ function PipelineSettingsForm({
     pipelineSettings: PipelineSettingsConfig,
     { setSubmitting }: FormikHelpers<any>
   ) => {
+    removeAllLocalStorageMapping();
     setSubmitting(false); //NP: this is required when the first query responds with an error and the submit button should still be available for next query
     onSubmit(
       pipelineSettings.name!,
@@ -65,7 +67,11 @@ function PipelineSettingsForm({
   });
 
   return (
-  <Formik initialValues={initialValues} validationSchema={formSchema} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={formSchema}
+      onSubmit={handleSubmit}
+    >
       {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
         <Form>
           <InputField title="Pipeline Name" type="text" name="name" />
