@@ -51,13 +51,13 @@ public interface QueryModelDAO {
     @SqlQuery("select * from query_model where warehouse_id =:whId and is_deleted = 0")
     List<QueryModel> getQueryModelsByWarehouse(@Bind("whId") Long whId);
 
-    @SqlQuery("select * from query_model where team_id =:teamId and is_deleted = 0")
+    @SqlQuery("select * from query_model where team_id =:teamId and is_deleted = 0 order by id desc")
     List<QueryModel> getQueryModelsByTeam(@Bind("teamId") Long teamId);
 
-    @SqlQuery("select * from query_model where user_id =:userId and is_deleted = 0")
+    @SqlQuery("select * from query_model where user_id =:userId and is_deleted = 0 order by id desc")
     List<QueryModel> getQueryModelsByUser(@Bind("userId") Long userId);
 
-    @SqlQuery("select * from query_model where warehouse_id =:whId and team_id =:teamId and is_deleted = 0")
+    @SqlQuery("select * from query_model where warehouse_id =:whId and team_id =:teamId and is_deleted = 0 order by id desc")
     List<QueryModel> getQueryModelsByWarehouseAndTeam(@Bind("whId") Long whId, @Bind("teamId") Long teamId);
 
     @SqlUpdate("update query_model set is_deleted = 1 where id = :id")

@@ -107,7 +107,7 @@ const PipelineMapping = ({
         <div className="container">
           <Formik
             initialValues={initialValuesForValidation}
-            // validate={validate}
+            validate={validate}
             validateOnChange={false}
             validateOnBlur={false}
             onSubmit={(values, { setSubmitting }) => {
