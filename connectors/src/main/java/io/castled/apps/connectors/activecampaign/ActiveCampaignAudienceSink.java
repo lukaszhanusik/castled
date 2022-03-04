@@ -10,6 +10,7 @@ import io.castled.apps.connectors.activecampaign.dto.Contact;
 import io.castled.apps.connectors.activecampaign.dto.FieldValue;
 import io.castled.apps.connectors.activecampaign.models.ContactAndError;
 import io.castled.apps.models.GenericSyncObject;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.schema.models.Field;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Singleton
-public class ActiveCampaignAudienceSink extends BufferedObjectSink<Message> {
+public class ActiveCampaignAudienceSink extends BufferedObjectSink<DataSinkMessage> {
 
     private final ActiveCampaignRestClient activeCampaignRestClient;
     private final ActiveCampaignErrorParser activeCampaignErrorParser;
@@ -48,10 +49,10 @@ public class ActiveCampaignAudienceSink extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
 
         //Messages with missing emails.
-        List<Message> messagesWithMissingEmails= messages.stream().filter(message -> StringUtils.nullIfEmpty(getEmail(message.getRecord()))==null).collect(Collectors.toList());
+        List<DataSinkMessage> messagesWithMissingEmails= messages.stream().filter(message -> StringUtils.nullIfEmpty(getEmail(message.getRecord()))==null).collect(Collectors.toList());
 
         //Write to error streams message entries with missing email.
         messagesWithMissingEmails.forEach(message -> this.errorOutputStream.writeFailedRecord(message,activeCampaignErrorParser.getMissingRequiredFieldError("email")));
@@ -59,9 +60,9 @@ public class ActiveCampaignAudienceSink extends BufferedObjectSink<Message> {
         messages.removeAll(messagesWithMissingEmails);
 
         List<ContactAndError> failedRecords = this.activeCampaignRestClient.upsertContacts(
-                messages.stream().map(Message::getRecord).map(this::constructContact).collect(Collectors.toList()));
+                messages.stream().map(DataSinkMessage::getRecord).map(this::constructContact).collect(Collectors.toList()));
 
-        Map<String, Message> emailRecordMapper = messages.stream().filter(message -> getEmail(message.getRecord()) != null)
+        Map<String, DataSinkMessage> emailRecordMapper = messages.stream().filter(message -> getEmail(message.getRecord()) != null)
                 .collect(Collectors.toMap(message -> getEmail(message.getRecord()), Function.identity()));
 
         failedRecords.forEach(failedRecord ->

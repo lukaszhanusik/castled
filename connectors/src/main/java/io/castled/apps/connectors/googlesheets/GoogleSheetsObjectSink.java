@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
@@ -29,7 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class GoogleSheetsObjectSink extends BufferedObjectSink<Message> {
+public class GoogleSheetsObjectSink extends BufferedObjectSink<DataSinkMessage> {
 
     private final GoogleSheetsAppConfig googleSheetsAppConfig;
     private final GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig;
@@ -56,11 +57,11 @@ public class GoogleSheetsObjectSink extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
         try {
             List<ValueRange> updateValueRanges = Lists.newArrayList();
             List<List<Object>> appendValues = Lists.newArrayList();
-            for (Message message : messages) {
+            for (DataSinkMessage message : messages) {
                 LinkedHashMap<String, Object> rowValues = headers.stream().collect(Collectors.toMap(Function.identity(),
                         header -> GoogleSheetUtils.getSheetsValue(message.getRecord().getField(header)), (v1, v2) -> v1, LinkedHashMap::new));
 
@@ -93,18 +94,18 @@ public class GoogleSheetsObjectSink extends BufferedObjectSink<Message> {
         this.lastProcessedOffset = Math.max(lastProcessedOffset, messages.get(messages.size() - 1).getOffset());
     }
 
-    private void handleGSheetsError(List<Message> messages, Exception e) {
+    private void handleGSheetsError(List<DataSinkMessage> messages, Exception e) {
         log.error("Google Sheets append records failed for spreadsheet id {} and name {}",
                 GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
                 googleSheetsAppSyncConfig.getObject().getObjectName(), e);
         if (e instanceof GoogleJsonResponseException) {
             GoogleJsonResponseException gre = (GoogleJsonResponseException) e;
-            for (Message message : messages) {
+            for (DataSinkMessage message : messages) {
                 this.errorOutputStream.writeFailedRecord(message, new ExternallyCategorizedError(gre.getStatusMessage(), gre.getContent()));
             }
             return;
         }
-        for (Message message : messages) {
+        for (DataSinkMessage message : messages) {
             this.errorOutputStream.writeFailedRecord(message, new UnclassifiedError(Optional.ofNullable(e.getMessage()).orElse("Unknown error")));
         }
 

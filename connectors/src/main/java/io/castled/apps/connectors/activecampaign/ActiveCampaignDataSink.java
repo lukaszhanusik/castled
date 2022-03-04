@@ -4,6 +4,7 @@ import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.schema.models.Message;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ public class ActiveCampaignDataSink implements DataSink {
 
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        Message message;
+        DataSinkMessage message;
         this.activeCampaignAudienceSink = new ActiveCampaignAudienceSink((ActiveCampaignAppConfig) dataSinkRequest.getExternalApp().getConfig(),
                 dataSinkRequest.getErrorOutputStream(), ((ActiveCampaignAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject());
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {

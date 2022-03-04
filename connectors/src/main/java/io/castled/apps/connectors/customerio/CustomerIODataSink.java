@@ -3,6 +3,7 @@ package io.castled.apps.connectors.customerio;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.models.Message;
 
@@ -20,7 +21,7 @@ public class CustomerIODataSink implements DataSink {
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
 
         this.customerIOObjectSink = getObjectSink(dataSinkRequest);
-        Message message;
+        DataSinkMessage message;
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             if (!this.writeRecord(message,dataSinkRequest.getPrimaryKeys())) {
                 skippedRecords++;
@@ -53,7 +54,7 @@ public class CustomerIODataSink implements DataSink {
                         statsRef.getOffset(), skippedRecords)).orElse(new AppSyncStats(0, 0, 0));
     }
 
-    private boolean writeRecord(Message message,List<String> primaryKeys) {
+    private boolean writeRecord(DataSinkMessage message,List<String> primaryKeys) {
         this.customerIOObjectSink.createOrUpdateObject(message);
         return true;
     }

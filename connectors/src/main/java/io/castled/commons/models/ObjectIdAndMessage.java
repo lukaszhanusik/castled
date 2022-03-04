@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ObjectIdAndMessage implements MessageOffsetSupplier {
 
     private String id;
-    private Message message;
+    private DataSinkMessage message;
 
     @Override
     public long getOffset() {

@@ -11,9 +11,9 @@ import io.castled.apps.connectors.salesforce.client.dtos.*;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.syncconfigs.AppSyncConfig;
-import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledException;
 import io.castled.exceptions.CastledRuntimeException;
@@ -71,10 +71,10 @@ public class SalesforceDataSink implements DataSink {
                 salesforceAppConfig.getClientConfig());
         computeExistingPrimaryKeysIfReqd(salesforceAppConfig, dataSinkRequest.getPrimaryKeys(), dataSinkRequest.getAppSyncConfig());
 
-        Message message;
+        DataSinkMessage message;
         long recordsBuffered = 0;
         String primaryKey = dataSinkRequest.getPrimaryKeys().get(0);
-        Map<Object, Long> primaryKeyOffsetMapper = Maps.newHashMap();
+        Map<Object, DataSinkMessage> primaryKeyMessageMapper = Maps.newHashMap();
 
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             if (this.csvPrinter == null) {
@@ -88,7 +88,7 @@ public class SalesforceDataSink implements DataSink {
 
             if (this.appendRecordToBuffer(message, dataSinkRequest.getAppSyncConfig(),
                     dataSinkRequest.getPrimaryKeys())) {
-                primaryKeyOffsetMapper.putIfAbsent(message.getRecord().getValue(primaryKey), message.getOffset());
+                primaryKeyMessageMapper.putIfAbsent(message.getRecord().getValue(primaryKey), message);
                 recordsBuffered++;
             } else {
                 skippedRecords.incrementAndGet();
@@ -98,8 +98,8 @@ public class SalesforceDataSink implements DataSink {
                 this.csvPrinter.close();
                 uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataSinkRequest.getAppSyncConfig(), recordsBuffer,
                         dataSinkRequest.getObjectSchema(), dataSinkRequest.getErrorOutputStream(),
-                        primaryKey, primaryKeyOffsetMapper);
-                primaryKeyOffsetMapper.clear();
+                        primaryKey, primaryKeyMessageMapper);
+                primaryKeyMessageMapper.clear();
                 this.csvPrinter = null;
 
                 recordsBuffered = 0;
@@ -113,7 +113,7 @@ public class SalesforceDataSink implements DataSink {
         if (recordsBuffered > 0) {
             uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataSinkRequest.getAppSyncConfig(), recordsBuffer,
                     dataSinkRequest.getObjectSchema(), dataSinkRequest.getErrorOutputStream(),
-                    primaryKey, primaryKeyOffsetMapper);
+                    primaryKey, primaryKeyMessageMapper);
         }
     }
 
@@ -126,7 +126,7 @@ public class SalesforceDataSink implements DataSink {
                                                   AppSyncConfig appSyncConfig) throws Exception {
 
 
-        GenericObjectRadioGroupConfig sfdcAppSyncConfig = (GenericObjectRadioGroupConfig) appSyncConfig;
+        SalesforceAppSyncConfig sfdcAppSyncConfig = (SalesforceAppSyncConfig) appSyncConfig;
         GenericSyncObject sfdcSyncObject = sfdcAppSyncConfig.getObject();
         if (sfdcAppSyncConfig.getMode() == AppSyncMode.UPDATE) {
             String primaryKey = primaryKeys.get(0);
@@ -141,7 +141,7 @@ public class SalesforceDataSink implements DataSink {
 
     private void uploadBufferedRecords(long recordsBuffered, SFDCRestClient sfdcRestClient, AppSyncConfig appSyncConfig, StringBuilder recordsBuffer,
                                        RecordSchema objectSchema, ErrorOutputStream errorOutputStream,
-                                       String primaryKey, Map<Object, Long> offsetMapper) throws Exception {
+                                       String primaryKey, Map<Object, DataSinkMessage> messageMapper) throws Exception {
 
         Job job = sfdcRestClient.createJob(createJobRequest(appSyncConfig, primaryKey));
         sfdcRestClient.uploadCsv(job.getId(), recordsBuffer.toString());
@@ -162,14 +162,14 @@ public class SalesforceDataSink implements DataSink {
         }
 
         processFailedReport(new CharSequenceReader(sfdcRestClient.getFailedReport(job.getId())), objectSchema,
-                errorOutputStream, primaryKey, offsetMapper);
+                errorOutputStream, primaryKey, messageMapper);
         processedRecords.addAndGet(recordsBuffered);
 
     }
 
     private void processFailedReport(Reader reportReader, RecordSchema objectSchema,
                                      ErrorOutputStream errorOutputStream, String primaryKey,
-                                     Map<Object, Long> offsetMapper) throws CastledException {
+                                     Map<Object, DataSinkMessage> primaryKeyOffsetMapper) throws CastledException {
         try {
             CSVParser csvParser = new CSVParser(reportReader, CSVFormat.RFC4180.withHeader().withSkipHeaderRecord());
             for (CSVRecord csvRecord : csvParser) {
@@ -185,8 +185,8 @@ public class SalesforceDataSink implements DataSink {
                     }
                 }
                 Tuple record = recordBuilder.build();
-                errorOutputStream.writeFailedRecord(new Message(Optional.ofNullable(offsetMapper.get(record.getValue(primaryKey)))
-                        .orElse(0L), record), this.salesforceErrorParser.parseSalesforceError(sfError));
+                errorOutputStream.writeFailedRecord(primaryKeyOffsetMapper.get(record.getValue(primaryKey)),
+                        this.salesforceErrorParser.parseSalesforceError(sfError));
             }
         } catch (Exception e) {
             log.error("Process failed records failed", e);
@@ -197,8 +197,8 @@ public class SalesforceDataSink implements DataSink {
 
     private JobRequest createJobRequest(AppSyncConfig appSyncConfig, String primaryKey) {
 
-        GenericObjectRadioGroupConfig sfdcAppSyncConfig = (GenericObjectRadioGroupConfig) appSyncConfig;
-        GenericSyncObject sfdcSyncObject = ((GenericObjectRadioGroupConfig) appSyncConfig).getObject();
+        SalesforceAppSyncConfig sfdcAppSyncConfig = (SalesforceAppSyncConfig) appSyncConfig;
+        GenericSyncObject sfdcSyncObject = ((SalesforceAppSyncConfig) appSyncConfig).getObject();
         switch (sfdcAppSyncConfig.getMode()) {
             case UPSERT:
                 return new UpsertJobRequest(sfdcSyncObject.getObjectName(), ContentType.CSV, primaryKey);
@@ -212,9 +212,9 @@ public class SalesforceDataSink implements DataSink {
     }
 
 
-    private boolean appendRecordToBuffer(Message message, AppSyncConfig appSyncConfig, List<String> primaryKeys)
+    private boolean appendRecordToBuffer(DataSinkMessage message, AppSyncConfig appSyncConfig, List<String> primaryKeys)
             throws IOException {
-        GenericObjectRadioGroupConfig sfdcAppSyncConfig = (GenericObjectRadioGroupConfig) appSyncConfig;
+        SalesforceAppSyncConfig sfdcAppSyncConfig = (SalesforceAppSyncConfig) appSyncConfig;
         if (sfdcAppSyncConfig.getMode() == AppSyncMode.UPDATE) {
             String primaryKey = primaryKeys.get(0);
             if (!existingPrimaryKeyValues.contains(message.getRecord().getValue(primaryKey))) {

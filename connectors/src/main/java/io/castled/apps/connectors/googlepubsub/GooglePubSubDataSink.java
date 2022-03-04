@@ -13,6 +13,7 @@ import com.google.pubsub.v1.TopicName;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.schema.models.Message;
 import io.castled.utils.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class GooglePubSubDataSink implements DataSink {
             publisher = Publisher.newBuilder(topicName).setBatchingSettings(batchingSettings)
                     .setCredentialsProvider(new GooglePubSubCredentialsProvider(googlePubSubAppConfig.getServiceAccountDetails())).build();
 
-            Message message;
+            DataSinkMessage message;
             while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
                 messageIdFutures.add(publishMessage(publisher, message));
                 if (messageIdFutures.size() == FLUSH_BATCH_SIZE) {
@@ -80,9 +81,9 @@ public class GooglePubSubDataSink implements DataSink {
         validateAndThrow();
     }
 
-    private ApiFuture<String> publishMessage(Publisher publisher, Message message) throws Exception {
+    private ApiFuture<String> publishMessage(Publisher publisher, DataSinkMessage message) throws Exception {
         pendingMessageIds.add(message.getOffset());
-        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(ByteString.copyFrom(MessageUtils.messageToBytes(message))).build();
+        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(ByteString.copyFrom(MessageUtils.messageToBytes(message.getMessage()))).build();
         ApiFuture<String> messageIdFuture = publisher.publish(pubsubMessage);
         lastBufferedOffset = message.getOffset();
         ApiFutures.addCallback(messageIdFuture, new DataSinkCallback(message.getOffset()),

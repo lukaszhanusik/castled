@@ -41,7 +41,7 @@ webapp:
     repository: castled/webapp
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.42-alpha"
+    tag: "0.2.43-alpha"
 
   ## @param webapp.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}
@@ -141,7 +141,7 @@ app:
     repository: castled/app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.42-alpha"
+    tag: "0.2.43-alpha"
 
   ## @param app.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}
@@ -260,10 +260,10 @@ mysql:
   primary:
     persistence:
       ## @param mysql.primary.persistence.enabled Enable data persistence using PVC.
-      enabled: false
+      enabled: true
 
       ## @param mysql.primary.persistence.size Persistent Volume size.
-      size: 2Gi
+      size: 10Gi
 
 ## External Mysql configuration
 ## All of these values are only used when mysql.enabled is set to false

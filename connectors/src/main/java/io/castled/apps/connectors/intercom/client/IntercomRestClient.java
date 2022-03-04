@@ -1,12 +1,15 @@
 package io.castled.apps.connectors.intercom.client;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.apps.connectors.intercom.client.dtos.*;
 import io.castled.apps.connectors.intercom.client.exceptions.IntercomRestException;
 import io.castled.apps.connectors.intercom.client.models.IntercomModel;
+import io.castled.apps.models.EntityIdResponse;
 import io.castled.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import net.snowflake.client.jdbc.internal.apache.arrow.flatbuf.Int;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
@@ -41,15 +44,15 @@ public class IntercomRestClient {
                 .get(DataAttributesResponse.class).getData();
     }
 
-    public void createContact(Map<String, Object> contactProperties, List<String> customAttributes) throws IntercomRestException {
+    public String createContact(Map<String, Object> contactProperties, List<String> customAttributes) throws IntercomRestException {
         Map<String, Object> requestProperties = constructRequestObject(contactProperties, customAttributes);
 
         try (Response response = executeRequest(() -> this.client.target("https://api.intercom.io/contacts")
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + accessToken)
                 .post(Entity.json(requestProperties)))) {
+            return response.readEntity(EntityIdResponse.class).getId();
             //do nothing
-
         }
     }
 
@@ -68,12 +71,13 @@ public class IntercomRestClient {
     }
 
 
-    public void updateContact(String contactId, Map<String, Object> contactProperties, List<String> customAttributes) throws IntercomRestException {
+    public String updateContact(String contactId, Map<String, Object> contactProperties, List<String> customAttributes) throws IntercomRestException {
         Map<String, Object> requestProperties = constructRequestObject(contactProperties, customAttributes);
         try (Response response = executeRequest(() -> this.client.target(String.format("https://api.intercom.io/contacts/%s", contactId))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + accessToken)
                 .put(Entity.json(requestProperties)))) {
+            return response.readEntity(EntityIdResponse.class).getId();
         }
     }
 
@@ -87,8 +91,7 @@ public class IntercomRestClient {
     }
 
     public void updateCompany(String companyId, Map<String, Object> companyProperties, List<String> customAttributes) {
-        //this is not used as update and create can happeven via the create api
-
+        //this is not used as update and create can happen via the create api
     }
 
     public void consumeContacts(Consumer<Map<String, Object>> contactsConsumer) {
@@ -107,6 +110,23 @@ public class IntercomRestClient {
             contactList.getData().stream().map(this::flattenPropertyResponse).forEach(contactsConsumer);
         }
     }
+
+    public void attachCompany(String contactId, String companyId) throws IntercomRestException {
+        try (Response response = executeRequest(() -> this.client.target(String.format("https://api.intercom.io/contacts/%s/companies", contactId))
+                .request(MediaType.APPLICATION_JSON).header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + accessToken)
+                .post(Entity.json(ImmutableMap.of("id", companyId))))) {
+        }
+    }
+
+    public String getIntercomCompanyId(String companyId) throws IntercomRestException {
+        try (Response response = executeRequest(() -> this.client.target("https://api.intercom.io/companies")
+                .queryParam("company_id", companyId)
+                .request(MediaType.APPLICATION_JSON).header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + accessToken)
+                .get())) {
+            return response.readEntity(EntityIdResponse.class).getId();
+        }
+    }
+
 
     private Map<String, Object> flattenPropertyResponse(Map<String, Object> properties) {
         Map<String, Object> flattenedProperties = Maps.newHashMap();

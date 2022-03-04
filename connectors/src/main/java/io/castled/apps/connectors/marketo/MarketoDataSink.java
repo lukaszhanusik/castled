@@ -4,6 +4,7 @@ import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.models.Message;
 
@@ -15,7 +16,7 @@ public class MarketoDataSink implements DataSink {
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
 
-        BufferedObjectSink<Message> objectSink;
+        BufferedObjectSink<DataSinkMessage> objectSink;
         MarketoObject marketoObject = MarketoObject
                 .getObjectByName(((MarketoAppSyncConfig)dataSinkRequest.getAppSyncConfig()).getObject().getObjectName());
         switch (marketoObject) {
@@ -32,7 +33,7 @@ public class MarketoDataSink implements DataSink {
                 throw new CastledRuntimeException(String.format("Invalid object type %s!", marketoObject.getName()));
         }
 
-        Message msg;
+        DataSinkMessage msg;
         while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             objectSink.writeRecord(msg);
         }

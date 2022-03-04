@@ -5,6 +5,7 @@ import com.google.rpc.Status;
 import io.castled.ObjectRegistry;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.commons.errors.CastledError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
-public abstract class GadsObjectSink extends BufferedObjectSink<Message> {
+public abstract class GadsObjectSink extends BufferedObjectSink<DataSinkMessage> {
     protected final ErrorOutputStream errorOutputStream;
 
     protected final AtomicLong processedRecords = new AtomicLong(0);
@@ -25,7 +26,7 @@ public abstract class GadsObjectSink extends BufferedObjectSink<Message> {
         this.errorOutputStream = errorOutputStream;
     }
 
-    protected void handlePartialFailures(List<Message> messages, Status partialFailureError) {
+    protected void handlePartialFailures(List<DataSinkMessage> messages, Status partialFailureError) {
 
         for (int operationIndex = 0; operationIndex < messages.size(); operationIndex++) {
             GoogleAdsError googleAdsError = getGoogleAdsError(operationIndex, partialFailureError);

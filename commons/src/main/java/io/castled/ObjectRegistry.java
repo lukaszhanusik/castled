@@ -3,7 +3,6 @@ package io.castled;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 
 @Data

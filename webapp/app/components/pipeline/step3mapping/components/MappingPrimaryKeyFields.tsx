@@ -4,6 +4,8 @@ import Image from "react-bootstrap/Image";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
+import { useState, useEffect } from "react";
+import { addkeysToLocalStorage, defaultValue } from "../utils/MappingAutoFill";
 interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
   onlyOptions?: SchemaOptions[];
 }
@@ -16,6 +18,15 @@ export default function MappingPrimaryKeyFields({
   setFieldTouched,
   errors,
 }: MappingPrimaryKeyFieldsProps) {
+
+  // On mount check if fields are there in localStorage
+  useEffect(() => {
+    const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
+    if (getLocalStorageItem) {
+      const primaryKeysForm = JSON.parse(getLocalStorageItem);
+      Object.assign(values, primaryKeysForm);
+    }
+  }, []);
   // SECTION - 2 - Primary Keys to match the destination object
   const primaryKeysSection = mappingGroups.filter((fields) => {
     return fields.type === "PRIMARY_KEYS" && fields;
@@ -34,13 +45,44 @@ export default function MappingPrimaryKeyFields({
                 <th className="col-6">
                   <Select
                     options={options}
-                    onChange={(e) =>
-                      setFieldValue?.(`PRIMARY_KEYS-warehouseField-0`, e?.value)
-                    }
+                    onChange={(e) => {
+                      setFieldValue?.(
+                        `PRIMARY_KEYS-warehouseField-0`,
+                        e?.value
+                      );
+                      addkeysToLocalStorage(
+                        e?.value,
+                        "primaryKeysForm",
+                        "",
+                        "warehouseField",
+                        ""
+                      );
+                    }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                     placeholder={"Select a column"}
+                    defaultValue={
+                      defaultValue(
+                        "primaryKeysForm",
+                        "0",
+                        "warehouseField",
+                        ""
+                      ) && {
+                        value: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "warehouseField",
+                          ""
+                        ),
+                        label: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "warehouseField",
+                          ""
+                        ),
+                      }
+                    }
                   />
                 </th>
                 <th>
@@ -56,13 +98,36 @@ export default function MappingPrimaryKeyFields({
                       value: key.fieldName,
                       label: key.fieldDisplayName || key.fieldName,
                     }))}
-                    onChange={(e) =>
-                      setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value)
-                    }
+                    onChange={(e) => {
+                      setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value);
+                      addkeysToLocalStorage(
+                        e?.value,
+                        "primaryKeysForm",
+                        "",
+                        "appField",
+                        ""
+                      );
+                    }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                     }
                     placeholder={"Select a field"}
+                    defaultValue={
+                      defaultValue("primaryKeysForm", "0", "appField", "") && {
+                        value: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "appField",
+                          ""
+                        ),
+                        label: defaultValue(
+                          "primaryKeysForm",
+                          "0",
+                          "appField",
+                          ""
+                        ),
+                      }
+                    }
                   />
                 </th>
                 <Placeholder as="td" className="pb-0">
