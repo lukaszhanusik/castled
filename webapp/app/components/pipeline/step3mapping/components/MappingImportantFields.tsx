@@ -13,7 +13,6 @@ export default function MappingImportantFields({
   setFieldError,
   errors,
 }: MappingFieldsProps) {
-  const [form, setForm] = useState({});
 
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("importantParamsForm");

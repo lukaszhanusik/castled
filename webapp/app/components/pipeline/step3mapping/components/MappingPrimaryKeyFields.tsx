@@ -18,7 +18,6 @@ export default function MappingPrimaryKeyFields({
   setFieldTouched,
   errors,
 }: MappingPrimaryKeyFieldsProps) {
-  const [form, setForm] = useState({});
 
   // On mount check if fields are there in localStorage
   useEffect(() => {
