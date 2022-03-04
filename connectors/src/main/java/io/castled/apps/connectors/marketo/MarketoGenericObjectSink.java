@@ -8,6 +8,7 @@ import io.castled.apps.connectors.marketo.dtos.GenericObjectSyncRequest;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.models.Message;
@@ -15,7 +16,7 @@ import io.castled.schema.models.Message;
 import java.util.List;
 import java.util.Map;
 
-public class MarketoGenericObjectSink extends BufferedObjectSink<Message> {
+public class MarketoGenericObjectSink extends BufferedObjectSink<DataSinkMessage> {
 
     // Marketo API Limits
     // Max number of records in a batch rest api request
@@ -36,7 +37,7 @@ public class MarketoGenericObjectSink extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> records) {
+    protected void writeRecords(List<DataSinkMessage> records) {
         GenericObjectSyncRequest request = this.constructSyncRequest(records);
         MarketoObject marketoObject = MarketoObject.getObjectByName(this.syncConfig.getObject().getObjectName());
         BatchSyncStats batchSyncStats = this.marketoClient.batchSyncObject(marketoObject, request);
@@ -55,13 +56,13 @@ public class MarketoGenericObjectSink extends BufferedObjectSink<Message> {
         return this.syncStats;
     }
 
-    GenericObjectSyncRequest constructSyncRequest(List<Message> records) {
+    GenericObjectSyncRequest constructSyncRequest(List<DataSinkMessage> records) {
         GenericObjectSyncRequest request = new GenericObjectSyncRequest();
         request.setAction(getMarketoSyncMode());
         request.setDedupeBy(getDedupeKey(records));
         List<Map<String, Object>> input = Lists.newArrayList();
 
-        for (Message msg : records) {
+        for (DataSinkMessage msg : records) {
             Map<String, Object> inputRec = Maps.newHashMap();
             msg.getRecord().getFields()
                     .forEach(fieldRef -> inputRec.put((String) fieldRef.getParams().get("name"),
@@ -73,10 +74,10 @@ public class MarketoGenericObjectSink extends BufferedObjectSink<Message> {
     }
 
     // Get api name from display name
-    private String getDedupeKey(List<Message> records) {
+    private String getDedupeKey(List<DataSinkMessage> records) {
         // Only 1 pk allowed
         String pkDisplayName = this.primaryKeys.stream().findFirst().orElse(null);
-        Message msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Records empty!"));
+        DataSinkMessage msg = records.stream().findFirst().orElseThrow(() -> new CastledRuntimeException("Records empty!"));
         // Marketo apis are weird!
         return (String) msg.getRecord().getField(pkDisplayName).getParams().get("internalName");
     }

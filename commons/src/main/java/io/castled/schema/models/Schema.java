@@ -31,11 +31,11 @@ public abstract class Schema {
     private List<Class<?>> allowedTypes;
     private boolean optional;
 
-    public void validateValue(Object value) throws SchemaValidationException {
+    public void validateValue(String fieldName, Object value) throws SchemaValidationException {
 
         if (value == null) {
             if (!optional) {
-                throw new NullValueException(type);
+                throw new NullValueException(fieldName, type);
             }
             return;
         }

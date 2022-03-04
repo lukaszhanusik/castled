@@ -1,8 +1,11 @@
 package io.castled.pipelines;
 
 import io.castled.ObjectRegistry;
+import io.castled.commons.models.DataSinkMessage;
+import io.castled.commons.streams.DataSinkMessageOutputStream;
 import io.castled.commons.streams.RecordOutputStream;
 import io.castled.schema.SchemaMapper;
+import io.castled.schema.models.Field;
 import io.castled.schema.models.FieldSchema;
 import io.castled.schema.models.RecordSchema;
 import io.castled.schema.models.Tuple;
@@ -11,15 +14,15 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.List;
 import java.util.Map;
 
-public class SchemaMappedRecordOutputStream implements RecordOutputStream {
+public class SchemaMappedMessageOutputStream implements DataSinkMessageOutputStream {
 
     private final RecordSchema targetSchema;
     private final RecordOutputStream recordOutputStream;
     private final Map<String, List<String>> targetSourceMapping;
     private final SchemaMapper schemaMapper;
 
-    public SchemaMappedRecordOutputStream(RecordSchema targetSchema, RecordOutputStream recordOutputStream,
-                                          Map<String, List<String>> targetSourceMapping) {
+    public SchemaMappedMessageOutputStream(RecordSchema targetSchema, RecordOutputStream recordOutputStream,
+                                           Map<String, List<String>> targetSourceMapping) {
         this.targetSchema = targetSchema;
         this.recordOutputStream = recordOutputStream;
         this.targetSourceMapping = targetSourceMapping;
@@ -27,10 +30,10 @@ public class SchemaMappedRecordOutputStream implements RecordOutputStream {
     }
 
     @Override
-    public void writeRecord(Tuple inputRecord) throws Exception {
+    public void writeDataSinkMessage(DataSinkMessage dataSinkMessage) throws Exception {
 
         if (this.targetSourceMapping == null) {
-            recordOutputStream.writeRecord(inputRecord);
+            recordOutputStream.writeRecord(dataSinkMessage.getRecord());
             return;
         }
         Tuple.Builder targetRecordBuilder = Tuple.builder();
@@ -39,10 +42,13 @@ public class SchemaMappedRecordOutputStream implements RecordOutputStream {
             if (!CollectionUtils.isEmpty(sourceFields)) {
                 for (String sourceField : sourceFields) {
                     if (sourceField != null) {
-                        targetRecordBuilder.put(field, schemaMapper.transformValue(inputRecord.getValue(sourceField), field.getSchema()));
+                        targetRecordBuilder.put(field, schemaMapper.transformValue(dataSinkMessage.getRecord().getValue(sourceField), field.getSchema()));
                     }
                 }
             }
+        }
+        for (Field field : dataSinkMessage.getUnmappedSourceFields()) {
+            targetRecordBuilder.put(field);
         }
         recordOutputStream.writeRecord(targetRecordBuilder.build());
     }

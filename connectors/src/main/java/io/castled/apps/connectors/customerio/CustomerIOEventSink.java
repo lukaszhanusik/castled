@@ -9,6 +9,7 @@ import io.castled.apps.models.GenericSyncObject;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetQueue;
@@ -50,13 +51,13 @@ public class CustomerIOEventSink implements CustomerIOObjectSink<String> {
     private final AtomicLong processedRecords = new AtomicLong(0);
     private long lastProcessedOffset = 0;
 
-    private final CastledOffsetQueue<Message> recordsBuffer =
+    private final CastledOffsetQueue<DataSinkMessage> recordsBuffer =
             new CastledOffsetQueue<>(new CustomerIOEventSink.EventConsumer(), 10, 10, true);
 
 
-    private class EventConsumer implements Consumer<Message> {
+    private class EventConsumer implements Consumer<DataSinkMessage> {
         @Override
-        public void accept(Message message) {
+        public void accept(DataSinkMessage message) {
             Map<String, Object> eventProperties = constructProperties(message.getRecord());
             try {
                 customerIORestClient.insertEventDetails(eventProperties,primaryKeys);
@@ -82,7 +83,7 @@ public class CustomerIOEventSink implements CustomerIOObjectSink<String> {
         this.mappedFields = dataSinkRequest.getMappedFields();
     }
 
-    public void createOrUpdateObject(Message message) {
+    public void createOrUpdateObject(DataSinkMessage message) {
         try {
             recordsBuffer.writePayload(message, 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {

@@ -11,6 +11,7 @@ import io.castled.apps.connectors.intercom.client.exceptions.IntercomRestExcepti
 import io.castled.apps.connectors.intercom.client.models.IntercomModel;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.models.ObjectIdAndMessage;
 import io.castled.commons.streams.ErrorOutputStream;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -53,18 +55,30 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         public void accept(ObjectIdAndMessage objectIdAndMessage) {
             if (objectIdAndMessage.getId() == null) {
                 createContact(objectIdAndMessage.getMessage());
-                return;
+            } else {
+                updateContact(objectIdAndMessage.getMessage(), objectIdAndMessage.getId());
             }
-            updateContact(objectIdAndMessage.getMessage(), objectIdAndMessage.getId());
         }
 
-        private void createContact(Message message) {
+        private void attachCompanyIfRequired(DataSinkMessage message, String contactId) throws IntercomRestException {
+            String companyId = Optional.ofNullable(message.getRecord().getField(IntercomObjectFields.COMPANY_ID))
+                    .map(Field::getValue).map(Object::toString).orElse(null);
+            if (companyId == null) {
+                return;
+            }
+            String internalCompanyId = intercomRestClient.getIntercomCompanyId(companyId);
+            intercomRestClient.attachCompany(contactId, internalCompanyId);
+        }
+
+        private void createContact(DataSinkMessage message) {
             Map<String, Object> contactProperties = constructContactProperties(message.getRecord());
             if (Lists.newArrayList(IntercomObject.LEAD, IntercomObject.USER).contains(intercomObject)) {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
             }
             try {
-                intercomRestClient.createContact(contactProperties, customAttributes);
+                String contactId = intercomRestClient.createContact(contactProperties, customAttributes);
+                attachCompanyIfRequired(message, contactId);
+
             } catch (IntercomRestException e) {
                 CastledError pipelineError = intercomErrorParser.parseIntercomError(e.getErrorResponse());
                 errorOutputStream.writeFailedRecord(message, pipelineError);
@@ -72,13 +86,14 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             processedRecords.incrementAndGet();
         }
 
-        private void updateContact(Message message, String id) {
+        private void updateContact(DataSinkMessage message, String id) {
             Map<String, Object> contactProperties = constructContactProperties(message.getRecord());
             if (Lists.newArrayList(IntercomObject.LEAD, IntercomObject.USER).contains(intercomObject)) {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
             }
             try {
-                intercomRestClient.updateContact(id, contactProperties, customAttributes);
+                String contactId = intercomRestClient.updateContact(id, contactProperties, customAttributes);
+                attachCompanyIfRequired(message, contactId);
             } catch (IntercomRestException e) {
                 CastledError pipelineError = intercomErrorParser.parseIntercomError(e.getErrorResponse());
                 errorOutputStream.writeFailedRecord(message, pipelineError);
@@ -95,10 +110,8 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         this.intercomObject = intercomObject;
         this.primaryKeys = primaryKeys;
 
-
         this.customAttributes = intercomRestClient.listAttributes(IntercomModel.CONTACT)
                 .stream().filter(DataAttribute::isCustom).map(DataAttribute::getName).collect(Collectors.toList());
-
         this.primaryKeyIdMapper = constructPrimaryKeyIdMapper(appSyncConfig);
         this.errorOutputStream = errorOutputStream;
 
@@ -111,7 +124,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
     }
 
     @Override
-    public void createObject(Message message) {
+    public void createObject(DataSinkMessage message) {
         try {
             recordsBuffer.writePayload(new ObjectIdAndMessage(null, message), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
@@ -119,11 +132,10 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             errorOutputStream.writeFailedRecord(message,
                     new UnclassifiedError("Internal error!! Unable to publish records to records queue. Please contact support"));
         }
-
     }
 
     @Override
-    public void updateObject(String id, Message message) {
+    public void updateObject(String id, DataSinkMessage message) {
         try {
             recordsBuffer.writePayload(new ObjectIdAndMessage(id, message), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
@@ -149,6 +161,9 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
         for (Field field : record.getFields()) {
             Object value = record.getValue(field.getName());
             if (value != null) {
+                if (field.getName().equals(IntercomObjectFields.COMPANY_ID)) {
+                    continue;
+                }
                 if (SchemaUtils.isZonedTimestamp(field.getSchema())) {
                     recordProperties.put(field.getName(), ((ZonedDateTime) value).toEpochSecond());
                 } else {

@@ -69,10 +69,7 @@ public class SFDCUtils {
             default:
                 throw new CastledRuntimeException("Invalid soapType " + sfdcSoapType);
         }
-
-        if (sfdcObjectField.isNillable()) {
-            schema.setOptional(true);
-        }
+        schema.setOptional(true);
         return schema;
     }
 

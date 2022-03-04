@@ -4,7 +4,7 @@ import io.castled.schema.models.SchemaType;
 
 public class NullValueException extends SchemaValidationException {
 
-    public NullValueException(SchemaType schemaType) {
-        super(schemaType, "Value absent for optional field");
+    public NullValueException(String fieldName, SchemaType schemaType) {
+        super(schemaType, String.format("Value absent for required field %s", fieldName));
     }
 }

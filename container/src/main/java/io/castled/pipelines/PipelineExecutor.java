@@ -9,6 +9,7 @@ import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.PipelineSyncStats;
+import io.castled.commons.streams.DefaultDataSinkMessageOutputStream;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStreamImpl;
 import io.castled.constants.CommonConstants;
@@ -106,14 +107,14 @@ public class PipelineExecutor implements TaskExecutor {
 
             MysqlErrorTracker mysqlErrorTracker = new MysqlErrorTracker(warehousePollContext);
 
-            ErrorOutputStream schemaMappingErrorOutputStream = new ErrorOutputStream(warehouseSyncFailureListener, mysqlErrorTracker);
+            ErrorOutputStream schemaMappingErrorOutputStream = new ErrorOutputStream(new DefaultDataSinkMessageOutputStream(warehouseSyncFailureListener), mysqlErrorTracker);
 
             SchemaMappedMessageInputStream schemaMappedMessageInputStream = new SchemaMappedMessageInputStream(
                     appSchema, warehouseExecutionContext.getMessageInputStreamImpl(), DataMappingUtils.appWarehouseMapping(pipeline.getDataMapping()),
                     DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()), schemaMappingErrorOutputStream);
 
-            SchemaMappedRecordOutputStream schemaMappedRecordOutputStream =
-                    new SchemaMappedRecordOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
+            SchemaMappedMessageOutputStream schemaMappedRecordOutputStream =
+                    new SchemaMappedMessageOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
                             getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
                             DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()));
 
@@ -130,7 +131,6 @@ public class PipelineExecutor implements TaskExecutor {
                     .objectSchema(appSchema).primaryKeys(pipeline.getDataMapping().getPrimaryKeys())
                     .mapping(pipeline.getDataMapping()).queryMode(pipeline.getQueryMode())
                     .messageInputStream(schemaMappedMessageInputStream)
-
                     .build();
 
             PipelineSyncStats pipelineSyncStats = monitoredDataSink.syncRecords(externalAppConnector.getDataSink(),

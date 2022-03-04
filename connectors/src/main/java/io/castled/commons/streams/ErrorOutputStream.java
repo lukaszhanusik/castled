@@ -2,6 +2,7 @@ package io.castled.commons.streams;
 
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.CastledErrorTracker;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.models.Message;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class ErrorOutputStream {
 
-    private final RecordOutputStream recordOutputStream;
+    private final DataSinkMessageOutputStream dataSinkMessageOutputStream;
     private final CastledErrorTracker castledErrorTracker;
 
     @Getter
@@ -20,27 +21,27 @@ public class ErrorOutputStream {
     @Getter
     private volatile Long firstFailedMessageId;
 
-    public ErrorOutputStream(RecordOutputStream recordOutputStream, CastledErrorTracker castledErrorTracker) {
-        this.recordOutputStream = recordOutputStream;
+    public ErrorOutputStream(DataSinkMessageOutputStream dataSinkMessageOutputStream, CastledErrorTracker castledErrorTracker) {
+        this.dataSinkMessageOutputStream = dataSinkMessageOutputStream;
         this.castledErrorTracker = castledErrorTracker;
     }
 
-    public void writeFailedRecord(Message message, CastledError pipelineError) {
+    public void writeFailedRecord(DataSinkMessage dataSinkMessage, CastledError pipelineError) {
         try {
             if (firstFailedMessageId == null) {
-                firstFailedMessageId = message.getOffset();
+                firstFailedMessageId = dataSinkMessage.getOffset();
             }
             this.failedRecords.incrementAndGet();
-            this.castledErrorTracker.writeError(message.getRecord(), pipelineError);
-            this.recordOutputStream.writeRecord(message.getRecord());
+            this.castledErrorTracker.writeError(dataSinkMessage.getRecord(), pipelineError);
+            this.dataSinkMessageOutputStream.writeDataSinkMessage(dataSinkMessage);
         } catch (Exception e) {
-            log.error(String.format("Write failed record failed for error %s", pipelineError.description()),e);
+            log.error(String.format("Write failed record failed for error %s", pipelineError.description()), e);
             throw new CastledRuntimeException(e);
         }
     }
 
     public void flushFailedRecords() throws Exception {
-        this.recordOutputStream.flush();
+        this.dataSinkMessageOutputStream.flush();
         this.castledErrorTracker.flushErrors();
     }
 

@@ -6,6 +6,7 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class RestApiObjectSync extends BufferedObjectSink<Message> {
+public class RestApiObjectSync extends BufferedObjectSink<DataSinkMessage> {
 
 
     private final RestApiTemplateClient restApiRestClient;
@@ -37,7 +38,7 @@ public class RestApiObjectSync extends BufferedObjectSink<Message> {
     private final ErrorOutputStream errorOutputStream;
     private final AtomicLong processedRecords = new AtomicLong(0);
     private final Integer batchSize;
-    private final CastledOffsetListQueue<Message> requestsBuffer;
+    private final CastledOffsetListQueue<DataSinkMessage> requestsBuffer;
 
     public RestApiObjectSync(DataSinkRequest dataSinkRequest) {
         RestApiAppSyncConfig restApiAppSyncConfig = (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig();
@@ -52,12 +53,12 @@ public class RestApiObjectSync extends BufferedObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
         try {
             requestsBuffer.writePayload(Lists.newArrayList(messages), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
             log.error("Unable to publish records to records queue", e);
-            for (Message record : messages) {
+            for (DataSinkMessage record : messages) {
                 errorOutputStream.writeFailedRecord(record,
                         new UnclassifiedError("Internal error!! Unable to publish records to records queue. Please contact support"));
             }
@@ -93,9 +94,9 @@ public class RestApiObjectSync extends BufferedObjectSink<Message> {
         return recordProperties;
     }
 
-    private void upsertRestApiObjects(List<Message> messages) {
+    private void upsertRestApiObjects(List<DataSinkMessage> messages) {
         ErrorAndCode errorObject = this.restApiRestClient.upsertDetails(messages.stream()
-                .map(Message::getRecord).map(this::constructProperties).collect(Collectors.toList()));
+                .map(DataSinkMessage::getRecord).map(this::constructProperties).collect(Collectors.toList()));
 
         Optional.ofNullable(errorObject).ifPresent((objectAndErrorRef) -> messages.
                 forEach(message -> this.errorOutputStream.writeFailedRecord(message, restApiErrorParser.getPipelineError(objectAndErrorRef.getCode(), objectAndErrorRef.getMessage()))));
@@ -103,9 +104,9 @@ public class RestApiObjectSync extends BufferedObjectSink<Message> {
         this.processedRecords.addAndGet(messages.size());
     }
 
-    private class UpsertRestApiObjectConsumer implements Consumer<List<Message>> {
+    private class UpsertRestApiObjectConsumer implements Consumer<List<DataSinkMessage>> {
         @Override
-        public void accept(List<Message> messages) {
+        public void accept(List<DataSinkMessage> messages) {
             if (CollectionUtils.isEmpty(messages)) {
                 return;
             }

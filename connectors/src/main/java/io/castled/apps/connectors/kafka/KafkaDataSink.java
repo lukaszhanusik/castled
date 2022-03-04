@@ -6,6 +6,7 @@ import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.kafka.producer.CastledKafkaProducer;
@@ -53,7 +54,7 @@ public class KafkaDataSink implements DataSink {
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
         KafkaAppConfig kafkaAppConfig = (KafkaAppConfig) dataSinkRequest.getExternalApp().getConfig();
         KafkaAppSyncConfig kafkaAppSyncConfig = (KafkaAppSyncConfig) dataSinkRequest.getAppSyncConfig();
-        Message message;
+        DataSinkMessage message;
         try (CastledKafkaProducer kafkaProducer = new CastledKafkaProducer
                 (KafkaProducerConfiguration.builder().bootstrapServers(kafkaAppConfig.getBootstrapServers()).build())) {
             while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
@@ -68,11 +69,11 @@ public class KafkaDataSink implements DataSink {
         }
     }
 
-    private void publishMessage(CastledKafkaProducer kafkaProducer, Message message, String topic,
+    private void publishMessage(CastledKafkaProducer kafkaProducer, DataSinkMessage message, String topic,
                                 ErrorOutputStream errorOutputStream) {
         try {
             kafkaProducer.publish(new ProducerRecord<>(topic, null,
-                    MessageUtils.messageToBytes(message)), new DataSinkCallback(message.getOffset()));
+                    MessageUtils.messageToBytes(message.getMessage())), new DataSinkCallback(message.getOffset()));
         } catch (Exception e) {
             pendingMessageIds.remove(message.getOffset());
             recordsProcessed.incrementAndGet();

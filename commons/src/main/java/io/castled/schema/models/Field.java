@@ -22,6 +22,7 @@ public class Field {
         this.name = fieldSchema.getName();
         this.value = value;
         this.params = fieldSchema.getParams();
-        schema.validateValue(value);
+        schema.validateValue(fieldSchema.getName(), value);
     }
+
 }

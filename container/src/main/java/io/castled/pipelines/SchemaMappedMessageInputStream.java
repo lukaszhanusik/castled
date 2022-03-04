@@ -1,7 +1,10 @@
 package io.castled.pipelines;
 
+import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.commons.errors.errorclassifications.IncompatibleMappingError;
+import io.castled.commons.models.DataSinkMessage;
+import io.castled.commons.streams.DataSinkMessageInputStream;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStream;
 import io.castled.schema.IncompatibleValueException;
@@ -13,9 +16,10 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
-public class SchemaMappedMessageInputStream implements MessageInputStream {
+public class SchemaMappedMessageInputStream implements DataSinkMessageInputStream {
 
     private final RecordSchema targetSchema;
     private final MessageInputStream messageInputStream;
@@ -37,7 +41,7 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
     }
 
     @Override
-    public Message readMessage() throws Exception {
+    public DataSinkMessage readMessage() throws Exception {
 
         while (true) {
             Message message = this.messageInputStream.readMessage();
@@ -45,9 +49,9 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
                 return null;
             }
             if (this.sourceTargetMapping == null) {
-                return message;
+                return new DataSinkMessage(message);
             }
-            Message mappedMessage = mapMessage(message);
+            DataSinkMessage mappedMessage = mapMessage(message);
             if (mappedMessage == null) {
                 continue;
             }
@@ -55,12 +59,13 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         }
     }
 
-    private Message mapMessage(Message message) {
+    private DataSinkMessage mapMessage(Message message) {
 
         if (targetSchema == null) {
-            return mapMessageFromSourceSchema(message);
+            return new DataSinkMessage(mapMessageFromSourceSchema(message));
         }
         Tuple.Builder recordBuilder = Tuple.builder();
+        List<String> mappedSourceFields = Lists.newArrayList();
         for (FieldSchema field : targetSchema.getFieldSchemas()) {
             List<String> sourceFields = targetSourceMapping.get(field.getName());
             if (!CollectionUtils.isEmpty(sourceFields)) {
@@ -68,16 +73,19 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
                     if (sourceField != null) {
                         try {
                             recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
+                            mappedSourceFields.add(sourceField);
                         } catch (IncompatibleValueException e) {
                             failedRecords++;
-                            this.errorOutputStream.writeFailedRecord(message, new IncompatibleMappingError(sourceField, field.getSchema()));
+                            this.errorOutputStream.writeFailedRecord(new DataSinkMessage(message), new IncompatibleMappingError(sourceField, field.getSchema()));
                             return null;
                         }
                     }
                 }
             }
         }
-        return new Message(message.getOffset(), recordBuilder.build());
+        List<Field> unmappedSourceFields = message.getRecord().getFields().stream()
+                .filter(field -> !mappedSourceFields.contains(field.getName())).collect(Collectors.toList());
+        return new DataSinkMessage(new Message(message.getOffset(), recordBuilder.build()), unmappedSourceFields);
     }
 
     private Message mapMessageFromSourceSchema(Message message) {
@@ -85,7 +93,7 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         for (Field field : message.getRecord().getFields()) {
             List<String> targetFields = sourceTargetMapping.get(field.getName());
             if (!CollectionUtils.isEmpty(targetFields)) {
-                targetFields.stream().forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
+                targetFields.forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
             }
         }
         return new Message(message.getOffset(), recordBuilder.build());

@@ -4,6 +4,7 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.oauth.OAuthDetails;
 import io.castled.schema.models.Message;
 import io.castled.services.OAuthService;
@@ -13,9 +14,6 @@ import java.util.Optional;
 
 public class FbCustomAudDataSink implements DataSink {
 
-    // Refresh access token if only less than 10 days until expiry.
-    // These are long-lived token with typical expiry period of 60 days.
-    private final long TOKEN_REFRESH_BUFFER_SECONDS = 10 * 24 * 3600;
     private volatile FbCustomAudienceCustomerSink fbCustomAudienceCustomerSink;
 
     @Override
@@ -24,7 +22,7 @@ public class FbCustomAudDataSink implements DataSink {
         fbCustomAudienceCustomerSink = new FbCustomAudienceCustomerSink((FbAppConfig) dataSinkRequest.getExternalApp().getConfig(),
                 (FbCustomAudAppSyncConfig) dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
 
-        Message msg;
+        DataSinkMessage msg;
         while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             this.fbCustomAudienceCustomerSink.writeRecord(msg);
         }
@@ -33,7 +31,7 @@ public class FbCustomAudDataSink implements DataSink {
 
     @Override
     public AppSyncStats getSyncStats() {
-        return Optional.ofNullable(fbCustomAudienceCustomerSink).map(sinkRef -> sinkRef.getSyncStats())
+        return Optional.ofNullable(fbCustomAudienceCustomerSink).map(FbCustomAudienceCustomerSink::getSyncStats)
                 .orElse(new AppSyncStats(0, 0, 0));
     }
 
@@ -41,6 +39,9 @@ public class FbCustomAudDataSink implements DataSink {
     private void renewAccessToken(FbAppConfig appConfig) {
         OAuthDetails oAuthDetails = ObjectRegistry.getInstance(OAuthService.class).getOAuthDetails(appConfig.getOAuthToken());
         FbAccessConfig accessConfig = (FbAccessConfig) oAuthDetails.getAccessConfig();
+        // Refresh access token if only less than 10 days until expiry.
+        // These are long-lived token with typical expiry period of 60 days.
+        long TOKEN_REFRESH_BUFFER_SECONDS = 10 * 24 * 3600;
         if ((accessConfig.getTokenEpochSecond() + accessConfig.getExpiresIn() - TOKEN_REFRESH_BUFFER_SECONDS)
                 < Instant.EPOCH.getEpochSecond()) {
             FbTokenRefresher fbTokenRefresher = new FbTokenRefresher(appConfig.getClientConfig());
