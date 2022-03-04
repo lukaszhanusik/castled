@@ -136,10 +136,8 @@ export default function MappingMiscellaneousFields({
     );
   }
 
-  function keyValueDefault(type: string, key?: string): string {
-    return key
-      ? `MISCELLANEOUS_FIELDS-${type}-${key}`
-      : `MISCELLANEOUS_FIELDS-${type}-0x0x0x0x0x`;
+  function keyValueDefault(type: string, key: string): string {
+    return `MISCELLANEOUS_FIELDS-${type}-${key}`;
   }
 
   const additionalFields = (key: string) => (
@@ -197,7 +195,10 @@ export default function MappingMiscellaneousFields({
       key={"0x0x0x0x0x"}
       options={options}
       onChange={(e) => {
-        setFieldValue?.(keyValueDefault("warehouseField"), e?.value);
+        setFieldValue?.(
+          keyValueDefault("warehouseField", "0x0x0x0x0x"),
+          e?.value
+        );
         addkeysToLocalStorage(
           e?.value,
           "misclFieldForm",
@@ -206,16 +207,21 @@ export default function MappingMiscellaneousFields({
           "0x0x0x0x0x"
         );
       }}
-      onBlur={() => setFieldTouched?.(keyValueDefault("warehouseField"), true)}
+      onBlur={() =>
+        setFieldTouched?.(keyValueDefault("warehouseField", "0x0x0x0x0x"), true)
+      }
       handleDelete={(e) => {
         e.preventDefault();
         deleteRow("0x0x0x0x0x");
         deleteItemFromLocalStorage("0x0x0x0x0x", "misclFieldForm");
-        setFieldValue?.(keyValueDefault("warehouseField"), "");
-        setFieldValue?.(keyValueDefault("appField"), "");
+        setFieldValue?.(keyValueDefault("warehouseField", "0x0x0x0x0x"), "");
+        setFieldValue?.(keyValueDefault("appField", "0x0x0x0x0x"), "");
       }}
       inputChange={(e) => {
-        setFieldValue?.(keyValueDefault("appField"), e.target.value);
+        setFieldValue?.(
+          keyValueDefault("appField", "0x0x0x0x0x"),
+          e.target.value
+        );
         addkeysToLocalStorage(
           e.target.value,
           "misclFieldForm",
@@ -224,7 +230,9 @@ export default function MappingMiscellaneousFields({
           "0x0x0x0x0x"
         );
       }}
-      inputBlur={() => setFieldTouched?.(keyValueDefault("appField"), true)}
+      inputBlur={() =>
+        setFieldTouched?.(keyValueDefault("appField", "0x0x0x0x0x"), true)
+      }
       defaultWarehouseValue={
         defaultValue("misclFieldForm", "", "warehouseField", "0x0x0x0x0x") && {
           value: defaultValue(
