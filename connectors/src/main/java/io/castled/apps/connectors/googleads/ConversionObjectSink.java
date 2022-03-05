@@ -102,7 +102,11 @@ public class ConversionObjectSink extends GadsObjectSink {
         Optional.ofNullable(conversionDateTimeString).ifPresent(builder::setConversionDateTime);
 
         for (ConversionCustomVariable customVariable : customVariables) {
-            String customVariableValue = MessageUtils.toString(record.getField(customVariable.getName()));
+            Field customField = record.getField(customVariable.getName());
+            if(customField == null){
+                continue;
+            }
+            String customVariableValue = MessageUtils.toString(customField);
             Optional.ofNullable(customVariableValue).ifPresent(valueRef -> builder.addCustomVariables(
                     CustomVariable.newBuilder()
                             .setConversionCustomVariable(customVariable.getResourceName())

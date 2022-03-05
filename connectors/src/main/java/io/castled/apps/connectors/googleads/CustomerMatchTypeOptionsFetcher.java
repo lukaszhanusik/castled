@@ -11,7 +11,7 @@ public class CustomerMatchTypeOptionsFetcher implements StaticOptionsFetcher {
     @Override
     public List<FormFieldOption> getOptions() {
         return Arrays.stream(CustomerMatchType.values())
-                .map(customerMatchType -> new FormFieldOption(customerMatchType, customerMatchType.name()))
+                .map(customerMatchType -> new FormFieldOption(customerMatchType, customerMatchType.getDisplayName()))
                 .collect(Collectors.toList());
     }
 }

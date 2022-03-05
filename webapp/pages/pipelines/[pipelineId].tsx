@@ -151,8 +151,8 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2>
-            Data sync successful!
+          <h2> 
+            Data sync completed!&nbsp;
             {pipelineRuns[0].createdTs && (
               <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
             )}
