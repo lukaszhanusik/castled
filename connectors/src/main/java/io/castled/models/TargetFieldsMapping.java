@@ -9,6 +9,5 @@ import java.util.List;
 @Setter
 public class TargetFieldsMapping extends CastledDataMapping {
 
-    private List<String> primaryKeys;
     private List<FieldMapping> fieldMappings;
 }

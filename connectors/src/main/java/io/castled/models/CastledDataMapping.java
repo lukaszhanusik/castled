@@ -17,5 +17,6 @@ import java.util.List;
         @JsonSubTypes.Type(value = TargetRestApiMapping.class, name = "TARGET_REST_MAPPING")})
 public class CastledDataMapping {
 
+    private List<String> primaryKeys;
     private DataMappingType type;
 }

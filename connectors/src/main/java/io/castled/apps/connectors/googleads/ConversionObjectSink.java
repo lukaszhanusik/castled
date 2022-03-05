@@ -10,7 +10,6 @@ import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.oauth.OAuthDetails;
 import io.castled.schema.models.Field;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.services.OAuthService;
 import io.castled.utils.MessageUtils;

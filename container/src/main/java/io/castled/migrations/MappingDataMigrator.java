@@ -8,10 +8,7 @@ import io.castled.ObjectRegistry;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.models.Pipeline;
-import io.castled.models.QueryModelPK;
-import io.castled.models.TargetFieldsMapping;
-import io.castled.models.Warehouse;
+import io.castled.models.*;
 import io.castled.services.QueryModelService;
 import io.castled.utils.DataMappingUtils;
 import io.castled.warehouses.WarehouseService;
@@ -66,7 +63,7 @@ public class MappingDataMigrator extends AbstractDataMigrator {
                 }
 
                 if (modelId == null) {
-                    List<String> oldAppPKs = DataMappingUtils.getPrimaryKeys(pipeline.getDataMapping());
+                    List<String> oldAppPKs = pipeline.getDataMapping().getPrimaryKeys();
                     Set<String> newWarehousePKs = Sets.newHashSet();
 
                     if (pipeline.getDataMapping() instanceof TargetFieldsMapping) {
@@ -76,7 +73,11 @@ public class MappingDataMigrator extends AbstractDataMigrator {
                                 newWarehousePKs.add(fieldMapping.getWarehouseField());
                             }
                         });
+                    } else {
+                        TargetRestApiMapping targetRestApiMapping = (TargetRestApiMapping) pipeline.getDataMapping();
+                        newWarehousePKs.addAll(targetRestApiMapping.getPrimaryKeys());
                     }
+
 
                     ModelInputDTO modelInputDTO = new ModelInputDTO();
                     modelInputDTO.setWarehouseId(warehouseId);
