@@ -4,8 +4,12 @@ import Image from "react-bootstrap/Image";
 import { MappingFieldsProps, SchemaOptions } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
-import { useState, useEffect } from "react";
-import { addkeysToLocalStorage, defaultValue } from "../utils/MappingAutoFill";
+import { useEffect } from "react";
+import {
+  addkeysToLocalStorage,
+  defaultValue,
+  formatLabel,
+} from "../utils/MappingAutoFill";
 interface MappingPrimaryKeyFieldsProps extends MappingFieldsProps {
   onlyOptions?: SchemaOptions[];
 }
@@ -18,7 +22,6 @@ export default function MappingPrimaryKeyFields({
   setFieldTouched,
   errors,
 }: MappingPrimaryKeyFieldsProps) {
-
   // On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
@@ -50,36 +53,33 @@ export default function MappingPrimaryKeyFields({
                         `PRIMARY_KEYS-warehouseField-0`,
                         e?.value
                       );
-                      addkeysToLocalStorage(
-                        e?.value,
-                        "primaryKeysForm",
-                        "",
-                        "warehouseField",
-                        ""
-                      );
+                      addkeysToLocalStorage({
+                        input: e?.value,
+                        formType: "primaryKeysForm",
+                        type: "warehouseField",
+                      });
                     }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-warehouseField-0`, true)
                     }
                     placeholder={"Select a column"}
                     defaultValue={
-                      defaultValue(
-                        "primaryKeysForm",
-                        "0",
-                        "warehouseField",
-                        ""
-                      ) && {
-                        value: defaultValue(
-                          "primaryKeysForm",
-                          "0",
-                          "warehouseField",
-                          ""
-                        ),
-                        label: defaultValue(
-                          "primaryKeysForm",
-                          "0",
-                          "warehouseField",
-                          ""
+                      defaultValue({
+                        form: "primaryKeysForm",
+                        field: "0",
+                        type: "warehouseField",
+                      }) && {
+                        value: defaultValue({
+                          form: "primaryKeysForm",
+                          field: "0",
+                          type: "warehouseField",
+                        }),
+                        label: formatLabel(
+                          defaultValue({
+                            form: "primaryKeysForm",
+                            field: "0",
+                            type: "warehouseField",
+                          })
                         ),
                       }
                     }
@@ -100,31 +100,33 @@ export default function MappingPrimaryKeyFields({
                     }))}
                     onChange={(e) => {
                       setFieldValue?.(`PRIMARY_KEYS-appField-0`, e?.value);
-                      addkeysToLocalStorage(
-                        e?.value,
-                        "primaryKeysForm",
-                        "",
-                        "appField",
-                        ""
-                      );
+                      addkeysToLocalStorage({
+                        input: e?.value,
+                        formType: "primaryKeysForm",
+                        type: "appField",
+                      });
                     }}
                     onBlur={() =>
                       setFieldTouched?.(`PRIMARY_KEYS-appField-0`, true)
                     }
                     placeholder={"Select a field"}
                     defaultValue={
-                      defaultValue("primaryKeysForm", "0", "appField", "") && {
-                        value: defaultValue(
-                          "primaryKeysForm",
-                          "0",
-                          "appField",
-                          ""
-                        ),
-                        label: defaultValue(
-                          "primaryKeysForm",
-                          "0",
-                          "appField",
-                          ""
+                      defaultValue({
+                        form: "primaryKeysForm",
+                        field: "0",
+                        type: "appField",
+                      }) && {
+                        value: defaultValue({
+                          form: "primaryKeysForm",
+                          field: "0",
+                          type: "appField",
+                        }),
+                        label: formatLabel(
+                          defaultValue({
+                            form: "primaryKeysForm",
+                            field: "0",
+                            type: "appField",
+                          })
                         ),
                       }
                     }

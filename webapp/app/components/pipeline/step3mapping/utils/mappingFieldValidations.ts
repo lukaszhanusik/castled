@@ -38,49 +38,63 @@ export default function mappingFieldValidations(
 
   // Both row needed to be filled for primary key section 2
   function primaryKeyBothRowNeeded(obj: any) {
-    let appFieldCount = 0;
-    let warehouseFieldCount = 0;
-    let hasPrimaryKey = false;
-    for (let [key, value] of Object.entries(obj)) {
-      if (key.includes("PRIMARY_KEYS-appField")) {
-        appFieldCount += 1;
-        for (let [key0, value0] of Object.entries(obj)) {
-          if (key0.includes("PRIMARY_KEYS-warehouseField")) {
-            warehouseFieldCount += 1;
-          }
+    let count = 0;
+    if (hasPrimaryKeyObject) {
+      for (let key of Object.keys(obj)) {
+        if (key.includes("PRIMARY_KEYS")) {
+          count++;
         }
-        hasPrimaryKey = true;
+      }
+      if (count !== 2) {
+        errors.push({
+          fillBothPrimaryFields:
+            "Both warehouse column and app field are mandatory.",
+        });
       }
     }
-    if (hasPrimaryKey && (appFieldCount == 0 || warehouseFieldCount == 0)) {
-      errors.push({
-        fillBothPrimaryFields:
-          "Both warehouse column and app field are mandatory.",
-      });
-    }
+    // let appFieldCount = 0;
+    // let warehouseFieldCount = 0;
+    // let hasPrimaryKey = false;
+    // for (let [key, value] of Object.entries(obj)) {
+    //   if (key.includes("PRIMARY_KEYS-appField")) {
+    //     appFieldCount += 1;
+    //     for (let [key0, value0] of Object.entries(obj)) {
+    //       if (key0.includes("PRIMARY_KEYS-warehouseField")) {
+    //         warehouseFieldCount += 1;
+    //       }
+    //     }
+    //     hasPrimaryKey = true;
+    //   }
+    // }
+    // if (hasPrimaryKey && (appFieldCount == 0 || warehouseFieldCount == 0)) {
+    //   errors.push({
+    //     fillBothPrimaryFields:
+    //       "Both warehouse column and app field are mandatory.",
+    //   });
+    // }
   }
 
   // Primary keys mandatory validation section 2
-  function primaryKeysMandatoryValidation(obj: any) {
-    let primaryCount = 0;
-    let hasPrimaryKey = mappingGroups?.some(
-      (group) => group.type == "PRIMARY_KEYS"
-    );
-    // console.log("hasPrimaryKey", hasPrimaryKey);
-    if (hasPrimaryKey) {
-      for (let [key, value] of Object.entries(obj)) {
-        if (key.includes("PRIMARY_KEYS")) {
-          primaryCount += 1;
-        }
-      }
-    }
-    if (hasPrimaryKey && !primaryCount) {
-      errors.push({
-        primaryKeyMandatory:
-          "All questions marked mandatory (*) needs to be answered.",
-      });
-    }
-  }
+  // function primaryKeysMandatoryValidation(obj: any) {
+  //   let primaryCount = 0;
+  //   let hasPrimaryKey = mappingGroups?.some(
+  //     (group) => group.type == "PRIMARY_KEYS"
+  //   );
+  //   // console.log("hasPrimaryKey", hasPrimaryKey);
+  //   if (hasPrimaryKey) {
+  //     for (let [key, value] of Object.entries(obj)) {
+  //       if (key.includes("PRIMARY_KEYS")) {
+  //         primaryCount += 1;
+  //       }
+  //     }
+  //   }
+  //   if (hasPrimaryKey && !primaryCount) {
+  //     errors.push({
+  //       primaryKeyMandatory:
+  //         "Both warehouse column and app field are mandatory.",
+  //     });
+  //   }
+  // }
 
   // Important Params mandatory validation section 1
   function importantParamsMandatoryValidation(obj: any) {
@@ -132,7 +146,7 @@ export default function mappingFieldValidations(
         if (mandatoryFieldsCount !== countOptionalFields * 2) {
           errors.push({
             destinationFieldsMandatory:
-              "All questions marked mandatory (*) needs to be answered.",
+              "Warehouse column is mandatory for all rows marked mandatory (*).",
           });
         }
       }
@@ -174,7 +188,6 @@ export default function mappingFieldValidations(
               }
             }
           }
-          // console.log(trackedOptionalFields.length);
 
           if (trackedOptionalFields.length * 2 !== optionalFieldsTrack) {
             errors.push({
@@ -189,7 +202,7 @@ export default function mappingFieldValidations(
 
   appFieldRepeatingValidations();
   hasPrimaryKeyObject && primaryKeyBothRowNeeded(values);
-  hasPrimaryKeyObject && primaryKeysMandatoryValidation(values);
+  // hasPrimaryKeyObject && primaryKeysMandatoryValidation(values);
   hasImportantParamsObject && importantParamsMandatoryValidation(values);
   hasDestinationFieldsObject && destinationFieldsValidations(values);
 

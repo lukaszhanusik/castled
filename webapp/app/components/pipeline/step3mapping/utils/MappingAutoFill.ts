@@ -36,25 +36,31 @@ function deleteItemFromLocalStorage(key: string, type: string) {
   }
 }
 
-function defaultValue(
-  form: string,
-  field: string,
-  type: string,
-  index: string | number
-) {
-  const getLocalStorageItem = localStorage.getItem(`${form}`);
+interface IDefaultValueProps {
+  form: string;
+  field?: string;
+  type?: string;
+  index?: string | number;
+}
+
+function defaultValue(context: IDefaultValueProps) {
+  const getLocalStorageItem = localStorage.getItem(`${context.form}`);
 
   if (getLocalStorageItem) {
     const responseJson = JSON.parse(getLocalStorageItem);
-    switch (form) {
+    switch (context.form) {
       case "importantParamsForm":
-        return responseJson[`IMPORTANT_PARAMS-${field}`];
+        return responseJson[`IMPORTANT_PARAMS-${context.field}`];
       case "primaryKeysForm":
-        return responseJson[`PRIMARY_KEYS-${type}-${field}`];
+        return responseJson[`PRIMARY_KEYS-${context.type}-${context.field}`];
       case "destinationFieldForm":
-        return responseJson[`DESTINATION_FIELDS-${type}-${index}`];
+        return responseJson[
+          `DESTINATION_FIELDS-${context.type}-${context.index}`
+        ];
       case "misclFieldForm":
-        return responseJson[`MISCELLANEOUS_FIELDS-${type}-${index}`];
+        return responseJson[
+          `MISCELLANEOUS_FIELDS-${context.type}-${context.index}`
+        ];
     }
   }
 }
@@ -70,42 +76,51 @@ function getAndSetLocalStorage(
   localStorage.setItem(formType, JSON.stringify(combineAllItems));
 }
 
-function addkeysToLocalStorage(
-  input: string,
-  formType: string,
-  field: string,
-  type: string,
-  index: string | number
-) {
+interface IAddKeysToLocalStorageProps {
+  input: string;
+  formType: string;
+  field?: string;
+  type?: string;
+  index?: string | number;
+}
+
+function addkeysToLocalStorage(context: IAddKeysToLocalStorageProps) {
   const form = {};
 
-  if (formType === "importantParamsForm") {
+  if (context.formType === "importantParamsForm") {
     Object.assign(form, {
-      [`IMPORTANT_PARAMS-${field}`]: input,
+      [`IMPORTANT_PARAMS-${context.field}`]: context.input,
     });
-    getAndSetLocalStorage(formType, form);
+    getAndSetLocalStorage(context.formType, form);
   }
 
-  if (formType === "primaryKeysForm") {
+  if (context.formType === "primaryKeysForm") {
     Object.assign(form, {
-      [`PRIMARY_KEYS-${type}-0`]: input,
+      [`PRIMARY_KEYS-${context.type}-0`]: context.input,
     });
-    getAndSetLocalStorage(formType, form);
+    getAndSetLocalStorage(context.formType, form);
   }
 
-  if (formType === "destinationFieldForm") {
+  if (context.formType === "destinationFieldForm") {
     Object.assign(form, {
-      [`DESTINATION_FIELDS-${type}-${index}`]: input,
+      [`DESTINATION_FIELDS-${context.type}-${context.index}`]: context.input,
     });
-    getAndSetLocalStorage(formType, form);
+    getAndSetLocalStorage(context.formType, form);
   }
 
-  if (formType === "misclFieldForm") {
+  if (context.formType === "misclFieldForm") {
     Object.assign(form, {
-      [`MISCELLANEOUS_FIELDS-${type}-${index}`]: input,
+      [`MISCELLANEOUS_FIELDS-${context.type}-${context.index}`]: context.input,
     });
-    getAndSetLocalStorage(formType, form);
+    getAndSetLocalStorage(context.formType, form);
   }
+}
+
+function formatLabel(label: string) {
+  return label
+    .split("_")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 export {
@@ -113,4 +128,5 @@ export {
   deleteItemFromLocalStorage,
   defaultValue,
   addkeysToLocalStorage,
+  formatLabel,
 };

@@ -9,6 +9,7 @@ import {
   addkeysToLocalStorage,
   defaultValue,
   deleteItemFromLocalStorage,
+  formatLabel,
 } from "../utils/MappingAutoFill";
 
 export default function MappingMiscellaneousFields({
@@ -146,13 +147,12 @@ export default function MappingMiscellaneousFields({
       options={options}
       onChange={(e) => {
         setFieldValue?.(keyValueDefault("warehouseField", key), e?.value);
-        addkeysToLocalStorage(
-          e?.value,
-          "misclFieldForm",
-          "",
-          "warehouseField",
-          key
-        );
+        addkeysToLocalStorage({
+          input: e?.value,
+          formType: "misclFieldForm",
+          type: "warehouseField",
+          index: key,
+        });
       }}
       onBlur={() =>
         setFieldTouched?.(keyValueDefault("warehouseField", key), true)
@@ -166,27 +166,41 @@ export default function MappingMiscellaneousFields({
       }}
       inputChange={(e) => {
         setFieldValue?.(keyValueDefault("appField", key), e.target.value);
-        addkeysToLocalStorage(
-          e.target.value,
-          "misclFieldForm",
-          "",
-          "appField",
-          key
-        );
+        addkeysToLocalStorage({
+          input: e.target.value,
+          formType: "misclFieldForm",
+          type: "appField",
+          index: key,
+        });
       }}
       inputBlur={() =>
         setFieldTouched?.(keyValueDefault("appField", key), true)
       }
       defaultWarehouseValue={
-        defaultValue("misclFieldForm", "", "warehouseField", key) && {
-          value: defaultValue("misclFieldForm", "", "warehouseField", key),
-          label: defaultValue("misclFieldForm", "", "warehouseField", key)
-            .split("_")
-            .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
-            .join(" "),
+        defaultValue({
+          form: "misclFieldForm",
+          type: "warehouseField",
+          index: key,
+        }) && {
+          value: defaultValue({
+            form: "misclFieldForm",
+            type: "warehouseField",
+            index: key,
+          }),
+          label: formatLabel(
+            defaultValue({
+              form: "misclFieldForm",
+              type: "warehouseField",
+              index: key,
+            })
+          ),
         }
       }
-      defaultAppValue={defaultValue("misclFieldForm", "", "appField", key)}
+      defaultAppValue={defaultValue({
+        form: "misclFieldForm",
+        type: "appField",
+        index: key,
+      })}
     />
   );
 
@@ -199,13 +213,12 @@ export default function MappingMiscellaneousFields({
           keyValueDefault("warehouseField", "0x0x0x0x0x"),
           e?.value
         );
-        addkeysToLocalStorage(
-          e?.value,
-          "misclFieldForm",
-          "",
-          "warehouseField",
-          "0x0x0x0x0x"
-        );
+        addkeysToLocalStorage({
+          input: e?.value,
+          formType: "misclFieldForm",
+          type: "warehouseField",
+          index: "0x0x0x0x0x",
+        });
       }}
       onBlur={() =>
         setFieldTouched?.(keyValueDefault("warehouseField", "0x0x0x0x0x"), true)
@@ -222,42 +235,41 @@ export default function MappingMiscellaneousFields({
           keyValueDefault("appField", "0x0x0x0x0x"),
           e.target.value
         );
-        addkeysToLocalStorage(
-          e.target.value,
-          "misclFieldForm",
-          "",
-          "appField",
-          "0x0x0x0x0x"
-        );
+        addkeysToLocalStorage({
+          input: e.target.value,
+          formType: "misclFieldForm",
+          type: "appField",
+          index: "0x0x0x0x0x",
+        });
       }}
       inputBlur={() =>
         setFieldTouched?.(keyValueDefault("appField", "0x0x0x0x0x"), true)
       }
       defaultWarehouseValue={
-        defaultValue("misclFieldForm", "", "warehouseField", "0x0x0x0x0x") && {
-          value: defaultValue(
-            "misclFieldForm",
-            "",
-            "warehouseField",
-            "0x0x0x0x0x"
+        defaultValue({
+          form: "misclFieldForm",
+          type: "warehouseField",
+          index: "0x0x0x0x0x",
+        }) && {
+          value: defaultValue({
+            form: "misclFieldForm",
+            type: "warehouseField",
+            index: "0x0x0x0x0x",
+          }),
+          label: formatLabel(
+            defaultValue({
+              form: "misclFieldForm",
+              type: "warehouseField",
+              index: "0x0x0x0x0x",
+            })
           ),
-          label: defaultValue(
-            "misclFieldForm",
-            "",
-            "warehouseField",
-            "0x0x0x0x0x"
-          )
-            .split("_")
-            .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
-            .join(" "),
         }
       }
-      defaultAppValue={defaultValue(
-        "misclFieldForm",
-        "",
-        "appField",
-        "0x0x0x0x0x"
-      )}
+      defaultAppValue={defaultValue({
+        form: "misclFieldForm",
+        type: "appField",
+        index: "0x0x0x0x0x",
+      })}
     />
   );
 

@@ -1,8 +1,12 @@
 import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MappingFieldsProps } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
-import { addkeysToLocalStorage, defaultValue } from "../utils/MappingAutoFill";
+import {
+  addkeysToLocalStorage,
+  defaultValue,
+  formatLabel,
+} from "../utils/MappingAutoFill";
 
 export default function MappingImportantFields({
   options,
@@ -13,7 +17,6 @@ export default function MappingImportantFields({
   setFieldError,
   errors,
 }: MappingFieldsProps) {
-
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("importantParamsForm");
     if (getLocalStorageItem) {
@@ -51,13 +54,11 @@ export default function MappingImportantFields({
                     `IMPORTANT_PARAMS-${field.fieldName}`,
                     e?.value
                   );
-                  addkeysToLocalStorage(
-                    e?.value,
-                    "importantParamsForm",
-                    field.fieldName,
-                    "",
-                    ""
-                  );
+                  addkeysToLocalStorage({
+                    input: e?.value,
+                    formType: "importantParamsForm",
+                    field: field.fieldName,
+                  });
                 }}
                 onBlur={() =>
                   setFieldTouched?.(`IMPORTANT_PARAMS-${field.fieldName}`, true)
@@ -65,23 +66,19 @@ export default function MappingImportantFields({
                 isClearable={field.optional}
                 placeholder={"Select a column"}
                 defaultValue={
-                  defaultValue(
-                    "importantParamsForm",
-                    field.fieldName,
-                    "",
-                    ""
-                  ) && {
-                    value: defaultValue(
-                      "importantParamsForm",
-                      field.fieldName,
-                      "",
-                      ""
-                    ),
-                    label: defaultValue(
-                      "importantParamsForm",
-                      field.fieldName,
-                      "",
-                      ""
+                  defaultValue({
+                    form: "importantParamsForm",
+                    field: field.fieldName,
+                  }) && {
+                    value: defaultValue({
+                      form: "importantParamsForm",
+                      field: field.fieldName,
+                    }),
+                    label: formatLabel(
+                      defaultValue({
+                        form: "importantParamsForm",
+                        field: field.fieldName,
+                      })
                     ),
                   }
                 }

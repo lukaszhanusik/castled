@@ -5,6 +5,7 @@ import {
   addkeysToLocalStorage,
   defaultValue,
   deleteItemFromLocalStorage,
+  formatLabel,
 } from "../utils/MappingAutoFill";
 import DestinationFieldRows from "./Layouts/DestinationFieldRows";
 import ErrorMessage from "./Layouts/ErrorMessage";
@@ -77,26 +78,24 @@ export default function MappingImportantFields({
             `DESTINATION_FIELDS-optional-warehouseField-${i}`,
             e?.value
           );
-          addkeysToLocalStorage(
-            e?.value,
-            "destinationFieldForm",
-            "",
-            "optional-warehouseField",
-            i
-          );
+          addkeysToLocalStorage({
+            input: e?.value,
+            formType: "destinationFieldForm",
+            type: "optional-warehouseField",
+            index: i,
+          });
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
             `DESTINATION_FIELDS-optional-appField-${i}`,
             e?.value
           );
-          addkeysToLocalStorage(
-            e?.value,
-            "destinationFieldForm",
-            "",
-            "optional-appField",
-            i
-          );
+          addkeysToLocalStorage({
+            input: e?.value,
+            formType: "destinationFieldForm",
+            type: "optional-appField",
+            index: i,
+          });
         }}
         handleDelete={(e) => {
           e.preventDefault();
@@ -115,46 +114,43 @@ export default function MappingImportantFields({
           )
         }
         defaultAppValue={
-          defaultValue("destinationFieldForm", "", "optional-appField", i) && {
-            value: defaultValue(
-              "destinationFieldForm",
-              "",
-              "optional-appField",
-              i
+          defaultValue({
+            form: "destinationFieldForm",
+            type: "optional-appField",
+            index: i,
+          }) && {
+            value: defaultValue({
+              form: "destinationFieldForm",
+              type: "optional-appField",
+              index: i,
+            }),
+            label: formatLabel(
+              defaultValue({
+                form: "destinationFieldForm",
+                type: "optional-appField",
+                index: i,
+              })
             ),
-            label: defaultValue(
-              "destinationFieldForm",
-              "",
-              "optional-appField",
-              i
-            )
-              .split("_")
-              .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
-              .join(" "),
           }
         }
         defaultWarehouseValue={
-          defaultValue(
-            "destinationFieldForm",
-            "",
-            "optional-warehouseField",
-            i
-          ) && {
-            value: defaultValue(
-              "destinationFieldForm",
-              "",
-              "optional-warehouseField",
-              i
+          defaultValue({
+            form: "destinationFieldForm",
+            type: "optional-warehouseField",
+            index: i,
+          }) && {
+            value: defaultValue({
+              form: "destinationFieldForm",
+              type: "optional-warehouseField",
+              index: i,
+            }),
+            label: formatLabel(
+              defaultValue({
+                form: "destinationFieldForm",
+                type: "optional-warehouseField",
+                index: i,
+              })
             ),
-            label: defaultValue(
-              "destinationFieldForm",
-              "",
-              "optional-warehouseField",
-              i
-            )
-              .split("_")
-              .map((word: string[]) => word[0].toUpperCase() + word.slice(1))
-              .join(" "),
           }
         }
         isClearable={true}
@@ -213,30 +209,23 @@ export default function MappingImportantFields({
                         mandatoryField.fieldName,
                     }}
                     defaultWarehouseValue={
-                      defaultValue(
-                        "destinationFieldForm",
-                        "",
-                        "mandatory-warehouseField",
-                        i
-                      ) && {
-                        value: defaultValue(
-                          "destinationFieldForm",
-                          "",
-                          "mandatory-warehouseField",
-                          i
+                      defaultValue({
+                        form: "destinationFieldForm",
+                        type: "mandatory-warehouseField",
+                        index: i,
+                      }) && {
+                        value: defaultValue({
+                          form: "destinationFieldForm",
+                          type: "mandatory-warehouseField",
+                          index: i,
+                        }),
+                        label: formatLabel(
+                          defaultValue({
+                            form: "destinationFieldForm",
+                            type: "mandatory-warehouseField",
+                            index: i,
+                          })
                         ),
-                        label: defaultValue(
-                          "destinationFieldForm",
-                          "",
-                          "mandatory-warehouseField",
-                          i
-                        )
-                          .split("_")
-                          .map(
-                            (word: string[]) =>
-                              word[0].toUpperCase() + word.slice(1)
-                          )
-                          .join(" "),
                       }
                     }
                     isDisabled={!mandatoryField.optional}
@@ -249,20 +238,18 @@ export default function MappingImportantFields({
                         `DESTINATION_FIELDS-mandatory-appField-${i}`,
                         mandatoryField.fieldName
                       );
-                      addkeysToLocalStorage(
-                        e?.value,
-                        "destinationFieldForm",
-                        "",
-                        "mandatory-warehouseField",
-                        i
-                      );
-                      addkeysToLocalStorage(
-                        mandatoryField.fieldName,
-                        "destinationFieldForm",
-                        "",
-                        "mandatory-appField",
-                        i
-                      );
+                      addkeysToLocalStorage({
+                        input: e?.value,
+                        formType: "destinationFieldForm",
+                        type: "mandatory-warehouseField",
+                        index: i,
+                      });
+                      addkeysToLocalStorage({
+                        input: e?.value,
+                        formType: "destinationFieldForm",
+                        type: "mandatory-appField",
+                        index: i,
+                      });
                     }}
                     onBlur={() =>
                       setFieldTouched?.(
