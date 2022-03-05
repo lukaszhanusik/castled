@@ -42,16 +42,12 @@ export default function mappingFieldValidations(
     let warehouseFieldCount = 0;
     let hasPrimaryKey = false;
     for (let [key, value] of Object.entries(obj)) {
-      if (key.includes("PRIMARY_KEYS")) {
-        if (key.includes("appField")) {
-          for (let [key0, value0] of Object.entries(obj)) {
-            if (key.includes("PRIMARY_KEYS")) {
-              if (key0.includes("warehouseField")) {
-                warehouseFieldCount += 1;
-              }
-            }
+      if (key.includes("PRIMARY_KEYS-appField")) {
+        appFieldCount += 1;
+        for (let [key0, value0] of Object.entries(obj)) {
+          if (key0.includes("PRIMARY_KEYS-warehouseField")) {
+            warehouseFieldCount += 1;
           }
-          appFieldCount += 1;
         }
         hasPrimaryKey = true;
       }
