@@ -1,6 +1,7 @@
 package io.castled.apps.connectors.salesforce.client;
 
 import io.castled.apps.connectors.salesforce.SalesforceAccessConfig;
+import io.castled.apps.connectors.salesforce.SalesforceObjectFields;
 import io.castled.apps.connectors.salesforce.client.dtos.SFDCObjectField;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.SchemaConstants;
@@ -74,6 +75,9 @@ public class SFDCUtils {
     }
 
     public static boolean isDedupKeyEligible(SFDCObjectField sfdcObjectField) {
+        if (sfdcObjectField.getName().equals(SalesforceObjectFields.ID)) {
+            return false;
+        }
         return sfdcObjectField.isExternalId() || sfdcObjectField.isIdLookup()
                 || sfdcObjectField.isUnique();
     }

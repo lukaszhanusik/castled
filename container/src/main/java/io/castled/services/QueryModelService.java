@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
 @Singleton
 public class QueryModelService {
 
-    final private QueryModelDAO queryModelDAO;
-    final private ResourceAccessController resourceAccessController;
-    final private WarehouseService warehouseService;
-    final private PipelineService pipelineService;
-    private ModelSchemaCache modelSchemaCache;
+    private final QueryModelDAO queryModelDAO;
+    private final ResourceAccessController resourceAccessController;
+    private final WarehouseService warehouseService;
+    private final PipelineService pipelineService;
+    private final ModelSchemaCache modelSchemaCache;
 
     @Inject
     public QueryModelService(Jdbi jdbi, ResourceAccessController resourceAccessController,
