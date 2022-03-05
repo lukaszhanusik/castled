@@ -76,14 +76,13 @@ const Models = () => {
                           key={`sidebar-${idx}`}
                           overlay={
                             <Tooltip id={`sidebar-${idx}`}>
-                              {model.modelDetails.sourceQuery}
+                              {model.details.sourceQuery}
                             </Tooltip>
                           }
                         >
                           <div>
-                            {model.modelDetails.sourceQuery.substring(0, 30)}{" "}
-                            {model.modelDetails.sourceQuery.length >= 30 &&
-                              `...`}
+                            {model.details.sourceQuery.substring(0, 30)}{" "}
+                            {model.details.sourceQuery.length >= 30 && `...`}
                           </div>
                         </OverlayTrigger>
                       </div>

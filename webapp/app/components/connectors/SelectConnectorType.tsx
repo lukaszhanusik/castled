@@ -5,6 +5,7 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
+import bannerNotificationService from "@/app/services/bannerNotificationService";
 
 export interface SelectConnectorTypeProps {
   category: ConnectorCategory;
@@ -24,6 +25,18 @@ const SelectConnectorType = ({
       setTypeList(data);
     });
   }, [category]);
+
+  const selectType = (type: ConnectorTypeDto) => {
+    console.log(type);
+    if (type.count === 0) {
+      bannerNotificationService.warn(
+        "Please setup a warehouse before proceeding to create a model."
+      );
+    } else {
+      onSelect(type);
+    }
+  };
+
   return (
     <>
       {pipelineWizContext?.isDemo && category === "App" && (
@@ -39,7 +52,7 @@ const SelectConnectorType = ({
             <ListGroup key={i}>
               <ListGroup.Item
                 className="rounded"
-                onClick={() => onSelect(type)}
+                onClick={() => selectType(type)}
               >
                 <Col>
                   <div>
