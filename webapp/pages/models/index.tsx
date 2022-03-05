@@ -55,6 +55,7 @@ const Models = () => {
             <tbody>
               {models.map((model, idx) => (
                 <tr
+                  className="cursor-pointer"
                   key={idx}
                   onClick={() =>
                     router
