@@ -28,10 +28,11 @@ public class GoogleSheetsDataSink implements DataSink {
 
         Sheets sheetsService = GoogleSheetUtils.getSheets(googleSheetsAppConfig.getServiceAccount());
 
-        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD) {
+        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD || dataSinkRequest.getQueryMode() == QueryMode.INCREMENTAL) {
             sheetsService.spreadsheets().values().clear(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
                     new ClearValuesRequest()).execute();
         }
+
         List<SheetRow> sheetRows = dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD ? Lists.newArrayList() :
                 GoogleSheetUtils.getRows(sheetsService, GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
                         googleSheetsAppSyncConfig.getObject().getObjectName());

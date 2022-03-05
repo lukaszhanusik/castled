@@ -13,6 +13,7 @@ import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.schema.mapping.MappingGroup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,8 +64,7 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
 
     @Override
     public List<MappingGroup> getMappingGroups(GoogleSheetsAppConfig config, GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig) {
-        MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addElasticAppFields(true).build().getMappingGroups();
+        return MappingGroupAggregator.builder().addElasticAppFields(true).build().getMappingGroups();
     }
 
     @Override
