@@ -6,11 +6,9 @@ import io.castled.apps.models.DataSinkRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyIdMapper;
 import io.castled.apps.syncconfigs.AppSyncConfig;
-import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
-import io.castled.schema.models.Message;
 
 import java.util.List;
 import java.util.Map;
@@ -65,7 +63,7 @@ public class IntercomDataSink implements DataSink {
         PrimaryKeyIdMapper primaryKeyIdMapper = intercomObjectSink.getPrimaryKeyIdMapper();
         Object objectId = primaryKeyIdMapper.getObjectId(primaryKeyValues);
 
-        GenericObjectRadioGroupConfig intercomSyncConfig = (GenericObjectRadioGroupConfig) appSyncConfig;
+        IntercomAppSyncConfig intercomSyncConfig = (IntercomAppSyncConfig) appSyncConfig;
         if (intercomSyncConfig.getMode() == AppSyncMode.UPDATE && objectId == null) {
             return false;
         }

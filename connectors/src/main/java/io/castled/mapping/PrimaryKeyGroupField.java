@@ -9,9 +9,11 @@ public class PrimaryKeyGroupField extends MappingGroupField {
 
     @Builder
     public PrimaryKeyGroupField(String name, String displayName, boolean optional) {
-        super(name, displayName);
+        super(name);
         this.optional = optional;
+        this.displayName = displayName;
     }
 
     private boolean optional;
+    private String displayName;
 }

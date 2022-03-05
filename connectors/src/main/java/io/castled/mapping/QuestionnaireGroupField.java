@@ -9,9 +9,8 @@ import lombok.*;
 public class QuestionnaireGroupField extends MappingGroupField {
 
     @Builder
-    public QuestionnaireGroupField(String title, String description, boolean optional,
-                                   String name, String displayName) {
-        super(name, displayName);
+    public QuestionnaireGroupField(String title, String description, boolean optional, String name) {
+        super(name);
         this.title = title;
         this.description = description;
         this.optional = optional;
@@ -19,6 +18,7 @@ public class QuestionnaireGroupField extends MappingGroupField {
     }
 
     private String title;
+    private String displayName;
     private String description;
     private boolean optional;
 }
