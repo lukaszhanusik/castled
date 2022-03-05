@@ -38,7 +38,7 @@ const PipelineWizardSource = ({
           onFinish={(id) => {
             _.set(pipelineWizContext, "values.warehouseId", id);
             setPipelineWizContext(pipelineWizContext);
-            setCurWizardStep(CUR_WIZARD_STEP_GROUP, "model");
+            setCurWizardStep(CUR_WIZARD_STEP_GROUP, "selectModelType"); //<NP> redirection used to be "model" before models were introduced
           }}
         />
       )}
