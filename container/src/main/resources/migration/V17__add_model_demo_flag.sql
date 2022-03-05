@@ -1,1 +1,1 @@
-alter table query_model add column demo boolean not null default false;
+alter table query_models add column demo boolean not null default false;

@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
         visible = true,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SqlQueryModelDetails.class, name = "SQL_QUERY_EDITOR"),
-        @JsonSubTypes.Type(value = TableQueryModelDetails.class, name = "TABLE_SELECTOR"),
-        @JsonSubTypes.Type(value = DbtQueryModelDetails.class, name = "DBT_MODEL_SELECTOR")})
+        @JsonSubTypes.Type(value = SqlQueryModelDetails.class, name = "SQL"),
+        @JsonSubTypes.Type(value = TableQueryModelDetails.class, name = "TABLE"),
+        @JsonSubTypes.Type(value = DbtQueryModelDetails.class, name = "DBT")})
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class QueryModelDetails {

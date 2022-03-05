@@ -53,7 +53,7 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       <Layout
         title={renderTitle(model, router)}
         subTitle={undefined}
-        pageTitle={model ? "Pipeline " + model.modelName : ""}
+        pageTitle={model ? "Pipeline " + model.name : ""}
         rightBtn={{
           id: "create_pipeline_button",
           title: "Create Pipeline",
@@ -75,7 +75,7 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
               const values: PipelineCreateRequestDto = {
                 warehouseId: model.warehouse.id,
                 modelId: model.id,
-                sourceQuery: model.modelDetails.sourceQuery,
+                sourceQuery: model.details.sourceQuery,
                 appSyncConfig: {
                   appType: undefined,
                 },
@@ -102,12 +102,12 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
         />
         <Tabs defaultActiveKey="Query" className="mb-3">
           <Tab eventKey="Query" title="Query">
-            <ModelQueryView source={model?.modelDetails.sourceQuery} />
+            <ModelQueryView source={model?.details.sourceQuery} />
           </Tab>
           <Tab eventKey="Details" title="Column Details">
             <ModelColumnDetailsView
-              warehouse={model?.warehouse}
-              queryModelPK={model?.queryModelPK}
+              columnDetails={model?.columnDetails}
+              queryPK={model?.queryPK}
             />
           </Tab>
           <Tab eventKey="Pipelines" title="Pipelines">
@@ -126,7 +126,7 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
   if (!model) return "";
   return (
     <>
-      <span>{model.id} | </span> <span>{model.modelName}</span>
+      <span>{model.id} | </span> <span>{model.name}</span>
       <div className="float-end">
         <button
           className="btn btn-outline-primary mx-2"

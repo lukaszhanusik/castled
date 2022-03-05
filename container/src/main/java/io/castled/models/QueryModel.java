@@ -15,9 +15,9 @@ public class QueryModel {
     private Long userId;
     private Long teamId;
     private Long warehouseId;
-    private String modelName;
-    private String modelType;
-    private QueryModelDetails modelDetails;
-    private QueryModelPK queryModelPK;
+    private String name;
+    private QueryModelType type;
+    private QueryModelDetails details;
+    private QueryModelPK queryPK;
     private boolean demo;
 }

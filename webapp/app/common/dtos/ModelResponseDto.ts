@@ -2,13 +2,14 @@ export interface ModelResponseDto {
   id:                number;
   teamId:            number;
   warehouse:         Warehouse;
-  modelName:         string;
-  modelType:         string;
-  modelDetails:      ModelDetails;
-  queryModelPK:      QueryModelPK;
+  name:         string;
+  type:         string;
+  details:      ModelDetails;
+  queryPK:      QueryModelPK;
   activeSyncDetails: ActiveSyncDetail[];
   activeSyncsCount:  number;
   demo:              boolean;
+  columnDetails?: ColumnDetail[];
 }
 
 export interface ActiveSyncDetail {
@@ -35,7 +36,7 @@ export interface Warehouse {
   type:           string;
   name:           string;
   logoUrl:        string;
-  columnDetails?: ColumnDetail[];
+
 }
 
 export interface ColumnDetail {

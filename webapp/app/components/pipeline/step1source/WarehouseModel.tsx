@@ -55,7 +55,7 @@ const WarehouseModel = ({
         if (!demoModel) {
           setCurWizardStep("source", "selectType");
         } else {
-          setQuery(demoModel.modelDetails?.sourceQuery);
+          setQuery(demoModel.details?.sourceQuery);
           _.set(
             pipelineWizContext,
             "values.warehouseId",

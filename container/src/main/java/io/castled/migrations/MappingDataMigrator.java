@@ -7,10 +7,8 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.SqlQueryModelDetails;
-import io.castled.exceptions.CastledRuntimeException;
 import io.castled.models.*;
 import io.castled.services.QueryModelService;
-import io.castled.utils.DataMappingUtils;
 import io.castled.warehouses.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
@@ -81,15 +79,15 @@ public class MappingDataMigrator extends AbstractDataMigrator {
 
                     ModelInputDTO modelInputDTO = new ModelInputDTO();
                     modelInputDTO.setWarehouseId(warehouseId);
-                    modelInputDTO.setModelName("Model-" + pipeline.getName());
-                    modelInputDTO.setModelType("SQL");
+                    modelInputDTO.setName("Model-" + pipeline.getName());
+                    modelInputDTO.setType(QueryModelType.SQL);
                     modelInputDTO.setDemo(warehouse.isDemo());
                     SqlQueryModelDetails sqlQueryModelDetails = new SqlQueryModelDetails();
                     sqlQueryModelDetails.setSourceQuery(sourceQuery);
-                    modelInputDTO.setModelDetails(sqlQueryModelDetails);
+                    modelInputDTO.setDetails(sqlQueryModelDetails);
                     QueryModelPK queryModelPK = new QueryModelPK();
                     queryModelPK.setPrimaryKeys(Lists.newArrayList(newWarehousePKs));
-                    modelInputDTO.setQueryModelPK(queryModelPK);
+                    modelInputDTO.setQueryPK(queryModelPK);
                     modelId = queryModelService.createQueryModel(modelInputDTO, pipeline.getTeamId());
                     warehouseIdHandledQueryMap.get(warehouseId).put(sourceQuery, modelId);
                 }

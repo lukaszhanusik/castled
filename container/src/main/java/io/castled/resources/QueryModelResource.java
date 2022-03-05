@@ -3,7 +3,7 @@ package io.castled.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.castled.dtos.EntityCreateResponse;
-import io.castled.dtos.querymodel.ModelDetailsDTO;
+import io.castled.dtos.querymodel.QueryModelDTO;
 import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
@@ -23,12 +23,10 @@ import java.util.List;
 public class QueryModelResource {
 
     private final QueryModelService queryModelService;
-    private final ResourceAccessController resourceAccessController;
 
     @Inject
-    public QueryModelResource(QueryModelService queryModelService, ResourceAccessController resourceAccessController) {
+    public QueryModelResource(QueryModelService queryModelService) {
         this.queryModelService = queryModelService;
-        this.resourceAccessController = resourceAccessController;
     }
 
     @POST
@@ -38,7 +36,7 @@ public class QueryModelResource {
 
     @GET
     @Path("/{id}")
-    public ModelDetailsDTO getModel(@PathParam("id") Long id, @Auth User user) {
+    public QueryModelDTO getModel(@PathParam("id") Long id, @Auth User user) {
         return this.queryModelService.getQueryModel(id, user.getTeamId());
     }
 
@@ -49,7 +47,7 @@ public class QueryModelResource {
     }
 
     @GET
-    public List<ModelDetailsDTO> getAllModels(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
+    public List<QueryModelDTO> getAllModels(@QueryParam("warehouseId") Long warehouseId, @Auth User user) {
         return this.queryModelService.getAllModels(warehouseId, user.getTeamId());
     }
 }

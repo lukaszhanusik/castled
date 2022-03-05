@@ -1,6 +1,7 @@
 package io.castled.dtos.querymodel;
 
 import io.castled.models.QueryModelPK;
+import io.castled.models.QueryModelType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -12,15 +13,15 @@ public class ModelInputDTO {
     private Long warehouseId;
 
     @NotNull
-    private String modelName;
+    private String name;
 
-    private String modelType;
-
-    @NotNull
-    private QueryModelDetails modelDetails;
+    private QueryModelType type;
 
     @NotNull
-    private QueryModelPK queryModelPK;
+    private QueryModelDetails details;
+
+    @NotNull
+    private QueryModelPK queryPK;
 
     private boolean demo;
 }

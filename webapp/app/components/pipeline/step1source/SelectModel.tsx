@@ -47,7 +47,7 @@ const SelectModel = ({
   }, []);
 
   const onModelSelect = (model: ModelListDto) => {
-    onSelect(model.id, model.modelDetails.sourceQuery);
+    onSelect(model.id, model.details.sourceQuery);
     removeAllLocalStorageMapping();
   };
 
@@ -80,18 +80,18 @@ const SelectModel = ({
                   <img src="/images/sql-icon.svg" />
                 </Col>
                 <Col className="col-md-10 ps-0">
-                  {model.modelName}
+                  {model.name}
                   <OverlayTrigger
                     placement="right"
                     key={`sidebar-${idx}`}
                     overlay={
                       <Tooltip id={`sidebar-${idx}`}>
-                        {model.modelDetails.sourceQuery}
+                        {model.details.sourceQuery}
                       </Tooltip>
                     }
                   >
                     <div className="text-muted">
-                      {model.modelDetails.sourceQuery}
+                      {model.details.sourceQuery}
                     </div>
                   </OverlayTrigger>
                 </Col>

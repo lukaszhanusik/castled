@@ -19,5 +19,4 @@ public class WarehouseDetails {
     private String name;
     private WarehouseType type;
     private String logoUrl;
-    private List<FieldSchema> columnDetails;
 }

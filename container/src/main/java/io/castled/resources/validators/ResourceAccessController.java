@@ -44,7 +44,7 @@ public class ResourceAccessController {
             throw new NotFoundException("Query model not found");
         }
         if (!queryModel.getTeamId().equals(teamId)) {
-            throw new ForbiddenException(String.format("User not authorized to access model %s", queryModel.getModelName()));
+            throw new ForbiddenException(String.format("User not authorized to access model %s", queryModel.getName()));
         }
     }
 }

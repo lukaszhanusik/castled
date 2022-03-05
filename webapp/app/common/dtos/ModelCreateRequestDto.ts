@@ -1,12 +1,12 @@
 export interface ModelCreateRequestDto {
     warehouseId: number;
-    modelName:  string;
-    modelType:  string;
-    modelDetails:{
+    name:  string;
+    type:  string;
+    details:{
        type: string;
        sourceQuery: string;
     };
-    queryModelPK:{
+    queryPK:{
        primaryKeys: string[];
     };
  }

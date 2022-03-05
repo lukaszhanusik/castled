@@ -11,6 +11,6 @@ public class SqlQueryModelDetails extends QueryModelDetails {
     private String sourceQuery;
 
     public SqlQueryModelDetails() {
-        super(QueryModelType.SQL_QUERY_EDITOR);
+        super(QueryModelType.SQL);
     }
 }

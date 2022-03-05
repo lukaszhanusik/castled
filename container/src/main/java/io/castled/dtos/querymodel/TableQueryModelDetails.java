@@ -13,6 +13,6 @@ public class TableQueryModelDetails extends QueryModelDetails {
     private String sourceQuery;
 
     public TableQueryModelDetails() {
-        super(QueryModelType.TABLE_SELECTOR);
+        super(QueryModelType.TABLE);
     }
 }

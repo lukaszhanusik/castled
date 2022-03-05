@@ -5,6 +5,7 @@ import io.castled.dtos.querymodel.ModelInputDTO;
 import io.castled.dtos.querymodel.QueryModelDetails;
 import io.castled.models.QueryModel;
 import io.castled.models.QueryModelPK;
+import io.castled.models.QueryModelType;
 import io.castled.models.users.User;
 import io.castled.utils.JsonUtils;
 import org.jdbi.v3.core.argument.AbstractArgumentFactory;
@@ -31,36 +32,31 @@ import java.util.List;
 public interface QueryModelDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into query_model(user_id, team_id,warehouse_id,model_name,model_type,model_details,query_pk,demo)" +
-            " values(:user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
-            " :modelDTO.modelDetails, :modelDTO.queryModelPK, :modelDTO.demo)")
+    @SqlUpdate("insert into query_models(user_id, team_id, warehouse_id, name, type, details, query_pk, demo)" +
+            " values(:user.id, :user.teamId, :modelDTO.warehouseId, :modelDTO.name, :modelDTO.type," +
+            " :modelDTO.details, :modelDTO.queryPK, :modelDTO.demo)")
     long createModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @BindBean("user") User user);
 
     @GetGeneratedKeys
-    @SqlUpdate("insert into query_model(team_id,warehouse_id,model_name,model_type,model_details,query_pk,demo)" +
-            " values(:teamId, :modelDTO.warehouseId, :modelDTO.modelName, :modelDTO.modelType," +
-            " :modelDTO.modelDetails, :modelDTO.queryModelPK, :modelDTO.demo)")
+    @SqlUpdate("insert into query_models(team_id, warehouse_id, name ,type, details, query_pk, demo)" +
+            " values(:teamId, :modelDTO.warehouseId, :modelDTO.name, :modelDTO.type," +
+            " :modelDTO.details, :modelDTO.queryPK, :modelDTO.demo)")
     long createQueryModel(@BindBean("modelDTO") ModelInputDTO modelDTO, @Bind("teamId") Long teamId);
 
-    @SqlQuery("select * from query_model where model_name = :modelName and is_deleted = 0")
-    QueryModel getQueryModelByModelName(@Bind("modelName") String modelName);
+    @SqlQuery("select * from query_models where name = :name and is_deleted = 0")
+    QueryModel getModelByName(@Bind("name") String name);
 
-    @SqlQuery("select * from query_model where id = :id and is_deleted = 0")
+    @SqlQuery("select * from query_models where id = :id and is_deleted = 0")
     QueryModel getQueryModel(@Bind("id") Long id);
 
-    @SqlQuery("select * from query_model where warehouse_id =:whId and is_deleted = 0")
-    List<QueryModel> getQueryModelsByWarehouse(@Bind("whId") Long whId);
 
-    @SqlQuery("select * from query_model where team_id =:teamId and is_deleted = 0 order by id desc")
+    @SqlQuery("select * from query_models where team_id =:teamId and is_deleted = 0 order by id desc")
     List<QueryModel> getQueryModelsByTeam(@Bind("teamId") Long teamId);
 
-    @SqlQuery("select * from query_model where user_id =:userId and is_deleted = 0 order by id desc")
-    List<QueryModel> getQueryModelsByUser(@Bind("userId") Long userId);
+    @SqlQuery("select * from query_models where warehouse_id =:warehouseId and team_id =:teamId and is_deleted = 0 order by id desc")
+    List<QueryModel> getQueryModelsByWarehouseAndTeam(@Bind("warehouseId") Long whId, @Bind("teamId") Long teamId);
 
-    @SqlQuery("select * from query_model where warehouse_id =:whId and team_id =:teamId and is_deleted = 0 order by id desc")
-    List<QueryModel> getQueryModelsByWarehouseAndTeam(@Bind("whId") Long whId, @Bind("teamId") Long teamId);
-
-    @SqlUpdate("update query_model set is_deleted = 1 where id = :id")
+    @SqlUpdate("update query_models set is_deleted = 1 where id = :id")
     void deleteModel(@Bind("id") Long id);
 
 
@@ -95,10 +91,10 @@ public interface QueryModelDAO {
             QueryModelPK queryModelPK = JsonUtils.jsonStringToObject(rs.getString(TableFields.WAREHOUSE_PK), QueryModelPK.class);
             QueryModelDetails modelDetails = JsonUtils.jsonStringToObject(rs.getString(TableFields.QUERY_MODEL_DETAILS), QueryModelDetails.class);
 
-            return QueryModel.builder().id(rs.getLong(TableFields.ID)).modelName(rs.getString(TableFields.MODEL_NAME))
-                    .modelType(rs.getString(TableFields.MODEL_TYPE)).teamId(rs.getLong(TableFields.TEAM_ID))
-                    .modelDetails(modelDetails).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
-                    .queryModelPK(queryModelPK).demo(rs.getBoolean(TableFields.DEMO_MODEL)).build();
+            return QueryModel.builder().id(rs.getLong(TableFields.ID)).name(rs.getString(TableFields.NAME))
+                    .type(QueryModelType.valueOf(rs.getString(TableFields.TYPE))).teamId(rs.getLong(TableFields.TEAM_ID))
+                    .details(modelDetails).warehouseId(rs.getLong(TableFields.WAREHOUSE_ID))
+                    .queryPK(queryModelPK).demo(rs.getBoolean(TableFields.DEMO_MODEL)).build();
         }
     }
 }

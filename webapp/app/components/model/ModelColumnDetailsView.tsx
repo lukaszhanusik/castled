@@ -4,19 +4,19 @@ import { useState, useEffect, ChangeEvent, useMemo } from "react";
 import { debounce } from "lodash";
 
 type ModelColumnDetailsViewProps = Partial<
-  Pick<ModelResponseDto, "warehouse" | "queryModelPK">
+  Pick<ModelResponseDto, "columnDetails" | "queryPK">
 >;
 
 function ModelColumnDetailsView({
-  warehouse,
-  queryModelPK,
+  columnDetails,
+  queryPK,
 }: ModelColumnDetailsViewProps) {
   const [warehouseRows, setWarehouseRows] = useState<JSX.Element[]>([]);
   const [searchResults, setSearchResults] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    if (warehouse && warehouse.columnDetails) {
-      const warehouseResults = warehouse.columnDetails.map((field, index) => (
+    if (columnDetails) {
+      const warehouseResults = columnDetails.map((field, index) => (
         <tr key={`${field.name}-${index}`}>
           <td className="col-4">{columnNameTransform(field.name)}</td>
           <td className="col-6">
@@ -28,7 +28,7 @@ function ModelColumnDetailsView({
             />
           </td>
           <td className="col-2">
-            {queryModelPK?.primaryKeys.includes(field.name) && (
+            {queryPK?.primaryKeys.includes(field.name) && (
               <div className="d-flex align-items-center">
                 <img
                   className="status-mark"
@@ -43,7 +43,7 @@ function ModelColumnDetailsView({
       setWarehouseRows(warehouseResults);
       setSearchResults(warehouseResults);
     }
-  }, [warehouse]);
+  }, [columnDetails]);
 
   const stringTransform = (str: string) => str[0] + str.slice(1).toLowerCase();
 

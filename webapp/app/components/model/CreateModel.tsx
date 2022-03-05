@@ -80,13 +80,13 @@ const CreateModel = ({
     modelService
       .create({
         warehouseId: pipelineWizContext.values?.warehouseId || 0, //delete this after testing
-        modelName: modelName,
-        modelType: "SQL",
-        modelDetails: {
-          type: "SQL_QUERY_EDITOR",
+        name: modelName,
+        type: "SQL",
+        details: {
+          type: "SQL",
           sourceQuery: query || "",
         },
-        queryModelPK: {
+        queryPK: {
           primaryKeys: primaryKeys || [],
         },
       })

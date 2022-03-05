@@ -1,11 +1,11 @@
-CREATE TABLE `query_model` (
+CREATE TABLE `query_models` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NULL,
   `team_id` bigint(20) NOT NULL,
   `warehouse_id` varchar(255) NOT NULL,
-  `model_name` varchar(50) NOT NULL,
-  `model_type` varchar(20) NOT NULL,
-  `model_details` text NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `details` text NOT NULL,
   `query_pk` text NOT NULL,
   `created_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

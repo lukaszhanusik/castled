@@ -9,6 +9,6 @@ import lombok.Setter;
 public class DbtQueryModelDetails extends QueryModelDetails{
 
     public DbtQueryModelDetails(){
-        super(QueryModelType.DBT_MODEL_SELECTOR);
+        super(QueryModelType.DBT);
     }
 }

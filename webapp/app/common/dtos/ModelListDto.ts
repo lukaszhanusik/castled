@@ -4,14 +4,14 @@ export interface ModelListDto {
   teamId: number;
   activeSyncsCount: number;
   warehouse: ConnectorDetails;
-  modelName: string;
-  modelType: string;
+  name: string;
+  type: string;
   demo: boolean;
-  modelDetails: {
+  details: {
     sourceQuery: string;
     type: string;
   };
-  queryModelPK: {
+  queryPK: {
     primaryKey: string[];
   };
 }

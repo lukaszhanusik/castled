@@ -2,7 +2,7 @@ package io.castled.dtomappers;
 
 import io.castled.dtos.PipelineDTO;
 import io.castled.dtos.WarehouseDetails;
-import io.castled.dtos.querymodel.ModelDetailsDTO;
+import io.castled.dtos.querymodel.QueryModelDTO;
 import io.castled.models.QueryModel;
 import io.castled.models.Warehouse;
 import io.castled.schema.models.FieldSchema;
@@ -13,44 +13,45 @@ import java.util.Optional;
 
 public class QueryModelDTOMapper {
 
-    public static ModelDetailsDTO toDTO(QueryModel queryModel, Warehouse warehouse, Integer activeSyncsCount) {
+    public static QueryModelDTO toDTO(QueryModel queryModel, Warehouse warehouse, Integer activeSyncsCount) {
         if (queryModel == null) {
             return null;
         }
 
-        ModelDetailsDTO.ModelDetailsDTOBuilder modelDetailsDTO = ModelDetailsDTO.builder();
-        modelDetailsDTO.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
+        QueryModelDTO.QueryModelDTOBuilder queryModelDTOBuilder = QueryModelDTO.builder();
+        queryModelDTOBuilder.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
                 .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build());
-        modelDetailsDTO.id(queryModel.getId());
-        modelDetailsDTO.userId(queryModel.getUserId());
-        modelDetailsDTO.teamId(queryModel.getTeamId());
-        modelDetailsDTO.modelName(queryModel.getModelName());
-        modelDetailsDTO.modelType(queryModel.getModelType());
-        modelDetailsDTO.modelDetails(queryModel.getModelDetails());
-        modelDetailsDTO.queryModelPK(queryModel.getQueryModelPK());
-        modelDetailsDTO.activeSyncsCount(Optional.ofNullable(activeSyncsCount).orElse(0));
-        modelDetailsDTO.demo(queryModel.isDemo());
-        return modelDetailsDTO.build();
+        queryModelDTOBuilder.id(queryModel.getId());
+        queryModelDTOBuilder.userId(queryModel.getUserId());
+        queryModelDTOBuilder.teamId(queryModel.getTeamId());
+        queryModelDTOBuilder.name(queryModel.getName());
+        queryModelDTOBuilder.type(queryModel.getType());
+        queryModelDTOBuilder.details(queryModel.getDetails());
+        queryModelDTOBuilder.queryPK(queryModel.getQueryPK());
+        queryModelDTOBuilder.activeSyncsCount(Optional.ofNullable(activeSyncsCount).orElse(0));
+        queryModelDTOBuilder.demo(queryModel.isDemo());
+        return queryModelDTOBuilder.build();
     }
 
-    public static ModelDetailsDTO toDetailedDTO(QueryModel queryModel, Warehouse warehouse, List<FieldSchema> warehouseFieldSchemas, List<PipelineDTO> pipelineDTOs) {
+    public static QueryModelDTO toDetailedDTO(QueryModel queryModel, Warehouse warehouse, List<FieldSchema> warehouseFieldSchemas, List<PipelineDTO> pipelineDTOs) {
         if (queryModel == null) {
             return null;
         }
 
-        ModelDetailsDTO.ModelDetailsDTOBuilder modelDetailsDTO = ModelDetailsDTO.builder();
-        modelDetailsDTO.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
-                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).columnDetails(warehouseFieldSchemas).build());
-        modelDetailsDTO.id(queryModel.getId());
-        modelDetailsDTO.userId(queryModel.getUserId());
-        modelDetailsDTO.teamId(queryModel.getTeamId());
-        modelDetailsDTO.modelName(queryModel.getModelName());
-        modelDetailsDTO.modelType(queryModel.getModelType());
-        modelDetailsDTO.modelDetails(queryModel.getModelDetails());
-        modelDetailsDTO.queryModelPK(queryModel.getQueryModelPK());
-        modelDetailsDTO.activeSyncDetails(pipelineDTOs);
-        modelDetailsDTO.activeSyncsCount(CollectionUtils.isEmpty(pipelineDTOs) ? 0 : pipelineDTOs.size());
-        modelDetailsDTO.demo(queryModel.isDemo());
-        return modelDetailsDTO.build();
+        QueryModelDTO.QueryModelDTOBuilder queryModelDTOBuilder = QueryModelDTO.builder();
+        queryModelDTOBuilder.warehouse(WarehouseDetails.builder().id(warehouse.getId()).name(warehouse.getName())
+                .type(warehouse.getType()).logoUrl(warehouse.getType().getLogoUrl()).build());
+        queryModelDTOBuilder.columnDetails(warehouseFieldSchemas);
+        queryModelDTOBuilder.id(queryModel.getId());
+        queryModelDTOBuilder.userId(queryModel.getUserId());
+        queryModelDTOBuilder.teamId(queryModel.getTeamId());
+        queryModelDTOBuilder.name(queryModel.getName());
+        queryModelDTOBuilder.type(queryModel.getType());
+        queryModelDTOBuilder.details(queryModel.getDetails());
+        queryModelDTOBuilder.queryPK(queryModel.getQueryPK());
+        queryModelDTOBuilder.activeSyncDetails(pipelineDTOs);
+        queryModelDTOBuilder.activeSyncsCount(CollectionUtils.isEmpty(pipelineDTOs) ? 0 : pipelineDTOs.size());
+        queryModelDTOBuilder.demo(queryModel.isDemo());
+        return queryModelDTOBuilder.build();
     }
 }
