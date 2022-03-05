@@ -8,6 +8,7 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.connectors.mixpanel.dto.EventAndError;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
@@ -37,31 +38,30 @@ import java.util.stream.Collectors;
 
 @Singleton
 @Slf4j
-public class MixpanelEventSink extends MixpanelObjectSink<Message> {
+public class MixpanelEventSink extends MixpanelObjectSink<DataSinkMessage> {
 
     private final MixpanelRestClient mixpanelRestClient;
     private final MixpanelErrorParser mixpanelErrorParser;
     private final ErrorOutputStream errorOutputStream;
     private final MixpanelAppSyncConfig mixpanelAppSyncConfig;
     private final AtomicLong processedRecords = new AtomicLong(0);
-    private final AtomicLong failedRecords = new AtomicLong(0);
-    private final CastledOffsetListQueue<Message> requestsBuffer =
+    private final CastledOffsetListQueue<DataSinkMessage> requestsBuffer =
             new CastledOffsetListQueue<>(new CreateEventConsumer(), 10, 10, true);
     private long lastProcessedOffset = 0;
 
     public MixpanelEventSink(DataSinkRequest dataSinkRequest) {
         this.mixpanelRestClient = new MixpanelRestClient(((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getProjectToken(),
                 ((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiSecret());
-        this.mixpanelAppSyncConfig = (MixpanelAppSyncConfig)dataSinkRequest.getAppSyncConfig();
+        this.mixpanelAppSyncConfig = (MixpanelAppSyncConfig) dataSinkRequest.getAppSyncConfig();
         this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
         this.mixpanelErrorParser = ObjectRegistry.getInstance(MixpanelErrorParser.class);
     }
 
-    private void processBulkEventCreation(List<Message> messages) {
+    private void processBulkEventCreation(List<DataSinkMessage> messages) {
         List<EventAndError> failedRecords = this.mixpanelRestClient.insertEventDetails(
-                messages.stream().map(Message::getRecord).map(this::constructEventDetails).collect(Collectors.toList()));
+                messages.stream().map(DataSinkMessage::getRecord).map(this::constructEventDetails).collect(Collectors.toList()));
 
-        Map<String, Message> eventIDMapper = messages.stream().filter(message -> getEventID(message.getRecord()) != null)
+        Map<Object, DataSinkMessage> eventIDMapper = messages.stream().filter(message -> getEventID(message.getRecord()) != null)
                 .collect(Collectors.toMap(message -> getEventID(message.getRecord()), Function.identity()));
 
         failedRecords.forEach(failedRecord ->
@@ -73,20 +73,20 @@ public class MixpanelEventSink extends MixpanelObjectSink<Message> {
     }
 
     @Override
-    protected void writeRecords(List<Message> messages) {
+    protected void writeRecords(List<DataSinkMessage> messages) {
         try {
             requestsBuffer.writePayload(Lists.newArrayList(messages), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
             log.error("Unable to publish records to records queue", e);
-            for (Message record : messages) {
+            for (DataSinkMessage record : messages) {
                 errorOutputStream.writeFailedRecord(record,
                         new UnclassifiedError("Internal error!! Unable to publish records to records queue. Please contact support"));
             }
         }
     }
 
-    private String getEventID(Tuple record) {
-        return (String) record.getValue(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName());
+    private Object getEventID(Tuple record) {
+        return record.getValue(MixpanelObjectFields.EVENT_FIELDS.INSERT_ID.getFieldName());
     }
 
     private Map<String, Object> constructEventDetails(Tuple record) {
@@ -161,9 +161,9 @@ public class MixpanelEventSink extends MixpanelObjectSink<Message> {
         return 2000;
     }
 
-    private class CreateEventConsumer implements Consumer<List<Message>> {
+    private class CreateEventConsumer implements Consumer<List<DataSinkMessage>> {
         @Override
-        public void accept(List<Message> messages) {
+        public void accept(List<DataSinkMessage> messages) {
             if (CollectionUtils.isEmpty(messages)) {
                 return;
             }

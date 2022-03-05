@@ -6,10 +6,10 @@ import com.google.ads.googleads.v7.services.*;
 import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.commons.errors.errorclassifications.MissingRequiredFieldsError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.oauth.OAuthDetails;
 import io.castled.schema.models.Field;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.services.OAuthService;
 import io.castled.utils.MessageUtils;
@@ -42,7 +42,7 @@ public class ConversionObjectSink extends GadsObjectSink {
         this.customVariables = GoogleAdUtils.getCustomVariables(googleAdsAppConfig, mappingConfig);
     }
 
-    public void writeRecords(List<Message> messages) {
+    public void writeRecords(List<DataSinkMessage> messages) {
         GAdsObjectType gAdsObjectType = mappingConfig.getObjectType();
         if (gAdsObjectType == GAdsObjectType.CLICK_CONVERSIONS) {
             uploadClickConversions(messages);
@@ -53,10 +53,10 @@ public class ConversionObjectSink extends GadsObjectSink {
         this.lastProcessedMessageId = Math.min(lastProcessedMessageId, messages.get(messages.size() - 1).getOffset());
     }
 
-    private void uploadClickConversions(List<Message> messages) {
+    private void uploadClickConversions(List<DataSinkMessage> messages) {
 
         List<ClickConversion> clickConversions = Lists.newArrayList();
-        for (Message message : messages) {
+        for (DataSinkMessage message : messages) {
             ClickConversion clickConversion = getClickConversion(message);
             if (!clickConversion.hasConversionDateTime()) {
                 errorOutputStream.writeFailedRecord(message,
@@ -80,7 +80,7 @@ public class ConversionObjectSink extends GadsObjectSink {
         }
     }
 
-    private ClickConversion getClickConversion(Message message) {
+    private ClickConversion getClickConversion(DataSinkMessage message) {
 
         Tuple record = message.getRecord();
         Double conversionValue = (Double) record.getValue(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_VALUE.getFieldName());
@@ -101,7 +101,11 @@ public class ConversionObjectSink extends GadsObjectSink {
         Optional.ofNullable(conversionDateTimeString).ifPresent(builder::setConversionDateTime);
 
         for (ConversionCustomVariable customVariable : customVariables) {
-            String customVariableValue = MessageUtils.toString(record.getField(customVariable.getName()));
+            Field customField = record.getField(customVariable.getName());
+            if(customField == null){
+                continue;
+            }
+            String customVariableValue = MessageUtils.toString(customField);
             Optional.ofNullable(customVariableValue).ifPresent(valueRef -> builder.addCustomVariables(
                     CustomVariable.newBuilder()
                             .setConversionCustomVariable(customVariable.getResourceName())
@@ -118,7 +122,7 @@ public class ConversionObjectSink extends GadsObjectSink {
     }
 
 
-    private CallConversion getCallConversion(Message message) {
+    private CallConversion getCallConversion(DataSinkMessage message) {
         Tuple record = message.getRecord();
 
         Double conversionValue = (Double) record.getValue(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_VALUE.getFieldName());
@@ -151,10 +155,10 @@ public class ConversionObjectSink extends GadsObjectSink {
         return builder.build();
     }
 
-    private void uploadCallConversions(List<Message> messages) {
+    private void uploadCallConversions(List<DataSinkMessage> messages) {
 
         List<CallConversion> callConversions = Lists.newArrayList();
-        for (Message message : messages) {
+        for (DataSinkMessage message : messages) {
             CallConversion callConversion = getCallConversion(message);
             if (!callConversion.hasConversionDateTime()) {
                 errorOutputStream.writeFailedRecord(message,

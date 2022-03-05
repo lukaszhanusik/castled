@@ -35,12 +35,12 @@ const SelectExistingConnector = ({
   return (
     <div className="categories">
       <ListGroup>
-        {connectors !== undefined && (
+        {connectors !== undefined && category !== "Model" && (
           <button
             className="btn list-group-item rounded"
             onClick={() => onCreate()}
           >
-            Create New {category}
+            <strong>Create New {category}</strong>
           </button>
         )}
         {connectors?.map((connector, i) => (

@@ -9,6 +9,7 @@ import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.PipelineSyncStats;
+import io.castled.commons.streams.DefaultDataSinkMessageOutputStream;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStreamImpl;
 import io.castled.constants.CommonConstants;
@@ -25,8 +26,8 @@ import io.castled.pipelines.exceptions.PipelineInterruptedException;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.RecordSchema;
 import io.castled.services.PipelineService;
+import io.castled.services.QueryModelService;
 import io.castled.utils.DataMappingUtils;
-import io.castled.utils.PipelineUtils;
 import io.castled.warehouses.WarehouseConnector;
 import io.castled.warehouses.WarehouseService;
 import io.castled.warehouses.WarehouseSyncFailureListener;
@@ -41,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Slf4j
@@ -54,12 +54,13 @@ public class PipelineExecutor implements TaskExecutor {
     private final ExternalAppService externalAppService;
     private final EncryptionManager encryptionManager;
     private final MonitoredDataSink monitoredDataSink;
+    private final QueryModelService queryModelService;
 
     @Inject
     public PipelineExecutor(PipelineService pipelineService, Map<WarehouseType, WarehouseConnector> warehouseConnectors,
                             WarehouseService warehouseService, Map<ExternalAppType, ExternalAppConnector> externalAppConnectors,
                             ExternalAppService externalAppService, EncryptionManager encryptionManager,
-                            MonitoredDataSink monitoredDataSink) {
+                            MonitoredDataSink monitoredDataSink, QueryModelService queryModelService) {
         this.pipelineService = pipelineService;
         this.warehouseConnectors = warehouseConnectors;
         this.warehouseService = warehouseService;
@@ -67,6 +68,7 @@ public class PipelineExecutor implements TaskExecutor {
         this.externalAppService = externalAppService;
         this.encryptionManager = encryptionManager;
         this.monitoredDataSink = monitoredDataSink;
+        this.queryModelService = queryModelService;
     }
 
     @Override
@@ -80,11 +82,11 @@ public class PipelineExecutor implements TaskExecutor {
         Warehouse warehouse = this.warehouseService.getWarehouse(pipeline.getWarehouseId());
         PipelineRun pipelineRun = getOrCreatePipelineRun(pipelineId);
         WarehousePollContext warehousePollContext = WarehousePollContext.builder()
-                .primaryKeys(PipelineUtils.getWarehousePrimaryKeys(pipeline)).pipelineUUID(pipeline.getUuid())
+                .primaryKeys(getWarehousePrimaryKeys(pipeline)).pipelineUUID(pipeline.getUuid())
                 .pipelineRunId(pipelineRun.getId()).warehouseConfig(warehouse.getConfig())
                 .dataEncryptionKey(encryptionManager.getEncryptionKey(warehouse.getTeamId()))
                 .queryMode(pipeline.getQueryMode())
-                .query(pipeline.getSourceQuery()).pipelineId(pipeline.getId()).build();
+                .query(getQuery(pipeline)).pipelineId(pipeline.getId()).build();
         try {
 
             WarehouseExecutionContext warehouseExecutionContext = pollRecords(warehouse, pipelineRun, warehousePollContext);
@@ -105,15 +107,15 @@ public class PipelineExecutor implements TaskExecutor {
 
             MysqlErrorTracker mysqlErrorTracker = new MysqlErrorTracker(warehousePollContext);
 
-            ErrorOutputStream schemaMappingErrorOutputStream = new ErrorOutputStream(warehouseSyncFailureListener, mysqlErrorTracker);
+            ErrorOutputStream schemaMappingErrorOutputStream = new ErrorOutputStream(new DefaultDataSinkMessageOutputStream(warehouseSyncFailureListener), mysqlErrorTracker);
 
             SchemaMappedMessageInputStream schemaMappedMessageInputStream = new SchemaMappedMessageInputStream(
                     appSchema, warehouseExecutionContext.getMessageInputStreamImpl(), DataMappingUtils.appWarehouseMapping(pipeline.getDataMapping()),
                     DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()), schemaMappingErrorOutputStream);
 
-            SchemaMappedRecordOutputStream schemaMappedRecordOutputStream =
-                    new SchemaMappedRecordOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
-                            PipelineUtils.getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
+            SchemaMappedMessageOutputStream schemaMappedRecordOutputStream =
+                    new SchemaMappedMessageOutputStream(SchemaUtils.filterSchema(warehousePollContext.getWarehouseSchema(),
+                            getWarehousePrimaryKeys(pipeline)), warehouseSyncFailureListener,
                             DataMappingUtils.warehouseAppMapping(pipeline.getDataMapping()));
 
             ErrorOutputStream sinkErrorOutputStream = new ErrorOutputStream(schemaMappedRecordOutputStream,
@@ -126,10 +128,9 @@ public class PipelineExecutor implements TaskExecutor {
 
             DataSinkRequest dataSinkRequest = DataSinkRequest.builder().externalApp(externalApp).errorOutputStream(sinkErrorOutputStream)
                     .appSyncConfig(pipeline.getAppSyncConfig()).mappedFields(mappedAppFields)
-                    .objectSchema(appSchema).primaryKeys(pipeline.getDataMapping().getPrimaryKeys())
+                    .objectSchema(appSchema).primaryKeys(DataMappingUtils.getPrimaryKeys(pipeline.getDataMapping()))
                     .mapping(pipeline.getDataMapping()).queryMode(pipeline.getQueryMode())
                     .messageInputStream(schemaMappedMessageInputStream)
-
                     .build();
 
             PipelineSyncStats pipelineSyncStats = monitoredDataSink.syncRecords(externalAppConnector.getDataSink(),
@@ -164,6 +165,14 @@ public class PipelineExecutor implements TaskExecutor {
             }
         }
         return null;
+    }
+
+    private List<String> getWarehousePrimaryKeys(Pipeline pipeline) {
+        return queryModelService.getQueryModelPrimaryKeys(pipeline.getModelId());
+    }
+
+    private String getQuery(Pipeline pipeline) {
+        return queryModelService.getSourceQuery(pipeline.getModelId());
     }
 
     private PipelineRun getOrCreatePipelineRun(Long pipelineId) {

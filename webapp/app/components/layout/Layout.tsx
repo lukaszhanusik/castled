@@ -10,6 +10,7 @@ interface LayoutProps extends HeaderProps {
   stepGroups?: WizardSteps;
   rightHelp?: React.ReactNode;
   hideHeader?: boolean;
+  isFluid?: boolean;
 }
 
 const Layout = ({
@@ -24,6 +25,7 @@ const Layout = ({
   stepGroups,
   rightHelp,
   hideHeader,
+  isFluid,
 }: LayoutProps) => {
   return (
     <div className="layout-holder">
@@ -41,7 +43,7 @@ const Layout = ({
             stepGroups={stepGroups}
           />
         )}
-        {renderChildren(children, rightHelp)}
+        {renderChildren(children, rightHelp, isFluid)}
       </main>
     </div>
   );
@@ -49,7 +51,8 @@ const Layout = ({
 
 const renderChildren = (
   children: React.ReactNode,
-  rightHelp: React.ReactNode
+  rightHelp: React.ReactNode,
+  isFluid?: boolean
 ) => {
   if (rightHelp) {
     return (
@@ -59,7 +62,15 @@ const renderChildren = (
       </div>
     );
   } else {
-    return <div className="container-fluid container-main">{children}</div>;
+    return (
+      <div
+        className={`${
+          isFluid ? "container-fluid" : "container-fluid container-main"
+        }`}
+      >
+        {children}
+      </div>
+    );
   }
 };
 

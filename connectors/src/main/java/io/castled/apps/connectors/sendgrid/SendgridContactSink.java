@@ -6,6 +6,7 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.connectors.sendgrid.dtos.ContactAttribute;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class SendgridContactSink extends BufferedObjectSink<Message>  {
+public class SendgridContactSink extends BufferedObjectSink<DataSinkMessage>  {
 
     // Sendgrid API Limits
     private static final long UPSERT_BATCH_NUM_SIZE_MAX = 30000;
@@ -43,13 +44,13 @@ public class SendgridContactSink extends BufferedObjectSink<Message>  {
     }
 
     @Override
-    protected void writeRecords(List<Message> msgs) {
+    protected void writeRecords(List<DataSinkMessage> msgs) {
         List<Map<String, Object>> contacts = msgs.stream().map(msgRef ->
                 constructContactProperties(msgRef.getRecord())).collect(Collectors.toList());
 
         List<SendgridUpsertError> upsertErrors = sendgridRestClient.upsertContacts(contacts, syncConfig.getListIds());
 
-        Map<String, Message> emailRecordMap = msgs.stream()
+        Map<String, DataSinkMessage> emailRecordMap = msgs.stream()
                 .collect(Collectors.toMap(message -> getEmail(message.getRecord()), Function.identity()));
         upsertErrors.forEach(error -> this.errorOutputStream.writeFailedRecord(emailRecordMap.get(error.getEmail()),
                 errorParser.getPipelineError(error)));

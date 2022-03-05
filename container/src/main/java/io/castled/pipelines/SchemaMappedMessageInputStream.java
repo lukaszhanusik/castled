@@ -1,7 +1,10 @@
 package io.castled.pipelines;
 
+import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.commons.errors.errorclassifications.IncompatibleMappingError;
+import io.castled.commons.models.DataSinkMessage;
+import io.castled.commons.streams.DataSinkMessageInputStream;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.commons.streams.MessageInputStream;
 import io.castled.schema.IncompatibleValueException;
@@ -9,23 +12,26 @@ import io.castled.schema.SchemaMapper;
 import io.castled.schema.models.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
-public class SchemaMappedMessageInputStream implements MessageInputStream {
+public class SchemaMappedMessageInputStream implements DataSinkMessageInputStream {
 
     private final RecordSchema targetSchema;
     private final MessageInputStream messageInputStream;
     private final SchemaMapper schemaMapper;
-    private final Map<String, String> targetSourceMapping;
-    private final Map<String, String> sourceTargetMapping;
+    private final Map<String, List<String>> targetSourceMapping;
+    private final Map<String, List<String>> sourceTargetMapping;
     private final ErrorOutputStream errorOutputStream;
     @Getter
     private long failedRecords = 0;
 
     public SchemaMappedMessageInputStream(RecordSchema targetSchema, MessageInputStream messageInputStream,
-                                          Map<String, String> targetSourceMapping, Map<String, String> sourceTargetMapping, ErrorOutputStream errorOutputStream) {
+                                          Map<String, List<String>> targetSourceMapping, Map<String, List<String>> sourceTargetMapping, ErrorOutputStream errorOutputStream) {
         this.targetSchema = targetSchema;
         this.messageInputStream = messageInputStream;
         this.schemaMapper = ObjectRegistry.getInstance(SchemaMapper.class);
@@ -35,7 +41,7 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
     }
 
     @Override
-    public Message readMessage() throws Exception {
+    public DataSinkMessage readMessage() throws Exception {
 
         while (true) {
             Message message = this.messageInputStream.readMessage();
@@ -43,9 +49,9 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
                 return null;
             }
             if (this.sourceTargetMapping == null) {
-                return message;
+                return new DataSinkMessage(message);
             }
-            Message mappedMessage = mapMessage(message);
+            DataSinkMessage mappedMessage = mapMessage(message);
             if (mappedMessage == null) {
                 continue;
             }
@@ -53,33 +59,41 @@ public class SchemaMappedMessageInputStream implements MessageInputStream {
         }
     }
 
-    private Message mapMessage(Message message) {
+    private DataSinkMessage mapMessage(Message message) {
 
         if (targetSchema == null) {
-            return mapMessageFromSourceSchema(message);
+            return new DataSinkMessage(mapMessageFromSourceSchema(message));
         }
         Tuple.Builder recordBuilder = Tuple.builder();
+        List<String> mappedSourceFields = Lists.newArrayList();
         for (FieldSchema field : targetSchema.getFieldSchemas()) {
-            String sourceField = targetSourceMapping.get(field.getName());
-            if (sourceField != null) {
-                try {
-                    recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
-                } catch (IncompatibleValueException e) {
-                    failedRecords++;
-                    this.errorOutputStream.writeFailedRecord(message, new IncompatibleMappingError(sourceField, field.getSchema()));
-                    return null;
+            List<String> sourceFields = targetSourceMapping.get(field.getName());
+            if (!CollectionUtils.isEmpty(sourceFields)) {
+                for (String sourceField : sourceFields) {
+                    if (sourceField != null) {
+                        try {
+                            recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
+                            mappedSourceFields.add(sourceField);
+                        } catch (IncompatibleValueException e) {
+                            failedRecords++;
+                            this.errorOutputStream.writeFailedRecord(new DataSinkMessage(message), new IncompatibleMappingError(sourceField, field.getSchema()));
+                            return null;
+                        }
+                    }
                 }
             }
         }
-        return new Message(message.getOffset(), recordBuilder.build());
+        List<Field> unmappedSourceFields = message.getRecord().getFields().stream()
+                .filter(field -> !mappedSourceFields.contains(field.getName())).collect(Collectors.toList());
+        return new DataSinkMessage(new Message(message.getOffset(), recordBuilder.build()), unmappedSourceFields);
     }
 
     private Message mapMessageFromSourceSchema(Message message) {
         Tuple.Builder recordBuilder = Tuple.builder();
         for (Field field : message.getRecord().getFields()) {
-            String targetField = sourceTargetMapping.get(field.getName());
-            if (targetField != null) {
-                recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue());
+            List<String> targetFields = sourceTargetMapping.get(field.getName());
+            if (!CollectionUtils.isEmpty(targetFields)) {
+                targetFields.forEach(targetField -> recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue()));
             }
         }
         return new Message(message.getOffset(), recordBuilder.build());

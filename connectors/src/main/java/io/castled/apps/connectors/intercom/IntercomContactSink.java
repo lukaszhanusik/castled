@@ -11,6 +11,7 @@ import io.castled.apps.connectors.intercom.client.exceptions.IntercomRestExcepti
 import io.castled.apps.connectors.intercom.client.models.IntercomModel;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.models.ObjectIdAndMessage;
 import io.castled.commons.streams.ErrorOutputStream;
@@ -59,7 +60,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             }
         }
 
-        private void attachCompanyIfRequired(Message message, String contactId) throws IntercomRestException {
+        private void attachCompanyIfRequired(DataSinkMessage message, String contactId) throws IntercomRestException {
             String companyId = Optional.ofNullable(message.getRecord().getField(IntercomObjectFields.COMPANY_ID))
                     .map(Field::getValue).map(Object::toString).orElse(null);
             if (companyId == null) {
@@ -69,7 +70,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             intercomRestClient.attachCompany(contactId, internalCompanyId);
         }
 
-        private void createContact(Message message) {
+        private void createContact(DataSinkMessage message) {
             Map<String, Object> contactProperties = constructContactProperties(message.getRecord());
             if (Lists.newArrayList(IntercomObject.LEAD, IntercomObject.USER).contains(intercomObject)) {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
@@ -85,7 +86,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
             processedRecords.incrementAndGet();
         }
 
-        private void updateContact(Message message, String id) {
+        private void updateContact(DataSinkMessage message, String id) {
             Map<String, Object> contactProperties = constructContactProperties(message.getRecord());
             if (Lists.newArrayList(IntercomObject.LEAD, IntercomObject.USER).contains(intercomObject)) {
                 contactProperties.put(IntercomObjectFields.ROLE, intercomObject.getName().toLowerCase());
@@ -123,7 +124,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
     }
 
     @Override
-    public void createObject(Message message) {
+    public void createObject(DataSinkMessage message) {
         try {
             recordsBuffer.writePayload(new ObjectIdAndMessage(null, message), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
@@ -134,7 +135,7 @@ public class IntercomContactSink implements IntercomObjectSink<String> {
     }
 
     @Override
-    public void updateObject(String id, Message message) {
+    public void updateObject(String id, DataSinkMessage message) {
         try {
             recordsBuffer.writePayload(new ObjectIdAndMessage(id, message), 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {

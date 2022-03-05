@@ -5,12 +5,16 @@ import com.google.common.collect.Lists;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.models.ExternalAppSchema;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.dtos.PipelineConfigDTO;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.models.FieldMapping;
 import io.castled.models.TargetFieldsMapping;
 import io.castled.schema.SchemaConstants;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -75,7 +79,7 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
         for (String customVariable : GoogleAdUtils.getCustomVariables(googleAdsAppConfig, mappingConfig).stream().map(ConversionCustomVariable::getName).collect(Collectors.toList())) {
             customerSchemaBuilder.put(customVariable, SchemaConstants.OPTIONAL_STRING_SCHEMA);
         }
-        return new ExternalAppSchema(customerSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName()));
+        return new ExternalAppSchema(customerSchemaBuilder.build());
     }
 
 
@@ -88,7 +92,7 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
         for (String customVariable : GoogleAdUtils.getCustomVariables(googleAdsAppConfig, googleAdsMappingConfig).stream().map(ConversionCustomVariable::getName).collect(Collectors.toList())) {
             recordSchemaBuilder.put(customVariable, SchemaConstants.OPTIONAL_STRING_SCHEMA);
         }
-        return new ExternalAppSchema(recordSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName()));
+        return new ExternalAppSchema(recordSchemaBuilder.build());
     }
 
     private ExternalAppSchema getSchemaForCustomerMatch(CustomerMatchType customerMatchType) {
@@ -98,21 +102,18 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
                 for (GadsObjectFields.CUSTOMER_MATCH_CONTACT_INFO_FIELDS customerMatchField : GadsObjectFields.CUSTOMER_MATCH_CONTACT_INFO_FIELDS.values()) {
                     customerSchemaBuilder.put(customerMatchField.getFieldName(), SchemaConstants.OPTIONAL_STRING_SCHEMA);
                 }
-                List<String> pkEligibles = Lists.newArrayList(GadsObjectFields.CUSTOMER_MATCH_CONTACT_INFO_FIELDS.EMAIL.getFieldName(),
-                        GadsObjectFields.CUSTOMER_MATCH_CONTACT_INFO_FIELDS.PHONE_NUMBER.getFieldName());
-
-                return new ExternalAppSchema(customerSchemaBuilder.build(), pkEligibles);
+                return new ExternalAppSchema(customerSchemaBuilder.build());
 
             case CRM_ID:
                 RecordSchema.Builder userIdSchemaBuilder = RecordSchema.builder()
                         .put(GadsObjectFields.CUSTOMER_MATCH_USER_ID_FIELD, SchemaConstants.STRING_SCHEMA);
-                return new ExternalAppSchema(userIdSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CUSTOMER_MATCH_USER_ID_FIELD));
+                return new ExternalAppSchema(userIdSchemaBuilder.build());
 
             case MOBILE_ADVERTISING_ID:
                 RecordSchema.Builder mobileIdSchemaBuilder = RecordSchema.builder()
                         .put(GadsObjectFields.CUSTOMER_MATCH_MOBILE_DEVICE_ID_FIELD, SchemaConstants.STRING_SCHEMA);
 
-                return new ExternalAppSchema(mobileIdSchemaBuilder.build(), Lists.newArrayList(GadsObjectFields.CUSTOMER_MATCH_MOBILE_DEVICE_ID_FIELD));
+                return new ExternalAppSchema(mobileIdSchemaBuilder.build());
 
             default:
                 throw new CastledRuntimeException(String.format("Invalid customer match type %s", customerMatchType));
@@ -121,7 +122,7 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
     }
 
     public PipelineConfigDTO validateAndEnrichPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
-        TargetFieldsMapping targetFieldsMapping = (TargetFieldsMapping)pipelineConfig.getMapping();
+        TargetFieldsMapping targetFieldsMapping = (TargetFieldsMapping) pipelineConfig.getMapping();
         List<String> mappedAppFields = targetFieldsMapping.getFieldMappings().stream()
                 .map(FieldMapping::getAppField).collect(Collectors.toList());
         GAdsObjectType gAdsObjectType = ((GoogleAdsAppSyncConfig) pipelineConfig.getAppSyncConfig()).getObjectType();
@@ -155,5 +156,70 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
         return GoogleAdsAppConfig.class;
     }
 
+    @Override
+    public List<MappingGroup> getMappingGroups(GoogleAdsAppConfig googleAdsAppConfig, GoogleAdsAppSyncConfig googleAdsAppSyncConfig) {
+        switch (googleAdsAppSyncConfig.getObjectType()) {
+            case CUSTOMER_MATCH:
+                return getCustomerMatchMappingGroup(googleAdsAppSyncConfig.getCustomerMatchType());
+            case CALL_CONVERSIONS:
+                return getCallConversionMappingGroup();
+            case CLICK_CONVERSIONS:
+                return getClickConversionMappingGroup();
+            default:
+                throw new CastledRuntimeException(String.format("Invalid object type %s", googleAdsAppSyncConfig.getObjectType()));
+        }
+    }
 
+    private List<MappingGroup> getCustomerMatchMappingGroup(CustomerMatchType customerMatchType) {
+        switch (customerMatchType) {
+            case CRM_ID:
+                return getUserIdMappingGroup();
+            case MOBILE_ADVERTISING_ID:
+                return getMobileIdMappingGroup();
+            case CONTACT_INFO:
+                return getContactInfoMappingGroup();
+            default:
+                throw new CastledRuntimeException(String.format("Invalid customer match type %s", customerMatchType));
+        }
+    }
+
+    private List<MappingGroup> getContactInfoMappingGroup() {
+        List<FixedGroupAppField> fixedGroupAppFields = Arrays.stream(GadsObjectFields.CUSTOMER_MATCH_CONTACT_INFO_FIELDS.values())
+                .map(field -> new FixedGroupAppField(field.getFieldName(), field.getFieldName(), true)).collect(Collectors.toList());
+        return MappingGroupAggregator.builder().addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
+
+    }
+
+    private List<MappingGroup> getUserIdMappingGroup() {
+        List<FixedGroupAppField> fixedGroupAppFields = Lists.newArrayList(new FixedGroupAppField(GadsObjectFields.CUSTOMER_MATCH_USER_ID_FIELD,
+                GadsObjectFields.CUSTOMER_MATCH_USER_ID_FIELD, true));
+        return MappingGroupAggregator.builder().addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
+
+    }
+
+    private List<MappingGroup> getMobileIdMappingGroup() {
+        List<FixedGroupAppField> fixedGroupAppFields = Lists.newArrayList(new FixedGroupAppField(GadsObjectFields.CUSTOMER_MATCH_MOBILE_DEVICE_ID_FIELD,
+                GadsObjectFields.CUSTOMER_MATCH_MOBILE_DEVICE_ID_FIELD, true));
+        return MappingGroupAggregator.builder().addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
+    }
+
+    private List<MappingGroup> getClickConversionMappingGroup() {
+        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.GCLID.getFieldName(),
+                GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName());
+        List<FixedGroupAppField> fixedGroupAppFields = requiredFields.stream().map(field -> new FixedGroupAppField(field, field, false))
+                .collect(Collectors.toList());
+        fixedGroupAppFields.addAll(Arrays.stream(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS.values()).map(GadsObjectFields.CLICK_CONVERSION_STANDARD_FIELDS::getFieldName)
+                .filter(field -> !requiredFields.contains(field)).map(field -> new FixedGroupAppField(field, field, true)).collect(Collectors.toList()));
+        return MappingGroupAggregator.builder().addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
+    }
+
+    private List<MappingGroup> getCallConversionMappingGroup() {
+        List<String> requiredFields = Lists.newArrayList(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALLER_ID.getFieldName(),
+                GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CONVERSION_TIME.getFieldName(), GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.CALL_START_TIME.getFieldName());
+        List<FixedGroupAppField> fixedGroupAppFields = requiredFields.stream().map(field -> new FixedGroupAppField(field, field, false))
+                .collect(Collectors.toList());
+        fixedGroupAppFields.addAll(Arrays.stream(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS.values()).map(GadsObjectFields.CALL_CONVERSION_STANDARD_FIELDS::getFieldName)
+                .filter(field -> !requiredFields.contains(field)).map(field -> new FixedGroupAppField(field, field, true)).collect(Collectors.toList()));
+        return MappingGroupAggregator.builder().addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
+    }
 }

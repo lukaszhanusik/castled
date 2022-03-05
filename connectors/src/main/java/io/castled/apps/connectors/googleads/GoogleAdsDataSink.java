@@ -3,6 +3,7 @@ package io.castled.apps.connectors.googleads;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.models.Message;
@@ -15,7 +16,7 @@ public class GoogleAdsDataSink implements DataSink {
 
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        Message message;
+        DataSinkMessage message;
         this.gadsObjectSink = getObjectSink((GoogleAdsAppSyncConfig) dataSinkRequest.getAppSyncConfig(),
                 (GoogleAdsAppConfig) dataSinkRequest.getExternalApp().getConfig(),
                 dataSinkRequest.getErrorOutputStream());

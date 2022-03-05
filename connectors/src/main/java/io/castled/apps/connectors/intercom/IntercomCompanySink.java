@@ -9,6 +9,7 @@ import io.castled.apps.connectors.intercom.client.exceptions.IntercomRestExcepti
 import io.castled.apps.connectors.intercom.client.models.IntercomModel;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetQueue;
@@ -40,14 +41,14 @@ public class IntercomCompanySink implements IntercomObjectSink<String> {
 
     private final AtomicLong failedRecords = new AtomicLong(0);
     private final AtomicLong processedRecords = new AtomicLong(0);
-    private final CastledOffsetQueue<Message> companyRecordsBuffer =
+    private final CastledOffsetQueue<DataSinkMessage> companyRecordsBuffer =
             new CastledOffsetQueue<>(new CompanyRecordConsumer(), 2, 10, true);
 
 
-    private class CompanyRecordConsumer implements Consumer<Message> {
+    private class CompanyRecordConsumer implements Consumer<DataSinkMessage> {
 
         @Override
-        public void accept(Message message) {
+        public void accept(DataSinkMessage message) {
             Map<String, Object> companyProperties = constructProperties(message.getRecord());
             try {
                 intercomRestClient.createCompany(companyProperties, customAttributes);
@@ -82,7 +83,7 @@ public class IntercomCompanySink implements IntercomObjectSink<String> {
 
 
     @Override
-    public void createObject(Message message) {
+    public void createObject(DataSinkMessage message) {
         try {
             companyRecordsBuffer.writePayload(message, 5, TimeUnit.MINUTES);
         } catch (TimeoutException e) {
@@ -94,7 +95,7 @@ public class IntercomCompanySink implements IntercomObjectSink<String> {
 
 
     @Override
-    public void updateObject(String id, Message message) {
+    public void updateObject(String id, DataSinkMessage message) {
 
     }
 

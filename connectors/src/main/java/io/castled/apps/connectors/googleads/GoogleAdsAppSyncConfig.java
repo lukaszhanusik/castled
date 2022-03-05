@@ -28,15 +28,16 @@ public class GoogleAdsAppSyncConfig extends BaseAppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.GADS_ACCOUNT_ID, type = OptionsRefType.DYNAMIC))
     private String accountId;
 
-    @FormField(type = FormFieldType.DROP_DOWN, title = "Auto Generated Login CustomerId", optionsRef = @OptionsRef(value = OptionsReferences.GADS_LOGIN_ACCOUNT_ID, type = OptionsRefType.DYNAMIC), group = GoogleAdsFormGroups.LOGIN_ACCOUNT_ID)
+    @FormField(type = FormFieldType.HIDDEN, title = "Auto Generated Login CustomerId", optionsRef = @OptionsRef(value = OptionsReferences.GADS_LOGIN_ACCOUNT_ID, type = OptionsRefType.DYNAMIC), group = GoogleAdsFormGroups.LOGIN_ACCOUNT_ID,
+    loadingText = "Fetching google ads resources...")
     private String loginCustomerId;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.STRING, title = "Resource", description = "Google Ads resource to sync the data",
+    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Select resource to sync the data", description = "Google Ads resource to sync the data",
             group = GoogleAdsFormGroups.OBJECT_TYPE, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GAdsObjectType objectType;
 
     //customer match group
-    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.STRING, title = "Customer Match Type", description = "Customer Match Type", group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE,
+    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Customer Match Type", description = "Customer Match Type", group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE,
             optionsRef = @OptionsRef(value = OptionsReferences.CUSTOMER_MATCH_TYPE, type = OptionsRefType.STATIC))
     private CustomerMatchType customerMatchType;
 

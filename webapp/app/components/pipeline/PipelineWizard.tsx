@@ -13,6 +13,7 @@ import _ from "lodash";
 import { AccessType } from "@/app/common/enums/AccessType";
 import { PipelineWizardContextDto } from "@/app/common/dtos/context/PipelineWizardContextDto";
 import warehouseService from "@/app/services/warehouseService";
+import PipelineMappingRestWizard from "./step3mapping/PipelineMappingRestWizard";
 
 interface PipelineWizardProps {
   appBaseUrl: string;
@@ -63,6 +64,7 @@ const PipelineWizard = ({
   const setCurWizardStep = (stepGroup: string | undefined, step: string) => {
     wizardUtils.setCurWizardStep(router, stepGroup, step);
   };
+
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (!wizardStepKey && demo) {
@@ -71,6 +73,7 @@ const PipelineWizard = ({
       setPipelineWizContext({});
     }
   }, [wizardStepKey, !!pipelineWizContext, demo]);
+
   if (!curWizardStepGroup && !curWizardStep) {
     if (demo) {
       setCurWizardStep("source", "model");
@@ -102,8 +105,12 @@ const PipelineWizard = ({
                 "Follow the guide on the right to set up your Source or invite a team member to do it for you",
             },
             model: {
-              title: "Configure Model",
-              description: "Enter your query and run it to see a preview",
+              title: "Run Model",
+              description: "Run the query to preview the results.",
+            },
+            selectModelType: {
+              title: "Select Model Type",
+              description: "Select a model type to setup your pipeline sync.",
             },
           }}
           setCurWizardStep={setCurWizardStep}
@@ -136,21 +143,40 @@ const PipelineWizard = ({
           setCurWizardStep={setCurWizardStep}
         />
       )}
-      {curWizardStepGroup === undefined && curWizardStep === "mapping" && (
-        <PipelineMapping
-          appBaseUrl={appBaseUrl}
-          curWizardStep={curWizardStep}
-          stepGroups={steps}
-          steps={{
-            mapping: {
-              title: "Map fields",
-              description:
-                "Map source columns to the fields in the destination. Select primary keys based on which deduplication should happen",
-            },
-          }}
-          setCurWizardStep={setCurWizardStep}
-        />
-      )}
+      {curWizardStepGroup === undefined &&
+        curWizardStep === "mapping" &&
+        pipelineWizContext?.appType?.value === "RESTAPI" && (
+          <PipelineMappingRestWizard
+            appBaseUrl={appBaseUrl}
+            curWizardStep={curWizardStep}
+            stepGroups={steps}
+            steps={{
+              mapping: {
+                title: "Map fields",
+                description:
+                  "Map source columns to the fields in the destination. Select primary keys based on which deduplication should happen",
+              },
+            }}
+            setCurWizardStep={setCurWizardStep}
+          />
+        )}
+      {curWizardStepGroup === undefined &&
+        curWizardStep === "mapping" &&
+        pipelineWizContext?.appType?.value != "RESTAPI" && (
+          <PipelineMapping
+            appBaseUrl={appBaseUrl}
+            curWizardStep={curWizardStep}
+            stepGroups={steps}
+            steps={{
+              mapping: {
+                title: "Map fields",
+                description:
+                  "Map source columns to the fields in the destination. Select primary keys based on which deduplication should happen",
+              },
+            }}
+            setCurWizardStep={setCurWizardStep}
+          />
+        )}
       {curWizardStepGroup === undefined && curWizardStep === "settings" && (
         <PipelineSettings
           appBaseUrl={appBaseUrl}

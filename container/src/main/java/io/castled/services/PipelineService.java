@@ -13,8 +13,8 @@ import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.connectors.restapi.InvalidTemplateException;
 import io.castled.apps.connectors.restapi.RestApiAppSyncConfig;
+import io.castled.apps.connectors.restapi.RestApiTemplateParser;
 import io.castled.apps.dtos.AppSyncConfigDTO;
-import io.castled.apps.models.ExternalAppSchema;
 import io.castled.caches.PipelineCache;
 import io.castled.commons.models.PipelineSyncStats;
 import io.castled.constants.CommonConstants;
@@ -41,11 +41,11 @@ import io.castled.jarvis.taskmanager.models.requests.TaskCreateRequest;
 import io.castled.misc.PipelineScheduleManager;
 import io.castled.models.*;
 import io.castled.models.users.User;
-import io.castled.apps.connectors.restapi.RestApiTemplateParser;
 import io.castled.pubsub.MessagePublisher;
 import io.castled.pubsub.registry.PipelineUpdatedMessage;
 import io.castled.resources.validators.ResourceAccessController;
 import io.castled.schema.SchemaUtils;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 import io.castled.utils.JsonUtils;
 import io.castled.utils.TimeUtils;
@@ -118,7 +118,7 @@ public class PipelineService {
         try {
             ExternalApp externalApp = this.externalAppService.getExternalApp(pipelineConfigDTO.getAppId(), true);
             PipelineConfigDTO enrichedPipelineConfig = this.appConnectors.get(externalApp.getType()).validateAndEnrichPipelineConfig(pipelineConfigDTO);
-            validPipelineConfig(enrichedPipelineConfig);
+            //validPipelineConfig(enrichedPipelineConfig);
             Long pipelineId = this.pipelineDAO.createPipeline(enrichedPipelineConfig, user,
                     UUID_PREFIX + UUID.randomUUID().toString().replaceAll("-", "_"));
             this.castledEventsClient.publishPipelineEvent(new PipelineEvent(pipelineId, PipelineEventType.PIPELINE_CREATED));
@@ -132,13 +132,6 @@ public class PipelineService {
                     pipelineConfigDTO.getWarehouseId(), e);
             throw new CastledRuntimeException(e);
         }
-    }
-
-    private void validPipelineConfig(PipelineConfigDTO pipelineConfig) throws BadRequestException {
-        if (CollectionUtils.isEmpty(pipelineConfig.getMapping().getPrimaryKeys())) {
-            throw new BadRequestException("Atleast one primary key needs to be selected for creating a pipeline");
-        }
-
     }
 
     public void updatePipeline(Long pipelineId, PipelineUpdateRequest pipelineUpdateRequest) {
@@ -332,11 +325,10 @@ public class PipelineService {
                 new ThreadFactoryBuilder().setNameFormat("pipeline-schema-fetch-%d").build());
         try {
             Future<RecordSchema> warehouseSchema = executorService.submit(() -> warehouseService.fetchSchema(appSyncConfigDTO.getWarehouseId(), appSyncConfigDTO.getSourceQuery()));
-            Future<ExternalAppSchema> externalAppSchema = executorService.submit(() -> externalAppService.getObjectSchema(appSyncConfigDTO.getAppId(), appSyncConfigDTO.getAppSyncConfig()));
+            Future<List<MappingGroup>> mappingGroups = executorService.submit(() -> externalAppService.getMappingGroup(appSyncConfigDTO.getAppId(), appSyncConfigDTO.getAppSyncConfig()));
 
             return new PipelineSchema(SchemaUtils.transformToSimpleSchema(enrichWarehouseSchema(appSyncConfigDTO, warehouseSchema)),
-                    SchemaUtils.transformToSimpleSchema(externalAppSchema.get().getAppSchema()),
-                    externalAppSchema.get().getPkEligibles());
+                    mappingGroups.get());
         } finally {
             executorService.shutdownNow();
         }
@@ -388,5 +380,19 @@ public class PipelineService {
 
     public List<AppAggregate> getAppAggregates(Long teamId) {
         return pipelineDAO.aggregateByApp(teamId);
+    }
+
+    public List<ModelAggregate> getModelAggregates(Long teamId, List<Long> modelIds) {
+        if (CollectionUtils.isNotEmpty(modelIds)) {
+            return pipelineDAO.aggregateByModel(teamId, modelIds);
+        }
+        return pipelineDAO.aggregateByModel(teamId);
+    }
+
+    public List<Pipeline> listPipelinesByModelId(Long teamid, Long modelId) {
+        if (modelId == null) {
+            return pipelineDAO.listPipelines(teamid);
+        }
+        return pipelineDAO.listPipelinesByModelId(teamid, modelId);
     }
 }

@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { PipelineCreateRequestDto } from "@/app/common/dtos/PipelineCreateRequestDto";
 import { PipelineUpdateRequestDto } from "@/app/common/dtos/PipelineUpdateRequestDto";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { PipelineSchemaResponseRestApiDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import { EntityCreatedResponseDto } from "@/app/common/dtos/EntityCreatedResponseDto";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
 
@@ -41,6 +42,11 @@ export default {
   getSchemaForMapping: (
     req: PipelineCreateRequestDto
   ): Promise<AxiosResponse<PipelineSchemaResponseDto>> => {
+    return http.post("/v1/pipelines/schemas/fetch", req);
+  },
+  getSchemaForRestMapping: (
+    req: PipelineCreateRequestDto
+  ): Promise<AxiosResponse<PipelineSchemaResponseRestApiDto>> => {
     return http.post("/v1/pipelines/schemas/fetch", req);
   },
   create: (

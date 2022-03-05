@@ -11,5 +11,5 @@ export type BootstrapColor =
   | "secondary"
   | "glow";
 
-export type ConnectorCategory = "App" | "Warehouse";
+export type ConnectorCategory = "App" | "Warehouse" | "Model";
 export type DataFetcherRequestDto = PipelineCreateRequestDto;

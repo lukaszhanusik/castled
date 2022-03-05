@@ -6,10 +6,15 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.OAuthAppConfig;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.connectors.mailchimp.client.MailchimpRestClient;
+import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.forms.dtos.FormFieldOption;
+import io.castled.mapping.FixedGroupAppField;
+import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.schema.mapping.MappingGroup;
 import io.castled.schema.models.RecordSchema;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +40,7 @@ public class MailchimpAppConnector implements ExternalAppConnector<OAuthAppConfi
         for (MailchimpObjectFields.AUDIENCE_FIELDS field : MailchimpObjectFields.AUDIENCE_FIELDS.values()) {
             customerSchemaBuilder.put(field.getFieldName(), field.getSchema());
         }
-        return new ExternalAppSchema(customerSchemaBuilder.build(),
-                Lists.newArrayList(MailchimpObjectFields.AUDIENCE_FIELDS.EMAIL.getFieldName()));
+        return new ExternalAppSchema(customerSchemaBuilder.build());
     }
 
     public List<AppSyncMode> getSyncModes(OAuthAppConfig config, MailchimpAppSyncConfig mailchimpAppSyncConfig) {
@@ -50,5 +54,13 @@ public class MailchimpAppConnector implements ExternalAppConnector<OAuthAppConfi
     @Override
     public Class<OAuthAppConfig> getAppConfigType() {
         return OAuthAppConfig.class;
+    }
+
+    public List<MappingGroup> getMappingGroups(OAuthAppConfig oAuthAppConfig, MailchimpAppSyncConfig mailchimpAppSyncConfig) {
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = Lists.newArrayList(new PrimaryKeyGroupField(MailchimpObjectFields.AUDIENCE_FIELDS.EMAIL.getFieldName(),
+                MailchimpObjectFields.AUDIENCE_FIELDS.EMAIL.getFieldName(), false));
+        List<FixedGroupAppField> fixedGroupAppFields = Arrays.stream(MailchimpObjectFields.AUDIENCE_FIELDS.values()).map(MailchimpObjectFields.AUDIENCE_FIELDS::getFieldName)
+                .map(field -> new FixedGroupAppField(field, field, true)).collect(Collectors.toList());
+        return MappingGroupAggregator.builder().addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();
     }
 }

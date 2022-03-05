@@ -13,6 +13,7 @@ import io.castled.apps.models.PrimaryKeyIdMapper;
 import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.ObjectIdAndMessage;
 import io.castled.exceptions.NonThrowingFunction;
 import io.castled.schema.SchemaMapper;
@@ -32,7 +33,7 @@ public class HubspotDataSink implements DataSink {
     @Override
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
 
-        Message message;
+        DataSinkMessage message;
         HubspotSyncObject hubspotObject = ((HubspotAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
         this.hubspotObjectSink = new HubspotObjectSink((OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getErrorOutputStream(),
                 hubspotObject);
@@ -72,7 +73,7 @@ public class HubspotDataSink implements DataSink {
     }
 
 
-    private void writeMessage(Message message, DataSinkRequest dataSinkRequest,
+    private void writeMessage(DataSinkMessage message, DataSinkRequest dataSinkRequest,
                               HubspotObjectSink hubspotObjectSink, PrimaryKeyIdMapper<String> primaryKeyObjectIdMapper) throws Exception {
 
         List<Object> primaryKeyValues = dataSinkRequest.getPrimaryKeys().stream().map(pk -> message.getRecord().getValue(pk))

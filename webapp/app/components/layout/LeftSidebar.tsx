@@ -4,6 +4,7 @@ import {
   IconGitCompare,
   IconDatabase,
   IconSettings,
+  IconRelationManyToMany,
 } from "@tabler/icons";
 import Link from "next/link";
 import cn from "classnames";
@@ -31,6 +32,12 @@ const sidebarLinks = [
     icon: IconApps,
     title: "Apps",
     href: "/apps",
+    enabledInOss: true,
+  },
+  {
+    icon: IconRelationManyToMany,
+    title: "Models",
+    href: "/models",
     enabledInOss: true,
   },
   {

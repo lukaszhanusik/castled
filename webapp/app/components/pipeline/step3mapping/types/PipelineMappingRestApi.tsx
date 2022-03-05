@@ -2,7 +2,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import Layout from "@/app/components/layout/Layout";
 import React, { useEffect, useRef, useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
+import { PipelineSchemaResponseRestApiDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import { Button, Col, ListGroup, Row, Table } from "react-bootstrap";
 import InputSelect from "@/app/components/forminputs/InputSelect";
 import InputField from "@/app/components/forminputs/InputField";
@@ -24,7 +24,7 @@ import bannerNotificationService from "@/app/services/bannerNotificationService"
 import pipelineService from "@/app/services/pipelineService";
 
 interface PipelineMappingRestApiProps extends PipelineWizardStepProps {
-  pipelineSchema: PipelineSchemaResponseDto | undefined;
+  pipelineSchema: PipelineSchemaResponseRestApiDto | undefined;
   isLoading: boolean;
 }
 
@@ -107,9 +107,6 @@ const PipelineMappingRestApi = ({
   };
 
   const formValidationSchema = yup.object().shape({
-    primaryKeys: yup
-      .array()
-      .min(1, "Atleast one primary key should be selected"),
     method: yup.string().required("Method is required"),
     url: yup.string().url().required("URL is required"),
     // template: yup.string().required("Body cannot be empty"),
@@ -142,7 +139,6 @@ const PipelineMappingRestApi = ({
               url: "",
               method: HttpMethod.POST,
               template: "",
-              primaryKeys: [],
               fieldMappings: [],
               headers: {},
             } as PipelineMappingDto
@@ -170,17 +166,6 @@ const PipelineMappingRestApi = ({
         >
           {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
             <Form>
-              <InputSelect
-                title="Primary Keys"
-                name="primaryKeys"
-                options={warehouseSchemaFields}
-                deps={undefined}
-                values={values}
-                isMulti
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-                required
-              />
               <Row>
                 <Col sm={3}>
                   <InputSelect

@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.models.QueryMode;
 import io.castled.schema.models.Message;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,10 +28,11 @@ public class GoogleSheetsDataSink implements DataSink {
 
         Sheets sheetsService = GoogleSheetUtils.getSheets(googleSheetsAppConfig.getServiceAccount());
 
-        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD) {
+        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD || dataSinkRequest.getQueryMode() == QueryMode.INCREMENTAL) {
             sheetsService.spreadsheets().values().clear(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
                     new ClearValuesRequest()).execute();
         }
+
         List<SheetRow> sheetRows = dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD ? Lists.newArrayList() :
                 GoogleSheetUtils.getRows(sheetsService, GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
                         googleSheetsAppSyncConfig.getObject().getObjectName());
@@ -38,7 +40,7 @@ public class GoogleSheetsDataSink implements DataSink {
         this.googleSheetsObjectSink = new GoogleSheetsObjectSink(googleSheetsAppConfig, googleSheetsAppSyncConfig, sheetsService,
                 sheetRows, dataSinkRequest.getPrimaryKeys(), dataSinkRequest.getMappedFields(), dataSinkRequest.getErrorOutputStream());
 
-        Message message;
+        DataSinkMessage message;
         int recordsCount = 0;
         while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             if (recordsCount == 0 && CollectionUtils.isEmpty(sheetRows)) {

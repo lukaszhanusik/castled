@@ -3,6 +3,7 @@ package io.castled.apps.connectors.sendgrid;
 import io.castled.apps.DataSink;
 import io.castled.apps.models.DataSinkRequest;
 import io.castled.commons.models.AppSyncStats;
+import io.castled.commons.models.DataSinkMessage;
 import io.castled.schema.models.Message;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ public class SendgridDataSink implements DataSink {
     public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
         this.sendgridContactSink = new SendgridContactSink((SendgridAppConfig) dataSinkRequest.getExternalApp().getConfig(),
                 (SendgridAppSyncConfig)dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
-        Message msg;
+        DataSinkMessage msg;
         while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
             this.sendgridContactSink.writeRecord(msg);
         }
@@ -24,7 +25,7 @@ public class SendgridDataSink implements DataSink {
 
     @Override
     public AppSyncStats getSyncStats() {
-        return Optional.ofNullable(sendgridContactSink).map(sinkRef -> sinkRef.getSyncStats())
+        return Optional.ofNullable(sendgridContactSink).map(SendgridContactSink::getSyncStats)
                 .orElse(new AppSyncStats(0, 0, 0));
     }
 }
