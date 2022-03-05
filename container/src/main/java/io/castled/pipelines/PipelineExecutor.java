@@ -128,7 +128,7 @@ public class PipelineExecutor implements TaskExecutor {
 
             DataSinkRequest dataSinkRequest = DataSinkRequest.builder().externalApp(externalApp).errorOutputStream(sinkErrorOutputStream)
                     .appSyncConfig(pipeline.getAppSyncConfig()).mappedFields(mappedAppFields)
-                    .objectSchema(appSchema).primaryKeys(pipeline.getDataMapping().getPrimaryKeys())
+                    .objectSchema(appSchema).primaryKeys(DataMappingUtils.getPrimaryKeys(pipeline.getDataMapping()))
                     .mapping(pipeline.getDataMapping()).queryMode(pipeline.getQueryMode())
                     .messageInputStream(schemaMappedMessageInputStream)
                     .build();

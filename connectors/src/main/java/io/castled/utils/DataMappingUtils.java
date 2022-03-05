@@ -1,5 +1,6 @@
 package io.castled.utils;
 
+import com.google.common.collect.Lists;
 import io.castled.models.CastledDataMapping;
 import io.castled.models.DataMappingType;
 import io.castled.models.FieldMapping;
@@ -20,6 +21,14 @@ public class DataMappingUtils {
         TargetFieldsMapping targetFieldMapping = (TargetFieldsMapping) castledDataMapping;
         return targetFieldMapping.getFieldMappings().stream().filter(fieldMapping -> appFields.contains(fieldMapping.getAppField()))
                 .collect(Collectors.toMap(FieldMapping::getAppField, FieldMapping::getWarehouseField));
+    }
+
+    public static List<String> getPrimaryKeys(CastledDataMapping castledDataMapping) {
+        if (castledDataMapping.getType() == DataMappingType.TARGET_REST_MAPPING) {
+            return Lists.newArrayList();
+        }
+        TargetFieldsMapping targetFieldMapping = (TargetFieldsMapping) castledDataMapping;
+        return targetFieldMapping.getPrimaryKeys();
     }
 
     public static Map<String, List<String>> appWarehouseMapping(CastledDataMapping castledDataMapping) {

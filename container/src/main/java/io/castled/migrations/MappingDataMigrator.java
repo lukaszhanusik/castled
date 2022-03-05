@@ -13,6 +13,7 @@ import io.castled.models.QueryModelPK;
 import io.castled.models.TargetFieldsMapping;
 import io.castled.models.Warehouse;
 import io.castled.services.QueryModelService;
+import io.castled.utils.DataMappingUtils;
 import io.castled.warehouses.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
@@ -65,7 +66,7 @@ public class MappingDataMigrator extends AbstractDataMigrator {
                 }
 
                 if (modelId == null) {
-                    List<String> oldAppPKs = pipeline.getDataMapping().getPrimaryKeys();
+                    List<String> oldAppPKs = DataMappingUtils.getPrimaryKeys(pipeline.getDataMapping());
                     Set<String> newWarehousePKs = Sets.newHashSet();
 
                     if (pipeline.getDataMapping() instanceof TargetFieldsMapping) {

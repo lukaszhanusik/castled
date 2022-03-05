@@ -12,5 +12,4 @@ import lombok.Setter;
 public class MappingGroupField {
 
     private String name;
-    private String displayName;
 }

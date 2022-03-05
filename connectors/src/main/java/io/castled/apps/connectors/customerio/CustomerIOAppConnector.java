@@ -75,7 +75,6 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .title("Column identifying Customer.io id (customer_id) of the person")
                     .description("This field will be used to uniquely identifying the person associated with the event")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
-                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
                     .optional(false)
                     .build());
 
@@ -83,7 +82,6 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .title("Column identifying the Event Timestamp")
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
-                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
                     .optional(true)
                     .build());
 
@@ -93,7 +91,6 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .title("Column identifying the URL of the page viewed")
                     .description("Column identifying the URL of the page viewed")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldName())
-                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.PAGE_URL.getFieldTitle())
                     .optional(false)
                     .build());
 
@@ -101,7 +98,6 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .title("Column identifying Customer.io id (customer_id) of the person")
                     .description("This field will be used to uniquely identifying the person associated with the event")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldName())
-                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.CUSTOMER_ID.getFieldTitle())
                     .optional(false)
                     .build());
 
@@ -109,7 +105,6 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                     .title("Column identifying the Event Timestamp")
                     .description("If selected this field will be used as the event timestamp else API will default the time event reaches the server")
                     .name(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldName())
-                    .displayName(CustomerIOObjectFields.EVENT_FIELDS.EVENT_TIMESTAMP.getFieldTitle())
                     .optional(true)
                     .build());
 

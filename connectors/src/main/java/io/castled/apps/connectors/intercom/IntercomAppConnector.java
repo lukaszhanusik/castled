@@ -5,15 +5,9 @@ import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
-import io.castled.apps.OAuthAppConfig;
-import io.castled.apps.connectors.salesforce.SalesforceAppSyncConfig;
-import io.castled.apps.connectors.salesforce.client.SFDCRestClient;
-import io.castled.apps.connectors.salesforce.client.SFDCUtils;
-import io.castled.apps.connectors.salesforce.client.dtos.SFDCObjectField;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.MappingGroupAggregator;
-import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.apps.connectors.intercom.client.IntercomObjectFields;
 import io.castled.apps.connectors.intercom.client.IntercomRestClient;
 import io.castled.apps.connectors.intercom.client.dtos.DataAttribute;
@@ -23,6 +17,7 @@ import io.castled.exceptions.CastledRuntimeException;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.mapping.FixedGroupAppField;
 import io.castled.mapping.PrimaryKeyGroupField;
+import io.castled.mapping.QuestionnaireGroupField;
 import io.castled.schema.mapping.MappingGroup;
 
 import java.util.Arrays;
@@ -69,8 +64,16 @@ public class IntercomAppConnector implements ExternalAppConnector<IntercomAppCon
         }
     }
 
-    public List<AppSyncMode> getSyncModes(IntercomAppConfig config, GenericObjectRadioGroupConfig mappingConfig) {
+    public List<AppSyncMode> getSyncModes(IntercomAppConfig config, IntercomAppSyncConfig mappingConfig) {
         return Lists.newArrayList(AppSyncMode.UPDATE, AppSyncMode.UPSERT);
+    }
+
+    private List<QuestionnaireGroupField> getQuestionnaireFields(IntercomAppSyncConfig intercomAppSyncConfig) {
+        if (!intercomAppSyncConfig.isAssociateCompany()) {
+            return Lists.newArrayList();
+        }
+        return Lists.newArrayList(new QuestionnaireGroupField("Which source column contains the Company Id to associate contacts to companies", null,
+                false, IntercomObjectFields.COMPANY_ID));
     }
 
     public List<MappingGroup> getMappingGroups(IntercomAppConfig intercomAppConfig, IntercomAppSyncConfig intercomAppSyncConfig) {
@@ -78,7 +81,8 @@ public class IntercomAppConnector implements ExternalAppConnector<IntercomAppCon
         IntercomObject intercomObject = IntercomObject.getObjectByName(intercomAppSyncConfig.getObject().getObjectName());
         IntercomModel intercomModel = IntercomUtils.getIntercomModel(intercomObject);
         List<DataAttribute> dataAttributes = intercomRestClient.listAttributes(intercomModel);
-        return MappingGroupAggregator.builder().addPrimaryKeyFields(getPrimaryKeyGroupFields(intercomModel))
+        return MappingGroupAggregator.builder().addQuestionnaireFields(getQuestionnaireFields(intercomAppSyncConfig))
+                .addPrimaryKeyFields(getPrimaryKeyGroupFields(intercomModel))
                 .addFixedAppFields(getFixedGroupAppFields(intercomModel, dataAttributes)).build().getMappingGroups();
 
     }

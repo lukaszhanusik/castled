@@ -9,7 +9,6 @@ export interface PipelineMappingViewRestApiProps {
     | {
         headers: any | undefined;
         method: string | undefined;
-        primaryKeys: string[];
         template: string | undefined;
         url: string | undefined;
         fieldMappings: FieldMapping[];
@@ -52,13 +51,6 @@ const PipelineMappingViewRestApi = ({
       <input
         className="form-control"
         value={dataMapping?.method}
-        disabled={true}
-      />
-
-      <label className="form-label mt-3 mb-0">Primary Keys</label>
-      <input
-        className="form-control"
-        value={dataMapping && dataMapping.primaryKeys.map((key, i) => key)}
         disabled={true}
       />
 
