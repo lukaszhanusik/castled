@@ -82,8 +82,7 @@ const Models = () => {
                         >
                           <div>
                             {model.details.sourceQuery.substring(0, 30)}{" "}
-                            {model.details.sourceQuery.length >= 30 &&
-                              `...`}
+                            {model.details.sourceQuery.length >= 30 && `...`}
                           </div>
                         </OverlayTrigger>
                       </div>

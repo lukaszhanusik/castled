@@ -69,6 +69,11 @@ const ModelWizard = ({
               title: "Select Source Type",
               description: "Which warehouse do you own?",
             },
+            configure: {
+              title: "Configure Warehouse",
+              description:
+                "Follow the guide on the right to set up your Source or invite a team member to do it for you",
+            },
             selectExisting: {
               title: "Select Warehouse",
               description:
