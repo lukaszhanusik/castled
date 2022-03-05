@@ -27,8 +27,7 @@ const SelectConnectorType = ({
   }, [category]);
 
   const selectType = (type: ConnectorTypeDto) => {
-    console.log(type);
-    if (type.count === 0) {
+    if (category === "Model" && type.count === 0) {
       bannerNotificationService.warn(
         "Please setup a warehouse before proceeding to create a model."
       );
