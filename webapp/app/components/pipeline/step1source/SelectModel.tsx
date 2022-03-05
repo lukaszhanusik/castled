@@ -4,7 +4,15 @@ import { ModelListDto } from "@/app/common/dtos/ModelListDto";
 import DefaultErrorPage from "next/error";
 import { useRouter } from "next/router";
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
-import { Col, Row } from "react-bootstrap";
+import {
+  Col,
+  Row,
+  Alert,
+  Badge,
+  OverlayTrigger,
+  Table,
+  Tooltip,
+} from "react-bootstrap";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import _ from "lodash";
@@ -31,8 +39,6 @@ const SelectModel = ({
     modelService
       .get(pipelineWizContext?.values?.warehouseId)
       .then(({ data }) => {
-        console.log(data);
-        console.log(pipelineWizContext);
         setModels(data);
       })
       .catch(() => {
@@ -41,7 +47,6 @@ const SelectModel = ({
   }, []);
 
   const onModelSelect = (model: ModelListDto) => {
-    console.log(model);
     onSelect(model.id, model.modelDetails.sourceQuery);
     removeAllLocalStorageMapping();
   };
@@ -76,9 +81,19 @@ const SelectModel = ({
                 </Col>
                 <Col className="col-md-10 ps-0">
                   {model.modelName}
-                  <div className="text-muted">
-                    {model.modelDetails.sourceQuery}
-                  </div>
+                  <OverlayTrigger
+                    placement="right"
+                    key={`sidebar-${idx}`}
+                    overlay={
+                      <Tooltip id={`sidebar-${idx}`}>
+                        {model.modelDetails.sourceQuery}
+                      </Tooltip>
+                    }
+                  >
+                    <div className="text-muted">
+                      {model.modelDetails.sourceQuery}
+                    </div>
+                  </OverlayTrigger>
                 </Col>
               </Row>
             </button>

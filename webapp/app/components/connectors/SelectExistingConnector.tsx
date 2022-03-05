@@ -40,7 +40,7 @@ const SelectExistingConnector = ({
             className="btn list-group-item rounded"
             onClick={() => onCreate()}
           >
-            Create New {category}
+            <strong>Create New {category}</strong>
           </button>
         )}
         {connectors?.map((connector, i) => (

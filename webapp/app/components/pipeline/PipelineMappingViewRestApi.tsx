@@ -27,8 +27,6 @@ const PipelineMappingViewRestApi = ({
     }
   }
 
-  console.log(dataMapping);
-
   return (
     <>
       <h3 className="mb-1 mt-3 font-weight-bold">SQL Query</h3>
