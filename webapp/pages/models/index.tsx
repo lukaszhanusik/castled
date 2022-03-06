@@ -64,11 +64,11 @@ const Models = () => {
                   }
                 >
                   <td>
-                    <div className="w-50">
-                      {model.name}
+                    <div>
+                      <strong>{model.name}</strong>
 
                       <div
-                        className="text-muted"
+                        className="text-muted w-75"
                         style={{ whiteSpace: "nowrap" }}
                       >
                         <OverlayTrigger
