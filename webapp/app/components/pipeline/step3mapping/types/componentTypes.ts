@@ -3,7 +3,7 @@ import { FocusEventHandler } from "react-select";
 
 export interface MappingFieldsProps {
   options: SchemaOptions[];
-  mappingGroups: MappingGroup[];
+  mappingGroups: MappingGroup;
   values?: any;
   setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
   setFieldTouched?: (
@@ -17,13 +17,13 @@ export interface MappingFieldsProps {
 }
 
 export interface SchemaOptions {
-  value: any;
+  value: string;
   label: string;
 }
 
 export interface DestinationFieldRowsProps {
   options: SchemaOptions[];
-  destinationFieldSection?: MappingGroup[];
+  destinationFieldSection?: MappingGroup;
   defaultWarehouseValue?: { value: string; label: string };
   defaultAppValue?: { value: string; label: string };
   isDisabled?: boolean;

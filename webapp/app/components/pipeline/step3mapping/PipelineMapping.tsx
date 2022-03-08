@@ -58,7 +58,7 @@ const PipelineMapping = ({
     return <Loading />;
   }
 
-  // console.log(pipelineSchema);
+  console.log(pipelineSchema);
 
   function validate(values: any) {
     const errors = {};
@@ -82,7 +82,7 @@ const PipelineMapping = ({
         Object.assign(errors, error);
       }
     }
-    // console.log(values);
+    console.log(values);
     return errors;
   }
 
@@ -94,6 +94,7 @@ const PipelineMapping = ({
     destinationFieldsMandatory: "",
     destinationFieldsOptional: "",
     misclFieldsValidation: "",
+    misclPrimaryKey: "",
   };
 
   return (
@@ -114,7 +115,10 @@ const PipelineMapping = ({
             onSubmit={(values, { setSubmitting }) => {
               if (!pipelineWizContext.values) return setSubmitting(false);
 
-              console.log(values);
+              // console.log(values);
+              // console.log(transformMapping(values));
+              // setSubmitting(false);
+
               pipelineWizContext.values.mapping = transformMapping(values);
 
               pipelineWizContext.values.mapping.type =

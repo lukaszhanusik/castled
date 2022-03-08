@@ -11,7 +11,7 @@ import DestinationFieldRows from "./Layouts/DestinationFieldRows";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
 
-export default function MappingImportantFields({
+export default function MappingDestinationFields({
   options,
   mappingGroups,
   values,
@@ -35,7 +35,6 @@ export default function MappingImportantFields({
       setTrackFieldsElement((prev) => [...prev, ...optionalFields]);
     }
   }, []);
-
   // On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
@@ -61,55 +60,56 @@ export default function MappingImportantFields({
     }
   }, [trackFieldsElement]);
 
-  // SECTION - 3 - Other fields to match the destination object
-  const destinationFieldSection = mappingGroups.filter((fields) => {
-    return fields.type === "DESTINATION_FIELDS" && fields;
-  });
-
-  const optionalFields = destinationFieldSection[0].optionalFields?.map(
-    (optionalField, i) => (
+  const optionalFields = mappingGroups.optionalFields?.map((optionalField) => {
+    return (
       <DestinationFieldRows
-        key={i}
+        key={optionalField.fieldName}
         options={options}
-        destinationFieldSection={destinationFieldSection}
+        destinationFieldSection={mappingGroups}
         isDisabled={!optionalField.optional}
         onChangeWarehouse={(e) => {
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-warehouseField-${i}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${optionalField.fieldName}`,
             e?.value
           );
           addkeysToLocalStorage({
             input: e?.value,
             formType: "destinationFieldForm",
             type: "optional-warehouseField",
-            index: i,
+            index: optionalField.fieldName,
           });
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-appField-${i}`,
+            `DESTINATION_FIELDS-optional-appField-${optionalField.fieldName}`,
             e?.value
           );
           addkeysToLocalStorage({
             input: e?.value,
             formType: "destinationFieldForm",
             type: "optional-appField",
-            index: i,
+            index: optionalField.fieldName,
           });
         }}
         handleDelete={(e) => {
           e.preventDefault();
-          deleteRow(i.toString());
-          deleteItemFromLocalStorage(i.toString(), "destinationFieldForm");
+          deleteRow(optionalField.fieldName);
+          deleteItemFromLocalStorage(
+            optionalField.fieldName,
+            "destinationFieldForm"
+          );
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-warehouseField-${i}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${optionalField.fieldName}`,
             ""
           );
-          setFieldValue?.(`DESTINATION_FIELDS-optional-appField-${i}`, "");
+          setFieldValue?.(
+            `DESTINATION_FIELDS-optional-appField-${optionalField.fieldName}`,
+            ""
+          );
         }}
         onBlur={() =>
           setFieldTouched?.(
-            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${i}`,
+            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${optionalField.fieldName}`,
             true
           )
         }
@@ -117,18 +117,18 @@ export default function MappingImportantFields({
           defaultValue({
             form: "destinationFieldForm",
             type: "optional-appField",
-            index: i,
+            index: optionalField.fieldName,
           }) && {
             value: defaultValue({
               form: "destinationFieldForm",
               type: "optional-appField",
-              index: i,
+              index: optionalField.fieldName,
             }),
             label: formatLabel(
               defaultValue({
                 form: "destinationFieldForm",
                 type: "optional-appField",
-                index: i,
+                index: optionalField.fieldName,
               })
             ),
           }
@@ -137,26 +137,26 @@ export default function MappingImportantFields({
           defaultValue({
             form: "destinationFieldForm",
             type: "optional-warehouseField",
-            index: i,
+            index: optionalField.fieldName,
           }) && {
             value: defaultValue({
               form: "destinationFieldForm",
               type: "optional-warehouseField",
-              index: i,
+              index: optionalField.fieldName,
             }),
             label: formatLabel(
               defaultValue({
                 form: "destinationFieldForm",
                 type: "optional-warehouseField",
-                index: i,
+                index: optionalField.fieldName,
               })
             ),
           }
         }
         isClearable={true}
       />
-    )
-  );
+    );
+  });
 
   function addRow() {
     if (optionalFieldsElement && optionalFieldsElement.length) {
@@ -190,88 +190,88 @@ export default function MappingImportantFields({
 
   return (
     <div className="row">
-      {destinationFieldSection.length > 0 &&
-        destinationFieldSection.map((field) => (
-          <>
-            <WarehouseColumn
-              title={field.title}
-              description={field.description}
-            >
-              {field.mandatoryFields!.length > 0 &&
-                field.mandatoryFields?.map((mandatoryField, i) => (
-                  <DestinationFieldRows
-                    key={mandatoryField.fieldName}
-                    options={options}
-                    defaultAppValue={{
-                      value: mandatoryField.fieldName,
-                      label:
-                        mandatoryField.fieldDisplayName ||
-                        mandatoryField.fieldName,
-                    }}
-                    defaultWarehouseValue={
-                      defaultValue({
+      {mappingGroups && (
+        <>
+          <WarehouseColumn
+            title={mappingGroups.title}
+            description={mappingGroups.description}
+          >
+            {mappingGroups &&
+              mappingGroups.mandatoryFields &&
+              mappingGroups.mandatoryFields.map((mandatoryField, i) => (
+                <DestinationFieldRows
+                  key={mandatoryField.fieldName}
+                  options={options}
+                  defaultAppValue={{
+                    value: mandatoryField.fieldName,
+                    label:
+                      mandatoryField.fieldDisplayName ||
+                      mandatoryField.fieldName,
+                  }}
+                  defaultWarehouseValue={
+                    defaultValue({
+                      form: "destinationFieldForm",
+                      type: "mandatory-warehouseField",
+                      index: mandatoryField.fieldName,
+                    }) && {
+                      value: defaultValue({
                         form: "destinationFieldForm",
                         type: "mandatory-warehouseField",
-                        index: i,
-                      }) && {
-                        value: defaultValue({
+                        index: mandatoryField.fieldName,
+                      }),
+                      label: formatLabel(
+                        defaultValue({
                           form: "destinationFieldForm",
                           type: "mandatory-warehouseField",
-                          index: i,
-                        }),
-                        label: formatLabel(
-                          defaultValue({
-                            form: "destinationFieldForm",
-                            type: "mandatory-warehouseField",
-                            index: i,
-                          })
-                        ),
-                      }
+                          index: mandatoryField.fieldName,
+                        })
+                      ),
                     }
-                    isDisabled={!mandatoryField.optional}
-                    onChangeWarehouse={(e) => {
-                      setFieldValue?.(
-                        `DESTINATION_FIELDS-mandatory-warehouseField-${i}`,
-                        e?.value
-                      );
-                      setFieldValue?.(
-                        `DESTINATION_FIELDS-mandatory-appField-${i}`,
-                        mandatoryField.fieldName
-                      );
-                      addkeysToLocalStorage({
-                        input: e?.value,
-                        formType: "destinationFieldForm",
-                        type: "mandatory-warehouseField",
-                        index: i,
-                      });
-                      addkeysToLocalStorage({
-                        input: e?.value,
-                        formType: "destinationFieldForm",
-                        type: "mandatory-appField",
-                        index: i,
-                      });
-                    }}
-                    onBlur={() =>
-                      setFieldTouched?.(
-                        `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${i}`,
-                        true
-                      )
-                    }
-                  />
-                ))}
-              {optionalRow}
-              <Button
-                onClick={addRow}
-                variant="outline-primary"
-                className="mx-2 my-2"
-              >
-                Add mapping row
-              </Button>
-            </WarehouseColumn>
-            <ErrorMessage errors={errors} include={"destination"} />
-            <hr className="solid" />
-          </>
-        ))}
+                  }
+                  isDisabled={!mandatoryField.optional}
+                  onChangeWarehouse={(e) => {
+                    setFieldValue?.(
+                      `DESTINATION_FIELDS-mandatory-warehouseField-${mandatoryField.fieldName}`,
+                      e?.value
+                    );
+                    setFieldValue?.(
+                      `DESTINATION_FIELDS-mandatory-appField-${mandatoryField.fieldName}`,
+                      mandatoryField.fieldName
+                    );
+                    addkeysToLocalStorage({
+                      input: e?.value,
+                      formType: "destinationFieldForm",
+                      type: "mandatory-warehouseField",
+                      index: mandatoryField.fieldName,
+                    });
+                    addkeysToLocalStorage({
+                      input: mandatoryField.fieldName,
+                      formType: "destinationFieldForm",
+                      type: "mandatory-appField",
+                      index: mandatoryField.fieldName,
+                    });
+                  }}
+                  onBlur={() =>
+                    setFieldTouched?.(
+                      `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${mandatoryField.fieldName}`,
+                      true
+                    )
+                  }
+                />
+              ))}
+            {optionalRow}
+            <Button
+              onClick={addRow}
+              variant="outline-primary"
+              className="mx-2 my-2"
+            >
+              Add mapping row
+            </Button>
+          </WarehouseColumn>
+          <ErrorMessage errors={errors} include={"destination"} />
+          <hr className="solid" />
+        </>
+      )}
     </div>
   );
 }

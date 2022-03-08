@@ -28,7 +28,7 @@ public class GoogleSheetsDataSink implements DataSink {
 
         Sheets sheetsService = GoogleSheetUtils.getSheets(googleSheetsAppConfig.getServiceAccount());
 
-        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD || dataSinkRequest.getQueryMode() == QueryMode.INCREMENTAL) {
+        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD) {
             sheetsService.spreadsheets().values().clear(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
                     new ClearValuesRequest()).execute();
         }

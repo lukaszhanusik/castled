@@ -1,4 +1,5 @@
 import { IconTrash } from "@tabler/icons";
+import { useEffect } from "react";
 import { Placeholder } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Select from "react-select";
@@ -9,6 +10,10 @@ export interface AdditionalFieldsProps
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
   defaultAppValue?: string;
+  pkRequired?: boolean;
+  checkboxChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  pkDisabled?: { [s: string]: boolean };
+  name?: string;
 }
 
 export function AdditionalFields({
@@ -21,10 +26,13 @@ export function AdditionalFields({
   inputBlur,
   defaultWarehouseValue,
   defaultAppValue,
+  pkRequired,
+  checkboxChange,
 }: AdditionalFieldsProps) {
+
   return (
     <tr>
-      <th className="col-6">
+      <th className="col-5">
         <Select
           options={options}
           onChange={onChange}
@@ -41,7 +49,7 @@ export function AdditionalFields({
           className="py-2"
         />
       </th>
-      <th className="col-6">
+      <th className="col-5">
         <input
           type="text"
           placeholder="Enter a field"
@@ -51,7 +59,16 @@ export function AdditionalFields({
           defaultValue={defaultAppValue}
         />
       </th>
-      <Placeholder as="td">
+      {pkRequired && (
+        <th className="col-2 text-center align-middle">
+          <input
+            type="checkbox"
+            className="me-2"
+            onChange={checkboxChange}
+          />
+        </th>
+      )}
+      <Placeholder as="td" className="text-center">
         <IconTrash onClick={handleDelete} className="delete-btn" />
       </Placeholder>
     </tr>

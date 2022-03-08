@@ -6,7 +6,7 @@ import io.castled.schema.models.RecordSchema;
 
 import java.util.Arrays;
 
-public class FbAdUtils {
+public class FbAdSchemaUtils {
 
     public static RecordSchema getSchema() {
         final String OBJECT_NAME = "Custom Audiences";

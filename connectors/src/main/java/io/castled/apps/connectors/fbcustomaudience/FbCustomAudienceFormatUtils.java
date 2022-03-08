@@ -2,6 +2,7 @@ package io.castled.apps.connectors.fbcustomaudience;
 
 import io.castled.apps.connectors.fbcustomaudience.client.dtos.FbAudienceUserFields;
 import io.castled.exceptions.CastledRuntimeException;
+import io.castled.utils.CastledEncryptionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -63,27 +64,9 @@ public class FbCustomAudienceFormatUtils {
     public static String hashValue(String value, String fieldName) {
         FbAudienceUserFields field = fieldEnumMap.get(fieldName);
         if (field.isHashable()) {
-            return toSHA256String(value);
+            return CastledEncryptionUtils.toSHA256String(value);
         } else {
             return value;
-        }
-    }
-
-    private static String toSHA256String(String str) {
-        MessageDigest digest = getSHA256MessageDigest();
-        byte[] hash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-        StringBuilder result = new StringBuilder();
-        for (byte b : hash) {
-            result.append(String.format("%02x", b));
-        }
-        return result.toString();
-    }
-
-    private static MessageDigest getSHA256MessageDigest() {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Missing SHA-256 algorithm implementation.", e);
         }
     }
 

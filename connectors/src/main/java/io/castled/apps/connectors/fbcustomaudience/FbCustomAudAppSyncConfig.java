@@ -20,6 +20,6 @@ public class FbCustomAudAppSyncConfig extends BaseAppSyncConfig {
     private String customAudienceName;
 
     @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.BOOLEAN, title = "Hashing Required?", description = "Decides whether Castled should hash Personally identifiable Information(PII).", group = MappingFormGroups.SYNC_MODE,
-            optionsRef = @OptionsRef(value = OptionsReferences.HASHING_OPTIONS, type = OptionsRefType.STATIC), required = true)
+            optionsRef = @OptionsRef(value = OptionsReferences.HASHING_OPTIONS, type = OptionsRefType.STATIC), required = true, placeholder = "Yes")
     private boolean hashingRequired;
 }

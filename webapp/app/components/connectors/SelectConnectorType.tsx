@@ -46,7 +46,7 @@ const SelectConnectorType = ({
         </div>
       )}
       <div className="grid-categories">
-        <Row xs={3}>
+        <Row md={3}>
           {typeList?.map((type, i) => (
             <ListGroup key={i}>
               <ListGroup.Item

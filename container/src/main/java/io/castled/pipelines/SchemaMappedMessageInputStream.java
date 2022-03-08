@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,28 +62,45 @@ public class SchemaMappedMessageInputStream implements DataSinkMessageInputStrea
 
     private DataSinkMessage mapMessage(Message message) {
 
-        if (targetSchema == null) {
-            return new DataSinkMessage(mapMessageFromSourceSchema(message));
-        }
+//        if (targetSchema == null) {
+//            return new DataSinkMessage(mapMessageFromSourceSchema(message));
+//        }
         Tuple.Builder recordBuilder = Tuple.builder();
         List<String> mappedSourceFields = Lists.newArrayList();
-        for (FieldSchema field : targetSchema.getFieldSchemas()) {
-            List<String> sourceFields = targetSourceMapping.get(field.getName());
-            if (!CollectionUtils.isEmpty(sourceFields)) {
-                for (String sourceField : sourceFields) {
-                    if (sourceField != null) {
-                        try {
-                            recordBuilder.put(field, schemaMapper.transformValue(message.getRecord().getValue(sourceField), field.getSchema()));
-                            mappedSourceFields.add(sourceField);
-                        } catch (IncompatibleValueException e) {
-                            failedRecords++;
-                            this.errorOutputStream.writeFailedRecord(new DataSinkMessage(message), new IncompatibleMappingError(sourceField, field.getSchema()));
-                            return null;
+
+        for (Map.Entry<String, List<String>> entry : targetSourceMapping.entrySet()) {
+
+            FieldSchema targetFieldSchema = Optional.ofNullable(targetSchema)
+                    .map(targetSchemaRef -> targetSchemaRef.getFieldSchema(entry.getKey())).orElse(null);
+            List<String> sourceFields = entry.getValue();
+            if (targetFieldSchema != null) {
+                if (!CollectionUtils.isEmpty(sourceFields)) {
+                    for (String sourceField : sourceFields) {
+                        if (sourceField != null) {
+                            try {
+                                recordBuilder.put(targetFieldSchema,
+                                        schemaMapper.transformValue(message.getRecord().getValue(sourceField), targetFieldSchema.getSchema()));
+                                mappedSourceFields.add(sourceField);
+                            } catch (IncompatibleValueException e) {
+                                failedRecords++;
+                                this.errorOutputStream.writeFailedRecord(new DataSinkMessage(message), new IncompatibleMappingError(sourceField,
+                                        targetFieldSchema.getSchema()));
+                                return null;
+                            }
                         }
                     }
                 }
+            } else {
+                // Target field not present in targetSchema, field will be an elastic(custom property) one.
+                String targetField = entry.getKey();
+                for (String sourceField : sourceFields) {
+                    mappedSourceFields.add(sourceField);
+                    Field field = message.getRecord().getField(sourceField);
+                    recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue());
+                }
             }
         }
+
         List<Field> unmappedSourceFields = message.getRecord().getFields().stream()
                 .filter(field -> !mappedSourceFields.contains(field.getName())).collect(Collectors.toList());
         return new DataSinkMessage(new Message(message.getOffset(), recordBuilder.build()), unmappedSourceFields);

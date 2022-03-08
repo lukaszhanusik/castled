@@ -63,7 +63,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false, false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForEventObject(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
@@ -111,7 +111,7 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
         }
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false).build().getMappingGroups();
+        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false, false).build().getMappingGroups();
     }
 
     public List<AppSyncMode> getSyncModes(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {

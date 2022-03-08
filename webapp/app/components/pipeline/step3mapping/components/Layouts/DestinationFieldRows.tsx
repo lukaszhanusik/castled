@@ -40,7 +40,7 @@ export default function DestinationFieldRows({
         <Select
           options={
             destinationFieldSection &&
-            destinationFieldSection[0].optionalFields?.map((items: any) => {
+            destinationFieldSection.optionalFields?.map((items: any) => {
               return {
                 value: items.fieldName,
                 label: items.fieldDisplayName || items.fieldName,

@@ -35,8 +35,7 @@ const DynamicMappingFields = ({
   values,
   setFieldValue,
   errors,
-}: 
-DynamicMappingFieldsProps) => {
+}: DynamicMappingFieldsProps) => {
   if (
     !mappingFields?.warehouseSchema.fields ||
     !mappingFields?.mappingGroups.length
@@ -67,7 +66,7 @@ DynamicMappingFieldsProps) => {
     fields.push(
       <Input
         key={name}
-        mappingGroups={mappingGroups}
+        mappingGroups={fieldInfo}
         options={appSchemaOptions}
         name={name}
         defaultValue=""

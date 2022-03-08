@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,14 +24,14 @@ public class RecordSchema {
     @Getter
     private List<FieldSchema> fieldSchemas;
 
-    private Map<String, Schema> fieldSchemaMapping;
+    private Map<String, FieldSchema> fieldSchemaMapping;
 
     public void addFieldSchema(FieldSchema fieldSchema) throws DuplicateFieldException {
         if (fieldSchemaMapping.containsKey(fieldSchema.getName())) {
             throw new DuplicateFieldException(fieldSchema.getName());
         }
         fieldSchemas.add(fieldSchema);
-        fieldSchemaMapping.put(fieldSchema.getName(), fieldSchema.getSchema());
+        fieldSchemaMapping.put(fieldSchema.getName(), fieldSchema);
     }
 
     public void removeFieldSchema(List<FieldSchema> schemas) {
@@ -38,8 +39,11 @@ public class RecordSchema {
         fieldSchemaMapping.keySet().removeAll(fieldSchemas.stream().map(fieldSchema -> fieldSchema.getName()).collect(Collectors.toList()));
     }
 
-
     public Schema getSchema(String fieldName) {
+        return Optional.ofNullable(fieldSchemaMapping.get(fieldName)).map(FieldSchema::getSchema).orElse(null);
+    }
+
+    public FieldSchema getFieldSchema(String fieldName) {
         return fieldSchemaMapping.get(fieldName);
     }
 

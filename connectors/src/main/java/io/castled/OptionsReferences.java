@@ -33,5 +33,7 @@ public class OptionsReferences {
     public static final String CURRENCY_CODES = "CURRENCY_CODES";
     public static final String ZONE_IDS = "ZONE_IDS";
 
+    // Facebook option references
     public static final String HASHING_OPTIONS = "Hashing Required";
+    public static final String ACTION_SOURCE_OPTIONS = "Action Source";
 }

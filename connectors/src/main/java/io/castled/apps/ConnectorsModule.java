@@ -7,8 +7,9 @@ import com.google.inject.multibindings.MapBinder;
 import io.castled.OptionsReferences;
 import io.castled.apps.connectors.customerio.CIOEventTypeFetcher;
 import io.castled.apps.connectors.customerio.CIOPrimaryKeyOptionsFetcher;
+import io.castled.apps.connectors.fbconversion.FbActionSourceOptionsFetcher;
 import io.castled.apps.connectors.fbcustomaudience.FbAdAccountOptionsFetcher;
-import io.castled.apps.connectors.fbcustomaudience.HashingOptionsFetcher;
+import io.castled.apps.connectors.fbcustomaudience.FbHashingOptionsFetcher;
 import io.castled.apps.connectors.googleads.*;
 import io.castled.apps.connectors.intercom.*;
 import io.castled.apps.connectors.sendgrid.SendgridListsOptionsFetcher;
@@ -90,7 +91,8 @@ public class ConnectorsModule extends AbstractModule {
         staticOptionFetcher.addBinding(OptionsReferences.AWS_REGIONS).to(AWSRegionOptionsFetcher.class);
         staticOptionFetcher.addBinding(OptionsReferences.ZONE_IDS).to(ZoneIdOptionsFetcher.class);
         staticOptionFetcher.addBinding(OptionsReferences.CURRENCY_CODES).to(ISO4217CurrencyCodesFetcher.class);
-        staticOptionFetcher.addBinding(OptionsReferences.HASHING_OPTIONS).to(HashingOptionsFetcher.class);
+        staticOptionFetcher.addBinding(OptionsReferences.HASHING_OPTIONS).to(FbHashingOptionsFetcher.class);
+        staticOptionFetcher.addBinding(OptionsReferences.ACTION_SOURCE_OPTIONS).to(FbActionSourceOptionsFetcher.class);
     }
 
     private void bindIntercomObjectSinks() {

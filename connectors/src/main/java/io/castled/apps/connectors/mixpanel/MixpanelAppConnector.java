@@ -83,7 +83,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addElasticAppFields(false, false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForUserProfileObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
@@ -112,7 +112,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields(fixedGroupAppFields).addElasticAppFields(false).build().getMappingGroups();
+        return builder.addPrimaryKeyFields(primaryKeyGroupFields).addFixedAppFields(fixedGroupAppFields).addElasticAppFields(false, false).build().getMappingGroups();
     }
 
     private List<MappingGroup> getMappingGroupsForEventObject(MixpanelAppConfig config, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
@@ -140,6 +140,6 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
                 .build());
 
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false).build().getMappingGroups();
+        return builder.addQuestionnaireFields(questionnaireGroupFields).addElasticAppFields(false, false).build().getMappingGroups();
     }
 }

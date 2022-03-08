@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
-import com.google.common.collect.Lists;
 import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
@@ -13,7 +12,6 @@ import io.castled.apps.models.MappingGroupAggregator;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.connect.InvalidConfigException;
 import io.castled.forms.dtos.FormFieldOption;
-import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.schema.mapping.MappingGroup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,7 +62,7 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
 
     @Override
     public List<MappingGroup> getMappingGroups(GoogleSheetsAppConfig config, GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig) {
-        return MappingGroupAggregator.builder().addElasticAppFields(true).build().getMappingGroups();
+        return MappingGroupAggregator.builder().addElasticAppFields(null,"One or more needs to be marked as primary key",true, true).build().getMappingGroups();
     }
 
     @Override

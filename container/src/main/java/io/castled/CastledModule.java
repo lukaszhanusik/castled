@@ -12,6 +12,7 @@ import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.connectors.activecampaign.ActiveCampaignAppConnector;
 import io.castled.apps.connectors.customerio.CustomerIOAppConnector;
+import io.castled.apps.connectors.fbconversion.FbConversionAppConnector;
 import io.castled.apps.connectors.fbcustomaudience.FbCustomAudAppConnector;
 import io.castled.apps.connectors.googleads.GoogleAdsAppConnector;
 import io.castled.apps.connectors.googlepubsub.GooglePubSubAppConnector;
@@ -133,6 +134,7 @@ public class CastledModule extends AbstractModule {
         externalAppConnectorMapping.addBinding(ExternalAppType.GOOGLE_SHEETS).to(GoogleSheetsAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.RESTAPI).to(RestApiAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.FBCUSTOMAUDIENCE).to(FbCustomAudAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.FBCONVERSION).to(FbConversionAppConnector.class);
     }
 
     private void bindAppSyncOptions() {

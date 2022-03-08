@@ -68,7 +68,7 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
 
     public List<MappingGroup> getMappingGroups(GooglePubSubAppConfig config, GooglePubSubAppSyncConfig googlePubSubAppSyncConfig) {
         MappingGroupAggregator.Builder builder = MappingGroupAggregator.builder();
-        return builder.addElasticAppFields(true).build().getMappingGroups();
+        return builder.addElasticAppFields(true, false).build().getMappingGroups();
     }
 
     public void validateAppConfig(GooglePubSubAppConfig appConfig) throws InvalidConfigException {

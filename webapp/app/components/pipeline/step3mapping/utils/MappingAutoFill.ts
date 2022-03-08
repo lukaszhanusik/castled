@@ -119,8 +119,8 @@ function addkeysToLocalStorage(context: IAddKeysToLocalStorageProps) {
 function formatLabel(label: string) {
   return label
     .split("_")
-    .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
+    // .map((word) => word[0].toUpperCase() + word.slice(1))
 }
 
 export {

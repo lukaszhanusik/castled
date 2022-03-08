@@ -97,6 +97,11 @@ public enum ExternalAppType {
             .put(ConnectorConstants.TITLE, "Fb Custom Audience")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
             .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.FBCUSTOMAUDIENCE)
+            .build()),
+    FBCONVERSION(ImmutableMap.<String, Object>builder()
+            .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
+            .put(ConnectorConstants.TITLE, "Fb Conversion Api")
+            .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
             .build());
 
     private final Map<String, Object> properties;

@@ -24,15 +24,11 @@ export default function MappingImportantFields({
       Object.assign(values, importantParamsForm);
     }
   }, []);
-  // SECTION - 1 - Mandatory fields filter from warehouseSchema
-  const importantParamsSection = mappingGroups.filter((fields) => {
-    return fields.type === "IMPORTANT_PARAMS" && fields.fields;
-  });
 
   return (
     <div className="row py-1">
-      {importantParamsSection.length > 0 &&
-        importantParamsSection[0].fields?.map((field) => (
+      {mappingGroups &&
+        mappingGroups.fields?.map((field) => (
           <div className="flex-column align-self-center my-2">
             <div className="flex-column mx-1 my-2">
               <div className="column">

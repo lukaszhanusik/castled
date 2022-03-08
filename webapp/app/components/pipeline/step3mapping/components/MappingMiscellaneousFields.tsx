@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { MappingFieldsProps } from "../types/componentTypes";
 import ErrorMessage from "./Layouts/ErrorMessage";
 import WarehouseColumn from "./Layouts/WarehouseColumn";
-import PrePopulatedFields from "./Layouts/PrePopulatedFields";
 import { AdditionalFields } from "./Layouts/AdditionalFields";
 import {
   addkeysToLocalStorage,
@@ -21,17 +20,17 @@ export default function MappingMiscellaneousFields({
   errors,
 }: MappingFieldsProps) {
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
-  const [populatedRow, setPopulatedRow] = useState<JSX.Element[]>([]);
+  // const [pkChecked, setPkChecked] = useState<{ [s: string]: boolean }>({});
 
-  useEffect(() => {
-    setAdditionalRow((prevState) => [...prevState, defaultMisclRow]);
-  }, []);
   // useEffect for pre_populated_rows
   useEffect(() => {
-    if (prePopulatedRow) {
-      setPopulatedRow((prev) => [...prev, ...prePopulatedRow]);
+    if (mappingGroups.autoMap) {
       const initialValues = {};
       for (let ele of options) {
+        // Add rows for pre_populated_rows
+        addRow(ele.value, mappingGroups.pkRequired ? true : false);
+
+        // Add values to formik values
         let key = ele.value;
         let value = ele.value;
         const initialFieldValues = {
@@ -39,8 +38,14 @@ export default function MappingMiscellaneousFields({
           [`MISCELLANEOUS_FIELDS-appField-${key}`]: value,
         };
         Object.assign(initialValues, initialFieldValues);
+        // if (mappingGroups.pkRequired) {
+        //   let newKey = { [key]: false };
+        //   setPkChecked((prev) => Object.assign(prev, newKey));
+        // }
       }
       Object.assign(values, initialValues);
+    } else {
+      addRow("0x0x0x0x0x");
     }
   }, []);
 
@@ -65,70 +70,19 @@ export default function MappingMiscellaneousFields({
     }
   }, []);
 
-  // SECTION - 4 - Miscellaneous fields filter from warehouseSchema
-  const miscellaneousFieldSection = mappingGroups.filter((fields) => {
-    return fields.type === "MISCELLANEOUS_FIELDS" && fields;
-  });
+  // console.log(pkChecked);
 
-  function addRow(e: any, key?: string) {
-    e.preventDefault();
+  function addRow(key?: string, pkRequired: boolean = false) {
     const randomKey = Math.random().toString(15).substring(2, 15);
     setAdditionalRow((prevState) => [
       ...prevState,
-      additionalFields(key || randomKey),
+      additionalFields(key || randomKey, pkRequired),
     ]);
   }
 
-  const prePopulatedRow =
-    miscellaneousFieldSection[0].autoMap &&
-    options.map((field) => {
-      return (
-        <PrePopulatedFields
-          key={field.value}
-          options={options}
-          onChange={(e) => {
-            setFieldValue?.(
-              keyValueDefault("warehouseField", field.value),
-              e?.value
-            );
-          }}
-          onBlur={() =>
-            setFieldTouched?.(
-              keyValueDefault("warehouseField", field.value),
-              true
-            )
-          }
-          handleDelete={(e) => {
-            e.preventDefault();
-            deletePopulatedRow(field.value);
-            setFieldValue?.(keyValueDefault("warehouseField", field.value), "");
-            setFieldValue?.(keyValueDefault("appField", field.value), "");
-          }}
-          inputChange={(e) => {
-            setFieldValue?.(
-              keyValueDefault("appField", field.value),
-              e.target.value
-            );
-          }}
-          inputBlur={() =>
-            setFieldTouched?.(keyValueDefault("appField", field.value), true)
-          }
-          inputDefaultValue={field.value}
-          selectDefaultValue={{ value: field.value, label: field.label }}
-        />
-      );
-    });
-
-  function deletePopulatedRow(key: string) {
-    // filter items based on key
-    setPopulatedRow((prevState) =>
-      prevState.filter((item) => {
-        return item.key !== key;
-      })
-    );
-  }
-
   function deleteRow(key: string) {
+    // Remove primary key when deleted rows
+    handleCheckboxChange(key, false);
     // filter items based on key
     setAdditionalRow((prevState) =>
       prevState.filter((item) => {
@@ -141,10 +95,18 @@ export default function MappingMiscellaneousFields({
     return `MISCELLANEOUS_FIELDS-${type}-${key}`;
   }
 
-  const additionalFields = (key: string) => (
+  function handleCheckboxChange(key: string, isChecked: boolean) {
+    setFieldValue?.(`MISCELLANEOUS_FIELDS-primaryKey-${key}`, isChecked);
+    // setPkChecked((prev) => Object.assign(prev, { [key]: isChecked }));
+  }
+
+  const additionalFields = (key: string, pkRequired: boolean = false) => (
     <AdditionalFields
       key={key}
       options={options}
+      pkRequired={pkRequired}
+      checkboxChange={(e) => handleCheckboxChange(key, e.target.checked)}
+      name={key}
       onChange={(e) => {
         setFieldValue?.(keyValueDefault("warehouseField", key), e?.value);
         addkeysToLocalStorage({
@@ -181,122 +143,65 @@ export default function MappingMiscellaneousFields({
           form: "misclFieldForm",
           type: "warehouseField",
           index: key,
-        }) && {
-          value: defaultValue({
-            form: "misclFieldForm",
-            type: "warehouseField",
-            index: key,
-          }),
-          label: formatLabel(
-            defaultValue({
+        })
+          ? {
+              value: defaultValue({
+                form: "misclFieldForm",
+                type: "warehouseField",
+                index: key,
+              }),
+              label: formatLabel(
+                defaultValue({
+                  form: "misclFieldForm",
+                  type: "warehouseField",
+                  index: key,
+                })
+              ),
+            }
+          : mappingGroups.autoMap
+          ? {
+              value: key,
+              label: key,
+            }
+          : undefined
+      }
+      defaultAppValue={
+        mappingGroups.autoMap
+          ? key
+          : defaultValue({
               form: "misclFieldForm",
-              type: "warehouseField",
+              type: "appField",
               index: key,
             })
-          ),
-        }
       }
-      defaultAppValue={defaultValue({
-        form: "misclFieldForm",
-        type: "appField",
-        index: key,
-      })}
-    />
-  );
-
-  const defaultMisclRow = (
-    <AdditionalFields
-      key={"0x0x0x0x0x"}
-      options={options}
-      onChange={(e) => {
-        setFieldValue?.(
-          keyValueDefault("warehouseField", "0x0x0x0x0x"),
-          e?.value
-        );
-        addkeysToLocalStorage({
-          input: e?.value,
-          formType: "misclFieldForm",
-          type: "warehouseField",
-          index: "0x0x0x0x0x",
-        });
-      }}
-      onBlur={() =>
-        setFieldTouched?.(keyValueDefault("warehouseField", "0x0x0x0x0x"), true)
-      }
-      handleDelete={(e) => {
-        e.preventDefault();
-        deleteRow("0x0x0x0x0x");
-        deleteItemFromLocalStorage("0x0x0x0x0x", "misclFieldForm");
-        setFieldValue?.(keyValueDefault("warehouseField", "0x0x0x0x0x"), "");
-        setFieldValue?.(keyValueDefault("appField", "0x0x0x0x0x"), "");
-      }}
-      inputChange={(e) => {
-        setFieldValue?.(
-          keyValueDefault("appField", "0x0x0x0x0x"),
-          e.target.value
-        );
-        addkeysToLocalStorage({
-          input: e.target.value,
-          formType: "misclFieldForm",
-          type: "appField",
-          index: "0x0x0x0x0x",
-        });
-      }}
-      inputBlur={() =>
-        setFieldTouched?.(keyValueDefault("appField", "0x0x0x0x0x"), true)
-      }
-      defaultWarehouseValue={
-        defaultValue({
-          form: "misclFieldForm",
-          type: "warehouseField",
-          index: "0x0x0x0x0x",
-        }) && {
-          value: defaultValue({
-            form: "misclFieldForm",
-            type: "warehouseField",
-            index: "0x0x0x0x0x",
-          }),
-          label: formatLabel(
-            defaultValue({
-              form: "misclFieldForm",
-              type: "warehouseField",
-              index: "0x0x0x0x0x",
-            })
-          ),
-        }
-      }
-      defaultAppValue={defaultValue({
-        form: "misclFieldForm",
-        type: "appField",
-        index: "0x0x0x0x0x",
-      })}
     />
   );
 
   return (
     <div className="row py-2">
-      {miscellaneousFieldSection.length > 0 &&
-        miscellaneousFieldSection?.map((field) => (
-          <>
-            <WarehouseColumn
-              title={field.title}
-              description={field.description}
+      {mappingGroups && (
+        <>
+          <WarehouseColumn
+            title={mappingGroups.title}
+            description={mappingGroups.description}
+            pkRequired={mappingGroups.pkRequired}
+          >
+            {additionalRow}
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                addRow();
+              }}
+              variant="outline-primary"
+              className="my-2 mx-2"
             >
-              {miscellaneousFieldSection[0].autoMap && populatedRow}
-
-              {additionalRow}
-              <Button
-                onClick={addRow}
-                variant="outline-primary"
-                className="my-2 mx-2"
-              >
-                Add mapping row
-              </Button>
-            </WarehouseColumn>
-            <ErrorMessage errors={errors} include={"miscl"} />
-            <hr className="solid" />
-          </>
-        ))}
+              Add mapping row
+            </Button>
+          </WarehouseColumn>
+          <ErrorMessage errors={errors} include={"miscl"} />
+          <hr className="solid" />
+        </>
+      )}
     </div>
   );
 }

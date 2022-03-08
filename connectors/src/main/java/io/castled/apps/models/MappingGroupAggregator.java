@@ -42,8 +42,18 @@ public class MappingGroupAggregator {
             return this;
         }
 
-        public Builder addElasticAppFields(boolean autoMap) {
-            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toElasticAppFieldsGroup(autoMap));
+        public Builder addFixedAppFields(String title, String description, List<FixedGroupAppField> fixedGroupAppFields) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toFixedAppFieldsGroup(title, description, fixedGroupAppFields));
+            return this;
+        }
+
+        public Builder addElasticAppFields(String title, String description, boolean autoMap, boolean pkRequired) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toElasticAppFieldsGroup(title, description, autoMap, pkRequired));
+            return this;
+        }
+
+        public Builder addElasticAppFields(boolean autoMap, boolean pkRequired) {
+            mappingGroupAggregator.getMappingGroups().add(MappingGroupUtil.toElasticAppFieldsGroup(null, null, autoMap, pkRequired));
             return this;
         }
 

@@ -22,8 +22,13 @@ export default function misclValidation(
       }
     }
 
+    console.log(userInputObject);
+
     for (let [key, value] of Object.entries(userInputObject)) {
-      if (key.includes("MISCELLANEOUS_FIELDS-")) {
+      if (
+        key.includes("MISCELLANEOUS_FIELDS-") &&
+        !key.includes("MISCELLANEOUS_FIELDS-primaryKey")
+      ) {
         misclFieldsTrack += 1;
       }
     }
@@ -50,6 +55,19 @@ export default function misclValidation(
         errors.push({
           misclFieldsValidation:
             "Both Warehouse Column and App Fields must be filled.",
+        });
+      }
+    }
+    if (hasMisclFields[0].pkRequired) {
+      let pkTrack = 0;
+      for (let [key, value] of Object.entries(userInputObject)) {
+        if (key.includes("MISCELLANEOUS_FIELDS-primaryKey")) {
+          pkTrack += 1;
+        }
+      }
+      if (pkTrack == 0) {
+        errors.push({
+          misclPrimaryKey: "Primary Key is required.",
         });
       }
     }

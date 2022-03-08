@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig, FbCustomAudDataSink, FbCustomAudAppSyncConfig> {
+
     @Override
     public List<FormFieldOption> getAllObjects(FbAppConfig config, FbCustomAudAppSyncConfig mappingConfig) {
         return null;
@@ -28,7 +29,7 @@ public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig
 
     @Override
     public ExternalAppSchema getSchema(FbAppConfig config, FbCustomAudAppSyncConfig fbCaAppSyncConfig) {
-        return new ExternalAppSchema(FbAdUtils.getSchema());
+        return new ExternalAppSchema(FbAdSchemaUtils.getSchema());
     }
 
     @Override

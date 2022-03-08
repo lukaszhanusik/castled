@@ -39,52 +39,50 @@ export default function transformMapping(obj: any): MappingReturnObject {
   }
 
   // Destination Object Transform Function
-  function destinationObjectTransform(o: any) {
+  function destinationObjectTransform(o: { [s: string]: string }) {
     let mandatoryArr = [];
     let optionalArr = [];
 
     for (let [key, value] of Object.entries(o)) {
-      if (key.includes("DESTINATION_FIELDS")) {
-        if (key.includes("mandatory-warehouseField")) {
-          let mandatoryIndex = Number(
-            key.replace("DESTINATION_FIELDS-mandatory-warehouseField-", "")
-          );
-          for (let [key0, value0] of Object.entries(o)) {
-            if (key.includes("DESTINATION_FIELDS")) {
-              let mandatoryAppIndex = `mandatory-appField-${mandatoryIndex}`;
-              if (key0.includes(mandatoryAppIndex)) {
-                let arrObj: any = mandatoryArr[mandatoryIndex] || {};
-                let arrObjVal = {
-                  warehouseField: value,
-                  appField: value0,
-                  skipped: false,
-                };
-                mandatoryArr[mandatoryIndex] = Object.assign(arrObj, arrObjVal);
-              }
-            }
+      if (key.includes("DESTINATION_FIELDS-mandatory-warehouseField")) {
+        let mandatoryIndex = key.replace(
+          "DESTINATION_FIELDS-mandatory-warehouseField-",
+          ""
+        );
+        for (let [key0, value0] of Object.entries(o)) {
+          if (
+            key0.includes(
+              `DESTINATION_FIELDS-mandatory-appField-${mandatoryIndex}`
+            )
+          ) {
+            let arrObjVal = {
+              warehouseField: value,
+              appField: value0,
+              skipped: false,
+            };
+            mandatoryArr.push(arrObjVal);
           }
         }
       }
     }
     for (let [key, value] of Object.entries(o)) {
-      if (key.includes("DESTINATION_FIELDS")) {
-        if (key.includes("optional-warehouseField")) {
-          let optionalIndex = Number(
-            key.replace("DESTINATION_FIELDS-optional-warehouseField-", "")
-          );
-          for (let [key0, value0] of Object.entries(o)) {
-            if (key.includes("DESTINATION_FIELDS")) {
-              let optionalAppIndex = `optional-appField-${optionalIndex}`;
-              if (key0.includes(optionalAppIndex)) {
-                let arrObj: any = optionalArr[optionalIndex] || {};
-                let arrObjVal = {
-                  warehouseField: value,
-                  appField: value0,
-                  skipped: false,
-                };
-                optionalArr[optionalIndex] = Object.assign(arrObj, arrObjVal);
-              }
-            }
+      if (key.includes("DESTINATION_FIELDS-optional-warehouseField")) {
+        let optionalIndex = key.replace(
+          "DESTINATION_FIELDS-optional-warehouseField-",
+          ""
+        );
+        for (let [key0, value0] of Object.entries(o)) {
+          if (
+            key0.includes(
+              `DESTINATION_FIELDS-optional-appField-${optionalIndex}`
+            )
+          ) {
+            let arrObjVal = {
+              warehouseField: value,
+              appField: value0,
+              skipped: false,
+            };
+            optionalArr.push(arrObjVal);
           }
         }
       }
@@ -161,6 +159,16 @@ export default function transformMapping(obj: any): MappingReturnObject {
             }
           }
           count += 1;
+        }
+        if (key.includes("primaryKey") && value) {
+          const [type, field, appFieldValue] = key.split("-");
+          for (let [key0, value0] of Object.entries(o)) {
+            if (
+              key0.includes(`MISCELLANEOUS_FIELDS-appField-${appFieldValue}`)
+            ) {
+              primary.push(value0);
+            }
+          }
         }
       }
     }
