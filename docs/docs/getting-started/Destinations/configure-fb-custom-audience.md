@@ -8,11 +8,11 @@ A Custom Audience is an ad targeting option that lets you find your existing aud
 
 ## Creating an app connection
 
-![fb app config form](/img/screens/destinations/app_fb_custom_audience_config.png)
+![fb app config form](/img/screens/destinations/fb-audience/app_fb_custom_audience_config.png)
 
 - **Destination App Name** - Any name for your app connection.
 
-![fb app secret form](/img/screens/destinations/app_fb_config_id_and_secret.png)
+![fb app secret form](/img/screens/destinations/fb-audience/app_fb_config_id_and_secret.png)
 
 - **OAuth Client id** - Your Facebook App ID.
 - **OAuth Client secret** - Your Facebook App Secret.
@@ -23,16 +23,16 @@ If you don't have a facebook app, you can create a new one by visiting [https://
 
 1. Login, navigate to `My Apps` page and click on `Create`.
 2. Make sure you select app type as `None` for the new app.
-   ![fb app types](/img/screens/destinations/app_fb_types.png)
+   ![fb app types](/img/screens/destinations/fb-audience/app_fb_types.png)
 3. Also add `Facebook Login` and `Marketing API` as products to your app using the `Add Products` menu on the left sidebar.
 
-   ![fb app product add](/img/screens/destinations/app_fb_product_add.png)
+   ![fb app product add](/img/screens/destinations/fb-audience/app_fb_product_add.png)
 
 App will be in development mode by default and it should be good enough as long as you are working with ad accounts within your our own fb account.
 
 ## Creating a sync pipeline
 
-![fb app config form](/img/screens/destinations/app_fb_custom_audience_sync_config.png)
+![fb app config form](/img/screens/destinations/fb-audience/app_fb_custom_audience_sync_config.png)
 
 - **Ads Account** - Select the ads account where you want to send the customer list to.
 - **Custom Audience Name** - You can specify an existing audience name or a new one. If the audience name doesn't exist we create a new one by the name you specified.
