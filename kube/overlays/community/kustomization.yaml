@@ -8,9 +8,9 @@ bases:
 
 images:
   - name: castled/webapp
-    newTag: 0.2.48-alpha
+    newTag: 0.2.49-alpha
   - name: castled/app
-    newTag: 0.2.48-alpha
+    newTag: 0.2.49-alpha
 
 configMapGenerator:
   - name: castled-env
