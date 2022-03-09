@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import Popup from "reactjs-popup";
 import ButtonSubmit from "../forminputs/ButtonSubmit";
 import InputField from "../forminputs/InputField";
-import GuestLayout from "./GuestLayout";
 
 export default function WelcomePopup() {
   const [open, setOpen] = useState(true);
