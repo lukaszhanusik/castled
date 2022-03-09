@@ -20,16 +20,16 @@ export default function WelcomePopup() {
     >
       <div className="card-body popup-body py-5" data-popup="tooltip">
         <div className="container">
-          <div className="row py-4 px-5">
+          <div className="row pt-3 px-5">
             <div className="col-6">
               <img
                 src="/images/Castled-Logo.png"
                 alt="Castled Logo"
                 className="my-3"
               />
-              <h2 className="header mb-3">Welcome to Castled</h2>
+              <h2 className="header mb-3">Thank you for choosing us.</h2>
               <h3 className="description mb-3">
-                Enter your email to get latest updates on Castled.
+                Enter your email to get started.
               </h3>
               <Formik
                 initialValues={{
@@ -45,19 +45,12 @@ export default function WelcomePopup() {
                     <InputField
                       type="email"
                       name="email"
-                      title="Email"
+                      title=""
                       placeholder="Your email goes here"
                     />
                     <ButtonSubmit className="form-control btn-lg py-2">
-                      Enter
+                      Get Started
                     </ButtonSubmit>
-                    <Button
-                      className="form-control btn-lg my-2"
-                      variant="outline-primary"
-                      onClick={closeModal}
-                    >
-                      Skip
-                    </Button>
                   </Form>
                 )}
               </Formik>
