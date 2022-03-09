@@ -231,3 +231,10 @@ body,
 .popup-image {
   width: 25rem;
 }
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+[data-popup='tooltip'].popup-overlay {
+  background: transparent;
+}
