@@ -91,7 +91,7 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
 
               router.push("/pipelines/create?wizardStep=source:model");
             }
-            console.log(pipelineWizContext);
+            // console.log(pipelineWizContext);
           },
         }}
       >

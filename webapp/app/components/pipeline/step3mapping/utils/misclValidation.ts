@@ -10,7 +10,7 @@ export default function misclValidation(
     (group) => group.type == "MISCELLANEOUS_FIELDS"
   );
 
-  if (hasMisclFields) {
+  if (hasMisclFields && hasMisclFields.length) {
     // let countOptionalFields = hasMisclFields[0].optionalFields.length;
     let misclFieldsTrack = 0;
 
@@ -21,8 +21,6 @@ export default function misclValidation(
         delete userInputObject[key];
       }
     }
-
-    console.log(userInputObject);
 
     for (let [key, value] of Object.entries(userInputObject)) {
       if (
@@ -67,7 +65,7 @@ export default function misclValidation(
       }
       if (pkTrack == 0) {
         errors.push({
-          misclPrimaryKey: "Primary Key is required.",
+          misclPkRequired: "Primary Key is required.",
         });
       }
     }
