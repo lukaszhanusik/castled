@@ -1,8 +1,8 @@
-import { Col, Row, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import { useRouter } from "next/router";
 
-export const ModelPipelineView = ({
+const ModelPipelineView = ({
   activeSyncDetails,
   activeSyncsCount,
 }: Pick<ModelResponseDto, "activeSyncDetails" | "activeSyncsCount">) => {
@@ -95,3 +95,5 @@ export const ModelPipelineView = ({
     </>
   );
 };
+
+export default ModelPipelineView;

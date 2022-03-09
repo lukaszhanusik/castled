@@ -201,7 +201,7 @@ body,
 
 /* popup animation */
 
-@keyframes anvil {
+@keyframes popup {
   0% {
     transform: scale(1) translateY(0px);
     opacity: 0;
@@ -219,13 +219,13 @@ body,
   }
 }
 .popup-content {
-  animation: anvil 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+  animation: popup 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 }
 
 /* popup css classes */
 
 .popup-body {
-  width: 55rem;
+  width: 52rem;
   border: 1px solid $gray-200;
   background-color: $white;
 }
