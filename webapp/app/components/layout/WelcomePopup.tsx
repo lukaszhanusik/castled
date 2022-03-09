@@ -1,5 +1,6 @@
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import { useState } from "react";
+import { Button } from "react-bootstrap";
 import Popup from "reactjs-popup";
 import ButtonSubmit from "../forminputs/ButtonSubmit";
 import InputField from "../forminputs/InputField";
@@ -18,43 +19,60 @@ export default function WelcomePopup() {
       className="popup-content"
       onClose={closeModal}
     >
-      <GuestLayout>
-        <div className="container">
-          <div className="row py-2">
-            <div className="col">
-              <img
-                src="/images/Castled-Logo.png"
-                alt="Castled Logo"
-                className="my-3"
-              />
-              <h2 className="mb-3">Create your Castled Account</h2>
-              <Formik
-                initialValues={{
-                  email: "",
-                }}
-                onSubmit={(values) => {
-                  closeModal();
-                  console.log(values);
-                }}
-              >
-                {({ values, setFieldValue, setFieldTouched }) => (
-                  <Form>
-                    <InputField
-                      type="email"
-                      name="email"
-                      title="Email"
-                      placeholder="Your email goes here"
-                    />
-                    <ButtonSubmit className="form-control btn-lg">
-                      Enter
-                    </ButtonSubmit>
-                  </Form>
-                )}
-              </Formik>
+        <div className="card-body popup-body py-5">
+          <div className="container">
+            <div className="row py-4 px-5">
+              <div className="col-6">
+                <img
+                  src="/images/Castled-Logo.png"
+                  alt="Castled Logo"
+                  className="my-3"
+                />
+                <h2 className="header mb-3">Welcome to Castled</h2>
+                <h3 className="description mb-3">
+                  Enter your email to get latest updates on Castled.
+                </h3>
+                <Formik
+                  initialValues={{
+                    email: "",
+                  }}
+                  onSubmit={(values) => {
+                    closeModal();
+                    console.log(values);
+                  }}
+                >
+                  {({ values, setFieldValue, setFieldTouched }) => (
+                    <Form>
+                      <InputField
+                        type="email"
+                        name="email"
+                        title="Email"
+                        placeholder="Your email goes here"
+                      />
+                      <ButtonSubmit className="form-control btn-lg py-2">
+                        Enter
+                      </ButtonSubmit>
+                      <Button
+                        className="form-control btn-lg my-2"
+                        variant="outline-primary"
+                        onClick={closeModal}
+                      >
+                        Skip
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+              <div className="col-6">
+                <img
+                  src="https://doodleipsum.com/700/flat?i=b27c0a34a1444c205ec7c49a651d3046"
+                  alt="Home Alone by Gustavo Pedrosa"
+                  className="popup-image"
+                />
+              </div>
             </div>
-          </div>
         </div>
-      </GuestLayout>
+      </div>
     </Popup>
   );
 }
