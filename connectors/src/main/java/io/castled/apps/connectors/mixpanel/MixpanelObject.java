@@ -7,15 +7,19 @@ import java.util.Arrays;
 
 public enum MixpanelObject {
 
-    EVENT("Event"),
-    GROUP_PROFILE("Group Profile"),
-    USER_PROFILE("User Profile");
+    EVENT("Event", "Sync event batches from your warehouse to Mixpanel."),
+    GROUP_PROFILE("Group Profile", "Update properties to a group profile. The profile is created if it does not exist."),
+    USER_PROFILE("User Profile", "Update properties to a group profile. The profile is created if it does not exist.");
 
     @Getter
     private final String name;
 
-    MixpanelObject(String name) {
+    @Getter
+    private final String description;
+
+    MixpanelObject(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     public static MixpanelObject getObjectByName(String name) {

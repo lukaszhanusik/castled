@@ -1,6 +1,5 @@
 package io.castled.forms.dtos;
 
-import io.castled.forms.FormFieldType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -26,7 +26,7 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
     @Override
     public List<FormFieldOption> getAllObjects(MixpanelAppConfig mixpanelAppConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
         return Arrays.stream(MixpanelObject.values()).map(mixpanelObject -> new FormFieldOption(new GenericSyncObject(mixpanelObject.getName(),
-                ExternalAppType.MIXPANEL), mixpanelObject.getName())).collect(Collectors.toList());
+                ExternalAppType.MIXPANEL), mixpanelObject.getName(), mixpanelObject.getDescription())).collect(Collectors.toList());
     }
 
     @Override
