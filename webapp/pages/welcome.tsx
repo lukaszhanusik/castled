@@ -1,8 +1,8 @@
 import Layout from "@/app/components/layout/Layout";
 import Link from "next/link";
 import { IconChevronRight } from "@tabler/icons";
-import { Badge } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
+import WelcomePopup from "@/app/components/layout/WelcomePopup";
 
 const Welcome = () => {
   const { isOss } = useSession();
@@ -36,6 +36,7 @@ const Welcome = () => {
             </Link>
           </div>
         )}
+        {typeof window === "object" && isOss && <WelcomePopup />}
         <div className="card mb-4 p-3">
           <Link href="/pipelines/create?wizardStep=source:selectType">
             <a className="row">
