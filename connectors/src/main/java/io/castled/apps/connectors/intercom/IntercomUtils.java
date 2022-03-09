@@ -62,7 +62,7 @@ public class IntercomUtils {
 
         switch (dataAttribute.getDataType()) {
             case "string":
-                return SchemaConstants.STRING_SCHEMA;
+                return SchemaConstants.OPTIONAL_STRING_SCHEMA;
             case "integer":
                 return SchemaConstants.OPTIONAL_LONG_SCHEMA;
             case "float":
