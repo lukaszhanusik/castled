@@ -135,12 +135,11 @@ const InputSelect = ({
             )}
             isClearable={isClearable}
           />
-          
 
           {dataFetcher && (
             <div className="col-1 my-auto">
               <IconRefresh
-                size={24}
+                size={16}
                 role="button"
                 onClick={() => setKey(key + 1)}
               />

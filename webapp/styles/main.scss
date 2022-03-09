@@ -132,10 +132,18 @@ form {
   }
 }
 
+.field-group {
+  // border-bottom: 1px solid $gray-100;
+  margin-bottom: 2.75rem;
+}
+
+label {
+  font-weight: 500;
+}
+
 .form-label {
   display: block;
   font-size: $h4-font-size;
-  font-weight: $font-weight-base;
   margin-bottom: 0.25rem;
   .required-icon {
     position: absolute;
@@ -561,4 +569,15 @@ form {
 .status-mark {
   width: 1rem;
   height: 1rem;
+}
+
+.radio-group-wrapper {
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.radio-group-wrapper:hover {
+  background-color: $gray-100;
+  border: 1px solid $gray-100;
+  transition: all 0.3s;
 }

@@ -99,8 +99,11 @@ const InputRadioButton = ({
           {optionsDynamic &&
             optionsDynamic.map((item: any, index: number) => (
               <>
-                <label htmlFor={item.title + index} className="d-flex py-2">
-                  <div className="flex-column align-self-center">
+                <label
+                  htmlFor={item.title + index}
+                  className="d-flex py-2 radio-group-wrapper"
+                >
+                  <div className="flex-column">
                     <input
                       name={props.id || props.name}
                       key={item.title + index}
@@ -121,6 +124,7 @@ const InputRadioButton = ({
               </>
             ))}
         </div>
+        
         {meta.touched && meta.error ? (
           <div className="error">{meta.error}</div>
         ) : null}
