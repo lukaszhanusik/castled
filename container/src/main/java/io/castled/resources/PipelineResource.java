@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 import io.castled.apps.dtos.AppSyncConfigDTO;
 import io.castled.dtomappers.PipelineDTOMapper;
 import io.castled.dtos.*;
-import io.castled.models.CastledDataMapping;
 import io.castled.models.Pipeline;
 import io.castled.models.users.User;
 import io.castled.resources.validators.ResourceAccessController;
@@ -125,5 +124,11 @@ public class PipelineResource {
     @Path("/dummy")
     public void triggerDummyJob() {
         this.pipelineService.triggerDummyRun();
+    }
+
+    @GET
+    @Path("/count")
+    public ConsolidatedCountDTO getAllCountDetails(@Auth User user) {
+        return this.pipelineService.getAllCountDetails(user.getTeamId());
     }
 }
