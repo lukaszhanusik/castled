@@ -60,11 +60,13 @@ const Pipelines = () => {
             </thead>
             <tbody>
               {pipelines.map((pipeline, idx) => (
-                <tr key={idx}>
+                <tr
+                  className="cursor-pointer"
+                  key={idx}
+                  onClick={() => router.push(`/pipelines/${pipeline.id}`)}
+                >
                   <td>
-                    <Link href={`/pipelines/${pipeline.id}`}>
-                      <a>{pipeline.name}</a>
-                    </Link>
+                    {pipeline.name}
                   </td>
                   <td>
                     {/* <img
