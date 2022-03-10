@@ -42,7 +42,7 @@ const Pipelines = () => {
           ? {
               id: "create_pipeline_button",
               title: "Create",
-              href: "/pipelines/create",
+              href: "/pipelines/create?wizardStep=source:selectModelType",
             }
           : undefined
       }

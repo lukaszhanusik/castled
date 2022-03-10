@@ -1,7 +1,7 @@
 @import "./colors";
 @import "./variables-custom";
 
-$sidebar-width: none;
+$sidebar-width: 7rem;
 
 html,
 body,
@@ -91,7 +91,7 @@ body,
   .nav-pills .show > .nav-link {
     background-color: transparent;
     border-radius: 0;
-    padding: 0.4rem 0.7rem;
+    padding: 0.4rem;
 
     &.active div {
       border-radius: $border-radius;
