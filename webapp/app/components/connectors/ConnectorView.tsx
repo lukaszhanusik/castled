@@ -25,7 +25,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["Name", "Type", "Pipelines", "Status"];
+  const headers = [`${category} Name`, "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -71,7 +71,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
       )}
       {connectors && connectors.length > 0 && (
         <div className="table-responsive">
-          <Table hover>
+          <Table>
             <thead>
               <tr>
                 {headers.map((header, idx) => (

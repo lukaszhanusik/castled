@@ -184,7 +184,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
       <div>
         <p>Query in progress...</p>
         <div className="table-responsive mx-auto mt-2">
-          <Table hover>
+          <Table>
             <tbody>
               <tr className="pt-4 pb-4">
                 <td>
@@ -211,7 +211,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
     return (
       <>
         <div className="table-responsive mx-auto mt-2">
-          <Table hover>
+          <Table>
             <thead>
               <tr>
                 {result.queryResults.headers.map((header, i) => (

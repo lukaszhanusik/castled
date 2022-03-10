@@ -30,7 +30,7 @@ export const ModelPipelineView = ({
           Number of syncs: {activeSyncsCount && activeSyncsCount}
         </span>
       </div>
-      <Table hover>
+      <Table>
         <thead>
           <tr>
             <th></th>
@@ -52,17 +52,6 @@ export const ModelPipelineView = ({
                 <td className="col-1 py-2">{field.id}</td>
                 <td className="col-3 py-2">
                   <div className="d-flex align-items-center">
-                    {!field.deleted ? (
-                      <img
-                        className="status-mark"
-                        src="/images/check-good-mark.svg"
-                      />
-                    ) : (
-                      <img
-                        className="status-mark"
-                        src="/images/cross-mark.svg"
-                      />
-                    )}
                     <div className="px-2">
                       <span className="font-weight-bold">{field.name}</span>
                     </div>
@@ -70,7 +59,7 @@ export const ModelPipelineView = ({
                 </td>
                 <td className="col-3 py-2">
                   <div className="d-flex align-items-center">
-                    <img className="app-logo-url" src={field.app.logoUrl} />
+                    <img src={field.app.logoUrl} height={24}/>
                     <div className="px-2">
                       <span className="font-weight-bold">{field.app.name}</span>
                       <div className="text-muted ">{field.app.type}</div>

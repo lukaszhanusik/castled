@@ -132,6 +132,15 @@ form {
   }
 }
 
+.form-check-input:focus{
+  border-color: $primary-color;
+  box-shadow: none;
+}
+.form-check-input:checked{
+  border-color: $primary-color;
+  background-color: $primary-color;
+}
+
 .form-label {
   display: block;
   font-size: $h4-font-size;
@@ -341,7 +350,8 @@ form {
 }
 
 .table {
-  border: 1px solid $gray-100;
+  border-spacing:0 5px;
+  border-collapse:separate;
   thead tr,
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;
@@ -355,11 +365,34 @@ form {
     padding-bottom: 1rem;
   }
 
+  tbody tr td{
+    border-top: 1px solid $gray-200;
+    border-bottom: 1px solid $gray-200;
+
+    &:first-child{
+      border-left: 1px solid $gray-200;
+    }
+
+    &:last-child{
+      border-right: 1px solid $gray-200;
+    }
+  }
+
+  tbody tr:hover{
+    td{
+      border-color: $table-row-hover;
+    }
+  }
+
   tbody td > a {
     color: blue;
   }
-  tbody td > a:hover {
+  tbody td:hover {
     cursor: pointer;
+  }
+
+  .badge{
+    background-color: $primary-lite-2x;
   }
 
   .processing {
@@ -551,14 +584,4 @@ form {
   background-size: 15px, 15px;
   background-position: 7px 6px, 43em 9px;
   padding-left: 2rem;
-}
-
-.app-logo-url {
-  width: 2rem;
-  height: 2rem;
-}
-
-.status-mark {
-  width: 1rem;
-  height: 1rem;
 }

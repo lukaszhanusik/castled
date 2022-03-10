@@ -21,7 +21,7 @@ export default function WarehouseColumn({
           <label className="row description text-muted pb-3">{description}</label>
         </div>
         <div>
-          <Table hover>
+          <Table>
             <thead>
               <tr>
                 <th>Warehouse Column</th>

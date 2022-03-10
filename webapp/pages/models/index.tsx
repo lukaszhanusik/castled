@@ -7,13 +7,16 @@ import DefaultErrorPage from "next/error";
 import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
+import _ from "lodash";
+import { IconChevronRight } from "@tabler/icons"
+
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
 
-  const headers = ["Model Name", "Source", "Type", "Pipelines"];
+  const headers = ["#", "Model Name", "Source", "Type", "Syncs"];
   useEffect(() => {
     modelService
       .get()
@@ -44,7 +47,7 @@ const Models = () => {
 
       {models && models.length > 0 && (
         <div className="table-responsive">
-          <Table hover>
+          <Table>
             <thead>
               <tr>
                 {headers.map((header, idx) => (
@@ -63,6 +66,7 @@ const Models = () => {
                       .then(() => setPipelineWizContext({}))
                   }
                 >
+                  <td>{model.id}</td>
                   <td>
                     <div>
                       <strong>{model.name}</strong>
@@ -94,17 +98,30 @@ const Models = () => {
                         src={model.warehouse.logoUrl}
                         alt={model.warehouse.name}
                         height={24}
+                        className="mt-1"
                       />
                       <div className="ms-2">
-                        {model.warehouse.name}
+                        <span className="fw-bolder">{model.warehouse.name}</span>
                         <div className="small text-muted">
-                          {model.warehouse.type}
+                          {_.capitalize(model.warehouse.type)}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td>{model.type}</td>
-                  <td>{model.activeSyncsCount}</td>
+                  <td>
+                    <div className="d-flex">
+                      <img
+                        src='/images/sql-icon.svg'
+                        height={24}
+                        className="mt-1 me-2"
+                      />
+                      {model.type} Model
+                    </div>
+                  </td>
+                  <td>
+                    <span className="badge text-dark fs-4">{model.activeSyncsCount}</span>
+                    <IconChevronRight className="float-end me-2 text-secondary" />
+                  </td>
                 </tr>
               ))}
             </tbody>
