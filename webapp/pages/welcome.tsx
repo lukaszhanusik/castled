@@ -37,7 +37,7 @@ const Welcome = () => {
           </div>
         )}
         {typeof window === "object" && isOss && <WelcomePopup />}
-        <div className="card mb-4 p-3">
+        {/* <div className="card mb-4 p-3">
           <Link href="/pipelines/create?wizardStep=source:selectModelType">
             <a className="row">
               <div className="col-3">
@@ -56,7 +56,7 @@ const Welcome = () => {
               </div>
             </a>
           </Link>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
