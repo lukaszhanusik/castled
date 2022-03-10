@@ -114,9 +114,9 @@ const InputRadioButton = ({
                       onBlur={() => setFieldTouched?.(field.name, true)}
                     />
                   </div>
-                  <div className="flex-column mx-4">
-                    <div className="row">{item.title}</div>
-                    <div className="row description text-muted">
+                  <div className="flex-column mx-2">
+                    <div>{item.title}</div>
+                    <div className="description text-muted">
                       {item.description}
                     </div>
                   </div>
@@ -124,7 +124,7 @@ const InputRadioButton = ({
               </>
             ))}
         </div>
-        
+
         {meta.touched && meta.error ? (
           <div className="error">{meta.error}</div>
         ) : null}
