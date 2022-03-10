@@ -38,7 +38,7 @@ const Welcome = () => {
         )}
         {typeof window === "object" && isOss && <WelcomePopup />}
         <div className="card mb-4 p-3">
-          <Link href="/pipelines/create?wizardStep=source:selectType">
+          <Link href="/pipelines/create?wizardStep=source:selectModelType">
             <a className="row">
               <div className="col-3">
                 <img src="/images/warehouses.png" className="card-img-top" />
