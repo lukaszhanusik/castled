@@ -323,7 +323,10 @@ form {
   cursor: pointer;
   transition: all 0.3s;
 }
-
+.border-dashed, .border-dashed:hover{
+  border: 2px dashed $gray-200;
+  box-shadow: none;
+}
 .stepper {
   display: flex;
   height: 72px;
