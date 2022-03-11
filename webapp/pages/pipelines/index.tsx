@@ -84,10 +84,10 @@ const Pipelines = () => {
       rightBtn={
         pipelines?.length
           ? {
-              id: "create_pipeline_button",
-              title: "Create",
-              href: "/pipelines/create",
-            }
+            id: "create_pipeline_button",
+            title: "Create",
+            href: "/pipelines/create",
+          }
           : undefined
       }
     >
@@ -124,13 +124,13 @@ const Pipelines = () => {
                       {pipeline.id}
                     </td>
                     <td>
-                      <img
+                      {/* <img
                         src={`/images/${status}.svg`}
                         width={14}
                         className="me-2"
-                      />
+                      /> */}
                       <Link href={`/pipelines/${pipeline.id}`}>
-                        <a>{pipeline.name}</a>
+                        <span className="fw-bolder">{pipeline.name}</span>
                       </Link>
                     </td>
                     <td

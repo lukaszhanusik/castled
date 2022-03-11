@@ -12,6 +12,7 @@ import cn from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
+import { IconChevronRight } from "@tabler/icons"
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -25,7 +26,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = [`${category} Name`, "Type", "Pipelines", "Status"];
+  const headers = ["#", `${category} Name`, "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -81,20 +82,22 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
             </thead>
             <tbody>
               {connectors.map((connector, idx) => (
-                <tr key={idx}>
+                <tr 
+                  key={idx} 
+                  className={cn({
+                    "disable-link": connector && connector.demo,
+                  })}
+                  onClick={() => {
+                    if(!(connector && connector.demo))
+                      router.push(`${path}/${connector.id}`)
+                  }}
+                >
+                  <td>{connector.id}</td>
                   <td>
-                    <Link href={`${path}/${connector.id}`}>
-                      <a
-                        className={cn({
-                          "disable-link": connector && connector.demo,
-                        })}
-                      >
-                        {connector.name}
-                        {connector && connector.demo && (
-                          <Badge bg="warning">demo</Badge>
-                        )}
-                      </a>
-                    </Link>
+                    <span className="fw-bolder">{connector.name}</span>
+                    {connector && connector.demo && (
+                      <Badge bg="warning" className="ms-1">demo</Badge>
+                    )}
                   </td>
                   <td>{connector.type}</td>
                   <td>{connector.pipelines}</td>
@@ -104,6 +107,8 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     >
                       {connector.status}
                     </Badge>
+
+                    <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>
               ))}
