@@ -326,6 +326,7 @@ form {
 .border-dashed, .border-dashed:hover{
   border: 2px dashed $gray-200;
   box-shadow: none;
+  transform: none;
 }
 .stepper {
   display: flex;

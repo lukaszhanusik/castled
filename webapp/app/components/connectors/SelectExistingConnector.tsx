@@ -5,7 +5,8 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import { ConnectorDto } from "@/app/common/dtos/ConnectorDto";
 import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
-
+import {IconPlus } from "@tabler/icons"
+import _ from "lodash";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;
@@ -40,7 +41,8 @@ const SelectExistingConnector = ({
             className="btn list-group-item rounded border-dashed"
             onClick={() => onCreate()}
           >
-            <strong>Create New {category}</strong>
+            <IconPlus className="float-start text-secondary" />
+            <strong>CREATE NEW {_.upperCase(category)}</strong>
           </button>
         )}
         {connectors?.map((connector, i) => (
