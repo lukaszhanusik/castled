@@ -74,13 +74,26 @@ export default function WelcomeOnboarding() {
       {steps.map((step, index) => (
         <div key={step.type}>
           <Alert
-            variant={step.isDone ? "success" : "light"}
-            className="pb-0 card border"
+            variant={step.isDone ? "primary" : "light"}
+            className="d-flex flex-row card border"
             onClick={() => !step.isDone && router.push(step.onClickURL)}
-            style={{ cursor: !step.isDone ? "pointer" : "default" }}
+            style={{
+              cursor: !step.isDone ? "pointer" : "default",
+              columnGap: "10px",
+            }}
           >
-            <Alert.Heading>{step.title}</Alert.Heading>
-            <p>{step.description}</p>
+            <img
+              src="/images/check-filled.svg"
+              alt="Completed or not"
+              className={`p-0 border-0 ${
+                step.isDone ? "onboarding done" : "onboarding not-done"
+              }`}
+              style={{ width: "1.5rem" }}
+            />
+            <div className="">
+              <Alert.Heading>{step.title}</Alert.Heading>
+              <div>{step.description}</div>
+            </div>
           </Alert>
         </div>
       ))}

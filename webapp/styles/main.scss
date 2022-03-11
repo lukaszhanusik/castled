@@ -562,3 +562,12 @@ form {
   width: 1rem;
   height: 1rem;
 }
+
+.onboarding.done {
+  filter: invert(63%) sepia(71%) saturate(312%) hue-rotate(105deg)
+    brightness(89%) contrast(90%);
+}
+.onboarding.not-done {
+  filter: invert(69%) sepia(3%) saturate(587%) hue-rotate(149deg)
+    brightness(99%) contrast(87%);
+}
