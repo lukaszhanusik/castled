@@ -38,34 +38,32 @@ export default function WelcomeOnboarding() {
         const Icon = step.icon;
         return (
           <div key={step.type}>
-            {!step.isDone && (
-              <Alert
-                variant={step.isDone ? "primary" : "light"}
-                className="d-flex flex-row card border"
-                onClick={() => !step.isDone && router.push(step.onClickURL)}
-                style={{
-                  cursor: !step.isDone ? "pointer" : "default",
-                  columnGap: "1rem",
-                }}
-              >
-                {step.isDone ? (
-                  <img
-                    src={"/images/check-filled.svg"}
-                    alt="Completed or not"
-                    className={`p-0 border-0 ${
-                      step.isDone ? "onboarding done" : "onboarding not-done"
-                    }`}
-                    style={{ width: "1.5rem" }}
-                  />
-                ) : (
-                  <Icon size={30} stroke={1} className="navbar-icon" />
-                )}
-                <div className="">
-                  <Alert.Heading>{step.title}</Alert.Heading>
-                  <div>{step.description}</div>
-                </div>
-              </Alert>
-            )}
+            <Alert
+              variant={step.isDone ? "primary" : "light"}
+              className="d-flex flex-row card border"
+              onClick={() => !step.isDone && router.push(step.onClickURL)}
+              style={{
+                cursor: !step.isDone ? "pointer" : "default",
+                columnGap: "1rem",
+              }}
+            >
+              {step.isDone ? (
+                <img
+                  src="/images/check-filled.svg"
+                  alt="Completed or not"
+                  className={`p-0 border-0 ${
+                    step.isDone ? "onboarding done" : "onboarding not-done"
+                  }`}
+                  style={{ width: "1.5rem" }}
+                />
+              ) : (
+                <Icon size={30} stroke={1} className="navbar-icon" />
+              )}
+              <div className="">
+                <Alert.Heading>{step.title}</Alert.Heading>
+                <div>{step.description}</div>
+              </div>
+            </Alert>
           </div>
         );
       })}
