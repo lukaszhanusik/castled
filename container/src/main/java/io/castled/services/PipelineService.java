@@ -21,10 +21,8 @@ import io.castled.constants.CommonConstants;
 import io.castled.daos.ErrorReportsDAO;
 import io.castled.daos.PipelineDAO;
 import io.castled.daos.PipelineRunDAO;
-import io.castled.dtos.MappingTestRequest;
-import io.castled.dtos.PipelineConfigDTO;
-import io.castled.dtos.PipelineSchema;
-import io.castled.dtos.PipelineUpdateRequest;
+import io.castled.daos.QueryModelDAO;
+import io.castled.dtos.*;
 import io.castled.errors.PipelineErrorAndSample;
 import io.castled.errors.PipelineRunErrors;
 import io.castled.events.CastledEventType;
@@ -91,6 +89,7 @@ public class PipelineService {
     private final ErrorReportsDAO errorReportsDAO;
     private final MessagePublisher messagePublisher;
     private final ResourceAccessController resourceAccessController;
+    private final QueryModelDAO queryModelDAO;
 
 
     @Inject
@@ -111,6 +110,7 @@ public class PipelineService {
         this.resourceAccessController = resourceAccessController;
         this.messagePublisher = messagePublisher;
         this.appConnectors = appConnectors;
+        this.queryModelDAO = jdbi.onDemand(QueryModelDAO.class);
     }
 
     public Long createPipeline(PipelineConfigDTO pipelineConfigDTO, User user) {
@@ -394,5 +394,13 @@ public class PipelineService {
             return pipelineDAO.listPipelines(teamid);
         }
         return pipelineDAO.listPipelinesByModelId(teamid, modelId);
+    }
+
+    public ConsolidatedCountDTO getAllCountDetails(Long teamId) {
+        int pipelines = pipelineDAO.getTotalActivePipelinesForTeam(teamId);
+        int models = queryModelDAO.getTotalActiveModelsForTeam(teamId);
+        int warehouses = warehouseService.getTotalActiveWarehousesForTeam(teamId);
+        int apps = externalAppService.getTotalActiveAppsForTeam(teamId);
+        return ConsolidatedCountDTO.builder().pipelines(pipelines).apps(apps).models(models).warehouses(warehouses).build();
     }
 }
