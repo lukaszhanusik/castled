@@ -128,7 +128,7 @@ form {
     resize: none;
   }
   input:checked {
-    filter: hue-rotate(45deg);
+    accent-color: $primary-color;
   }
 }
 
