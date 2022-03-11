@@ -3,6 +3,7 @@ import Link from "next/link";
 import { IconChevronRight } from "@tabler/icons";
 import { useSession } from "@/app/common/context/sessionContext";
 import WelcomePopup from "@/app/components/layout/WelcomePopup";
+import WelcomeOnboarding from "@/app/components/onboarding/WelcomeOnboarding";
 
 const Welcome = () => {
   const { isOss } = useSession();
@@ -56,6 +57,9 @@ const Welcome = () => {
               </div>
             </a>
           </Link>
+        </div>
+        <div className="mb-4 p-3">
+          <WelcomeOnboarding />
         </div>
       </div>
     </Layout>

@@ -65,9 +65,7 @@ const Pipelines = () => {
                   key={idx}
                   onClick={() => router.push(`/pipelines/${pipeline.id}`)}
                 >
-                  <td>
-                    {pipeline.name}
-                  </td>
+                  <td>{pipeline.name}</td>
                   <td>
                     {/* <img
                       src={pipeline.warehouse.logoUrl}

@@ -58,7 +58,7 @@ export default {
   testMapping: (req: any): Promise<AxiosResponse<any>> => {
     return http.post("/v1/pipelines/mappings/test", req);
   },
-  count: (): Promise<AxiosResponse<OnboardCountDto>> => {
-    return http.get("/v1/users/whoami");
+  onboardCount: (): Promise<AxiosResponse<OnboardCountDto>> => {
+    return http.get("/v1/pipelines/count");
   },
 };
