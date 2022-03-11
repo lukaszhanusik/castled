@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IconChevronRight } from "@tabler/icons";
 import { useSession } from "@/app/common/context/sessionContext";
 import WelcomePopup from "@/app/components/layout/WelcomePopup";
-import WelcomeOnboarding from "@/app/components/onboarding/WelcomeOnboarding";
+import WelcomeOnboarding from "@/app/components/onboarding/Welcome";
 
 const Welcome = () => {
   const { isOss } = useSession();
@@ -38,7 +38,7 @@ const Welcome = () => {
           </div>
         )}
         {typeof window === "object" && isOss && <WelcomePopup />}
-        <div className="card mb-4 p-3">
+        {/* <div className="card mb-4 p-3">
           <Link href="/pipelines/create?wizardStep=source:selectModelType">
             <a className="row">
               <div className="col-3">
@@ -57,8 +57,8 @@ const Welcome = () => {
               </div>
             </a>
           </Link>
-        </div>
-        <div className="mb-4 p-3">
+        </div> */}
+        <div className="mb-5 p-3">
           <WelcomeOnboarding />
         </div>
       </div>
