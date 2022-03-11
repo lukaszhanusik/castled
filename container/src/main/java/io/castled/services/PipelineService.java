@@ -397,7 +397,7 @@ public class PipelineService {
     }
 
     public ConsolidatedCountDTO getAllCountDetails(Long teamId) {
-        int pipelines = pipelineDAO.getTotalActivePipelinesForTeam(teamId);
+        int pipelines = pipelineDAO.getAllPipelinesCreatedByTeam(teamId);
         int models = queryModelDAO.getTotalActiveModelsForTeam(teamId);
         int warehouses = warehouseService.getTotalActiveWarehousesForTeam(teamId);
         int apps = externalAppService.getTotalActiveAppsForTeam(teamId);
