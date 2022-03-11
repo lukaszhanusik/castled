@@ -132,11 +132,11 @@ form {
   }
 }
 
-.form-check-input:focus{
+.form-check-input:focus {
   border-color: $primary-color;
   box-shadow: none;
 }
-.form-check-input:checked{
+.form-check-input:checked {
   border-color: $primary-color;
   background-color: $primary-color;
 }
@@ -350,8 +350,8 @@ form {
 }
 
 .table {
-  border-spacing:0 5px;
-  border-collapse:separate;
+  border-spacing: 0 5px;
+  border-collapse: separate;
   thead tr,
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;
@@ -363,24 +363,28 @@ form {
   tbody td {
     padding-top: 1rem;
     padding-bottom: 1rem;
+    img {
+      margin-top: 4px !important;
+    }
   }
 
-  tbody tr td{
+  tbody tr td {
     border-top: 1px solid $gray-200;
     border-bottom: 1px solid $gray-200;
 
-    &:first-child{
+    &:first-child {
       border-left: 1px solid $gray-200;
     }
 
-    &:last-child{
+    &:last-child {
       border-right: 1px solid $gray-200;
     }
   }
 
-  tbody tr:hover{
-    td{
+  tbody tr:hover {
+    td {
       border-color: $table-row-hover;
+      transition: all 0.5s;
     }
   }
 
@@ -391,7 +395,7 @@ form {
     cursor: pointer;
   }
 
-  .badge{
+  .badge {
     background-color: $primary-lite-2x;
   }
 
