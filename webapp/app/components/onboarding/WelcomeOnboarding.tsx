@@ -79,7 +79,7 @@ export default function WelcomeOnboarding() {
             onClick={() => !step.isDone && router.push(step.onClickURL)}
             style={{
               cursor: !step.isDone ? "pointer" : "default",
-              columnGap: "10px",
+              columnGap: "1rem",
             }}
           >
             <img
