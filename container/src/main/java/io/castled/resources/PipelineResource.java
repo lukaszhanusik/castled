@@ -127,7 +127,7 @@ public class PipelineResource {
     }
 
     @GET
-    @Path("/count")
+    @Path("count")
     public ConsolidatedCountDTO getAllCountDetails(@Auth User user) {
         return this.pipelineService.getAllCountDetails(user.getTeamId());
     }
