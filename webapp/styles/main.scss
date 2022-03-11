@@ -571,6 +571,13 @@ form {
   height: 1rem;
 }
 
+.option-wrapper {
+  background-color: #fff !important;
+  .label {
+    font-weight: 500;
+  }
+}
+
 .radio-group-wrapper {
   border: 1px solid #fff;
   cursor: pointer;

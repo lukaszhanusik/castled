@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 import { ObjectUtils } from "@/app/common/utils/objectUtils";
 import { Spinner } from "react-bootstrap";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import cn from "classnames";
 import { IconRefresh } from "@tabler/icons";
 
@@ -35,12 +35,25 @@ export interface InputSelectOptions extends InputBaseProps {
 export interface ReactSelectOption {
   value: any;
   label: string;
+  description?: string;
 }
 
 const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
   value: o.value,
   label: o.title,
+  description: o.description || "",
 });
+
+const Option = (props) => {
+  return (
+    <components.Option {...props}>
+      <div className="option-wrapper">
+        <div className="label">{props.data.label}</div>
+        <div className="description text-muted">{props.data.description}</div>
+      </div>
+    </components.Option>
+  );
+};
 
 const loadingOption = { label: "Loading...", value: "" };
 const emptyOption = { label: "", value: "" };
@@ -117,6 +130,7 @@ const InputSelect = ({
                 ? [loadingOption]
                 : optionsDynamic.map((option) => toReactSelectOption(option))
             }
+            components={{ Option }}
             isMulti={isMulti}
             className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
             onChange={(v: any | undefined) => {
