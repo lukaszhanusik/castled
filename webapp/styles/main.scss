@@ -130,6 +130,11 @@ form {
   input:checked {
     filter: hue-rotate(45deg);
   }
+  .select-fetcher{
+    position: relative;
+    top: -1.8rem;
+    right: -2rem;
+  }
 }
 
 .field-group {

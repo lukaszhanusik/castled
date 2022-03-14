@@ -132,7 +132,7 @@ const InputSelect = ({
             }
             components={{ Option }}
             isMulti={isMulti}
-            className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
+            className="col-12"
             onChange={(v: any | undefined) => {
               let newValue = v?.value;
               if (isMulti) {
@@ -151,11 +151,12 @@ const InputSelect = ({
           />
 
           {dataFetcher && (
-            <div className="col-1 my-auto">
+            <div className="col select-fetcher">
               <IconRefresh
-                size={16}
+                size={20}
                 role="button"
                 onClick={() => setKey(key + 1)}
+                className="float-end"
               />
             </div>
           )}
