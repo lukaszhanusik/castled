@@ -5,10 +5,13 @@
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const withPWA = require("next-pwa");
+const runtimeCaching = require("next-pwa/cache");
 
 const moduleExports = withPWA({
   pwa: {
     dest: "public",
+    runtimeCaching,
+    buildExcludes: [/middleware-manifest\.json$/],
   },
   env: {
     // Commenting to avoid inlining of this env variable. Will be fetched using getServerSideProps from pages where its required
