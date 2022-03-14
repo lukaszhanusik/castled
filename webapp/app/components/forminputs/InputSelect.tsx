@@ -44,12 +44,12 @@ const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
   description: o.description || "",
 });
 
-const Option = (props) => {
+const Option = (props:any) => {
   return (
     <components.Option {...props}>
       <div className="option-wrapper">
         <div className="label">{props.data.label}</div>
-        <div className="description text-muted">{props.data.description}</div>
+        <div className="description">{props.data.description}</div>
       </div>
     </components.Option>
   );

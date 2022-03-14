@@ -572,7 +572,9 @@ form {
 }
 
 .option-wrapper {
-  background-color: #fff !important;
+  .description {
+    opacity: 0.5;
+  }
   .label {
     font-weight: 500;
   }
