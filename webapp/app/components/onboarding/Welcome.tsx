@@ -34,7 +34,7 @@ export default function WelcomeOnboarding() {
 
   return (
     <>
-      {steps.map((step, index) => {
+      {onboardingSteps.map((step, index) => {
         const Icon = step.icon;
         return (
           <div key={step.type}>
@@ -45,6 +45,7 @@ export default function WelcomeOnboarding() {
               style={{
                 cursor: !step.isDone ? "pointer" : "default",
                 columnGap: "1rem",
+                backgroundColor: step.isDone ? "#dff6f8c9" : "",
               }}
             >
               {step.isDone ? (

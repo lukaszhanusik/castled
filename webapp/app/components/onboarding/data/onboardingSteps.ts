@@ -9,25 +9,25 @@ const onboardingSteps = [
   {
     title: "Configure Source",
     description:
-      "Start by connecting Castled to a source like Snowflake, Postgres, BigQuery, and many more.",
+      "Start with configuring your Source. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
     type: "warehouses",
     icon: IconDatabase,
-    isDone: false,
+    isDone: true,
     onClickURL: "/warehouses/create?wizardStep=selectType",
   },
   {
     title: "Create Model",
     description:
-      "Use a model to build a specific view of the data in your source.",
-    type: 'models',
+      "Once you have configured the source warehouse, create a model out of the data in your warehouse tables.",
+    type: "models",
     icon: IconRelationManyToMany,
-    isDone: false,
+    isDone: true,
     onClickURL: "/models/create?wizardStep=source:selectType",
   },
   {
     title: "Configure Destination",
     description:
-      "Connect Castled to your favorite tools like Salesforce, HubSpot, Facebook Ads, and many more. ",
+      "Configure your Destination App. Castled enables you to move data to all major sales, marketing, service apps.",
     type: "apps",
     icon: IconApps,
     isDone: false,
@@ -36,7 +36,7 @@ const onboardingSteps = [
   {
     title: "Create Pipeline",
     description:
-      "Operationalize your data by syncing a model to a destination.",
+      "Create your first pipeline to open the flood gates of operational analytics for your business teams.",
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
