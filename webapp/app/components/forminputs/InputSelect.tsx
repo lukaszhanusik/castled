@@ -44,7 +44,7 @@ const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
   description: o.description || "",
 });
 
-const Option = (props:any) => {
+const Option = (props: any) => {
   return (
     <components.Option {...props}>
       <div className="option-wrapper">
@@ -122,7 +122,7 @@ const InputSelect = ({
             {required && <span className="required-icon">*</span>}
           </label>
         )}
-        <div className="row">
+        <div className="row position-relative">
           <Select
             {...props}
             options={
@@ -151,9 +151,9 @@ const InputSelect = ({
           />
 
           {dataFetcher && (
-            <div className="col select-fetcher">
+            <div className="select-fetcher">
               <IconRefresh
-                size={20}
+                size={16}
                 role="button"
                 onClick={() => setKey(key + 1)}
                 className="float-end"
