@@ -12,6 +12,7 @@ import cn from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
+import { IconChevronRight } from "@tabler/icons";
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -25,7 +26,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = [`${category} Name`, "Type", "Pipelines", "Status"];
+  const headers = ["#", `${category} Name`, "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -83,6 +84,9 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
               {connectors.map((connector, idx) => (
                 <tr key={idx}>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    {idx + 1}
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <span
                       className={cn({
                         "disable-link": connector && connector.demo,
@@ -106,6 +110,8 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     >
                       {connector.status}
                     </Badge>
+
+                    <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>
               ))}

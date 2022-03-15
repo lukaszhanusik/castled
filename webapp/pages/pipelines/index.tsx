@@ -123,15 +123,15 @@ const Pipelines = () => {
                     >
                       {pipeline.id}
                     </td>
-                    <td
-                      onClick={() => router.push(`/pipelines/${pipeline.id}`)}
-                    >
-                      <img
+                    <td>
+                      {/* <img
                         src={`/images/${status}.svg`}
                         width={14}
                         className="me-2"
-                      />
-                      {pipeline.name}
+                      /> */}
+                      <Link href={`/pipelines/${pipeline.id}`}>
+                        <span className="fw-bolder">{pipeline.name}</span>
+                      </Link>
                     </td>
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
