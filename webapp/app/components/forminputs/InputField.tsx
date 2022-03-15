@@ -38,6 +38,7 @@ const InputField = ({
       });
     }
   }, [optionsRef]);
+
   return (
     <div className={className ? className : cn({ "mb-3": !isHidden })}>
       {title && !isHidden && (
@@ -45,6 +46,9 @@ const InputField = ({
           {title}
           {required && <span className="required-icon">*</span>}
         </label>
+      )}
+      {description && description !== title && (
+        <p className="text-muted mb-2">{description}</p>
       )}
       {getInput(field, meta, onChange, props, optionsRef, required)}
       {loading && !isHidden && (

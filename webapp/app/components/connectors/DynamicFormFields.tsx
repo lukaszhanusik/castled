@@ -39,8 +39,10 @@ const fieldRenderers: {
   TEXT_BOX: { renderer: InputField, props: { type: "text" } },
   PASSWORD: { renderer: InputField, props: { type: "password" } },
   CHECK_BOX: { renderer: InputCheckbox },
+  // RADIO_GROUP: { renderer: InputRadioButton },
+  // RADIO_BOX: { renderer: InputRadioButton },
   RADIO_GROUP: { renderer: InputSelect },
-  RADIO_BOX: { renderer: InputRadioButton },
+  RADIO_BOX: { renderer: InputSelect },
   DROP_DOWN: { renderer: InputSelect },
   JSON_FILE: { renderer: InputFile, props: { type: "json" } },
   TEXT_FILE: { renderer: InputFile, props: { type: "text" } },
@@ -95,21 +97,23 @@ const DynamicFormFields = ({
     const name = namePrefix ? `${namePrefix}.${key}` : key;
 
     fields.push(
-      <Input
-        key={name}
-        required={field.validations.required}
-        name={name}
-        {...field.fieldProps}
-        {...props}
-        defaultValue=""
-        dValues={depValues}
-        values={values}
-        dataFetcher={dataFetcher}
-        setFieldValue={setFieldValue}
-        deps={formFields.groupActivators[field.group]?.dependencies}
-        title={field.fieldProps.title || key}
-        isClearable={true}
-      />
+      <div className="field-group">
+        <Input
+          key={name}
+          required={field.validations.required}
+          name={name}
+          {...field.fieldProps}
+          {...props}
+          defaultValue=""
+          dValues={depValues}
+          values={values}
+          dataFetcher={dataFetcher}
+          setFieldValue={setFieldValue}
+          deps={formFields.groupActivators[field.group]?.dependencies}
+          title={field.fieldProps.title || key}
+          isClearable={true}
+        />
+      </div>
     );
   }
   return <>{fields}</>;
