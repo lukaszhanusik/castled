@@ -123,15 +123,15 @@ const Pipelines = () => {
                     >
                       {pipeline.id}
                     </td>
-                    <td>
+                    <td
+                      onClick={() => router.push(`/pipelines/${pipeline.id}`)}
+                    >
                       <img
                         src={`/images/${status}.svg`}
                         width={14}
                         className="me-2"
                       />
-                      <Link href={`/pipelines/${pipeline.id}`}>
-                        <a>{pipeline.name}</a>
-                      </Link>
+                      {pipeline.name}
                     </td>
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
@@ -144,9 +144,7 @@ const Pipelines = () => {
                           className="mt-1"
                         />
                         <div className="ms-2">
-                          <span className="fw-bolder">
-                            {pipeline.warehouse.name}
-                          </span>
+                          <span>{pipeline.warehouse.name}</span>
                           <p className="text-muted mb-0 small">
                             {_.capitalize(pipeline.warehouse.type)}
                           </p>
@@ -167,7 +165,7 @@ const Pipelines = () => {
                           className="mt-1"
                         />
                         <div className="ms-2">
-                          <span className="fw-bolder">{pipeline.app.name}</span>
+                          <span>{pipeline.app.name}</span>
                           <p className="text-muted mb-0 small">
                             {_.capitalize(pipeline.app.type)}
                           </p>

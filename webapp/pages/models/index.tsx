@@ -8,8 +8,7 @@ import Loading from "@/app/components/common/Loading";
 import { useRouter } from "next/router";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
-import { IconChevronRight } from "@tabler/icons"
-
+import { IconChevronRight } from "@tabler/icons";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
@@ -69,7 +68,7 @@ const Models = () => {
                   <td>{model.id}</td>
                   <td>
                     <div>
-                      <strong>{model.name}</strong>
+                      <span>{model.name}</span>
 
                       <div
                         className="text-muted w-75"
@@ -101,7 +100,7 @@ const Models = () => {
                         className="mt-1"
                       />
                       <div className="ms-2">
-                        <span className="fw-bolder">{model.warehouse.name}</span>
+                        <span>{model.warehouse.name}</span>
                         <div className="small text-muted">
                           {_.capitalize(model.warehouse.type)}
                         </div>
@@ -111,7 +110,7 @@ const Models = () => {
                   <td>
                     <div className="d-flex">
                       <img
-                        src='/images/sql-icon.svg'
+                        src="/images/sql-icon.svg"
                         height={24}
                         className="mt-1 me-2"
                       />
@@ -119,7 +118,9 @@ const Models = () => {
                     </div>
                   </td>
                   <td>
-                    <span className="badge text-dark fs-4">{model.activeSyncsCount}</span>
+                    <span className="badge text-dark fs-4">
+                      {model.activeSyncsCount}
+                    </span>
                     <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>

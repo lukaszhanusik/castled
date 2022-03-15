@@ -360,15 +360,10 @@ form {
     font-weight: $font-weight-bolder;
   }
 
-  tbody td {
-    img {
-      margin-top: 4px !important;
-    }
-  }
-
   tbody tr td {
     border-top: 1px solid $gray-200;
     border-bottom: 1px solid $gray-200;
+    vertical-align: middle;
 
     &:first-child {
       border-left: 1px solid $gray-200;

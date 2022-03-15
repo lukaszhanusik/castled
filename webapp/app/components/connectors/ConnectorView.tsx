@@ -82,23 +82,25 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
             <tbody>
               {connectors.map((connector, idx) => (
                 <tr key={idx}>
-                  <td>
-                    <Link href={`${path}/${connector.id}`}>
-                      <a
-                        className={cn({
-                          "disable-link": connector && connector.demo,
-                        })}
-                      >
-                        {connector.name}
-                        {connector && connector.demo && (
-                          <Badge bg="warning">demo</Badge>
-                        )}
-                      </a>
-                    </Link>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    <span
+                      className={cn({
+                        "disable-link": connector && connector.demo,
+                      })}
+                    >
+                      {connector.name}
+                      {connector && connector.demo && (
+                        <Badge bg="warning">demo</Badge>
+                      )}
+                    </span>
                   </td>
-                  <td>{connector.type}</td>
-                  <td>{connector.pipelines}</td>
-                  <td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    {connector.type}
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    {connector.pipelines}
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <Badge
                       bg={connector.status === "OK" ? "success" : "danger"}
                     >
