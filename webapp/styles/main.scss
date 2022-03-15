@@ -362,9 +362,12 @@ label {
   cursor: pointer;
 }
 
+.tr-collapse {
+  border-collapse: separate;
+}
+
 .table {
   border-spacing: 0 5px;
-  border-collapse: separate;
   thead tr,
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;

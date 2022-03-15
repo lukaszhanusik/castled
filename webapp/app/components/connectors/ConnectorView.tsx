@@ -72,7 +72,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
       )}
       {connectors && connectors.length > 0 && (
         <div className="table-responsive">
-          <Table>
+          <Table className="tr-collapse">
             <thead>
               <tr>
                 {headers.map((header, idx) => (

@@ -94,7 +94,7 @@ const Pipelines = () => {
       {!pipelines && <Loading />}
       {pipelines && pipelines.length > 0 && (
         <div className="table-responsive">
-          <Table>
+          <Table className="tr-collapse">
             <thead>
               <tr>
                 {headers.map((header, idx) => (

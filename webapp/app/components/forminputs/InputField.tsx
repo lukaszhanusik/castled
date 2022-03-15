@@ -48,7 +48,12 @@ const InputField = ({
         </label>
       )}
       {description && description !== title && (
-        <p className="text-muted mb-2">{description}</p>
+        <p
+          className="text-muted"
+          style={{ marginBottom: ".25rem", marginTop: "-.5rem" }}
+        >
+          {description}
+        </p>
       )}
       {getInput(field, meta, onChange, props, optionsRef, required)}
       {loading && !isHidden && (
