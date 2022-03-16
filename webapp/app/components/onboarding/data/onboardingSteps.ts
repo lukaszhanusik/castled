@@ -13,6 +13,7 @@ const demoOnboardingSteps = [
     type: "warehouses",
     icon: IconDatabase,
     isDone: true,
+    buttonText: "",
     onClickURL: "/pipelines/create?demo=1",
   },
   {
@@ -22,6 +23,7 @@ const demoOnboardingSteps = [
     type: "models",
     icon: IconRelationManyToMany,
     isDone: true,
+    buttonText: "",
     onClickURL: "/pipelines/create?demo=1",
   },
   {
@@ -31,6 +33,7 @@ const demoOnboardingSteps = [
     type: "apps",
     icon: IconApps,
     isDone: false,
+    buttonText: "Add App",
     onClickURL: "/pipelines/create?demo=1",
   },
   {
@@ -40,6 +43,7 @@ const demoOnboardingSteps = [
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
+    buttonText: "Create Pipeline",
     onClickURL: "/pipelines/create?demo=1",
   },
 ];
@@ -52,6 +56,7 @@ const onboardingSteps = [
     type: "warehouses",
     icon: IconDatabase,
     isDone: false,
+    buttonText: "Add Warehouse",
     onClickURL: "/warehouses/create?wizardStep=selectType",
   },
   {
@@ -61,6 +66,7 @@ const onboardingSteps = [
     type: "models",
     icon: IconRelationManyToMany,
     isDone: false,
+    buttonText: "Create Model",
     onClickURL: "/models/create?wizardStep=source:selectType",
   },
   {
@@ -70,6 +76,7 @@ const onboardingSteps = [
     type: "apps",
     icon: IconApps,
     isDone: false,
+    buttonText: "Add App",
     onClickURL: "/apps/create?wizardStep=selectType",
   },
   {
@@ -79,6 +86,7 @@ const onboardingSteps = [
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
+    buttonText: "Create Pipeline",
     onClickURL: "/pipelines/create?wizardStep=source:selectModelType",
   },
 ];

@@ -2,16 +2,18 @@ import { useRouter } from "next/router";
 import { Accordion } from "react-bootstrap";
 import { WelcomeOnboardingData } from "./Welcome";
 
-export default function conditionalStep(steps: WelcomeOnboardingData[]) {
+export default function ConditionalStep({
+  steps,
+}: {
+  steps: WelcomeOnboardingData[];
+}) {
   const router = useRouter();
-  return steps.map((step, index) => {
-    const Icon = step.icon;
-    return (
-      <div key={step.type} className="border">
-        <Accordion flush>
-          <Accordion.Item
-            eventKey={`${index}`}
-          >
+  return (
+    <Accordion>
+      {steps.map((step, index) => {
+        const Icon = step.icon;
+        return (
+          <Accordion.Item eventKey={`${index}`}>
             <Accordion.Header>
               <div className="mx-2">
                 {step.isDone ? (
@@ -29,20 +31,22 @@ export default function conditionalStep(steps: WelcomeOnboardingData[]) {
               </div>
               <div className="mx-2">{step.title}</div>
             </Accordion.Header>
-            <Accordion.Body>
+            <Accordion.Body className="border border-3 border-secondary">
               <div className="my-2">{step.description}</div>
-              <div className="my-3">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => router.push(step.onClickURL)}
-                >
-                  {"+ Create " + step.type}
-                </button>
-              </div>
+              {step.buttonText && (
+                <div className="my-3">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => router.push(step.onClickURL)}
+                  >
+                    {"+ " + step.buttonText}
+                  </button>
+                </div>
+              )}
             </Accordion.Body>
           </Accordion.Item>
-        </Accordion>
-      </div>
-    );
-  });
+        );
+      })}
+    </Accordion>
+  );
 }

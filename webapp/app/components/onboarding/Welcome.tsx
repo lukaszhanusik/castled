@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Alert } from "react-bootstrap";
 import pipelineService from "@/app/services/pipelineService";
-import { useRouter } from "next/router";
 import { onboardingSteps, demoOnboardingSteps } from "./data/onboardingSteps";
 import { TablerIcon } from "@tabler/icons";
-import conditionalStep from "./conditionalStep";
+import ConditionalStep from "@/app/components/onboarding/conditionalStep";
 
 export interface WelcomeOnboardingData {
   title: string;
@@ -12,6 +10,7 @@ export interface WelcomeOnboardingData {
   isDone: boolean;
   type: string;
   icon: TablerIcon;
+  buttonText: string;
   onClickURL: string;
 }
 
@@ -37,5 +36,9 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
       });
   }, []);
 
-  return <>{conditionalStep(type === "demo" ? demoSteps : steps)}</>;
+  return (
+    <>
+      <ConditionalStep steps={type === "demo" ? demoSteps : steps} />
+    </>
+  );
 }
