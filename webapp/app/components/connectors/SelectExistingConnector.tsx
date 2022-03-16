@@ -40,7 +40,7 @@ const SelectExistingConnector = ({
   return (
     <div className="categories">
       {loading && <div className="linear-background"></div>}
-      <ListGroup>
+      <ListGroup className="animate">
         {connectors !== undefined && category !== "Model" && (
           <button
             className="btn list-group-item rounded"

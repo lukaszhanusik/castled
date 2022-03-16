@@ -207,6 +207,7 @@ const ConnectorForm = ({
         })
       }
       onSubmit={onSubmit}
+      className="animate"
     >
       {({ values, isSubmitting, setFieldValue }) => (
         <Form>

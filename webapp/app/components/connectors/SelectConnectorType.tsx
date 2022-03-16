@@ -60,7 +60,7 @@ const SelectConnectorType = ({
           {typeList?.map((type, i) => (
             <ListGroup key={i}>
               <ListGroup.Item
-                className="rounded"
+                className="rounded animate"
                 onClick={() => selectType(type)}
               >
                 <Col>

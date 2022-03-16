@@ -53,7 +53,7 @@ const ModelType = ({
         {modelTypes?.map((type, i) => (
           <ListGroup.Item
             key={i}
-            className="list-group-item rounded"
+            className="list-group-item rounded animate"
             onClick={() => onModelTypeSelect(type)}
           >
             <img src={type.icon} />
