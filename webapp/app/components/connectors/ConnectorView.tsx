@@ -53,6 +53,10 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
       });
   };
 
+  const firstCapitalize = (str: String) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
@@ -99,7 +103,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    {connector.type}
+                    {firstCapitalize(connector.type)}
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     {connector.pipelines}

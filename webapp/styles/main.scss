@@ -269,6 +269,10 @@ label {
   }
 }
 
+.text-muted {
+  font-size: 0.8rem;
+}
+
 .mono-font {
   textarea {
     font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
@@ -364,6 +368,9 @@ label {
 
 .tr-collapse {
   border-collapse: separate;
+  td {
+    font-weight: 500;
+  }
 }
 
 .table {
@@ -377,16 +384,25 @@ label {
   }
 
   tbody tr td {
-    border-top: 1px solid $gray-200;
-    border-bottom: 1px solid $gray-200;
+    // border-top: 1px solid $gray-200;
+    // border-bottom: 1px solid $gray-200;
+    background: $gray-100;
     vertical-align: middle;
 
+    img {
+      border-radius: 0.15rem;
+    }
+
     &:first-child {
-      border-left: 1px solid $gray-200;
+      // border-left: 1px solid $gray-200;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
     }
 
     &:last-child {
-      border-right: 1px solid $gray-200;
+      // border-right: 1px solid $gray-200;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
     }
   }
 
