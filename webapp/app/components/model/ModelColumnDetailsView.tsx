@@ -18,7 +18,7 @@ function ModelColumnDetailsView({
     if (columnDetails) {
       const warehouseResults = columnDetails.map((field, index) => (
         <tr key={`${field.name}-${index}`}>
-          <td className="col-4">{columnNameTransform(field.name)}</td>
+          <td className="col-4">{field.name}</td>
           <td className="col-6">
             <input
               type="text"
