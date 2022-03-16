@@ -60,31 +60,31 @@ const Welcome = () => {
             className="btn btn-primary mb-3"
             onClick={() => stepsToggle(false, "default")}
           >
-            <IconChevronLeft size={20} />
-            {" "}
-            Go back
+            <IconChevronLeft size={20} /> Go back
           </button>
         )}
-        {!isOss && (btnType === "demo" || btnType === "default") && (
-          <PrimaryButtons
-            stepsToggle={() => stepsToggle(true, "demo")}
-            btnType="demo"
-            doneCount={demoCompletedCount}
-          />
-        )}
-        {/* {typeof window === "object" && isOss && <WelcomePopup />} */}
-        {(btnType === "primary" || btnType === "default") && (
-          <PrimaryButtons
-            stepsToggle={() => stepsToggle(true, "primary")}
-            btnType="primary"
-            doneCount={primaryCompletedCount}
-          />
-        )}
-        {showSteps && (
-          <div className="mb-5 px-3">
-            <WelcomeOnboarding type={btnType} />
-          </div>
-        )}
+        <div className={showSteps ? "border border-2" : ""}>
+          {!isOss && (btnType === "demo" || btnType === "default") && (
+            <PrimaryButtons
+              stepsToggle={() => stepsToggle(true, "demo")}
+              btnType="demo"
+              doneCount={demoCompletedCount}
+            />
+          )}
+          {/* {typeof window === "object" && isOss && <WelcomePopup />} */}
+          {(btnType === "primary" || btnType === "default") && (
+            <PrimaryButtons
+              stepsToggle={() => stepsToggle(true, "primary")}
+              btnType="primary"
+              doneCount={primaryCompletedCount}
+            />
+          )}
+          {showSteps && (
+            <div className="mb-5 px-3">
+              <WelcomeOnboarding type={btnType} />
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );
