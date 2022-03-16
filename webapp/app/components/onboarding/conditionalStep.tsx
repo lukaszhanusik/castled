@@ -13,7 +13,7 @@ export default function conditionalStep(steps: WelcomeOnboardingData[]) {
             eventKey={`${index}`}
           >
             <Accordion.Header>
-              <div>
+              <div className="mx-2">
                 {step.isDone ? (
                   <img
                     src="/images/check-filled.svg"
@@ -27,11 +27,11 @@ export default function conditionalStep(steps: WelcomeOnboardingData[]) {
                   <Icon size={25} stroke={1} className="navbar-icon" />
                 )}
               </div>
-              <div>{step.title}</div>
+              <div className="mx-2">{step.title}</div>
             </Accordion.Header>
             <Accordion.Body>
-              <div>{step.description}</div>
-              <div>
+              <div className="my-2">{step.description}</div>
+              <div className="my-3">
                 <button
                   className="btn btn-primary"
                   onClick={() => router.push(step.onClickURL)}

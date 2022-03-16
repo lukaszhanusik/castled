@@ -16,15 +16,20 @@ export interface WelcomeOnboardingData {
 }
 
 export default function WelcomeOnboarding({ type }: { type: string }) {
+  const [demoSteps, setDemoSteps] = useState<WelcomeOnboardingData[]>([]);
   const [steps, setSteps] = useState<WelcomeOnboardingData[]>([]);
 
   useEffect(() => {
     pipelineService
       .onboardCount()
       .then(({ data }) => {
+        const updatedDemoOnboarding = demoOnboardingSteps.map((step) =>
+          data[step.type] ? { ...step, isDone: true } : step
+        );
         const updatedOnboarding = onboardingSteps.map((step) =>
           data[step.type] ? { ...step, isDone: true } : step
         );
+        setDemoSteps(updatedDemoOnboarding);
         setSteps(updatedOnboarding);
       })
       .catch(() => {
@@ -32,5 +37,5 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
       });
   }, []);
 
-  return <>{conditionalStep(type === "demo" ? demoOnboardingSteps : steps)}</>;
+  return <>{conditionalStep(type === "demo" ? demoSteps : steps)}</>;
 }
