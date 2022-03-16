@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import pipelineService from "@/app/services/pipelineService";
 import { useRouter } from "next/router";
-import onboardingSteps from "./data/onboardingSteps";
+import { onboardingSteps, demoOnboardingSteps } from "./data/onboardingSteps";
 import { TablerIcon } from "@tabler/icons";
+import conditionalStep from "./conditionalStep";
 
-export interface WelcomeOnboardingProps {
+export interface WelcomeOnboardingData {
   title: string;
   description: string;
   isDone: boolean;
@@ -14,9 +15,8 @@ export interface WelcomeOnboardingProps {
   onClickURL: string;
 }
 
-export default function WelcomeOnboarding() {
-  const [steps, setSteps] = useState<WelcomeOnboardingProps[]>([]);
-  const router = useRouter();
+export default function WelcomeOnboarding({ type }: { type: string }) {
+  const [steps, setSteps] = useState<WelcomeOnboardingData[]>([]);
 
   useEffect(() => {
     pipelineService
@@ -32,42 +32,5 @@ export default function WelcomeOnboarding() {
       });
   }, []);
 
-  return (
-    <>
-      {steps.map((step, index) => {
-        const Icon = step.icon;
-        return (
-          <div key={step.type}>
-            <Alert
-              variant={step.isDone ? "primary" : "light"}
-              className="d-flex flex-row card border"
-              onClick={() => !step.isDone && router.push(step.onClickURL)}
-              style={{
-                cursor: !step.isDone ? "pointer" : "default",
-                columnGap: "1rem",
-                backgroundColor: step.isDone ? "#dff6f8c9" : "",
-              }}
-            >
-              {step.isDone ? (
-                <img
-                  src="/images/check-filled.svg"
-                  alt="Completed or not"
-                  className={`p-0 border-0 ${
-                    step.isDone ? "onboarding done" : "onboarding not-done"
-                  }`}
-                  style={{ width: "1.5rem" }}
-                />
-              ) : (
-                <Icon size={30} stroke={1} className="navbar-icon" />
-              )}
-              <div className="">
-                <Alert.Heading>{step.title}</Alert.Heading>
-                <div>{step.description}</div>
-              </div>
-            </Alert>
-          </div>
-        );
-      })}
-    </>
-  );
+  return <>{conditionalStep(type === "demo" ? demoOnboardingSteps : steps)}</>;
 }

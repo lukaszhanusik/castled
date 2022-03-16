@@ -101,7 +101,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                 </OverlayTrigger>
               );
             })}
-          <li className="position-absolute bottom-0 text-center">
+          <li className="position-absolute bottom-0 text-center w-75">
             {user && !isOss && (
               <Dropdown align="end">
                 <Dropdown.Toggle
