@@ -47,7 +47,7 @@ const ConnectorEdit = ({
         />
       }
     >
-      {!connector && <Loading />}
+      {!connector && <Loading className="w-50"/>}
       {connector && (
         <ConnectorForm
           appBaseUrl={appBaseUrl}

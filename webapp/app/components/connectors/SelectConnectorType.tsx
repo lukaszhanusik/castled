@@ -18,10 +18,13 @@ const SelectConnectorType = ({
 }: SelectConnectorTypeProps) => {
   const [typeList, setTypeList] = useState<ConnectorTypeDto[] | undefined>();
   const { pipelineWizContext } = usePipelineWizContext();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetcher =
       category === "App" ? appsService.types : warehouseService.types;
     fetcher().then(({ data }) => {
+      setLoading(false);
       setTypeList(data);
     });
   }, [category]);
@@ -47,6 +50,13 @@ const SelectConnectorType = ({
       )}
       <div className="grid-categories">
         <Row md={3}>
+          {loading &&
+            <>
+              <div className="linear-background w-25 m-3"></div>
+              <div className="linear-background w-25 m-3"></div>
+              <div className="linear-background w-25 m-3"></div>
+            </>
+          }
           {typeList?.map((type, i) => (
             <ListGroup key={i}>
               <ListGroup.Item

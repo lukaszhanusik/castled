@@ -22,18 +22,24 @@ const SelectExistingConnector = ({
   const [connectors, setConnectors] = useState<
     ConnectorDto[] | undefined | null
   >();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const type = typeOption.value;
     const fetcher =
       category === "App" ? appsService.get(type) : warehouseService.get(type);
     fetcher
-      .then(({ data }) => setConnectors(data))
+      .then(({ data }) => {
+        setLoading(false)
+        setConnectors(data)
+      })
       .catch(() => {
         setConnectors(null);
       });
   }, [category, typeOption.value]);
   return (
     <div className="categories">
+      {loading && <div className="linear-background"></div>}
       <ListGroup>
         {connectors !== undefined && category !== "Model" && (
           <button

@@ -9,17 +9,20 @@ import { useRouter } from "next/router";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
 import { IconChevronRight } from "@tabler/icons";
+import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
+  const [loading, setLoading] = useState(true);
 
   const headers = ["#", "Model Name", "Source", "Type", "Pipelines"];
   useEffect(() => {
     modelService
       .get()
       .then(({ data }) => {
+        setLoading(false)
         setModels(data);
       })
       .catch(() => {
@@ -38,7 +41,7 @@ const Models = () => {
         href: "/models/create",
       }}
     >
-      {!models && <Loading />}
+      {!models && <LoadingTable />}
 
       {models && models.length === 0 && (
         <p className="text-center">No models created yet.</p>

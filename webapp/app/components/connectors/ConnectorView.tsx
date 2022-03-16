@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
 import { IconChevronRight } from "@tabler/icons";
+import LoadingTable from "../pipeline/step3mapping/components/Layouts/LoadingTable";
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -64,7 +65,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
         href: `${path}/create?wizardStep=selectType`,
       }}
     >
-      {!connectors && <Loading />}
+      {!connectors && <LoadingTable />}
       {connectors && connectors.length === 0 && (
         <Alert variant="light" className="text-center">
           No {category} connections created yet!

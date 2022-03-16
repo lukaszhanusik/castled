@@ -35,6 +35,7 @@ import PipelineSettingsView from "@/app/components/pipeline/PipelineSettingsView
 import { ScheduleType } from "@/app/common/enums/ScheduleType";
 import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
 import TimeAgo from "react-timeago";
+import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const pipelineId = routerUtils.getInt(query.pipelineId);
@@ -135,7 +136,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
         },
       }}
     >
-      {!pipeline && <Loading />}
+      {!pipeline && <Loading className="mb-5"/>}
       {pipeline && (
         <div className="mb-4">
           <span>{pipeline.warehouse.name}</span>

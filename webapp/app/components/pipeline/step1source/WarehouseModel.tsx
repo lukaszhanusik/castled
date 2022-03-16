@@ -17,6 +17,7 @@ import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
 import modelService from "@/app/services/modelService";
+import LoadingTable from "../step3mapping/components/Layouts/LoadingTable";
 
 const WarehouseModel = ({
   curWizardStep,
@@ -183,26 +184,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
     return (
       <div>
         <p>Query in progress...</p>
-        <div className="table-responsive mx-auto mt-2">
-          <Table>
-            <tbody>
-              <tr className="pt-4 pb-4">
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
+        <LoadingTable />
       </div>
     );
   } else if (result.status === "FAILED") {

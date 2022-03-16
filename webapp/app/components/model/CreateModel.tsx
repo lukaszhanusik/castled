@@ -20,6 +20,7 @@ import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import modelService from "@/app/services/modelService";
 import Select from "react-select";
 import { NextRouter, useRouter } from "next/router";
+import LoadingTable from "../pipeline/step3mapping/components/Layouts/LoadingTable";
 
 const CreateModel = ({
   curWizardStep,
@@ -278,26 +279,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
     return (
       <div>
         <p>Query in progress...</p>
-        <div className="table-responsive mx-auto mt-1">
-          <Table>
-            <tbody>
-              <tr className="pt-4 pb-4">
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-                <td>
-                  <div className="linear-background"></div>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
+        <LoadingTable />
       </div>
     );
   } else if (result.status === "FAILED") {

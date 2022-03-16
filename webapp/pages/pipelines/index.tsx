@@ -13,6 +13,7 @@ import _ from "lodash";
 import { PipelineSyncStatus } from "@/app/common/enums/PipelineSyncStatus";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { IconArrowNarrowRight, IconChevronRight } from "@tabler/icons";
+import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
 const Pipelines = () => {
   const [pipelines, setPipelines] = useState<
     PipelineResponseDto[] | undefined | null
@@ -88,7 +89,7 @@ const Pipelines = () => {
           : undefined
       }
     >
-      {!pipelines && <Loading />}
+      {!pipelines && <LoadingTable />}
       {pipelines && pipelines.length > 0 && (
         <div className="table-responsive">
           <Table className="tr-collapse">

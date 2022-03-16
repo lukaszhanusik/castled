@@ -51,7 +51,7 @@ const ConnectorForm = ({
   const type = connectorType || routerUtils.getInt(router.query.type);
   const [formFields, setFormFields] = useState<FormFieldsDto | undefined>();
   const { isOss } = useSession();
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (!pipelineWizContext) return;
     if (id) {
@@ -64,6 +64,7 @@ const ConnectorForm = ({
           ? appsService.formFields
           : warehouseService.formFields;
       fetcher(type).then(({ data }) => {
+        setLoading(false);
         setFormFields(data);
       });
     }
@@ -217,6 +218,7 @@ const ConnectorForm = ({
             required
           />
           <InputField type="hidden" name="config.type" title="Type" />
+          {loading && <div className="w-50 linear-background"></div>}
           {connectorType && (
             <DynamicFormFields
               namePrefix="config"
