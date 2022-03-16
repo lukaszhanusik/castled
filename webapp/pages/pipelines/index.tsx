@@ -47,34 +47,31 @@ const Pipelines = () => {
   }
   const enabledHandler = (
     pipelines: PipelineResponseDto[],
-    pipeline: PipelineResponseDto,
+    idx: number,
     isActive: boolean
   ) => {
-    {
-      const pipelineNew = _.cloneDeep(pipeline);
-      if (isActive) {
-        pipelineService.pause(pipeline.id).then(() => {
-          if (pipeline) {
-            pipelineNew.syncStatus = PipelineSyncStatus.PAUSED;
-            setPipelines([
-              ...pipelines.filter((x) => x.id !== pipeline.id),
-              pipelineNew,
-            ]);
-          }
-          bannerNotificationService.success("Pipeline Paused");
-        });
-      } else {
-        pipelineService.resume(pipeline.id).then(() => {
-          if (pipeline) {
-            pipelineNew.syncStatus = PipelineSyncStatus.ACTIVE;
-            setPipelines([
-              ...pipelines.filter((x) => x.id !== pipeline.id),
-              pipelineNew,
-            ]);
-          }
-          bannerNotificationService.success("Pipeline Resumed");
-        });
-      }
+    const pipeline = pipelines[idx];
+    const pipelineNew = _.cloneDeep(pipeline);
+    if (isActive) {
+      pipelineService.pause(pipeline.id).then(() => {
+        if (pipeline) {
+          pipelineNew.syncStatus = PipelineSyncStatus.PAUSED;
+          let pipelinesNew = [...pipelines];
+          pipelinesNew[idx] = pipelineNew;
+          setPipelines(pipelinesNew);
+        }
+        bannerNotificationService.success("Pipeline Paused");
+      });
+    } else {
+      pipelineService.resume(pipeline.id).then(() => {
+        if (pipeline) {
+          pipelineNew.syncStatus = PipelineSyncStatus.ACTIVE;
+          let pipelinesNew = [...pipelines];
+          pipelinesNew[idx] = pipelineNew;
+          setPipelines(pipelinesNew);
+        }
+        bannerNotificationService.success("Pipeline Resumed");
+      });
     }
   };
   return (
@@ -123,15 +120,10 @@ const Pipelines = () => {
                     >
                       {pipeline.id}
                     </td>
-                    <td
-                      onClick={() => router.push(`/pipelines/${pipeline.id}`)}
-                    >
-                      {/* <img
-                        src={`/images/${status}.svg`}
-                        width={14}
-                        className="me-2"
-                      /> */}
-                      {pipeline.name}
+                    <td>
+                      <Link href={`/pipelines/${pipeline.id}`}>
+                        <span>{pipeline.name}</span>
+                      </Link>
                     </td>
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
@@ -145,9 +137,9 @@ const Pipelines = () => {
                         />
                         <div className="ms-2">
                           <span>{pipeline.warehouse.name}</span>
-                          <p className="text-muted mb-0 small">
+                          {/* <p className="text-muted mb-0 small">
                             {_.capitalize(pipeline.warehouse.type)}
-                          </p>
+                          </p> */}
                         </div>
                         <IconArrowNarrowRight
                           className={`text-${status} ms-5`}
@@ -166,9 +158,9 @@ const Pipelines = () => {
                         />
                         <div className="ms-2">
                           <span>{pipeline.app.name}</span>
-                          <p className="text-muted mb-0 small">
+                          {/* <p className="text-muted mb-0 small">
                             {_.capitalize(pipeline.app.type)}
-                          </p>
+                          </p> */}
                         </div>
                       </div>
                     </td>
@@ -185,7 +177,7 @@ const Pipelines = () => {
                         id="pipeline-switch"
                         checked={isActive}
                         onChange={() =>
-                          enabledHandler(pipelines, pipeline, isActive)
+                          enabledHandler(pipelines, idx, isActive)
                         }
                       />
                       <IconChevronRight

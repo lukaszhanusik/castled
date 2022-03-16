@@ -253,18 +253,17 @@ label {
   }
   .model-item {
     text-align: left;
+    font-weight: 500;
     img {
       width: 45px;
       height: 50px;
       padding-top: 0.25rem;
     }
     .text-muted {
-      font-weight: 400;
-      font-size: 0.75rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;
+      text-transform: initial;
     }
   }
 }
@@ -340,6 +339,7 @@ label {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
   padding: 0.5rem 0.7rem;
+  font-weight: 500;
 }
 
 .list-group-item:hover {
@@ -371,6 +371,10 @@ label {
   td {
     font-weight: 500;
   }
+
+  .d-flex {
+    align-items: center;
+  }
 }
 
 .table {
@@ -379,14 +383,23 @@ label {
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;
     font-size: 0.8rem;
-    background: $primary-lite-2x;
+    background: $gray-100;
     font-weight: $font-weight-bolder;
   }
 
+  thead th {
+    &:first-child {
+      border-left: 1px solid $primary-lite-2x;
+    }
+    &:last-child {
+      border-right: 1px solid $primary-lite-2x;
+    }
+  }
+
   tbody tr td {
-    // border-top: 1px solid $gray-200;
-    // border-bottom: 1px solid $gray-200;
-    background: $gray-100;
+    border-top: 1px solid $gray-200;
+    border-bottom: 1px solid $gray-200;
+    // background: $gray-100;
     vertical-align: middle;
 
     img {
@@ -394,13 +407,13 @@ label {
     }
 
     &:first-child {
-      // border-left: 1px solid $gray-200;
+      border-left: 1px solid $gray-200;
       border-top-left-radius: $border-radius;
       border-bottom-left-radius: $border-radius;
     }
 
     &:last-child {
-      // border-right: 1px solid $gray-200;
+      border-right: 1px solid $gray-200;
       border-top-right-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
     }
@@ -600,11 +613,6 @@ form {
   img {
     width: 200px;
   }
-}
-
-.delete-btn {
-  width: 20px;
-  height: 20px;
 }
 
 .search-input {

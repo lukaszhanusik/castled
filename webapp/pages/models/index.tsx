@@ -101,9 +101,9 @@ const Models = () => {
                       />
                       <div className="ms-2">
                         <span>{model.warehouse.name}</span>
-                        <div className="small text-muted">
+                        {/* <div className="small text-muted">
                           {_.capitalize(model.warehouse.type)}
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </td>
@@ -114,7 +114,7 @@ const Models = () => {
                         height={24}
                         className="mt-1 me-2"
                       />
-                      {model.type} Model
+                      {model.type} model
                     </div>
                   </td>
                   <td>

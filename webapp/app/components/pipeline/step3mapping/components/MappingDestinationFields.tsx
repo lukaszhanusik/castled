@@ -263,7 +263,7 @@ export default function MappingDestinationFields({
             <Button
               onClick={addRow}
               variant="outline-primary"
-              className="mx-2 my-2"
+              className="my-2"
             >
               Add mapping row
             </Button>

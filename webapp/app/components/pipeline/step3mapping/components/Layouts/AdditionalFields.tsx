@@ -29,7 +29,6 @@ export function AdditionalFields({
   pkRequired,
   checkboxChange,
 }: AdditionalFieldsProps) {
-
   return (
     <tr>
       <td className="col-5 p-2">
@@ -61,15 +60,11 @@ export function AdditionalFields({
       </td>
       {pkRequired && (
         <td className="col-2 p-2 text-center align-middle">
-          <input
-            type="checkbox"
-            className="me-2"
-            onChange={checkboxChange}
-          />
+          <input type="checkbox" className="me-2" onChange={checkboxChange} />
         </td>
       )}
       <Placeholder as="td" className="text-center">
-        <IconTrash onClick={handleDelete} className="delete-btn" />
+        <IconTrash size={16} onClick={handleDelete} className="delete-btn" />
       </Placeholder>
     </tr>
   );
