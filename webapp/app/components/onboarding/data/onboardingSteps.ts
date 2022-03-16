@@ -13,7 +13,7 @@ const demoOnboardingSteps = [
     type: "warehouses",
     icon: IconDatabase,
     isDone: true,
-    onClickURL: "/warehouses/create?wizardStep=selectType",
+    onClickURL: "/pipelines/create?demo=1",
   },
   {
     title: "Create Model",
@@ -22,7 +22,7 @@ const demoOnboardingSteps = [
     type: "models",
     icon: IconRelationManyToMany,
     isDone: true,
-    onClickURL: "/models/create?wizardStep=source:selectType",
+    onClickURL: "/pipelines/create?demo=1",
   },
   {
     title: "Configure Destination",
@@ -31,7 +31,7 @@ const demoOnboardingSteps = [
     type: "apps",
     icon: IconApps,
     isDone: false,
-    onClickURL: "/apps/create?wizardStep=selectType",
+    onClickURL: "/pipelines/create?demo=1",
   },
   {
     title: "Create Pipeline",
@@ -40,7 +40,7 @@ const demoOnboardingSteps = [
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
-    onClickURL: "/pipelines/create?wizardStep=source:selectModelType",
+    onClickURL: "/pipelines/create?demo=1",
   },
 ];
 
