@@ -80,7 +80,7 @@ const Welcome = () => {
             />
           )}
           {showSteps && (
-            <div className="mb-5 px-3">
+            <div className="mb-3 px-3">
               <WelcomeOnboarding type={btnType} />
             </div>
           )}

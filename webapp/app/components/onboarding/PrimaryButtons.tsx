@@ -1,4 +1,3 @@
-import { IconChevronRight } from "@tabler/icons";
 import { primaryButton } from "./data/PrimaryButton";
 
 export default function PrimaryButtons({
@@ -30,8 +29,8 @@ export default function PrimaryButtons({
                 <div className="col-3 align-self-center">
                   <span>{`${doneCount} of 4 completed`}</span>
                 </div>
-                <div className="col-1">
-                  <IconChevronRight size={20} className="text-muted" />
+                <div className="col-1 align-self-center">
+                  {">"}
                 </div>
               </div>
             </div>
