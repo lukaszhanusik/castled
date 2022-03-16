@@ -47,34 +47,31 @@ const Pipelines = () => {
   }
   const enabledHandler = (
     pipelines: PipelineResponseDto[],
-    pipeline: PipelineResponseDto,
+    idx: number,
     isActive: boolean
   ) => {
-    {
-      const pipelineNew = _.cloneDeep(pipeline);
-      if (isActive) {
-        pipelineService.pause(pipeline.id).then(() => {
-          if (pipeline) {
-            pipelineNew.syncStatus = PipelineSyncStatus.PAUSED;
-            setPipelines([
-              ...pipelines.filter((x) => x.id !== pipeline.id),
-              pipelineNew,
-            ]);
-          }
-          bannerNotificationService.success("Pipeline Paused");
-        });
-      } else {
-        pipelineService.resume(pipeline.id).then(() => {
-          if (pipeline) {
-            pipelineNew.syncStatus = PipelineSyncStatus.ACTIVE;
-            setPipelines([
-              ...pipelines.filter((x) => x.id !== pipeline.id),
-              pipelineNew,
-            ]);
-          }
-          bannerNotificationService.success("Pipeline Resumed");
-        });
-      }
+    const pipeline = pipelines[idx];
+    const pipelineNew = _.cloneDeep(pipeline);
+    if (isActive) {
+      pipelineService.pause(pipeline.id).then(() => {
+        if (pipeline) {
+          pipelineNew.syncStatus = PipelineSyncStatus.PAUSED;
+          let pipelinesNew = [ ...pipelines];
+          pipelinesNew[idx] = pipelineNew;
+          setPipelines(pipelinesNew);
+        }
+        bannerNotificationService.success("Pipeline Paused");
+      });
+    } else {
+      pipelineService.resume(pipeline.id).then(() => {
+        if (pipeline) {
+          pipelineNew.syncStatus = PipelineSyncStatus.ACTIVE;
+          let pipelinesNew = [ ...pipelines];
+          pipelinesNew[idx] = pipelineNew;
+          setPipelines(pipelinesNew);
+        }
+        bannerNotificationService.success("Pipeline Resumed");
+      });
     }
   };
   return (
@@ -84,10 +81,10 @@ const Pipelines = () => {
       rightBtn={
         pipelines?.length
           ? {
-              id: "create_pipeline_button",
-              title: "Create",
-              href: "/pipelines/create",
-            }
+            id: "create_pipeline_button",
+            title: "Create",
+            href: "/pipelines/create",
+          }
           : undefined
       }
     >
@@ -124,11 +121,6 @@ const Pipelines = () => {
                       {pipeline.id}
                     </td>
                     <td>
-                      {/* <img
-                        src={`/images/${status}.svg`}
-                        width={14}
-                        className="me-2"
-                      /> */}
                       <Link href={`/pipelines/${pipeline.id}`}>
                         <span className="fw-bolder">{pipeline.name}</span>
                       </Link>
@@ -184,9 +176,7 @@ const Pipelines = () => {
                         type="switch"
                         id="pipeline-switch"
                         checked={isActive}
-                        onChange={() =>
-                          enabledHandler(pipelines, pipeline, isActive)
-                        }
+                        onChange={() => enabledHandler(pipelines, idx, isActive)}
                       />
                       <IconChevronRight
                         className="float-end me-2 text-secondary"
