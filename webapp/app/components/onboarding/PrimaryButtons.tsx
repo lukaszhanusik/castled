@@ -27,11 +27,11 @@ export default function PrimaryButtons({
                   <h3>{item.title}</h3>
                 </div>
                 <div className="col-3 align-self-center">
-                  <span>{`${doneCount} of 4 completed`}</span>
+                  <span
+                    style={{ color: "#7a73ff" }}
+                  >{`${doneCount} of 4 completed`}</span>
                 </div>
-                <div className="col-1 align-self-center">
-                  {">"}
-                </div>
+                <div className="col-1 align-self-center">{">"}</div>
               </div>
             </div>
           )
