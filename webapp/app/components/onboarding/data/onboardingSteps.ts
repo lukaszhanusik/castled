@@ -12,7 +12,7 @@ const onboardingSteps = [
       "Start with configuring your Source. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
     type: "warehouses",
     icon: IconDatabase,
-    isDone: true,
+    isDone: false,
     onClickURL: "/warehouses/create?wizardStep=selectType",
   },
   {
@@ -21,7 +21,7 @@ const onboardingSteps = [
       "Once you have configured the source warehouse, create a model out of the data in your warehouse tables.",
     type: "models",
     icon: IconRelationManyToMany,
-    isDone: true,
+    isDone: false,
     onClickURL: "/models/create?wizardStep=source:selectType",
   },
   {

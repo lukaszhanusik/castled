@@ -34,7 +34,7 @@ export default function WelcomeOnboarding() {
 
   return (
     <>
-      {onboardingSteps.map((step, index) => {
+      {steps.map((step, index) => {
         const Icon = step.icon;
         return (
           <div key={step.type}>

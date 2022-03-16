@@ -27,46 +27,52 @@ export default function OnboardingBanner() {
 
   return (
     <>
-      <Navbar
-        bg="secondary"
-        variant="light"
-        style={{ backgroundColor: "#dff6f8c9" }}
-      >
-        <Container className="justify-content-around">
-          {onboardingSteps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <Navbar.Brand
-                href={!step.isDone ? step.onClickURL : "#"}
-                key={step.type}
-              >
-                {step.isDone ? (
-                  <img
-                    src="/images/check-filled.svg"
-                    alt="Completed or not"
-                    className={`d-inline-block align-top ${
-                      step.isDone ? "onboarding done" : "onboarding not-done"
-                    }`}
-                    width="30"
-                    height="30"
-                    style={{ width: "1.2rem" }}
-                  />
-                ) : (
-                  <Icon size={25} stroke={1} className="navbar-icon" />
-                )}{" "}
-                <label style={{ fontWeight: 500 }}>{step.title}</label>
-              </Navbar.Brand>
-            );
-          })}
-        </Container>
-      </Navbar>
+      {!router.pathname.includes("welcome") && countDone < 4 && (
+        <>
+          <Navbar
+            bg="secondary"
+            variant="light"
+            style={{ backgroundColor: "#dff6f8c9" }}
+          >
+            <Container className="justify-content-around">
+              {steps.map((step, index) => {
+                const Icon = step.icon;
+                return (
+                  <Navbar.Brand
+                    href={!step.isDone ? step.onClickURL : "#"}
+                    key={step.type}
+                  >
+                    {step.isDone ? (
+                      <img
+                        src="/images/check-filled.svg"
+                        alt="Completed or not"
+                        className={`d-inline-block align-top ${
+                          step.isDone
+                            ? "onboarding done"
+                            : "onboarding not-done"
+                        }`}
+                        width="30"
+                        height="30"
+                        style={{ width: "1.2rem" }}
+                      />
+                    ) : (
+                      <Icon size={25} stroke={1} className="navbar-icon" />
+                    )}{" "}
+                    <label style={{ fontWeight: 500 }}>{step.title}</label>
+                  </Navbar.Brand>
+                );
+              })}
+            </Container>
+          </Navbar>
 
-      <div className="text-center" style={{ backgroundColor: "#dff6f8c9" }}>
-        <label>
-          You are (x) steps aways from your first pipeline. Complete the pending
-          steps to start moving the data.
-        </label>
-      </div>
+          <div className="text-center" style={{ backgroundColor: "#dff6f8c9" }}>
+            <label>
+              You are (x) steps aways from your first pipeline. Complete the
+              pending steps to start moving the data.
+            </label>
+          </div>
+        </>
+      )}
     </>
   );
 }
