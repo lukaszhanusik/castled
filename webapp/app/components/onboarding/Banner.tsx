@@ -2,11 +2,11 @@ import pipelineService from "@/app/services/pipelineService";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Container, Navbar } from "react-bootstrap";
-import onboardingSteps from "./data/onboardingSteps";
-import { WelcomeOnboardingProps } from "./Welcome";
+import { onboardingSteps } from "./data/onboardingSteps";
+import { WelcomeOnboardingData } from "./Welcome";
 
 export default function OnboardingBanner() {
-  const [steps, setSteps] = useState<WelcomeOnboardingProps[]>([]);
+  const [steps, setSteps] = useState<WelcomeOnboardingData[]>([]);
   const [countDone, setCountDone] = useState(0);
   const router = useRouter();
 
