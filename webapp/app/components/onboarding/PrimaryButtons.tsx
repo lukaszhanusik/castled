@@ -9,6 +9,7 @@ export default function PrimaryButtons({
   btnType: string;
   doneCount: number;
 }) {
+  const countDone = 4 - doneCount;
   return (
     <>
       {primaryButton.map(
@@ -29,10 +30,10 @@ export default function PrimaryButtons({
                 </div>
                 <div className="col-3 align-self-center">
                   <span style={{ color: "#7a73ff" }}>
-                    {4 - doneCount === 0
+                    {countDone === 0
                       ? "All Steps Completed"
-                      : `${4 - doneCount} ${
-                          4 - doneCount === 1 ? "step" : "steps"
+                      : `${countDone} ${
+                          countDone === 1 ? "step" : "steps"
                         } left`}
                   </span>
                 </div>
