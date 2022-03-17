@@ -43,11 +43,16 @@ const Welcome = () => {
         console.log("Error fetching pipeline count.");
       });
 
-    authService.whoAmI().then(({ data }) => {
-      if (data.email) {
-        setUserExists(true);
-      }
-    });
+    authService
+      .whoAmI()
+      .then(({ data }) => {
+        if (data.email) {
+          setUserExists(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     if (router.query.redirect === "banner") {
       setBtnType("primary");
       setShowSteps(true);
@@ -90,7 +95,9 @@ const Welcome = () => {
               showSteps={showSteps}
             />
           )}
-          {typeof window === "object" && isOss && !userExists && <WelcomePopup />}
+          {/* {typeof window === "object" && isOss && !userExists && (
+            <WelcomePopup />
+          )} */}
           {(btnType === "primary" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "primary")}
