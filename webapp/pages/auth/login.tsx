@@ -32,7 +32,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 interface serverSideProps {
   appBaseUrl: string;
   apiBase: string;
-  isOss: boolean;
+  isOss: string;
 }
 
 const Login = (props: serverSideProps) => {
@@ -55,7 +55,7 @@ const Login = (props: serverSideProps) => {
 
   return (
     <>
-      {!props.isOss ? (
+      {props.isOss === "false" && (
         <GuestLayout>
           <div className="p-4">
             <Formik
@@ -116,9 +116,8 @@ const Login = (props: serverSideProps) => {
             </div>
           </div>
         </GuestLayout>
-      ) : (
-        <WelcomePopup />
       )}
+      {props.isOss === "true" && <WelcomePopup />}
     </>
   );
 };
