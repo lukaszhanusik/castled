@@ -38,7 +38,7 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
 
   return (
     <>
-      <ConditionalStep steps={type === "demo" ? demoSteps : steps} />
+      <ConditionalStep steps={type === "demo" ? demoSteps : steps} type={type}/>
     </>
   );
 }
