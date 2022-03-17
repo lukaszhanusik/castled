@@ -30,7 +30,7 @@ const Models = () => {
   console.log(models);
   return (
     <Layout
-      title="Model List"
+      title="Models"
       subTitle={undefined}
       rightBtn={{
         id: "create_model_button",

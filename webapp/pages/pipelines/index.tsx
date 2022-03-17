@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
-import { Form, Table } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Form, Table } from "react-bootstrap";
 import pipelineService from "@/app/services/pipelineService";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { SchedulTimeUnitLabel } from "@/app/common/enums/ScheduleType";
 import _ from "lodash";
 import { PipelineSyncStatus } from "@/app/common/enums/PipelineSyncStatus";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
-import { IconArrowNarrowRight, IconChevronRight } from "@tabler/icons";
+import { IconChevronRight } from "@tabler/icons";
 const Pipelines = () => {
   const [pipelines, setPipelines] = useState<
     PipelineResponseDto[] | undefined | null
@@ -81,10 +81,10 @@ const Pipelines = () => {
       rightBtn={
         pipelines?.length
           ? {
-              id: "create_pipeline_button",
-              title: "Create Pipeline",
-              href: "/pipelines/create",
-            }
+            id: "create_pipeline_button",
+            title: "Create Pipeline",
+            href: "/pipelines/create",
+          }
           : undefined
       }
     >
@@ -128,41 +128,44 @@ const Pipelines = () => {
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
                     >
-                      <div className="d-flex">
-                        <img
-                          src={pipeline.warehouse.logoUrl}
-                          alt={pipeline.warehouse.name}
-                          height={24}
-                          className="mt-1"
-                        />
-                        <div className="ms-2">
-                          <span>{pipeline.warehouse.name}</span>
-                          {/* <p className="text-muted mb-0 small">
-                            {_.capitalize(pipeline.warehouse.type)}
-                          </p> */}
+                      <OverlayTrigger
+                        placement="right"
+                        key={pipeline.warehouse.name}
+                        overlay={<Tooltip id={pipeline.warehouse.name}>{_.capitalize(pipeline.warehouse.type)}</Tooltip>}
+                      >
+                        <div className="d-flex">
+                          <img
+                            src={pipeline.warehouse.logoUrl}
+                            alt={pipeline.warehouse.name}
+                            height={24}
+                            className="mt-1"
+                          />
+                          <div className="ms-2">
+                            {pipeline.warehouse.name}
+                          </div>
                         </div>
-                        <IconArrowNarrowRight
-                          className={`text-${status} ms-5`}
-                        />
-                      </div>
+                      </OverlayTrigger>
                     </td>
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
                     >
-                      <div className="d-flex">
-                        <img
-                          src={pipeline.app.logoUrl}
-                          alt={pipeline.app.name}
-                          height={24}
-                          className="mt-1"
-                        />
-                        <div className="ms-2">
-                          <span>{pipeline.app.name}</span>
-                          {/* <p className="text-muted mb-0 small">
-                            {_.capitalize(pipeline.app.type)}
-                          </p> */}
+                      <OverlayTrigger
+                        placement="right"
+                        key={pipeline.app.name}
+                        overlay={<Tooltip id={pipeline.app.name}>{_.capitalize(pipeline.app.type)}</Tooltip>}
+                      >
+                        <div className="d-flex" data-toggle="tooltip" data-placement="right" title={_.capitalize(pipeline.app.type)}>
+                          <img
+                            src={pipeline.app.logoUrl}
+                            alt={pipeline.app.name}
+                            height={24}
+                            className="mt-1"
+                          />
+                          <div className="ms-2">
+                            {pipeline.app.name}
+                          </div>
                         </div>
-                      </div>
+                      </OverlayTrigger>
                     </td>
                     <td
                       onClick={() => router.push(`/pipelines/${pipeline.id}`)}
