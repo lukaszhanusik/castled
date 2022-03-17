@@ -4,10 +4,12 @@ export default function PrimaryButtons({
   stepsToggle,
   btnType,
   doneCount,
+  showSteps
 }: {
   stepsToggle: () => void;
   btnType: string;
   doneCount: number;
+  showSteps: boolean;
 }) {
   const countDone = 4 - doneCount;
   return (
@@ -37,7 +39,7 @@ export default function PrimaryButtons({
                         } left`}
                   </span>
                 </div>
-                <div className="col-1 align-self-center">{">"}</div>
+                {!showSteps && <div className="col-1 align-self-center">{">"}</div>}
               </div>
             </div>
           )

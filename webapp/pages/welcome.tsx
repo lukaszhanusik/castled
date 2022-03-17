@@ -32,6 +32,10 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
+        localStorage.setItem(
+          "onboarding_count",
+          JSON.stringify(isDoneCounter(updatedPrimaryOnboarding))
+        );
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");
@@ -76,6 +80,7 @@ const Welcome = () => {
               stepsToggle={() => stepsToggle(true, "demo")}
               btnType="demo"
               doneCount={demoCompletedCount}
+              showSteps={showSteps}
             />
           )}
           {/* {typeof window === "object" && isOss && <WelcomePopup />} */}
@@ -84,6 +89,7 @@ const Welcome = () => {
               stepsToggle={() => stepsToggle(true, "primary")}
               btnType="primary"
               doneCount={primaryCompletedCount}
+              showSteps={showSteps}
             />
           )}
           {showSteps && (
