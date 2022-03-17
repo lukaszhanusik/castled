@@ -31,7 +31,9 @@ export default function PrimaryButtons({
                   <span style={{ color: "#7a73ff" }}>
                     {4 - doneCount === 0
                       ? "All Steps Completed"
-                      : `${4 - doneCount} steps left`}
+                      : `${4 - doneCount} ${
+                          4 - doneCount === 1 ? "step" : "steps"
+                        } left`}
                   </span>
                 </div>
                 <div className="col-1 align-self-center">{">"}</div>
