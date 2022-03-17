@@ -34,11 +34,11 @@ export default function ConditionalStep({
     }
   }
 
-  // countDone is used here as a workaround for accordion defaultActiveKey
-  // which only works during first render. Usually first render will give us undefined
-  // So we will create a countDone state. initially it will also give undefined.
-  // Now since countDone is undefined, accordion won't render and will only render when both countDone
-  // and activeStep are defined, which gives us the correct render and then auto-opens the desired dropdown.
+  /* countDone is used here as a workaround for accordion defaultActiveKey which only 
+   works during first render. Usually first render will give us undefined. So we will create
+   a countDone state. initially it will also give undefined. Now since countDone is undefined, 
+   accordion won't render and will only render when both countDone and activeStep are defined, 
+   which gives us the correct render and then auto-opens the desired dropdown. */
   return (
     <>
       {countDone && (

@@ -64,13 +64,6 @@ export default function OnboardingBanner() {
               })}
             </Container>
           </Navbar>
-
-          <div className="text-center" style={{ backgroundColor: "#dff6f8c9" }}>
-            <label>
-              You are (x) steps aways from your first pipeline. Complete the
-              pending steps to start moving the data.
-            </label>
-          </div>
         </>
       )}
     </>
