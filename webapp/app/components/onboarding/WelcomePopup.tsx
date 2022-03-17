@@ -74,7 +74,7 @@ export default function WelcomePopup() {
           </div>
           <div className="col-6">
             <img
-              src="https://doodleipsum.com/700/flat?i=b27c0a34a1444c205ec7c49a651d3046"
+              src="/images/welcome-popup.svg"
               alt="Home Alone by Gustavo Pedrosa"
               className="popup-image"
             />
