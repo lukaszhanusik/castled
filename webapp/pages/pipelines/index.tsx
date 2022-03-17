@@ -42,7 +42,7 @@ const Pipelines = () => {
           ? {
               id: "create_pipeline_button",
               title: "Create",
-              href: "/pipelines/create",
+              href: "/pipelines/create?wizardStep=source:selectModelType",
             }
           : undefined
       }
@@ -60,12 +60,12 @@ const Pipelines = () => {
             </thead>
             <tbody>
               {pipelines.map((pipeline, idx) => (
-                <tr key={idx}>
-                  <td>
-                    <Link href={`/pipelines/${pipeline.id}`}>
-                      <a>{pipeline.name}</a>
-                    </Link>
-                  </td>
+                <tr
+                  className="cursor-pointer"
+                  key={idx}
+                  onClick={() => router.push(`/pipelines/${pipeline.id}`)}
+                >
+                  <td>{pipeline.name}</td>
                   <td>
                     {/* <img
                       src={pipeline.warehouse.logoUrl}

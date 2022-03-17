@@ -1,0 +1,44 @@
+name: skip version
+
+on:
+  workflow_dispatch:
+    inputs:
+      partToBump:
+        description: "Please choose the type of sem version to skip : major|minor|patch"
+        required: true
+        default: "patch"
+
+jobs:
+  publishCastled:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Old Version
+        id: old_version
+        run: echo ::set-output name=OLD_VERSION::$(grep VERSION .env | cut -d"=" -f2)
+
+      - name: Version Bump
+        env:
+          PART_TO_BUMP: ${{ github.event.inputs.partToBump }}
+        run: ./tools/bin/bump_release_version.sh
+
+      - name: Get New Version
+        id: new_version
+        run: echo ::set-output name=NEW_VERSION::$(grep VERSION .env | cut -d"=" -f2)
+
+      - name: Create Pull Request
+        id: pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GH_ACTION_PAT }}
+          branch: bump-version
+          branch-suffix: short-commit-hash
+          delete-branch: true
+          title: Skipping to Castled version to ${{ steps.new_version.outputs.NEW_VERSION }} from ${{ steps.old_version.outputs.OLD_VERSION }}
+          body: Skipping Castled version
+          commit-message: Skipping to Castled version to ${{ steps.new_version.outputs.NEW_VERSION }} from ${{ steps.old_version.outputs.OLD_VERSION }}
+
+      - name: Pull Request Info
+        run: echo "Pull Request Url - ${{ steps.pr.outputs.pull-request-url }}"
