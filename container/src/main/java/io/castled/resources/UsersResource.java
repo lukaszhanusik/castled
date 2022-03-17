@@ -2,13 +2,16 @@ package io.castled.resources;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.castled.dtos.EmailRegistrationRequest;
 import io.castled.dtos.UserDTO;
 import io.castled.models.users.User;
 import io.castled.services.UsersService;
 import io.dropwizard.auth.Auth;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,5 +32,11 @@ public class UsersResource {
     @Path("whoami")
     public UserDTO getLoggedInUser(@Auth User user) {
         return usersService.toDTO(user);
+    }
+
+    @POST
+    @Path("/register")
+    public void registerEmail(@Valid EmailRegistrationRequest emailRegistrationRequest) {
+        this.usersService.createTestTeamAndUser(emailRegistrationRequest.getEmail());
     }
 }
