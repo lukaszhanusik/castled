@@ -9,6 +9,7 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import warehouseService from "@/app/services/warehouseService";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import cn from "classnames";
+import _ from "lodash";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
@@ -51,10 +52,6 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
       .catch(() => {
         setConnectors(null);
       });
-  };
-
-  const firstCapitalize = (str: String) => {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
 
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
@@ -104,10 +101,23 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    {firstCapitalize(connector.type)}
+                    
+                    <div className="d-flex">
+                        <img
+                          src={connector.logoUrl}
+                          alt={connector.name}
+                          height={24}
+                          className="mt-1"
+                        />
+                        <div className="ms-2">
+                          <span>{_.capitalize(connector.type)}</span>
+                        </div>
+                      </div>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    {connector.pipelines}
+                    <span className="badge text-dark fs-4">
+                      {connector.pipelines}
+                    </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <Badge
