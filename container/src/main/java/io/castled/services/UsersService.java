@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jdbi.v3.core.Jdbi;
 
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 
 @Singleton
@@ -33,8 +34,12 @@ public class UsersService {
                 user.getId(), user.getCreatedTs(), team);
     }
 
-    public void createTestTeamAndUser() {
-        this.usersDAO.createTeamAndUser("test", "test@castled.io", "Test", "User");
+    public void createTestTeamAndUser(String email) {
+        User user = getUser();
+        if (user != null) {
+            throw new BadRequestException(String.format("User %s already exists", user.getEmail()));
+        }
+        this.usersDAO.createTeamAndUser("test", email, "Test", "User");
     }
 
     public User getUser() {

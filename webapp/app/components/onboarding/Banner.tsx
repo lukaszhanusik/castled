@@ -1,33 +1,23 @@
-import pipelineService from "@/app/services/pipelineService";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Container, Navbar } from "react-bootstrap";
-import { onboardingSteps } from "./data/onboardingSteps";
-import { WelcomeOnboardingData } from "./Welcome";
 
-export default function OnboardingBanner() {
-  const [steps, setSteps] = useState<WelcomeOnboardingData[]>([]);
+function OnboardingBanner() {
   const [countDone, setCountDone] = useState(0);
+  const [pathName, setPathName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    pipelineService
-      .onboardCount()
-      .then(({ data }) => {
-        const updatedOnboarding = onboardingSteps.map((step) =>
-          data[step.type] ? { ...step, isDone: true } : step
-        );
-        setSteps(updatedOnboarding);
-        setCountDone(Object.values(data).filter(Boolean).length);
-      })
-      .catch(() => {
-        console.log("error");
-      });
+    const getCount = localStorage.getItem("onboarding_count");
+    if (getCount) {
+      setCountDone(JSON.parse(getCount));
+    }
+    setPathName(router.pathname);
   }, []);
 
   return (
     <>
-      {!router.pathname.includes("welcome") && countDone < 4 && (
+      {!pathName.includes("welcome") && countDone < 4 && (
         <>
           <Navbar style={{ backgroundColor: "#7a73ff" }}>
             <Container className="justify-content-around">
@@ -77,3 +67,5 @@ export default function OnboardingBanner() {
     </>
   );
 }
+
+export default OnboardingBanner;
