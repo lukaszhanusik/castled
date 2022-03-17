@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
 import { WelcomeOnboardingData } from "./Welcome";
 
@@ -8,45 +9,76 @@ export default function ConditionalStep({
   steps: WelcomeOnboardingData[];
 }) {
   const router = useRouter();
+  const [activeStep, setActiveStep] = useState<string | undefined>();
+  const [countDone, setCountDone] = useState(0);
+
+  useEffect(() => {
+    const step = findRemainingStep();
+    if (step) {
+      setActiveStep(step.toString());
+    }
+    const countIsDone = steps.reduce(
+      (acc, curr) => (curr.isDone ? acc + 1 : 0),
+      0
+    );
+    setCountDone(countIsDone);
+  }, [steps]);
+
+  function findRemainingStep() {
+    let index = 0;
+    for (const step of steps) {
+      if (!step.isDone) {
+        return index;
+      }
+      index++;
+    }
+  }
+
   return (
-    <Accordion>
-      {steps.map((step, index) => {
-        const Icon = step.icon;
-        return (
-          <Accordion.Item eventKey={`${index}`}>
-            <Accordion.Header>
-              <div className="mx-2">
-                {step.isDone ? (
-                  <img
-                    src="/images/check-filled.svg"
-                    alt="Completed or not"
-                    className={`p-0 border-0 ${
-                      step.isDone ? "onboarding done" : "onboarding not-done"
-                    }`}
-                    style={{ width: "1.2rem" }}
-                  />
-                ) : (
-                  <Icon size={25} stroke={1} className="navbar-icon" />
-                )}
-              </div>
-              <div className="mx-2">{step.title}</div>
-            </Accordion.Header>
-            <Accordion.Body>
-              <div className="my-2">{step.description}</div>
-              {step.buttonText && (
-                <div className="my-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => router.push(step.onClickURL)}
-                  >
-                    {"+ " + step.buttonText}
-                  </button>
-                </div>
-              )}
-            </Accordion.Body>
-          </Accordion.Item>
-        );
-      })}
-    </Accordion>
+    <>
+      {countDone && (
+        <Accordion defaultActiveKey={activeStep}>
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <Accordion.Item eventKey={`${index}`} key={index}>
+                <Accordion.Header>
+                  <div className="mx-2">
+                    {step.isDone ? (
+                      <img
+                        src="/images/check-filled.svg"
+                        alt="Completed or not"
+                        className={`p-0 border-0 ${
+                          step.isDone
+                            ? "onboarding done"
+                            : "onboarding not-done"
+                        }`}
+                        style={{ width: "1.2rem" }}
+                      />
+                    ) : (
+                      <Icon size={25} stroke={1} className="navbar-icon" />
+                    )}
+                  </div>
+                  <div className="mx-2">{step.title}</div>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <div className="my-2">{step.description}</div>
+                  {step.buttonText && (
+                    <div className="my-3">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => router.push(step.onClickURL)}
+                      >
+                        {"+ " + step.buttonText}
+                      </button>
+                    </div>
+                  )}
+                </Accordion.Body>
+              </Accordion.Item>
+            );
+          })}
+        </Accordion>
+      )}
+    </>
   );
 }

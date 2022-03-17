@@ -11,4 +11,4 @@ const primaryButton = [
   },
 ];
 
-export { primaryButton };
+export default primaryButton;

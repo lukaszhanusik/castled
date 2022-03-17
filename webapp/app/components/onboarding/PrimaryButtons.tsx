@@ -1,4 +1,4 @@
-import { primaryButton } from "./data/PrimaryButton";
+import primaryButton from "./data/primaryButton";
 
 export default function PrimaryButtons({
   stepsToggle,
@@ -16,6 +16,7 @@ export default function PrimaryButtons({
           item.type === btnType && (
             <div
               className="card mb-3 p-3"
+              key={item.type}
               onClick={stepsToggle}
               style={{ cursor: "pointer" }}
             >
