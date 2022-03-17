@@ -85,12 +85,6 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
         flyway.setDataSource(mysqlDataSource);
         flyway.setLocations("migration");
         flyway.migrate();
-
-        //create test team and user if required
-        UsersService usersService = ObjectRegistry.getInstance(UsersService.class);
-        if (usersService.getUser() == null) {
-            usersService.createTestTeamAndUser();
-        }
         createNewInstallationIfRequired();
 
     }

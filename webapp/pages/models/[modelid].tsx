@@ -10,7 +10,7 @@ import Loading from "@/app/components/common/Loading";
 import { NextRouter, useRouter } from "next/router";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
-import { ModelPipelineView } from "@/app/components/model/ModelPipelineView";
+import ModelPipelineView from "@/app/components/model/ModelPipelineView";
 import ModelColumnDetailsView from "@/app/components/model/ModelColumnDetailsView";
 import PipelineWizardProvider, {
   usePipelineWizContext,

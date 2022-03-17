@@ -140,4 +140,8 @@ public class QueryModelService {
         List<ModelAggregate> modelAggregates = pipelineService.getModelAggregates(teamId, Lists.newArrayList(modelIdList));
         return modelAggregates.stream().collect(Collectors.toMap(ModelAggregate::getModelId, ModelAggregate::getPipelines));
     }
+
+    public int getTotalActiveModelsForTeam(Long teamId) {
+        return this.queryModelDAO.getTotalActiveModelsForTeam(teamId);
+    }
 }

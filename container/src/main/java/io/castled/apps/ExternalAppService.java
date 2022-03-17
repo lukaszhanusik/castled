@@ -203,7 +203,7 @@ public class ExternalAppService {
     public URI getAuthorizationUrl(User user, OAuthServiceType serviceType, OAuthAppAttributes oAuthAppAttributes,
                                    Long appId) throws Exception {
 
-        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig)oAuthAppAttributes.getConfig();
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig) oAuthAppAttributes.getConfig();
         ExternalAppOauthState externalAppOauthState = new ExternalAppOauthState(user.getId(), appId, oAuthAppAttributes);
         String stateId = ObjectRegistry.getInstance(OAuthStateStore.class).persistOAuthState(JsonUtils.objectToString(externalAppOauthState));
         OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppConfig.getClientId(),
@@ -221,7 +221,7 @@ public class ExternalAppService {
             throw new BadRequestException(String.format("Invalid state id %s", stateId));
         }
         OAuthAppAttributes oAuthAppAttributes = externalAppOauthState.getOAuthAppAttributes();
-        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig)oAuthAppAttributes.getConfig();
+        OAuthAppConfig oAuthAppConfig = (OAuthAppConfig) oAuthAppAttributes.getConfig();
         OAuthClientConfig oAuthClientConfig = new OAuthClientConfig(oAuthAppConfig.getClientId(),
                 oAuthAppConfig.getClientSecret());
         try {
@@ -268,5 +268,9 @@ public class ExternalAppService {
         return Optional.ofNullable(this.appOptionsFetchers.get(optionsReference))
                 .map(optionsFetcher -> new FieldOptionsDTO(optionsFetcher.getFieldOptions(appConfig)))
                 .orElse(null);
+    }
+
+    public int getTotalActiveAppsForTeam(Long teamId) {
+        return this.externalAppDAO.getTotalActiveAppsForTeam(teamId);
     }
 }
