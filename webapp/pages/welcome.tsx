@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import { useSession } from "@/app/common/context/sessionContext";
-import WelcomePopup from "@/app/components/layout/WelcomePopup";
 import WelcomeOnboarding from "@/app/components/onboarding/Welcome";
 import PrimaryButtons from "@/app/components/onboarding/PrimaryButtons";
 import {
@@ -11,12 +10,15 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
+import WelcomePopup from "@/app/components/onboarding/WelcomePopup";
+import authService from "@/app/services/authService";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
   const [btnType, setBtnType] = useState("default");
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
+  const [userExists, setUserExists] = useState(false);
   const { isOss } = useSession();
   const router = useRouter();
 
@@ -41,6 +43,11 @@ const Welcome = () => {
         console.log("Error fetching pipeline count.");
       });
 
+    authService.whoAmI().then(({ data }) => {
+      if (data.email) {
+        setUserExists(true);
+      }
+    });
     if (router.query.redirect === "banner") {
       setBtnType("primary");
       setShowSteps(true);
@@ -83,7 +90,7 @@ const Welcome = () => {
               showSteps={showSteps}
             />
           )}
-          {/* {typeof window === "object" && isOss && <WelcomePopup />} */}
+          {typeof window === "object" && isOss && !userExists && <WelcomePopup />}
           {(btnType === "primary" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "primary")}

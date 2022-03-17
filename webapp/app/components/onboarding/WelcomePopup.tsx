@@ -3,6 +3,7 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 import ButtonSubmit from "../forminputs/ButtonSubmit";
 import InputField from "../forminputs/InputField";
+import authService from "@/app/services/authService";
 
 export default function WelcomePopup() {
   const [open, setOpen] = useState(true);
@@ -35,8 +36,15 @@ export default function WelcomePopup() {
                   email: "",
                 }}
                 onSubmit={(values) => {
+                  authService.registerEmail(values).then((data) => {
+                    console.log(values);
+                    console.log(data);
+                  })
+                  .catch((error) => {
+                    console.log(values);
+                    console.log(error);
+                  });
                   closeModal();
-                  console.log(values);
                 }}
               >
                 {({ values, setFieldValue, setFieldTouched }) => (
