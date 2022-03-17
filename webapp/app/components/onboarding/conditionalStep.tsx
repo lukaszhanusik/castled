@@ -31,7 +31,7 @@ export default function ConditionalStep({
               </div>
               <div className="mx-2">{step.title}</div>
             </Accordion.Header>
-            <Accordion.Body className="border border-2 border-secondary">
+            <Accordion.Body>
               <div className="my-2">{step.description}</div>
               {step.buttonText && (
                 <div className="my-3">

@@ -575,3 +575,8 @@ form {
 .accordion-button {
   background-color: #fbfbfc;
 }
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0,0,0,.125);
+}
