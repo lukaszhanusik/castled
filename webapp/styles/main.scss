@@ -578,5 +578,32 @@ form {
 
 .accordion-button:focus {
   box-shadow: none;
-  border-color: rgba(0,0,0,.125);
+  border-color: rgba(0, 0, 0, 0.125);
+}
+
+.banner-primary {
+  display: flex;
+  column-gap: 5rem;
+}
+
+.banner-text {
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.banner-btn {
+  background-color: white;
+  color: #7a73ff;
+  font-weight: 600;
+  padding: 5px 9px 5px 9px;
+  border: 2px solid #7a73ff;
+  border-radius: 15px;
+  font-size: smaller;
+}
+
+.banner-btn:hover {
+  background-color: #7a73ff;
+  color: white;
+  border: 2px solid white;
 }

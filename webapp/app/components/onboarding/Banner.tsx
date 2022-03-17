@@ -29,13 +29,21 @@ export default function OnboardingBanner() {
     <>
       {!router.pathname.includes("welcome") && countDone < 4 && (
         <>
-          <Navbar
-            bg="secondary"
-            variant="light"
-            style={{ backgroundColor: "#dff6f8c9" }}
-          >
+          <Navbar style={{ backgroundColor: "#7a73ff" }}>
             <Container className="justify-content-around">
-              {steps.map((step, index) => {
+              <Navbar.Brand className="banner-primary">
+                <label className="banner-text">
+                  Complete the pending onboarding steps to start moving your
+                  data.
+                </label>
+                <button
+                  className="banner-btn"
+                  onClick={() => router.push("/welcome?redirect=banner")}
+                >
+                  {countDone === 0 ? "Start Onboarding" : "Continue Onboarding"}
+                </button>
+              </Navbar.Brand>
+              {/* {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
                   <Navbar.Brand
@@ -61,7 +69,7 @@ export default function OnboardingBanner() {
                     <label style={{ fontWeight: 500 }}>{step.title}</label>
                   </Navbar.Brand>
                 );
-              })}
+              })} */}
             </Container>
           </Navbar>
         </>

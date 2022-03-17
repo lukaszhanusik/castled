@@ -10,6 +10,7 @@ import {
 } from "@/app/components/onboarding/data/onboardingSteps";
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
+import { useRouter } from "next/router";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
@@ -17,6 +18,7 @@ const Welcome = () => {
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
   const { isOss } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     pipelineService
@@ -34,6 +36,11 @@ const Welcome = () => {
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
+
+    if (router.query.redirect === "banner") {
+      setBtnType("primary");
+      setShowSteps(true);
+    }
   }, []);
 
   function isDoneCounter(item: any) {
