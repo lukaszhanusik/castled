@@ -82,7 +82,7 @@ const Pipelines = () => {
         pipelines?.length
           ? {
               id: "create_pipeline_button",
-              title: "Create",
+              title: "Create Pipeline",
               href: "/pipelines/create",
             }
           : undefined

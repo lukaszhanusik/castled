@@ -60,7 +60,8 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      // title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      title={`${category}s`}
       subTitle={undefined}
       rightBtn={{
         id: `add_${category.toLowerCase()}_button`,

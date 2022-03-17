@@ -78,7 +78,7 @@ const Header = ({
                     )}
                     className="btn btn-primary btn-shadow float-end"
                   >
-                    {(rightBtn.title === "Create" ||
+                    {(rightBtn.title === "Create Pipeline" ||
                       rightBtn.title === "Add Warehouse" ||
                       rightBtn.title === "Create Model" ||
                       rightBtn.title === "Add App") && (

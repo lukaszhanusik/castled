@@ -26,10 +26,10 @@ export default function MappingImportantFields({
   }, []);
 
   return (
-    <div className="row py-1">
+    <div className="row pb-2">
       {mappingGroups &&
         mappingGroups.fields?.map((field) => (
-          <div className="flex-column align-self-center my-2">
+          <div className="flex-column align-self-center my-3">
             <div className="flex-column my-2">
               <label>{field.title}</label>
               {!field.optional && <span className="required-icon"> * </span>}

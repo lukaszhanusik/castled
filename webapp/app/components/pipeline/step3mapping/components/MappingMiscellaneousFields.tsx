@@ -178,7 +178,7 @@ export default function MappingMiscellaneousFields({
   );
 
   return (
-    <div className="row py-2">
+    <div className="row py-1">
       {mappingGroups && (
         <>
           <WarehouseColumn

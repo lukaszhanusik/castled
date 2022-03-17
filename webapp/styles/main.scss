@@ -367,13 +367,24 @@ label {
 }
 
 .tr-collapse {
-  border-collapse: separate;
+  // border-collapse: separate;
   td {
     font-weight: 500;
   }
 
   .d-flex {
     align-items: center;
+  }
+
+  tbody td:hover {
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    td {
+      // border-color: $table-row-hover;
+      transition: all 0.5s;
+    }
   }
 }
 
@@ -417,20 +428,6 @@ label {
       border-top-right-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
     }
-  }
-
-  tbody tr:hover {
-    td {
-      border-color: $table-row-hover;
-      transition: all 0.5s;
-    }
-  }
-
-  tbody td > a {
-    color: blue;
-  }
-  tbody td:hover {
-    cursor: pointer;
   }
 
   .badge {
