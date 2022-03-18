@@ -45,8 +45,8 @@ const SelectConnectorType = ({
           </Badge>
         </div>
       )}
-      <div className="grid-categories">
-        <Row md={3}>
+      <div className={category === "App" ? "grid-categories" : "categories"}>
+        <Row md={category === "App" ? 3 : 12}>
           {typeList?.map((type, i) => (
             <ListGroup key={i}>
               <ListGroup.Item

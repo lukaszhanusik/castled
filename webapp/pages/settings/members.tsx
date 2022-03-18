@@ -188,7 +188,7 @@ const MembersTab = () => {
           </div>
         )}
       </div>
-      <Table hover>
+      <Table>
         <thead>
           <tr>
             <th>Name</th>
@@ -266,7 +266,7 @@ const MembersTab = () => {
           <h3 className="mb-3 mt-4 font-weight-bold">
             {teamMembers!.pendingInvitees.length} pending invite
           </h3>
-          <Table hover>
+          <Table>
             <thead>
               <tr>
                 <th>Email address</th>

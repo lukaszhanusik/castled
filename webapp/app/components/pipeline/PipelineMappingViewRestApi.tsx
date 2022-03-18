@@ -53,7 +53,7 @@ const PipelineMappingViewRestApi = ({
       />
 
       <h4 className="mb-0 mt-3 font-weight-bold">Headers</h4>
-      <Table hover>
+      <Table>
         <thead>
           <tr>
             <th>Key</th>
