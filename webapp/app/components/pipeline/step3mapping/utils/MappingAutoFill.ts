@@ -117,10 +117,12 @@ function addkeysToLocalStorage(context: IAddKeysToLocalStorageProps) {
 }
 
 function formatLabel(label: string) {
-  return label
-    .split("_")
-    .join(" ");
-    // .map((word) => word[0].toUpperCase() + word.slice(1))
+  return label.split("_").join(" ");
+  // .map((word) => word[0].toUpperCase() + word.slice(1))
+}
+
+function sanitizedObjToString(string: string) {
+  return string.includes(".") ? string.replace(".", "_") : string;
 }
 
 export {
@@ -129,4 +131,5 @@ export {
   defaultValue,
   addkeysToLocalStorage,
   formatLabel,
+  sanitizedObjToString
 };

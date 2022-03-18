@@ -6,6 +6,7 @@ import {
   defaultValue,
   deleteItemFromLocalStorage,
   formatLabel,
+  sanitizedObjToString,
 } from "../utils/MappingAutoFill";
 import DestinationFieldRows from "./Layouts/DestinationFieldRows";
 import ErrorMessage from "./Layouts/ErrorMessage";
@@ -57,59 +58,67 @@ export default function MappingDestinationFields({
           }
         }
       }
+    } else {
+      if (
+        mappingGroups &&
+        !mappingGroups.mandatoryFields?.length &&
+        optionalFieldsElement &&
+        optionalFieldsElement.length
+      ) {
+        addRow();
+        // console.log("addRow");
+      }
     }
   }, [trackFieldsElement]);
 
   const optionalFields = mappingGroups.optionalFields?.map((optionalField) => {
+    const sanitizedObjToStr = sanitizedObjToString(optionalField.fieldName);
     return (
       <DestinationFieldRows
-        key={optionalField.fieldName}
+        key={sanitizedObjToStr}
         options={options}
         destinationFieldSection={mappingGroups}
         isDisabled={!optionalField.optional}
         onChangeWarehouse={(e) => {
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-warehouseField-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${sanitizedObjToStr}`,
             e?.value
           );
           addkeysToLocalStorage({
             input: e?.value,
             formType: "destinationFieldForm",
             type: "optional-warehouseField",
-            index: optionalField.fieldName,
+            index: sanitizedObjToStr,
           });
         }}
         onChangeAppField={(e) => {
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-appField-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-appField-${sanitizedObjToStr}`,
             e?.value
           );
           addkeysToLocalStorage({
             input: e?.value,
             formType: "destinationFieldForm",
             type: "optional-appField",
-            index: optionalField.fieldName,
+            index: sanitizedObjToStr,
           });
         }}
         handleDelete={(e) => {
           e.preventDefault();
-          deleteRow(optionalField.fieldName);
-          deleteItemFromLocalStorage(
-            optionalField.fieldName,
-            "destinationFieldForm"
-          );
+          deleteRow(sanitizedObjToStr);
+          deleteItemFromLocalStorage(sanitizedObjToStr, "destinationFieldForm");
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-warehouseField-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-warehouseField-${sanitizedObjToStr}`,
             ""
           );
           setFieldValue?.(
-            `DESTINATION_FIELDS-optional-appField-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-appField-${sanitizedObjToStr}`,
             ""
           );
         }}
         onBlur={() =>
           setFieldTouched?.(
-            `DESTINATION_FIELDS-optional-${optionalField.fieldName}-${optionalField.fieldName}`,
+            `DESTINATION_FIELDS-optional-${sanitizedObjToStr}-${sanitizedObjToStr}`,
             true
           )
         }
@@ -117,18 +126,18 @@ export default function MappingDestinationFields({
           defaultValue({
             form: "destinationFieldForm",
             type: "optional-appField",
-            index: optionalField.fieldName,
+            index: sanitizedObjToStr,
           }) && {
             value: defaultValue({
               form: "destinationFieldForm",
               type: "optional-appField",
-              index: optionalField.fieldName,
+              index: sanitizedObjToStr,
             }),
             label: formatLabel(
               defaultValue({
                 form: "destinationFieldForm",
                 type: "optional-appField",
-                index: optionalField.fieldName,
+                index: sanitizedObjToStr,
               })
             ),
           }
@@ -137,18 +146,18 @@ export default function MappingDestinationFields({
           defaultValue({
             form: "destinationFieldForm",
             type: "optional-warehouseField",
-            index: optionalField.fieldName,
+            index: sanitizedObjToStr,
           }) && {
             value: defaultValue({
               form: "destinationFieldForm",
               type: "optional-warehouseField",
-              index: optionalField.fieldName,
+              index: sanitizedObjToStr,
             }),
             label: formatLabel(
               defaultValue({
                 form: "destinationFieldForm",
                 type: "optional-warehouseField",
-                index: optionalField.fieldName,
+                index: sanitizedObjToStr,
               })
             ),
           }
@@ -198,67 +207,71 @@ export default function MappingDestinationFields({
           >
             {mappingGroups &&
               mappingGroups.mandatoryFields &&
-              mappingGroups.mandatoryFields.map((mandatoryField, i) => (
-                <DestinationFieldRows
-                  key={mandatoryField.fieldName}
-                  options={options}
-                  defaultAppValue={{
-                    value: mandatoryField.fieldName,
-                    label:
-                      mandatoryField.fieldDisplayName ||
-                      mandatoryField.fieldName,
-                  }}
-                  defaultWarehouseValue={
-                    defaultValue({
-                      form: "destinationFieldForm",
-                      type: "mandatory-warehouseField",
-                      index: mandatoryField.fieldName,
-                    }) && {
-                      value: defaultValue({
+              mappingGroups.mandatoryFields.map((mandatoryField, i) => {
+                const sanitizedObjToStr = sanitizedObjToString(
+                  mandatoryField.fieldName
+                );
+                return (
+                  <DestinationFieldRows
+                    key={sanitizedObjToStr}
+                    options={options}
+                    defaultAppValue={{
+                      value: sanitizedObjToStr,
+                      label:
+                        mandatoryField.fieldDisplayName || sanitizedObjToStr,
+                    }}
+                    defaultWarehouseValue={
+                      defaultValue({
                         form: "destinationFieldForm",
                         type: "mandatory-warehouseField",
-                        index: mandatoryField.fieldName,
-                      }),
-                      label: formatLabel(
-                        defaultValue({
+                        index: sanitizedObjToStr,
+                      }) && {
+                        value: defaultValue({
                           form: "destinationFieldForm",
                           type: "mandatory-warehouseField",
-                          index: mandatoryField.fieldName,
-                        })
-                      ),
+                          index: sanitizedObjToStr,
+                        }),
+                        label: formatLabel(
+                          defaultValue({
+                            form: "destinationFieldForm",
+                            type: "mandatory-warehouseField",
+                            index: sanitizedObjToStr,
+                          })
+                        ),
+                      }
                     }
-                  }
-                  isDisabled={!mandatoryField.optional}
-                  onChangeWarehouse={(e) => {
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-warehouseField-${mandatoryField.fieldName}`,
-                      e?.value
-                    );
-                    setFieldValue?.(
-                      `DESTINATION_FIELDS-mandatory-appField-${mandatoryField.fieldName}`,
-                      mandatoryField.fieldName
-                    );
-                    addkeysToLocalStorage({
-                      input: e?.value,
-                      formType: "destinationFieldForm",
-                      type: "mandatory-warehouseField",
-                      index: mandatoryField.fieldName,
-                    });
-                    addkeysToLocalStorage({
-                      input: mandatoryField.fieldName,
-                      formType: "destinationFieldForm",
-                      type: "mandatory-appField",
-                      index: mandatoryField.fieldName,
-                    });
-                  }}
-                  onBlur={() =>
-                    setFieldTouched?.(
-                      `DESTINATION_FIELDS-mandatory-${mandatoryField.fieldName}-${mandatoryField.fieldName}`,
-                      true
-                    )
-                  }
-                />
-              ))}
+                    isDisabled={!mandatoryField.optional}
+                    onChangeWarehouse={(e) => {
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-warehouseField-${sanitizedObjToStr}`,
+                        e?.value
+                      );
+                      setFieldValue?.(
+                        `DESTINATION_FIELDS-mandatory-appField-${sanitizedObjToStr}`,
+                        sanitizedObjToStr
+                      );
+                      addkeysToLocalStorage({
+                        input: e?.value,
+                        formType: "destinationFieldForm",
+                        type: "mandatory-warehouseField",
+                        index: sanitizedObjToStr,
+                      });
+                      addkeysToLocalStorage({
+                        input: sanitizedObjToStr,
+                        formType: "destinationFieldForm",
+                        type: "mandatory-appField",
+                        index: sanitizedObjToStr,
+                      });
+                    }}
+                    onBlur={() =>
+                      setFieldTouched?.(
+                        `DESTINATION_FIELDS-mandatory-${sanitizedObjToStr}-${sanitizedObjToStr}`,
+                        true
+                      )
+                    }
+                  />
+                );
+              })}
             {optionalRow}
             <Button
               onClick={addRow}
