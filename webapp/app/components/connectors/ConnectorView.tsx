@@ -27,7 +27,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["#", `${category} name`, "Type", "Pipelines", "Status"];
+  const headers = ["#", "Name", "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;

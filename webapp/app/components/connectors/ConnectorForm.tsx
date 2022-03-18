@@ -209,14 +209,16 @@ const ConnectorForm = ({
     >
       {({ values, isSubmitting, setFieldValue }) => (
         <Form>
-          <InputField
-            type="text"
-            name="name"
-            title={`${ConnectorCategoryLabel[category]} ${category} Name`}
-            placeholder={`Enter a name`}
-            required
-          />
-          <InputField type="hidden" name="config.type" title="Type" />
+          <div className="field-group">
+            <InputField
+              type="text"
+              name="name"
+              title={`${ConnectorCategoryLabel[category]} ${category} Name`}
+              placeholder={`Enter a name`}
+              required
+            />
+            <InputField type="hidden" name="config.type" title="Type" />
+          </div>
           {connectorType && (
             <DynamicFormFields
               namePrefix="config"
