@@ -48,7 +48,7 @@ public interface WarehouseDAO {
     @SqlQuery("select * from warehouses where id in (<whIds>) and is_deleted = 0 order by id desc")
     List<Warehouse> listWarehouses(@BindList("whIds") List<Long> whIds);
 
-    @SqlQuery("select count(id) from warehouses where is_deleted = 0 and team_id = :teamId")
+    @SqlQuery("select count(id) from warehouses where is_deleted = 0 and demo = 0 and team_id = :teamId")
     int getTotalActiveWarehousesForTeam(@Bind("teamId") Long teamId);
 
     @Slf4j
