@@ -40,7 +40,7 @@ export default function MappingPrimaryKeyFields({
             description={mappingGroups.description}
           >
             <tr>
-              <th className="col-6">
+              <td className="col-6">
                 <Select
                   options={options}
                   onChange={(e) => {
@@ -76,15 +76,15 @@ export default function MappingPrimaryKeyFields({
                     }
                   }
                 />
-              </th>
-              <th>
+              </td>
+              <td>
                 <Image
                   src="/images/arrow-right.svg"
                   alt="Right Arrow for Mapping"
                   className="py-2"
                 />
-              </th>
-              <th className="col-6">
+              </td>
+              <td className="col-6">
                 <Select
                   options={mappingGroups.primaryKeys?.map((key) => ({
                     value: key.fieldName,
@@ -123,7 +123,7 @@ export default function MappingPrimaryKeyFields({
                     }
                   }
                 />
-              </th>
+              </td>
               <Placeholder as="td" className="pb-0">
                 <label className="required-icon">*</label>
               </Placeholder>

@@ -87,7 +87,7 @@ function ModelColumnDetailsView({
         </div>
       </div>
       <div className="container">
-        <Table hover>
+        <Table>
           <thead>
             <tr>
               <th>NAME</th>

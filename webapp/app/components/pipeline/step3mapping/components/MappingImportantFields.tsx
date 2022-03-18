@@ -26,22 +26,17 @@ export default function MappingImportantFields({
   }, []);
 
   return (
-    <div className="row py-1">
+    <div className="row pb-2">
       {mappingGroups &&
         mappingGroups.fields?.map((field) => (
-          <div className="flex-column align-self-center my-2">
-            <div className="flex-column mx-1 my-2">
-              <div className="column">
-                <label className="font-weight-bold mx-1">{field.title}</label>
-                {!field.optional && (
-                  <label className="required-icon"> * </label>
-                )}
-              </div>
-              <div className="row description text-muted px-3">
-                {field.description}
-              </div>
+          <div className="flex-column align-self-center my-3">
+            <div className="flex-column my-2">
+              <label>{field.title}</label>
+              {!field.optional && <span className="required-icon"> * </span>}
+
+              <div className="description text-muted">{field.description}</div>
             </div>
-            <div className="w-50 px-2">
+            <div className="w-50">
               <Select
                 key={field.fieldName}
                 options={options}

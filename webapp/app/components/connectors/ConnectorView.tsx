@@ -9,9 +9,11 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import warehouseService from "@/app/services/warehouseService";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import cn from "classnames";
+import _ from "lodash";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
+import { IconChevronRight } from "@tabler/icons";
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -25,7 +27,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["Name", "Type", "Pipelines", "Status"];
+  const headers = ["#", `${category} name`, "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -55,7 +57,8 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      // title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      title={`${category}s`}
       subTitle={undefined}
       rightBtn={{
         id: `add_${category.toLowerCase()}_button`,
@@ -71,7 +74,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
       )}
       {connectors && connectors.length > 0 && (
         <div className="table-responsive">
-          <Table hover>
+          <Table className="tr-collapse">
             <thead>
               <tr>
                 {headers.map((header, idx) => (
@@ -82,28 +85,47 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
             <tbody>
               {connectors.map((connector, idx) => (
                 <tr key={idx}>
-                  <td>
-                    <Link href={`${path}/${connector.id}`}>
-                      <a
-                        className={cn({
-                          "disable-link": connector && connector.demo,
-                        })}
-                      >
-                        {connector.name}
-                        {connector && connector.demo && (
-                          <Badge bg="warning">demo</Badge>
-                        )}
-                      </a>
-                    </Link>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    {idx + 1}
                   </td>
-                  <td>{connector.type}</td>
-                  <td>{connector.pipelines}</td>
-                  <td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    <span
+                      className={cn({
+                        "disable-link": connector && connector.demo,
+                      })}
+                    >
+                      {connector.name}
+                      {connector && connector.demo && (
+                        <Badge bg="warning">demo</Badge>
+                      )}
+                    </span>
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    <div className="d-flex">
+                      <img
+                        src={connector.logoUrl}
+                        alt={connector.name}
+                        height={24}
+                        className="mt-1"
+                      />
+                      <div className="ms-2">
+                        <span>{_.capitalize(connector.type)}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
+                    <span className="badge text-dark fs-4">
+                      {connector.pipelines}
+                    </span>
+                  </td>
+                  <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <Badge
                       bg={connector.status === "OK" ? "success" : "danger"}
                     >
                       {connector.status}
                     </Badge>
+
+                    <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>
               ))}

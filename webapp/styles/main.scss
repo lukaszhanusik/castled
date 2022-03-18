@@ -91,7 +91,7 @@ body {
 .btn {
   text-transform: uppercase;
   font-size: $font-size-md;
-  border-radius: $border-radius-sm;
+  border-radius: $border-radius;
   padding: 0.35rem 1.5rem;
   svg {
     margin-top: -2px;
@@ -130,16 +130,38 @@ form {
   input:checked {
     filter: hue-rotate(45deg);
   }
+  .select-fetcher {
+    position: absolute;
+    top: 0.5rem;
+    right: -1.75rem;
+    width: 25px;
+  }
+}
+
+.field-group {
+  // border-bottom: 1px solid $gray-100;
+  margin-bottom: 2rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+.form-check-input:focus {
+  border-color: $primary-color;
+  box-shadow: none;
+}
+.form-check-input:checked {
+  border-color: $primary-color;
+  background-color: $primary-color;
 }
 
 .form-label {
   display: block;
-  font-size: $h4-font-size;
-  font-weight: $font-weight-base;
   margin-bottom: 0.25rem;
   .required-icon {
     position: absolute;
-    margin-top: -2px;
+    margin-top: 3px;
     margin-left: 3px;
   }
 }
@@ -231,20 +253,23 @@ form {
   }
   .model-item {
     text-align: left;
+    font-weight: 500;
     img {
       width: 45px;
       height: 50px;
       padding-top: 0.25rem;
     }
     .text-muted {
-      font-weight: 400;
-      font-size: 0.75rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;
+      text-transform: initial;
     }
   }
+}
+
+.text-muted {
+  font-size: 0.8rem;
 }
 
 .mono-font {
@@ -314,6 +339,7 @@ form {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
   padding: 0.5rem 0.7rem;
+  font-weight: 500;
 }
 
 .list-group-item:hover {
@@ -340,26 +366,90 @@ form {
   cursor: pointer;
 }
 
+.tr-collapse {
+  // border-collapse: separate;
+  td {
+    font-weight: 500;
+  }
+
+  th {
+    border-top: 1px solid $primary-lite-2x !important;
+    background: #fff !important;
+    font-weight: 400 !important;
+    color: #777 !important;
+  }
+
+  th,
+  td {
+    padding: 1rem;
+  }
+
+  .d-flex {
+    align-items: center;
+  }
+
+  tbody td:hover {
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    td {
+      // border-color: $table-row-hover;
+      transition: all 0.5s;
+    }
+  }
+}
+
+.loading-table {
+  td {
+    border: 0 !important;
+  }
+}
+
 .table {
-  border: 1px solid $gray-100;
+  border-spacing: 0 5px;
   thead tr,
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;
-    font-size: $font-size-md;
-    background: $primary-lite-2x;
+    font-size: 0.8rem;
+    background: $gray-100;
     font-weight: $font-weight-bolder;
   }
 
-  tbody td {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  thead th {
+    &:first-child {
+      border-left: 1px solid $primary-lite-2x;
+    }
+    &:last-child {
+      border-right: 1px solid $primary-lite-2x;
+    }
   }
 
-  tbody td > a {
-    color: blue;
+  tbody tr td {
+    // border-top: 1px solid $gray-200;
+    // border-bottom: 1px solid $gray-200;
+    // background: $gray-100;
+    vertical-align: middle;
+
+    img {
+      border-radius: 0.15rem;
+    }
+
+    &:first-child {
+      border-left: 1px solid $primary-lite-2x;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+    }
+
+    &:last-child {
+      border-right: 1px solid $primary-lite-2x;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
   }
-  tbody td > a:hover {
-    cursor: pointer;
+
+  .badge {
+    background-color: $primary-lite-2x;
   }
 
   .processing {
@@ -432,7 +522,7 @@ form {
 
 .required-icon {
   color: #f74c3c;
-  font-size: 20px;
+  font-size: 0.8rem;
   position: relative;
 }
 
@@ -444,6 +534,11 @@ form {
   .error {
     font-size: $font-size-sm;
   }
+}
+
+.form-width-75 {
+  width: 75%;
+  margin: auto;
 }
 
 .doc-not-found {
@@ -540,11 +635,6 @@ form {
   }
 }
 
-.delete-btn {
-  width: 20px;
-  height: 20px;
-}
-
 .search-input {
   background-image: url("/images/search-icon.svg");
   background-repeat: no-repeat, no-repeat;
@@ -563,6 +653,25 @@ form {
   height: 1rem;
 }
 
+.option-wrapper {
+  .description {
+    opacity: 0.5;
+  }
+  .label {
+    font-weight: 600;
+  }
+}
+
+.radio-group-wrapper {
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.radio-group-wrapper:hover {
+  background-color: $gray-100;
+  border: 1px solid $gray-100;
+  transition: all 0.3s;
+}
 .onboarding.done {
   filter: invert(63%) sepia(71%) saturate(312%) hue-rotate(105deg)
     brightness(89%) contrast(90%);

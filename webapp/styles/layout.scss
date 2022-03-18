@@ -61,7 +61,7 @@ body,
 .container-main {
   margin: 0 auto;
   @include media-breakpoint-up(xl) {
-    max-width: 57.77%;
+    max-width: 54%;
   }
 }
 
@@ -91,7 +91,7 @@ body,
   .nav-pills .show > .nav-link {
     background-color: transparent;
     border-radius: 0;
-    padding: 0.4rem;
+    padding: 0;
 
     &.active div {
       border-radius: $border-radius;
@@ -112,6 +112,10 @@ body,
 
   .icons {
     padding: 0.5rem;
+  }
+
+  .text-white {
+    font-size: 0.7rem;
   }
 
   .icons:hover {
@@ -163,9 +167,8 @@ body,
 
 .container-main {
   form {
-    padding: 1rem;
+    padding-bottom: 1rem;
     border-radius: $border-radius;
-    border: 1px solid $gray-100;
     margin: auto;
   }
 
@@ -238,6 +241,6 @@ body,
 .popup-overlay {
   background: rgba(0, 0, 0, 0.5);
 }
-[data-popup='tooltip'].popup-overlay {
+[data-popup="tooltip"].popup-overlay {
   background: transparent;
 }

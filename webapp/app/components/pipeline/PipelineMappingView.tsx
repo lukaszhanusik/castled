@@ -31,7 +31,7 @@ const PipelineMappingView = ({
         className="w-100"
       />
       <h3 className="mb-1 mt-4 font-weight-bold">Mapping</h3>
-      <Table hover>
+      <Table>
         <thead>
           <tr>
             <th>Warehouse Field</th>
