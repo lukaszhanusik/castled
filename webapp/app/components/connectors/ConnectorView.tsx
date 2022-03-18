@@ -27,7 +27,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["#", `${category} Name`, "Type", "Pipelines", "Status"];
+  const headers = ["#", "Name", "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -101,18 +101,17 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    
                     <div className="d-flex">
-                        <img
-                          src={connector.logoUrl}
-                          alt={connector.name}
-                          height={24}
-                          className="mt-1"
-                        />
-                        <div className="ms-2">
-                          <span>{_.capitalize(connector.type)}</span>
-                        </div>
+                      <img
+                        src={connector.logoUrl}
+                        alt={connector.name}
+                        height={24}
+                        className="mt-1"
+                      />
+                      <div className="ms-2">
+                        <span>{_.capitalize(connector.type)}</span>
                       </div>
+                    </div>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <span className="badge text-dark fs-4">

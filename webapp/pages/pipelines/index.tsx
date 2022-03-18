@@ -19,7 +19,7 @@ const Pipelines = () => {
   >();
   const headers = [
     "#",
-    "Pipeline Name",
+    "Name",
     "Model",
     "Destination",
     "Frequency",
