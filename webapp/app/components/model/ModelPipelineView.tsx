@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { IconChevronRight } from "@tabler/icons";
 import _ from "lodash";
 
-export const ModelPipelineView = ({
+const ModelPipelineView = ({
   activeSyncDetails,
   activeSyncsCount,
 }: Pick<ModelResponseDto, "activeSyncDetails" | "activeSyncsCount">) => {
@@ -92,3 +92,5 @@ export const ModelPipelineView = ({
     </>
   );
 };
+
+export default ModelPipelineView;

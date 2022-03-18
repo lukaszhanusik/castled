@@ -6,6 +6,7 @@ import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaRespo
 import { PipelineSchemaResponseRestApiDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import { EntityCreatedResponseDto } from "@/app/common/dtos/EntityCreatedResponseDto";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
+import { OnboardCountDto } from "../common/dtos/OnboardCountDto";
 
 export default {
   getById: (
@@ -56,5 +57,8 @@ export default {
   },
   testMapping: (req: any): Promise<AxiosResponse<any>> => {
     return http.post("/v1/pipelines/mappings/test", req);
+  },
+  onboardCount: (): Promise<AxiosResponse<OnboardCountDto>> => {
+    return http.get("/v1/pipelines/count");
   },
 };

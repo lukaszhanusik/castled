@@ -43,7 +43,6 @@ const PipelineSettings = ({
     onFinish?: (id: number) => void,
     setSubmitting?: (isSubmitting: boolean) => void
   ) => {
-
     pipelineService
       .create(values)
       .then(({ data }) => {
@@ -76,6 +75,7 @@ const PipelineSettings = ({
             console.log("Not submitting because context is not set");
             return;
           }
+          localStorage.setItem("onboarding_count", JSON.stringify(4));
           pipelineWizContext.values = {
             ...pipelineWizContext.values,
             name: name,

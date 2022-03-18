@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,9 @@ public class Tuple {
     private Map<String, Field> fieldMap;
 
     public void addField(Field field) {
+        IntStream.range(0, fields.size())
+                .filter(index -> fields.get(index).getName().equals(field.getName()))
+                .forEach(fields::remove);
         fields.add(field);
         fieldMap.put(field.getName(), field);
     }

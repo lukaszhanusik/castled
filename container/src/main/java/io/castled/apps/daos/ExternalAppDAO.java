@@ -43,6 +43,9 @@ public interface ExternalAppDAO {
     @SqlQuery("select * from external_apps where team_id = :teamId and is_deleted =0 order by id desc")
     List<ExternalApp> listExternalApps(@Bind("teamId") Long teamId);
 
+    @SqlQuery("select count(id) from external_apps where is_deleted = 0 and team_id = :teamId")
+    int getTotalActiveAppsForTeam(@Bind("teamId") Long teamId);
+
     @Slf4j
     class ExternalAppRowMapper implements RowMapper<ExternalApp> {
 

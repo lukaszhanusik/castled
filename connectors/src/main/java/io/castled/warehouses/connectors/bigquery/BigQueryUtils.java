@@ -9,6 +9,7 @@ import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.SchemaConstants;
 import io.castled.schema.models.DecimalSchema;
 import io.castled.schema.models.RecordSchema;
+import lombok.extern.slf4j.Slf4j;
 import org.threeten.bp.Duration;
 
 import java.time.Instant;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class BigQueryUtils {
 
     public static final int MAX_NUMERIC_SCALE = 9;
@@ -30,7 +32,10 @@ public class BigQueryUtils {
     public static RecordSchema bqSchemaToConnectSchema(com.google.cloud.bigquery.Schema bqSchema) {
         RecordSchema.Builder schemaBuilder = RecordSchema.builder();
         for (com.google.cloud.bigquery.Field field : bqSchema.getFields()) {
-            schemaBuilder.put(field.getName(), bqFieldToConnectSchema(field));
+            io.castled.schema.models.Schema schema = bqFieldToConnectSchema(field);
+            if (schema != null) {
+                schemaBuilder.put(field.getName(), schema);
+            }
         }
         return schemaBuilder.build();
     }
@@ -96,7 +101,7 @@ public class BigQueryUtils {
     public static io.castled.schema.models.Schema bqFieldToConnectSchema(com.google.cloud.bigquery.Field field) {
 
         io.castled.schema.models.Schema schema = buildSchema(field);
-        if (field.getMode() == com.google.cloud.bigquery.Field.Mode.NULLABLE) {
+        if (schema != null && (field.getMode() == com.google.cloud.bigquery.Field.Mode.NULLABLE)) {
             schema.setOptional(true);
         }
         return schema;
@@ -128,7 +133,8 @@ public class BigQueryUtils {
             case TIMESTAMP:
                 return SchemaConstants.ZONED_TIMESTAMP_SCHEMA;
             default:
-                throw new CastledRuntimeException(String.format("Unsupported field type %s", field.getType().getStandardType()));
+                log.error("Unsupported BigQuery field type {}", field.getType().getStandardType());
+                return null;
         }
     }
 }

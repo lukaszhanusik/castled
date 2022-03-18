@@ -248,4 +248,8 @@ public class WarehouseService {
         }
         return Lists.newArrayList();
     }
+
+    public int getTotalActiveWarehousesForTeam(Long teamId) {
+        return this.warehouseDAO.getTotalActiveWarehousesForTeam(teamId);
+    }
 }
