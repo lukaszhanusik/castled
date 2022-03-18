@@ -278,7 +278,7 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
     return (
       <div>
         <p>Query in progress...</p>
-        <div className="table-responsive mx-auto mt-1">
+        <div className="table-responsive mx-auto loading-table">
           <Table>
             <tbody>
               <tr className="pt-4 pb-4">

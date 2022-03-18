@@ -19,7 +19,7 @@ const Pipelines = () => {
   >();
   const headers = [
     "#",
-    "Name",
+    "Pipeline name",
     "Model",
     "Destination",
     "Frequency",
@@ -81,10 +81,10 @@ const Pipelines = () => {
       rightBtn={
         pipelines?.length
           ? {
-            id: "create_pipeline_button",
-            title: "Create Pipeline",
-            href: "/pipelines/create",
-          }
+              id: "create_pipeline_button",
+              title: "Create Pipeline",
+              href: "/pipelines/create",
+            }
           : undefined
       }
     >
@@ -131,7 +131,11 @@ const Pipelines = () => {
                       <OverlayTrigger
                         placement="right"
                         key={pipeline.warehouse.name}
-                        overlay={<Tooltip id={pipeline.warehouse.name}>{_.capitalize(pipeline.warehouse.type)}</Tooltip>}
+                        overlay={
+                          <Tooltip id={pipeline.warehouse.name}>
+                            {_.capitalize(pipeline.warehouse.type)}
+                          </Tooltip>
+                        }
                       >
                         <div className="d-flex">
                           <img
@@ -140,9 +144,7 @@ const Pipelines = () => {
                             height={24}
                             className="mt-1"
                           />
-                          <div className="ms-2">
-                            {pipeline.warehouse.name}
-                          </div>
+                          <div className="ms-2">{pipeline.warehouse.name}</div>
                         </div>
                       </OverlayTrigger>
                     </td>
@@ -152,18 +154,25 @@ const Pipelines = () => {
                       <OverlayTrigger
                         placement="right"
                         key={pipeline.app.name}
-                        overlay={<Tooltip id={pipeline.app.name}>{_.capitalize(pipeline.app.type)}</Tooltip>}
+                        overlay={
+                          <Tooltip id={pipeline.app.name}>
+                            {_.capitalize(pipeline.app.type)}
+                          </Tooltip>
+                        }
                       >
-                        <div className="d-flex" data-toggle="tooltip" data-placement="right" title={_.capitalize(pipeline.app.type)}>
+                        <div
+                          className="d-flex"
+                          data-toggle="tooltip"
+                          data-placement="right"
+                          title={_.capitalize(pipeline.app.type)}
+                        >
                           <img
                             src={pipeline.app.logoUrl}
                             alt={pipeline.app.name}
                             height={24}
                             className="mt-1"
                           />
-                          <div className="ms-2">
-                            {pipeline.app.name}
-                          </div>
+                          <div className="ms-2">{pipeline.app.name}</div>
                         </div>
                       </OverlayTrigger>
                     </td>

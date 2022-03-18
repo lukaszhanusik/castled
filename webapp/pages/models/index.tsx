@@ -15,7 +15,7 @@ const Models = () => {
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
 
-  const headers = ["#", "Name", "Source", "Type", "Pipelines"];
+  const headers = ["#", "Model name", "Source", "Type", "Pipelines"];
   useEffect(() => {
     modelService
       .get()

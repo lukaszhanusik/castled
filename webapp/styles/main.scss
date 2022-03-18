@@ -91,7 +91,7 @@ body {
 .btn {
   text-transform: uppercase;
   font-size: $font-size-md;
-  border-radius: $border-radius-sm;
+  border-radius: $border-radius;
   padding: 0.35rem 1.5rem;
   svg {
     margin-top: -2px;
@@ -372,6 +372,18 @@ label {
     font-weight: 500;
   }
 
+  th {
+    border-top: 1px solid $primary-lite-2x !important;
+    background: #fff !important;
+    font-weight: 400 !important;
+    color: #777 !important;
+  }
+
+  th,
+  td {
+    padding: 1rem;
+  }
+
   .d-flex {
     align-items: center;
   }
@@ -385,6 +397,12 @@ label {
       // border-color: $table-row-hover;
       transition: all 0.5s;
     }
+  }
+}
+
+.loading-table {
+  td {
+    border: 0 !important;
   }
 }
 
@@ -418,13 +436,13 @@ label {
     }
 
     &:first-child {
-      border-left: 1px solid $gray-200;
+      border-left: 1px solid $primary-lite-2x;
       border-top-left-radius: $border-radius;
       border-bottom-left-radius: $border-radius;
     }
 
     &:last-child {
-      border-right: 1px solid $gray-200;
+      border-right: 1px solid $primary-lite-2x;
       border-top-right-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
     }
