@@ -15,7 +15,7 @@ const Models = () => {
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
 
-  const headers = ["#", "Model name", "Source", "Type", "Pipelines"];
+  const headers = ["#", "Model name", "Source", "Type", "Pipelines", ""];
   useEffect(() => {
     modelService
       .get()
@@ -121,6 +121,9 @@ const Models = () => {
                     <span className="badge text-dark fs-4">
                       {model.activeSyncsCount}
                     </span>
+                  </td>
+                  <td>
+                    {" "}
                     <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>

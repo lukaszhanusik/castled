@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { Container, Navbar } from "react-bootstrap";
+import { Button, Container, Navbar } from "react-bootstrap";
 
 function OnboardingBanner() {
   const [countDone, setCountDone] = useState(0);
@@ -19,19 +19,24 @@ function OnboardingBanner() {
     <>
       {!pathName.includes("welcome") && countDone < 4 && (
         <>
-          <Navbar style={{ backgroundColor: "#7a73ff" }}>
+          {/* <Navbar style={{ backgroundColor: "#5448A3" }}> */}
+          <Navbar style={{ backgroundColor: "#5c2e8a" }}>
             <Container className="justify-content-around">
               <Navbar.Brand className="banner-primary">
                 <label className="banner-text">
                   Complete the pending onboarding steps to start moving your
                   data.
                 </label>
-                <button
-                  className="banner-btn"
+                <Button
+                  size="sm"
+                  variant="warning"
+                  className="btn banner-btn"
                   onClick={() => router.push("/welcome?redirect=banner")}
                 >
-                  {countDone === 0 ? "Start Onboarding" : "Continue Onboarding"}
-                </button>
+                  {countDone === 0
+                    ? "Setup Pipeline"
+                    : "Complete pipeline setup"}
+                </Button>
               </Navbar.Brand>
               {/* {steps.map((step, index) => {
                 const Icon = step.icon;

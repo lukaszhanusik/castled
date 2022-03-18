@@ -260,11 +260,7 @@ export default function MappingDestinationFields({
                 />
               ))}
             {optionalRow}
-            <Button
-              onClick={addRow}
-              variant="outline-primary"
-              className="my-2"
-            >
+            <Button onClick={addRow} variant="outline-primary" className="my-2">
               Add mapping row
             </Button>
           </WarehouseColumn>

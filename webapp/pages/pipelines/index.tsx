@@ -24,6 +24,7 @@ const Pipelines = () => {
     "Destination",
     "Frequency",
     "Enabled",
+    "",
   ];
   const router = useRouter();
   useEffect(() => {
@@ -192,10 +193,11 @@ const Pipelines = () => {
                           enabledHandler(pipelines, idx, isActive)
                         }
                       />
-                      <IconChevronRight
-                        className="float-end me-2 text-secondary"
-                        onClick={() => router.push(`/pipelines/${pipeline.id}`)}
-                      />
+                    </td>
+                    <td
+                      onClick={() => router.push(`/pipelines/${pipeline.id}`)}
+                    >
+                      <IconChevronRight className="float-end me-2 text-secondary" />
                     </td>
                   </tr>
                 );
