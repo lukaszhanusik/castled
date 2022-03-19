@@ -14,7 +14,7 @@ public class OAuthAppConfig extends BaseAppConfig {
     @FormField(description = "Client id of the registered oauth app", title = "OAuth Client id", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String clientId;
 
-    @FormField(description = "Client Secret of the registered oauth app", title = "OAuth Client secret", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Client Secret of the registered oauth app", title = "OAuth Client secret", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
     private String clientSecret;
 
     private Long oAuthToken;

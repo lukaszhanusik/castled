@@ -9,6 +9,6 @@ import lombok.Getter;
 @Getter
 public class IterableAppConfig extends BaseAppConfig {
 
-    @FormField(description = "Api key to read and write Iterable data from a server-side application", title = "Api Key", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "API key to read and write Iterable data from a server-side application", title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
     private String apiKey;
 }
