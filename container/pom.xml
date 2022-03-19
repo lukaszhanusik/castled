@@ -7,7 +7,7 @@
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>0.2.62-alpha</version>
+        <version>0.2.63-alpha</version>
     </parent>
     <artifactId>container</artifactId>
 
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>io.castled</groupId>
             <artifactId>connectors</artifactId>
-            <version>0.2.62-alpha</version>
+            <version>0.2.63-alpha</version>
         </dependency>
 
         <dependency>
