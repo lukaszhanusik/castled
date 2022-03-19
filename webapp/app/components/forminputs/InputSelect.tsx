@@ -122,6 +122,9 @@ const InputSelect = ({
             {required && <span className="required-icon">*</span>}
           </label>
         )}
+        <p className="text-muted" style={{ marginBottom: ".5rem" }}>
+        {description}
+        </p>
         <div className="row position-relative">
           <Select
             {...props}
