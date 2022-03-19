@@ -15,7 +15,8 @@ public class GooglePubSubAppSyncConfig extends BaseAppSyncConfig {
     @FormField(title = "Select Pub/Sub topic", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GooglePubSubTopicSyncObject object;
 
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
+    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode",
+            description = "How you want to sync the data to the destination", group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
     private AppSyncMode mode;
 }
