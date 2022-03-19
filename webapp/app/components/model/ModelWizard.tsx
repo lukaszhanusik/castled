@@ -77,7 +77,7 @@ const ModelWizard = ({
             selectExisting: {
               title: "Select Warehouse",
               description:
-                "To get the data you need, we need to select warehouse. If you don't have a warehouse, you can set a Castled-management warehouse or invite a team member who has access to warehouse.",
+                "Select the warehouse type. If you don't have warehouse credentials, you can select Castled Demo Postgres warehouse or invite a team member who has access to warehouse.",
             },
             modelType: {
               title: "Select Model Type",

@@ -9,7 +9,7 @@ const demoOnboardingSteps = [
   {
     title: "Configure Source",
     description:
-      "Since you do not have a warehouse configured, use the pre-configured warehouse provided by Castled.",
+      "Since you do not have a data warehouse configured, use the pre-configured Postgres demo warehouse provided by Castled.",
     type: "warehouses",
     icon: IconDatabase,
     isDone: true,
@@ -29,7 +29,7 @@ const demoOnboardingSteps = [
   {
     title: "Configure Destination",
     description:
-      "Configure your Destination App. Castled enables you to move data to all major sales, marketing, service apps.",
+      "Configure your Destination App. Castled enables you to sync data to all major sales, marketing, and customer success apps.",
     type: "apps",
     icon: IconApps,
     isDone: false,
@@ -39,7 +39,7 @@ const demoOnboardingSteps = [
   {
     title: "Create Pipeline",
     description:
-      "Create your first pipeline to enable your business teams, by moving the data to the app with which they work.",
+      "Create your first pipeline to enable your business teams by syncing customer or product data to their favourite apps.",
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
@@ -52,7 +52,7 @@ const onboardingSteps = [
   {
     title: "Configure Source",
     description:
-      "Start with configuring your Source. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
+      "Start with configuring your source data warehouse. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
     type: "warehouses",
     icon: IconDatabase,
     isDone: false,
@@ -72,7 +72,7 @@ const onboardingSteps = [
   {
     title: "Configure Destination",
     description:
-      "Configure your Destination App. Castled enables you to move data to all major sales, marketing, service apps.",
+      "Configure your Destination App. Castled enables you to sync data to all major sales, marketing, and customer success apps.",
     type: "apps",
     icon: IconApps,
     isDone: false,
@@ -82,7 +82,7 @@ const onboardingSteps = [
   {
     title: "Create Pipeline",
     description:
-      "Create your first pipeline to enable your business teams, by moving the data to the app with which they work.",
+      "Create your first pipeline to enable your business teams by syncing customer or product data to their favourite apps.",
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
