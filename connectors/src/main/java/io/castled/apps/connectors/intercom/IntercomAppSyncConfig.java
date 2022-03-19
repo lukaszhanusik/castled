@@ -21,6 +21,6 @@ public class IntercomAppSyncConfig extends BaseAppSyncConfig {
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
     private AppSyncMode mode;
 
-    @FormField(required = false, description = "Associate company to contacts", title = "Associate company to contacts. You will be asked to map company id on the mapping screen", schema = FormFieldSchema.BOOLEAN, type = FormFieldType.CHECK_BOX, group = "association")
+    @FormField(required = false, title = "Associate company to contacts. You will be asked to map company id on the mapping screen", schema = FormFieldSchema.BOOLEAN, type = FormFieldType.CHECK_BOX, group = "association")
     private boolean associateCompany;
 }
