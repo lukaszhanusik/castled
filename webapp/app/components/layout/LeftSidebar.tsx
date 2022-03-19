@@ -91,7 +91,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                         data-bs-original-title="Home"
                       >
                         <div className="icons">
-                          <Icon size={24} stroke={1} className="sidebar-icon" />
+                          <Icon size={26} stroke={1} className="sidebar-icon" />
                           <div className="text-white">{li.title}</div>
                         </div>
                         {(i & 1) === 0 && <hr className="sidebar-divider" />}

@@ -15,7 +15,7 @@ const Models = () => {
   const router = useRouter();
   const { setPipelineWizContext } = usePipelineWizContext();
 
-  const headers = ["#", "Model name", "Source", "Type", "Pipelines"];
+  const headers = ["#", "Name", "Source", "Type", "Pipelines", ""];
   useEffect(() => {
     modelService
       .get()
@@ -67,9 +67,8 @@ const Models = () => {
                 >
                   <td>{model.id}</td>
                   <td>
-                    <div>
+                    <div style={{ maxWidth: "225px" }}>
                       <span>{model.name}</span>
-
                       <div
                         className="text-muted w-75"
                         style={{ whiteSpace: "nowrap" }}
@@ -114,13 +113,16 @@ const Models = () => {
                         height={24}
                         className="mt-1 me-2"
                       />
-                      {model.type} model
+                      {model.type}
                     </div>
                   </td>
                   <td>
                     <span className="badge text-dark fs-4">
                       {model.activeSyncsCount}
                     </span>
+                  </td>
+                  <td>
+                    {" "}
                     <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>

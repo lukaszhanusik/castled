@@ -61,7 +61,7 @@ body,
 .container-main {
   margin: 0 auto;
   @include media-breakpoint-up(xl) {
-    max-width: 54%;
+    max-width: 56%;
   }
 }
 
@@ -105,8 +105,8 @@ body,
     .sidebar-divider {
       position: relative;
       bottom: -10px;
-      margin: 5px;
-      border-bottom: 2px solid $blue-semi;
+      margin: 5px 5px 10px 5px;
+      border-bottom: 1px solid $blue-semi;
     }
   }
 
@@ -130,6 +130,9 @@ body,
   li {
     text-align: center;
     margin-bottom: 10px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   #logout-dropdown {

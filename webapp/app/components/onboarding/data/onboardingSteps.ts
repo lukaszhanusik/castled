@@ -34,7 +34,7 @@ const demoOnboardingSteps = [
     icon: IconApps,
     isDone: false,
     buttonText: "Add App",
-    onClickURL: "/pipelines/create?demo=1",
+    onClickURL: "/apps/create?wizardStep=selectType",
   },
   {
     title: "Create Pipeline",
