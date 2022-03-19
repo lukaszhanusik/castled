@@ -11,9 +11,9 @@ export function ModelTitle({
         {warehouse?.name}
       </span>
       <span className="col-md-10 ps-0 px-4 text-muted">{warehouse?.type}</span>
-      <span className="col-md-10 ps-0">
+      {/* <span className="col-md-10 ps-0">
         Total Syncs - {activeSyncsCount}
-      </span>
+      </span> */}
     </div>
   );
 }
