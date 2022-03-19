@@ -140,9 +140,6 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
                   .then(({ data }) => {
                     router.push("/models");
                   })
-                  .catch(() => {
-                    alert("Error deleting model. Please try again.");
-                  });
               }
             }}
           >
