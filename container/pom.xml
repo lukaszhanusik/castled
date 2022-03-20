@@ -20,7 +20,7 @@
         <flyway.version>4.1.2</flyway.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
         <lombok.version>1.18.20</lombok.version>
-        <oss.app.version>0.2.66-alpha</oss.app.version>
+        <oss.app.version>0.2.67-alpha</oss.app.version>
     </properties>
 
     <dependencies>
