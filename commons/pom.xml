@@ -5,11 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commons</artifactId>
-    <version>${oss.app.version}</version>
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>${oss.app.version}</version>
+        <version>${revision}</version>
     </parent>
 
     <name>commons</name>
@@ -21,7 +20,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <aws.sdk.version>1.11.784</aws.sdk.version>
-        <oss.app.version>0.2.67-alpha</oss.app.version>
     </properties>
 
 <!--    <repositories>-->
