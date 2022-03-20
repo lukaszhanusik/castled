@@ -9,7 +9,6 @@
         <groupId>io.castled</groupId>
         <version>${oss.app.version}</version>
     </parent>
-    <version>${oss.app.version}</version>
     <artifactId>connectors</artifactId>
 
     <properties>
