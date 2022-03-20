@@ -20,6 +20,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "11"
+          cache: 'maven'
 
       - name: Get Old Version
         id: old_version
@@ -63,3 +64,6 @@ jobs:
 
       - name: Pull Request Info
         run: echo "Pull Request Url - ${{ steps.pr.outputs.pull-request-url }}"
+
+      - name: Cleanup Castled artifacts
+        run: mvn dependency:purge-local-repository -DmanualInclude=io.castled
