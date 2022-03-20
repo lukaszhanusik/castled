@@ -1,4 +1,4 @@
-name: Castled Release Artifacts Publish
+name: Release artifacts
 
 on:
   workflow_dispatch:

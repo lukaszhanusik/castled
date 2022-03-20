@@ -1,4 +1,4 @@
-name: Castled Github Tag And Release
+name: Github tag release
 
 on:
   push:

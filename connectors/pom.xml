@@ -7,7 +7,7 @@
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>0.2.69-alpha</version>
+        <version>${oss.version}</version>
     </parent>
     <artifactId>connectors</artifactId>
 

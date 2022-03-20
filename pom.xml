@@ -7,7 +7,7 @@
     <groupId>io.castled</groupId>
     <artifactId>app</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.69-alpha</version>
+    <version>${oss.version}</version>
     <modules>
         <module>commons</module>
         <module>jarvis</module>
@@ -63,6 +63,7 @@
         <sfwsc.version>47.0.0.</sfwsc.version>
         <jackson.version>2.10.1</jackson.version>
         <kafka.version>2.2.0</kafka.version>
+        <oss.version>0.2.69-alpha</oss.version>
 
     </properties>
 
@@ -384,6 +385,32 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <!--<version>1.2.2</version>-->
+                <configuration>
+                    <flattenMode>oss</flattenMode>
+                </configuration>
+                <executions>
+                    <!-- enable flattening -->
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- ensure proper cleanup -->
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
                         </goals>
                     </execution>
                 </executions>
