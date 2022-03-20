@@ -10,6 +10,8 @@
         <version>${oss.version}</version>
     </parent>
     <artifactId>connectors</artifactId>
+    <name>connectors</name>
+    <description>Castled Connectors Library</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -69,7 +71,7 @@
         <dependency>
             <groupId>io.castled</groupId>
             <artifactId>commons</artifactId>
-            <version>0.2.69-alpha</version>
+            <version>${oss.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.snowflake/snowflake-jdbc -->
