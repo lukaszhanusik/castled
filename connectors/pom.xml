@@ -7,7 +7,7 @@
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>0.2.68-alpha</version>
+        <version>0.2.69-alpha</version>
     </parent>
     <artifactId>connectors</artifactId>
 
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>io.castled</groupId>
             <artifactId>commons</artifactId>
-            <version>0.2.68-alpha</version>
+            <version>0.2.69-alpha</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.snowflake/snowflake-jdbc -->
