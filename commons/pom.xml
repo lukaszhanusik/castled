@@ -8,7 +8,7 @@
     <parent>
         <artifactId>app</artifactId>
         <groupId>io.castled</groupId>
-        <version>${revision}</version>
+        <version>0.2.68-alpha</version>
     </parent>
 
     <name>commons</name>

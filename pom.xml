@@ -7,7 +7,7 @@
     <groupId>io.castled</groupId>
     <artifactId>app</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>0.2.68-alpha</version>
     <modules>
         <module>commons</module>
         <module>jarvis</module>
@@ -63,7 +63,6 @@
         <sfwsc.version>47.0.0.</sfwsc.version>
         <jackson.version>2.10.1</jackson.version>
         <kafka.version>2.2.0</kafka.version>
-        <revision>0.2.68-alpha</revision>
 
     </properties>
 
