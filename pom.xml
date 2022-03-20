@@ -7,7 +7,7 @@
     <groupId>io.castled</groupId>
     <artifactId>app</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.63-alpha</version>
+    <version>${oss.app.version}</version>
     <modules>
         <module>commons</module>
         <module>jarvis</module>
@@ -21,12 +21,24 @@
     <url>https://github.com/castledio/castled</url>
 
 	<developers>
+        <developer>
+            <name>Arun Thulasidharan</name>
+            <email>arun@castled.io</email>
+            <organization>Castled Data</organization>
+            <organizationUrl>https://castled.io</organizationUrl>
+        </developer>
 		<developer>
 		    <name>Franklin George</name>
 		    <email>frank@castled.io</email>
 		    <organization>Castled Data</organization>
 		    <organizationUrl>https://castled.io</organizationUrl>
 		</developer>
+        <developer>
+            <name>Abhilash Thulaseedharan</name>
+            <email>abhilash@castled.io</email>
+            <organization>Castled Data</organization>
+            <organizationUrl>https://castled.io</organizationUrl>
+        </developer>
 	</developers>
 
 	<scm>
@@ -51,6 +63,7 @@
         <sfwsc.version>47.0.0.</sfwsc.version>
         <jackson.version>2.10.1</jackson.version>
         <kafka.version>2.2.0</kafka.version>
+        <oss.app.version>0.2.63-alpha</oss.app.version>
 
     </properties>
 

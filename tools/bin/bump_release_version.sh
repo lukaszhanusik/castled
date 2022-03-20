@@ -13,7 +13,8 @@ bumpversion "$PART_TO_BUMP"
 NEW_VERSION=$(grep VERSION .env | cut -d"=" -f2)
 
 # Also bump version for the jars
-mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+mvn versions:set-property -Dproperty=oss.app.version -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+
 git status
 
 echo "Version bumped from ${OLD_VERSION} to ${NEW_VERSION}"
