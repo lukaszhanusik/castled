@@ -1,10 +1,10 @@
-name: skip version
+name: bump version
 
 on:
   workflow_dispatch:
     inputs:
       partToBump:
-        description: "Please choose the type of sem version to skip : major|minor|patch"
+        description: "Please choose the type of sem version to bump : major|minor|patch"
         required: true
         default: "patch"
 
