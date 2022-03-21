@@ -17,7 +17,6 @@ const Welcome = () => {
   const [btnType, setBtnType] = useState("default");
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
-  const [userExists, setUserExists] = useState(false);
   const { isOss } = useSession();
   const router = useRouter();
 
@@ -42,16 +41,7 @@ const Welcome = () => {
         console.log("Error fetching pipeline count.");
       });
 
-    authService
-      .whoAmI()
-      .then(({ data }) => {
-        if (data.email) {
-          setUserExists(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
     if (router.query.redirect === "banner") {
       setBtnType("primary");
       setShowSteps(true);
@@ -94,9 +84,6 @@ const Welcome = () => {
               showSteps={showSteps}
             />
           )}
-          {/* {typeof window === "object" && isOss && !userExists && (
-            <WelcomePopup />
-          )} */}
           {(btnType === "primary" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "primary")}
