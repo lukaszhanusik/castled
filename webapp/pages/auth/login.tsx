@@ -36,7 +36,7 @@ interface serverSideProps {
 }
 
 const Login = (props: serverSideProps) => {
-  const { setUser } = useSession();
+  const { user, setUser } = useSession();
   const router = useRouter();
   useEffect(() => {
     if (!router.isReady) return;
@@ -47,6 +47,12 @@ const Login = (props: serverSideProps) => {
       eventService.trackConversion(router.query.gclid);
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user]);
 
   const formSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
