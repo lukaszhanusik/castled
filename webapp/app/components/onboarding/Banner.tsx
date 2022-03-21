@@ -22,7 +22,7 @@ function OnboardingBanner() {
           {/* <Navbar style={{ backgroundColor: "#5448A3" }}> */}
           <Navbar style={{ backgroundColor: "#5c2e8a" }}>
             <Container className="justify-content-around">
-              <Navbar.Brand className="banner-primary">
+              <Navbar.Brand className="banner-primary align-items-center">
                 <label className="banner-text">
                   Complete the pending onboarding steps to start moving your
                   data.
