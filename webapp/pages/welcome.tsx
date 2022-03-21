@@ -41,9 +41,9 @@ const Welcome = () => {
         console.log("Error fetching pipeline count.");
       });
 
-
     if (router.query.redirect === "banner") {
-      setBtnType("primary");
+      const onboardingStep = localStorage.getItem("onboarding_step");
+      setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
       setShowSteps(true);
     }
   }, []);
@@ -60,6 +60,7 @@ const Welcome = () => {
   function stepsToggle(show: boolean, type: string) {
     setShowSteps(show);
     setBtnType(type);
+    localStorage.setItem("onboarding_step", type);
   }
 
   return (
