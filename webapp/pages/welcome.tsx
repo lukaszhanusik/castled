@@ -70,13 +70,14 @@ const Welcome = () => {
         <h2 className="mb-4">Get started with your first pipeline.</h2>
         {(btnType === "primary" || btnType === "demo") && (
           <button
-            className="btn btn-primary mb-3"
+            className="btn btn-outline-primary mb-3"
             onClick={() => stepsToggle(false, "default")}
           >
-            <IconChevronLeft size={20} /> Go back
+            <IconChevronLeft size={16} /> Go back
           </button>
         )}
-        <div className={showSteps ? "border border-2" : ""}>
+        {/* <div className={showSteps ? "border border-2" : ""}> */}
+        <div className={showSteps ? "bg" : ""}>
           {!isOss && (btnType === "demo" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "demo")}
@@ -94,7 +95,8 @@ const Welcome = () => {
             />
           )}
           {showSteps && (
-            <div className="mb-3 px-3">
+            // <div className="mb-3 px-3">
+            <div className="mb-3">
               <WelcomeOnboarding type={btnType} />
             </div>
           )}
