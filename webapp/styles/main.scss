@@ -683,8 +683,9 @@ form {
     brightness(99%) contrast(87%);
 }
 
-.accordion-button {
-  background-color: #fbfbfc;
+.accordion-button:hover {
+  background-color: #e7f1ff;
+  transition: all 0.1s;
 }
 
 .accordion-button:focus {
