@@ -19,6 +19,7 @@ const ModelPipelineView = ({
     if (minutes > 0) return `${minutes} Minutes`;
   };
 
+  console.log(activeSyncDetails);
   return (
     <>
       <div className="text-center">
@@ -43,9 +44,9 @@ const ModelPipelineView = ({
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          {activeSyncDetails &&
-            activeSyncDetails.map((field, index) => (
+        {activeSyncDetails && activeSyncDetails.length ? (
+          <tbody>
+            {activeSyncDetails.map((field, index) => (
               <tr
                 key={index}
                 className="align-middle my-1"
@@ -63,18 +64,25 @@ const ModelPipelineView = ({
                   <OverlayTrigger
                     placement="right"
                     key={field.app.name}
-                    overlay={<Tooltip id={field.app.name}>{_.capitalize(field.app.type)}</Tooltip>}
+                    overlay={
+                      <Tooltip id={field.app.name}>
+                        {_.capitalize(field.app.type)}
+                      </Tooltip>
+                    }
                   >
-                    <div className="d-flex align-items-center" data-toggle="tooltip" data-placement="right" title={_.capitalize(field.app.type)}>
+                    <div
+                      className="d-flex align-items-center"
+                      data-toggle="tooltip"
+                      data-placement="right"
+                      title={_.capitalize(field.app.type)}
+                    >
                       <img
                         src={field.app.logoUrl}
                         alt={field.app.name}
                         height={24}
                         className="mt-1"
                       />
-                      <div className="ms-2">
-                        {field.app.name}
-                      </div>
+                      <div className="ms-2">{field.app.name}</div>
                     </div>
                   </OverlayTrigger>
                 </td>
@@ -83,11 +91,20 @@ const ModelPipelineView = ({
                 </td>
                 <td className="col-1 py-2">{field.syncStatus}</td>
                 <td className="col-1 py-2 text-center">
-                <IconChevronRight className="float-end me-2 text-secondary"/>
+                  <IconChevronRight className="float-end me-2 text-secondary" />
                 </td>
               </tr>
             ))}
-        </tbody>
+          </tbody>
+        ) : (
+          <tbody>
+            <tr>
+              <td colSpan={6} className="text-center">
+                No pipelines were created with this model yet!
+              </td>
+            </tr>
+          </tbody>
+        )}
       </Table>
     </>
   );
