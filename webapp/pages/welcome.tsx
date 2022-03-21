@@ -44,6 +44,10 @@ const Welcome = () => {
     }
   }, []);
 
+  if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
+    router.push("/pipelines");
+  }
+
   function isDoneCounter(item: any) {
     return item.reduce((acc: number, curr: { isDone: boolean }) => {
       if (curr.isDone) {

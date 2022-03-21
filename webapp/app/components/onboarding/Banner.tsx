@@ -41,8 +41,7 @@ function OnboardingBanner() {
     <>
       {pathName.includes("welcome")
         ? ""
-        : !!countDone &&
-          countDone < 4 && (
+        : countDone < 4 && (
             <>
               <Navbar style={{ backgroundColor: "#5c2e8a" }}>
                 <Container className="justify-content-around">
