@@ -10,7 +10,7 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
-import authService from "@/app/services/authService";
+import { onboardingContext } from "@/app/components/onboarding/utils/OnboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
@@ -32,10 +32,6 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
-        localStorage.setItem(
-          "onboarding_count",
-          JSON.stringify(isDoneCounter(updatedPrimaryOnboarding))
-        );
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");
@@ -60,7 +56,7 @@ const Welcome = () => {
   function stepsToggle(show: boolean, type: string) {
     setShowSteps(show);
     setBtnType(type);
-    localStorage.setItem("onboarding_step", type);
+    onboardingContext(type);
   }
 
   return (
