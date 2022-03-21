@@ -28,15 +28,9 @@ export default function ConditionalStep({
     return 0;
   }
 
-  console.log(activeStep);
   return (
     <>
-      {type === "demo" && activeStep === 0 && activeStep !== undefined && (
-        <Accordion defaultActiveKey={`${activeStep}`}>
-          <AccordionBody steps={steps} />
-        </Accordion>
-      )}
-      {type === "demo" && activeStep !== undefined && activeStep > 0 && (
+      {type === "demo" && !!activeStep && (
         <Accordion defaultActiveKey={`${activeStep}`}>
           <AccordionBody steps={steps} />
         </Accordion>
