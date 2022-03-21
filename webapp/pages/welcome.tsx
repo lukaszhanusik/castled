@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import { useSession } from "@/app/common/context/sessionContext";
-import WelcomeOnboarding from "@/app/components/onboarding/Welcome";
-import PrimaryButtons from "@/app/components/onboarding/PrimaryButtons";
+import WelcomeOnboarding from "@/app/components/onboarding/WelcomeOnboarding";
+import PrimaryButtons from "@/app/components/onboarding/components/PrimaryButtons";
 import {
   demoOnboardingSteps,
   onboardingSteps,
@@ -10,7 +10,6 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
-import WelcomePopup from "@/app/components/onboarding/WelcomePopup";
 import authService from "@/app/services/authService";
 
 const Welcome = () => {

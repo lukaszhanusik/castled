@@ -19,7 +19,6 @@ const ModelPipelineView = ({
     if (minutes > 0) return `${minutes} Minutes`;
   };
 
-  console.log(activeSyncDetails);
   return (
     <>
       <div className="text-center">

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
-import { WelcomeOnboardingData } from "./Welcome";
+import { WelcomeOnboardingData } from "../WelcomeOnboarding";
 
 export default function ConditionalStep({
   steps,
