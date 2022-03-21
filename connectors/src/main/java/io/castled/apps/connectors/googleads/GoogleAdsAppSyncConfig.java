@@ -32,16 +32,16 @@ public class GoogleAdsAppSyncConfig extends BaseAppSyncConfig {
     loadingText = "Fetching google ads resources...")
     private String loginCustomerId;
 
-    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Select resource to sync the data", description = "Google Ads resource to sync the data",
+    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Google Ads resource to sync the data",
             group = GoogleAdsFormGroups.OBJECT_TYPE, optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GAdsObjectType objectType;
 
     //customer match group
-    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Customer Match Type", description = "Customer Match Type", group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE,
+    @FormField(type = FormFieldType.RADIO_BOX, schema = FormFieldSchema.STRING, title = "Customer Match Type",  group = GoogleAdsFormGroups.CUSTOMER_MATCH_TYPE,
             optionsRef = @OptionsRef(value = OptionsReferences.CUSTOMER_MATCH_TYPE, type = OptionsRefType.STATIC))
     private CustomerMatchType customerMatchType;
 
-    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Customer Match List Name", description = "Customer Match list", group = GoogleAdsFormGroups.CUSTOMER_MATCH,
+    @FormField(type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, title = "Customer Match List Name", group = GoogleAdsFormGroups.CUSTOMER_MATCH,
             optionsRef = @OptionsRef(value = OptionsReferences.GADS_SUB_RESOURCE, type = OptionsRefType.DYNAMIC))
     private GadsCustomerMatch customerMatch;
 

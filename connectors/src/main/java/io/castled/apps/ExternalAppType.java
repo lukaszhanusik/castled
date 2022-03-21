@@ -102,6 +102,11 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Fb Conversion Api")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
+            .build()),
+    ITERABLE(ImmutableMap.<String, Object>builder()
+            .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
+            .put(ConnectorConstants.TITLE, "Iterable")
+            .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/iterable.png")
             .build());
 
     private final Map<String, Object> properties;

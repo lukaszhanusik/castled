@@ -30,8 +30,8 @@ public class FbConversionSchemaUtils {
         return schemaBuilder.build();
     }
 
-    private static Schema getInternalSchema(ServerEventField paramsEnum) {
-        switch (paramsEnum) {
+    private static Schema getInternalSchema(ServerEventField eventField) {
+        switch (eventField) {
             case DATA_PROC_OPT_CT:
             case DATA_PROC_OPT_ST:
                 return SchemaConstants.OPTIONAL_LONG_SCHEMA;
@@ -42,8 +42,8 @@ public class FbConversionSchemaUtils {
         }
     }
 
-    private static Schema getInternalSchema(CustomerInfoField paramsEnum) {
-        switch (paramsEnum) {
+    private static Schema getInternalSchema(CustomerInfoField eventField) {
+        switch (eventField) {
             case DB:
                 return SchemaConstants.OPTIONAL_DATE_SCHEMA;
             case LEAD_ID:

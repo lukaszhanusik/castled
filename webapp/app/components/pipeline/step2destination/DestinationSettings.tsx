@@ -73,21 +73,23 @@ const DestinationSettings = ({
         }}
       >
         {({ setFieldValue, setFieldTouched, isSubmitting, isValid }) => (
-          <Form>
-            <DynamicFormFields
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-              formFields={formFields}
-              values={pipelineWizContext.values?.appSyncConfig}
-              dataFetcher={(optionsRef) =>
-                appsService.dynamicFieldValues(
-                  optionsRef,
-                  pipelineWizContext.values
-                )
-              }
-            />
-            <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
-          </Form>
+          <div className="form-width-75">
+            <Form>
+              <DynamicFormFields
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                formFields={formFields}
+                values={pipelineWizContext.values?.appSyncConfig}
+                dataFetcher={(optionsRef) =>
+                  appsService.dynamicFieldValues(
+                    optionsRef,
+                    pipelineWizContext.values
+                  )
+                }
+              />
+              <ButtonSubmit submitting={isSubmitting}>Continue</ButtonSubmit>
+            </Form>
+          </div>
         )}
       </Formik>
     </Layout>

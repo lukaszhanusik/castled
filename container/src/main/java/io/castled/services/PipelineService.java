@@ -389,6 +389,10 @@ public class PipelineService {
         return pipelineDAO.aggregateByModel(teamId);
     }
 
+    public int pipelineCountUsingModel(Long modelId) {
+        return this.pipelineDAO.pipelineCountUsingModel(modelId);
+    }
+
     public List<Pipeline> listPipelinesByModelId(Long teamid, Long modelId) {
         if (modelId == null) {
             return pipelineDAO.listPipelines(teamid);

@@ -99,8 +99,11 @@ const InputRadioButton = ({
           {optionsDynamic &&
             optionsDynamic.map((item: any, index: number) => (
               <>
-                <label htmlFor={item.title + index} className="d-flex py-2">
-                  <div className="flex-column align-self-center">
+                <label
+                  htmlFor={item.title + index}
+                  className="d-flex py-2 radio-group-wrapper"
+                >
+                  <div className="flex-column">
                     <input
                       name={props.id || props.name}
                       key={item.title + index}
@@ -111,9 +114,9 @@ const InputRadioButton = ({
                       onBlur={() => setFieldTouched?.(field.name, true)}
                     />
                   </div>
-                  <div className="flex-column mx-4">
-                    <div className="row">{item.title}</div>
-                    <div className="row description text-muted">
+                  <div className="flex-column mx-2">
+                    <div>{item.title}</div>
+                    <div className="description text-muted">
                       {item.description}
                     </div>
                   </div>
@@ -121,6 +124,7 @@ const InputRadioButton = ({
               </>
             ))}
         </div>
+
         {meta.touched && meta.error ? (
           <div className="error">{meta.error}</div>
         ) : null}

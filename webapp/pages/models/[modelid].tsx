@@ -126,25 +126,26 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
   if (!model) return "";
   return (
     <>
-      <span>{model.id} | </span> <span>{model.name}</span>
-      <div className="float-end">
-        <button
-          className="btn btn-outline-primary mx-2"
-          onClick={() => {
-            if (confirm("Are you sure you want to delete this model?")) {
-              modelService
-                .delete(model.id)
-                .then(({ data }) => {
-                  router.push("/models");
-                })
-                .catch(() => {
-                  alert("Error deleting model. Please try again.");
-                });
-            }
-          }}
-        >
-          Delete Model
-        </button>
+      <div className="row">
+        <div className="col-8">
+          <span>{model.id} | </span> <span>{model.name}</span>
+        </div>
+        <div className="col-4">
+          <button
+            className="btn btn-outline-primary mx-2"
+            onClick={() => {
+              if (confirm("Are you sure you want to delete this model?")) {
+                modelService
+                  .delete(model.id)
+                  .then(({ data }) => {
+                    router.push("/models");
+                  })
+              }
+            }}
+          >
+            Delete Model
+          </button>
+        </div>
       </div>
     </>
   );

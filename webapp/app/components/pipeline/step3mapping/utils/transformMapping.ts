@@ -51,9 +51,7 @@ export default function transformMapping(obj: any): MappingReturnObject {
         );
         for (let [key0, value0] of Object.entries(o)) {
           if (
-            key0.includes(
-              `DESTINATION_FIELDS-mandatory-appField-${mandatoryIndex}`
-            )
+            key0 === `DESTINATION_FIELDS-mandatory-appField-${mandatoryIndex}`
           ) {
             let arrObjVal = {
               warehouseField: value,
@@ -73,15 +71,14 @@ export default function transformMapping(obj: any): MappingReturnObject {
         );
         for (let [key0, value0] of Object.entries(o)) {
           if (
-            key0.includes(
-              `DESTINATION_FIELDS-optional-appField-${optionalIndex}`
-            )
+            key0 === `DESTINATION_FIELDS-optional-appField-${optionalIndex}`
           ) {
             let arrObjVal = {
               warehouseField: value,
               appField: value0,
               skipped: false,
             };
+            // console.log(arrObjVal);
             optionalArr.push(arrObjVal);
           }
         }
@@ -123,43 +120,42 @@ export default function transformMapping(obj: any): MappingReturnObject {
     let count = 0;
     let memo = [];
 
+    // console.log(o);
     for (let [key, value] of Object.entries(o)) {
-      if (key.includes("MISCELLANEOUS_FIELDS")) {
-        if (key.includes("warehouseField")) {
-          let toReplace = "MISCELLANEOUS_FIELDS-warehouseField-";
-          let uuid = key.replace(toReplace, "");
-          let appUUID = "appField-" + uuid;
+      if (key.includes("MISCELLANEOUS_FIELDS-warehouseField")) {
+        let toReplace = "MISCELLANEOUS_FIELDS-warehouseField-";
+        let uuid = key.replace(toReplace, "");
+        let appUUID = "appField-" + uuid;
 
-          for (let [key0, value0] of Object.entries(o)) {
-            if (key0.includes(appUUID)) {
-              let arrObjVal = {
-                warehouseField: value,
-                appField: value0,
-                skipped: false,
-              };
-              arr[count] = Object.assign({}, arrObjVal);
-              memo.push(value);
-            }
+        for (let [key0, value0] of Object.entries(o)) {
+          if (key0.includes(appUUID)) {
+            let arrObjVal = {
+              warehouseField: value,
+              appField: value0,
+              skipped: false,
+            };
+            arr[count] = Object.assign({}, arrObjVal);
+            memo.push(value);
           }
-          count += 1;
         }
-        if (key.includes("appField")) {
-          let toReplace = "MISCELLANEOUS_FIELDS-appField-";
-          let uuid = key.replace(toReplace, "");
-          let wareUUID = "warehouseField-" + uuid;
+        count += 1;
+        // if (key.includes("appField")) {
+        //   let toReplace = "MISCELLANEOUS_FIELDS-appField-";
+        //   let uuid = key.replace(toReplace, "");
+        //   let wareUUID = "warehouseField-" + uuid;
 
-          for (let [key0, value0] of Object.entries(o)) {
-            if (key0.includes(wareUUID) && !memo.includes(value0)) {
-              let arrObjVal = {
-                warehouseField: value0,
-                appField: value,
-                skipped: false,
-              };
-              arr[count] = Object.assign({}, arrObjVal);
-            }
-          }
-          count += 1;
-        }
+        //   for (let [key0, value0] of Object.entries(o)) {
+        //     if (key0.includes(wareUUID) && !memo.includes(value0)) {
+        //       let arrObjVal = {
+        //         warehouseField: value0,
+        //         appField: value,
+        //         skipped: false,
+        //       };
+        //       arr[count] = Object.assign({}, arrObjVal);
+        //     }
+        //   }
+        //   count += 1;
+        // }
         if (key.includes("primaryKey") && value) {
           const [type, field, appFieldValue] = key.split("-");
           for (let [key0, value0] of Object.entries(o)) {
@@ -172,6 +168,7 @@ export default function transformMapping(obj: any): MappingReturnObject {
         }
       }
     }
+    // console.log(arr);
     fields.push(...arr.filter((e) => e.warehouseField && e.appField));
   }
 

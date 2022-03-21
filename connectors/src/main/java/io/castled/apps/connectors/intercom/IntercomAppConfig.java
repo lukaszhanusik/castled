@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 public class IntercomAppConfig extends BaseAppConfig {
 
-    @FormField(description = "Intercom Access Token", title = "Access Token", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "Access Token", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accessToken;
 }

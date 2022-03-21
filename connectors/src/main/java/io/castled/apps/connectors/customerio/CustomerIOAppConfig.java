@@ -11,9 +11,11 @@ import lombok.Setter;
 @Setter
 public class CustomerIOAppConfig extends BaseAppConfig {
 
-    @FormField(description = "Site Id", title = "Site Id", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Site ID generated for the workspace you are creating in customer.io",
+            title = "Site ID", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String siteId;
 
-    @FormField(description = "Tracking API Key", title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Tracking API Key generated for the workspace you are creating in customer.io",
+            title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String apiKey;
 }

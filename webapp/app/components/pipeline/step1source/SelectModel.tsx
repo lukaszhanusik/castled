@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import modelService from "@/app/services/modelService";
 import { ModelListDto } from "@/app/common/dtos/ModelListDto";
-import DefaultErrorPage from "next/error";
 import { useRouter } from "next/router";
-import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import {
   Col,
   Row,
@@ -13,31 +11,24 @@ import {
   Table,
   Tooltip,
 } from "react-bootstrap";
-import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import _ from "lodash";
 import { ConnectorCategory } from "@/app/common/utils/types";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;
-  onSelect: (id: number, sourceQuery: string) => void;
-  typeOption: ConnectorTypeDto;
+  onSelect: (id: number, sourceQuery: string, warehouseId: number) => void;
 }
 
 const SelectModel = ({
-  category,
-  onCreate,
   onSelect,
-  typeOption,
 }: SelectExistingConnectorProps) => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
-  const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
 
   useEffect(() => {
     modelService
-      .get(pipelineWizContext?.values?.warehouseId)
+      .get()
       .then(({ data }) => {
         setModels(data);
       })
@@ -47,7 +38,7 @@ const SelectModel = ({
   }, []);
 
   const onModelSelect = (model: ModelListDto) => {
-    onSelect(model.id, model.details.sourceQuery);
+    onSelect(model.id, model.details.sourceQuery, model.warehouse.id);
     removeAllLocalStorageMapping();
   };
 

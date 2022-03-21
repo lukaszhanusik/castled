@@ -119,17 +119,17 @@ const ConnectorWizard = ({
             }}
           />
         )}
-        {curWizardStep === "selectModelType" && typeOption && (
+        {curWizardStep === "selectModelType" && (
           <SelectModel
             category={category}
-            typeOption={typeOption}
             onCreate={() => {
               setCurWizardStep(curWizardStepGroup, "model");
             }}
-            onSelect={(id: number, sourceQuery: string) => {
+            onSelect={(id: number, sourceQuery: string, warehouseId: number) => {
               if (category !== "Model") {
                 _.set(pipelineWizContext, "values.modelId", id);
                 _.set(pipelineWizContext, "values.sourceQuery", sourceQuery);
+                _.set(pipelineWizContext, "values.warehouseId", warehouseId);
                 setPipelineWizContext(pipelineWizContext);
                 setCurWizardStep(curWizardStepGroup, "model");
               } else {

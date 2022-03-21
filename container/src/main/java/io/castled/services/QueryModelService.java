@@ -100,6 +100,9 @@ public class QueryModelService {
 
     public void deleteModel(Long id, Long teamId) {
         this.resourceAccessController.validateQueryModelAccess(getQueryModel(id), teamId);
+        if (this.pipelineService.pipelineCountUsingModel(id) > 0) {
+            throw new BadRequestException("Delete the pipelines using the model before deleting the model");
+        }
         this.queryModelDAO.deleteModel(id);
     }
 

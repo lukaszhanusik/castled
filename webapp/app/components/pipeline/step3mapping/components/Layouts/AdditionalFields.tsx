@@ -29,10 +29,9 @@ export function AdditionalFields({
   pkRequired,
   checkboxChange,
 }: AdditionalFieldsProps) {
-
   return (
     <tr>
-      <th className="col-5">
+      <td className="col-5 p-2">
         <Select
           options={options}
           onChange={onChange}
@@ -41,15 +40,15 @@ export function AdditionalFields({
           placeholder={"Select a column"}
           defaultValue={defaultWarehouseValue}
         />
-      </th>
-      <th>
+      </td>
+      <td className="P-2">
         <Image
           src="/images/arrow-right.svg"
           alt="Right Arrow for Mapping"
-          className="py-2"
+          // className="py-2"
         />
-      </th>
-      <th className="col-5">
+      </td>
+      <td className="col-5 p-2">
         <input
           type="text"
           placeholder="Enter a field"
@@ -58,18 +57,14 @@ export function AdditionalFields({
           onBlur={inputBlur}
           defaultValue={defaultAppValue}
         />
-      </th>
+      </td>
       {pkRequired && (
-        <th className="col-2 text-center align-middle">
-          <input
-            type="checkbox"
-            className="me-2"
-            onChange={checkboxChange}
-          />
-        </th>
+        <td className="col-2 p-2 text-center align-middle">
+          <input type="checkbox" className="me-2" onChange={checkboxChange} />
+        </td>
       )}
       <Placeholder as="td" className="text-center">
-        <IconTrash onClick={handleDelete} className="delete-btn" />
+        <IconTrash size={16} onClick={handleDelete} className="delete-btn" />
       </Placeholder>
     </tr>
   );

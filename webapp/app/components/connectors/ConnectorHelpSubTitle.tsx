@@ -10,7 +10,8 @@ const ConnectorHelpSubTitle = ({
   docUrl,
 }: ConnectorHelpSubTitleProps): JSX.Element => {
   if (curWizardStep !== "configure") return <>{description}</>;
-  if (!docUrl) return <>Contact support if you face issues with the setup</>;
+  if (!docUrl)
+    return <>Contact support if you face any issues with the setup</>;
   return (
     <p>
       Need help?{" "}

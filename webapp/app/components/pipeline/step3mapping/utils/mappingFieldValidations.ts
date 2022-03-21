@@ -22,6 +22,7 @@ export default function mappingFieldValidations(
     (group) => group.type == "IMPORTANT_PARAMS"
   );
 
+  // console.log(fieldMappings);
   // AppField repeating schema validation
   function appFieldRepeatingValidations() {
     for (let i = 0; i < fieldMappings.length; i++) {
@@ -29,7 +30,7 @@ export default function mappingFieldValidations(
         if (fieldMappings[i].appField == fieldMappings[j].appField) {
           errors.push({
             appFieldRepeating:
-              "Multiple app field with same values found. All app fields must have a unique value.",
+              "Multiple mappings found for a destination field! A destination field should be mapped only once.",
           });
         }
       }
@@ -90,63 +91,91 @@ export default function mappingFieldValidations(
       (group) => group.type == "DESTINATION_FIELDS"
     );
 
+    // console.log("hasDestinationFields", hasDestinationFields);
     if (hasDestinationFields) {
-      if (hasDestinationFields[0].mandatoryFields) {
-        let mandatoryFieldsCount = 0;
-        let countOptionalFields =
-          hasDestinationFields[0].mandatoryFields.length;
-        for (let [key, value] of Object.entries(obj)) {
-          if (key.includes("DESTINATION_FIELDS-mandatory")) {
-            mandatoryFieldsCount += 1;
+      let totalMandatoryFields = 0;
+      let totalOptionalFields = 0;
+
+      // Count mandatory and optional fields
+      for (let field of hasDestinationFields) {
+        if (field.mandatoryFields) {
+          totalMandatoryFields += field.mandatoryFields.length;
+        }
+        if (field.optionalFields) {
+          totalOptionalFields += field.optionalFields.length;
+        }
+      }
+
+      // Sanitize the empty values
+      const userInputObject = { ...obj };
+      for (let [key, value] of Object.entries(userInputObject)) {
+        if (!value) {
+          delete userInputObject[key];
+        }
+      }
+      // console.log(obj);
+      let destinationWarehouseTrack =
+        "DESTINATION_FIELDS-mandatory-warehouseField-";
+      let destinationAppFieldTrack = "DESTINATION_FIELDS-mandatory-appField-";
+
+      if (!!totalMandatoryFields) {
+        let actualMandatoryFields = 0;
+        for (let [key, value] of Object.entries(userInputObject)) {
+          if (key.includes(destinationWarehouseTrack)) {
+            let replacedKey = key.replace(destinationWarehouseTrack, "");
+
+            for (let [key0, value0] of Object.entries(userInputObject)) {
+              if (key0 === `${destinationAppFieldTrack}${replacedKey}`) {
+                actualMandatoryFields++;
+              }
+            }
           }
         }
-        // Check if user has entered destination fields or not
-        if (mandatoryFieldsCount !== countOptionalFields * 2) {
+        // Check if user has entered both mandatory destination fields or not
+        if (totalMandatoryFields !== actualMandatoryFields) {
           errors.push({
             destinationFieldsMandatory:
               "Warehouse column is mandatory for all rows marked mandatory (*).",
           });
         }
       }
-      if (hasDestinationFields[0].optionalFields) {
+      if (!!totalOptionalFields) {
         // let countOptionalFields = hasDestinationFields[0].optionalFields.length;
         let optionalFieldsTrack = 0;
 
-        const userInputObject = { ...obj };
-        for (let [key, value] of Object.entries(userInputObject)) {
-          if (!value) {
-            delete userInputObject[key];
-          }
-        }
         // console.log(userInputObject);
         for (let [key, value] of Object.entries(userInputObject)) {
           if (key.includes("DESTINATION_FIELDS-optional")) {
             optionalFieldsTrack += 1;
           }
         }
-        // console.log(optionalFieldsTrack);
+        // console.log(userInputObject);
         if (optionalFieldsTrack) {
-          const trackedOptionalFields = [];
+          let trackedOptionalFields = 0;
+          let destinationOptionalWarehouseTrack =
+            "DESTINATION_FIELDS-optional-warehouseField-";
+          let destinationOptionalAppFieldTrack =
+            "DESTINATION_FIELDS-optional-appField-";
           for (let [key, value] of Object.entries(userInputObject)) {
-            let destinationWarehouseTrack =
-              "DESTINATION_FIELDS-optional-warehouseField-";
-            let destinationAppFieldTrack =
-              "DESTINATION_FIELDS-optional-appField-";
-
-            if (key.includes(destinationWarehouseTrack)) {
-              let replacedKey = key.replace(destinationWarehouseTrack, "");
+            if (key.includes(destinationOptionalWarehouseTrack)) {
+              let replacedKey = key.replace(
+                destinationOptionalWarehouseTrack,
+                ""
+              );
 
               for (let [key0, value0] of Object.entries(userInputObject)) {
                 if (
-                  key0.includes(`${destinationAppFieldTrack}${replacedKey}`)
+                  key0 === `${destinationOptionalAppFieldTrack}${replacedKey}`
                 ) {
-                  trackedOptionalFields.push(true);
+                  trackedOptionalFields++;
                 }
               }
             }
           }
 
-          if (trackedOptionalFields.length * 2 !== optionalFieldsTrack) {
+          // console.log("trackedOptionalFields", trackedOptionalFields);
+          // console.log(optionalFieldsTrack);
+          if (trackedOptionalFields * 2 !== optionalFieldsTrack) {
             errors.push({
               destinationFieldsOptional:
                 "Both Warehouse Column and App Fields must be filled.",

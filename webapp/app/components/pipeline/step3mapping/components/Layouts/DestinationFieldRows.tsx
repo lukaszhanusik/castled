@@ -19,7 +19,7 @@ export default function DestinationFieldRows({
 }: DestinationFieldRowsProps) {
   return (
     <tr>
-      <th className="col-6">
+      <td className="col-6">
         <Select
           options={options}
           onChange={onChangeWarehouse}
@@ -28,15 +28,15 @@ export default function DestinationFieldRows({
           placeholder={"Select a column"}
           defaultValue={defaultWarehouseValue}
         />
-      </th>
-      <th>
+      </td>
+      <td>
         <Image
           src="/images/arrow-right.svg"
           alt="Right Arrow for Mapping"
           className="py-2"
         />
-      </th>
-      <th className="col-6">
+      </td>
+      <td className="col-6">
         <Select
           options={
             destinationFieldSection &&
@@ -54,7 +54,7 @@ export default function DestinationFieldRows({
           onChange={onChangeAppField}
           placeholder={"Select a field"}
         />
-      </th>
+      </td>
       {isDisabled ? (
         <Placeholder as="td" className="pb-0">
           <label className="required-icon">*</label>
