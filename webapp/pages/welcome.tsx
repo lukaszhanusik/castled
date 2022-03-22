@@ -36,13 +36,19 @@ const Welcome = () => {
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
-
     if (router.query.redirect === "banner") {
       const onboardingStep = localStorage.getItem("onboarding_step");
       setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
       setShowSteps(true);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "onboarding_count",
+      JSON.stringify(primaryCompletedCount)
+    );
+  }, [primaryCompletedCount]);
 
   if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
     router.push("/pipelines");

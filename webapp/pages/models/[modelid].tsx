@@ -140,6 +140,9 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
                   .then(({ data }) => {
                     router.push("/models");
                   })
+                  .catch((err) => {
+                    console.log(err);
+                  })
               }
             }}
           >
