@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 public class GoogleAdsAppConfig extends OAuthAppConfig {
 
-    @FormField(description = "Developer token of the registered oauth app", title = "Google Ads Developer token", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "Developer token of the registered oauth app", title = "Developer token", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String developerToken;
 }

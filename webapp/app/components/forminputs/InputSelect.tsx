@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 import { ObjectUtils } from "@/app/common/utils/objectUtils";
 import { Spinner } from "react-bootstrap";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import cn from "classnames";
 import { IconRefresh } from "@tabler/icons";
 
@@ -35,12 +35,25 @@ export interface InputSelectOptions extends InputBaseProps {
 export interface ReactSelectOption {
   value: any;
   label: string;
+  description?: string;
 }
 
 const toReactSelectOption = (o: SelectOptionDto): ReactSelectOption => ({
   value: o.value,
   label: o.title,
+  description: o.description || "",
 });
+
+const Option = (props: any) => {
+  return (
+    <components.Option {...props}>
+      <div className="option-wrapper">
+        <div className="label">{props.data.label}</div>
+        <div className="description">{props.data.description}</div>
+      </div>
+    </components.Option>
+  );
+};
 
 const loadingOption = { label: "Loading...", value: "" };
 const emptyOption = { label: "", value: "" };
@@ -109,7 +122,10 @@ const InputSelect = ({
             {required && <span className="required-icon">*</span>}
           </label>
         )}
-        <div className="row">
+        <p className="text-muted" style={{ marginBottom: ".5rem" }}>
+        {description}
+        </p>
+        <div className="row position-relative">
           <Select
             {...props}
             options={
@@ -117,8 +133,9 @@ const InputSelect = ({
                 ? [loadingOption]
                 : optionsDynamic.map((option) => toReactSelectOption(option))
             }
+            components={{ Option }}
             isMulti={isMulti}
-            className={cn({ "col-11": !!dataFetcher, col: !dataFetcher })}
+            className="col-12"
             onChange={(v: any | undefined) => {
               let newValue = v?.value;
               if (isMulti) {
@@ -135,14 +152,14 @@ const InputSelect = ({
             )}
             isClearable={isClearable}
           />
-          
 
           {dataFetcher && (
-            <div className="col-1 my-auto">
+            <div className="select-fetcher">
               <IconRefresh
-                size={24}
+                size={16}
                 role="button"
                 onClick={() => setKey(key + 1)}
+                className="float-end"
               />
             </div>
           )}

@@ -11,31 +11,31 @@ import lombok.Setter;
 @Setter
 public class RedshiftWarehouseConfig extends TunneledWarehouseConfig {
 
-    @FormField(description = "Database Server Host", title = "Database Server Host", placeholder = "e.g. examplecluster.abc123xyz789.us-west-2.rds.amazonaws.com", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "Database Server Host", placeholder = "e.g. examplecluster.abc123xyz789.us-west-2.rds.amazonaws.com", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String serverHost;
 
-    @FormField(description = "Database Server Port", title = "Database Server Port", placeholder = "e.g. 5439", schema = FormFieldSchema.NUMBER, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "Database Server Port", placeholder = "e.g. 5439", schema = FormFieldSchema.NUMBER, type = FormFieldType.TEXT_BOX)
     private int serverPort;
 
-    @FormField(description = "Database Name", title = "Database Name", placeholder = "e.g. demo_db", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "Database Name", placeholder = "e.g. demo_db", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String dbName;
 
-    @FormField(description = "Database User", title = "Database User", placeholder = "e.g. db_user", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "Database User", placeholder = "e.g. db_user", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String dbUser;
 
-    @FormField(description = "Database Password", title = "Database Password", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
+    @FormField(title = "Database Password", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
     private String dbPassword;
 
-    @FormField(description = "S3 Bucket to be used as the staging area", title = "S3 Bucket", placeholder = "e.g. s3://anycompany-stage-saeast1-12345-dev/sap/br/customers/validated/dt=2021-03-01/table_customers_20210301.snappy.parquet", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "S3 Bucket to be used as staging area", placeholder = "e.g. castled-bucket", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String s3Bucket;
 
-    @FormField(description = "S3 Access Key Id", title = "S3 Access Key Id", placeholder = "e.g. AKIAIOSFODNN7EXAMPLE", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "S3 Access Key Id", placeholder = "e.g. AKIAIOSFODNN7EXAMPLE", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accessKeyId;
 
-    @FormField(description = "S3 Access Key Secret", title = "S3 Access Key Secret", placeholder = "e.g. wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(title = "S3 Access Key Secret", placeholder = "e.g. wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
     private String accessKeySecret;
 
-    @FormField(description = "S3 Bucket Location", title = "S3 Bucket Location", schema = FormFieldSchema.ENUM,
+    @FormField(title = "S3 Bucket Location", schema = FormFieldSchema.ENUM,
             type = FormFieldType.DROP_DOWN, optionsRef = @OptionsRef(value = OptionsReferences.AWS_REGIONS, type = OptionsRefType.STATIC))
     private Regions region;
 

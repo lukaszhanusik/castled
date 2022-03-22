@@ -9,7 +9,7 @@ const demoOnboardingSteps = [
   {
     title: "Configure Source",
     description:
-      "Start with configuring your Source. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
+      "Since you do not have a data warehouse configured, use the pre-configured Postgres demo warehouse provided by Castled.",
     type: "warehouses",
     icon: IconDatabase,
     isDone: true,
@@ -19,7 +19,7 @@ const demoOnboardingSteps = [
   {
     title: "Create Model",
     description:
-      "Once you have configured the source warehouse, create a model out of the data in your warehouse tables.",
+      "Castled provides a demo model which will be used to query the demo warehouse table.",
     type: "models",
     icon: IconRelationManyToMany,
     isDone: true,
@@ -29,17 +29,17 @@ const demoOnboardingSteps = [
   {
     title: "Configure Destination",
     description:
-      "Configure your Destination App. Castled enables you to move data to all major sales, marketing, service apps.",
+      "Configure your Destination App. Castled enables you to sync data to all major sales, marketing, and customer success apps.",
     type: "apps",
     icon: IconApps,
     isDone: false,
     buttonText: "Add App",
-    onClickURL: "/pipelines/create?demo=1",
+    onClickURL: "/apps/create?wizardStep=selectType",
   },
   {
     title: "Create Pipeline",
     description:
-      "Create your first pipeline to open the flood gates of operational analytics for your business teams.",
+      "Create your first pipeline to enable your business teams by syncing customer or product data to their favourite apps.",
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,
@@ -52,7 +52,7 @@ const onboardingSteps = [
   {
     title: "Configure Source",
     description:
-      "Start with configuring your Source. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
+      "Start with configuring your source data warehouse. Castled supports all major warehouses including Snowflake, Redshift, Postgres and Bigquery.",
     type: "warehouses",
     icon: IconDatabase,
     isDone: false,
@@ -72,7 +72,7 @@ const onboardingSteps = [
   {
     title: "Configure Destination",
     description:
-      "Configure your Destination App. Castled enables you to move data to all major sales, marketing, service apps.",
+      "Configure your Destination App. Castled enables you to sync data to all major sales, marketing, and customer success apps.",
     type: "apps",
     icon: IconApps,
     isDone: false,
@@ -82,7 +82,7 @@ const onboardingSteps = [
   {
     title: "Create Pipeline",
     description:
-      "Create your first pipeline to open the flood gates of operational analytics for your business teams.",
+      "Create your first pipeline to enable your business teams by syncing customer or product data to their favourite apps.",
     type: "pipelines",
     icon: IconGitCompare,
     isDone: false,

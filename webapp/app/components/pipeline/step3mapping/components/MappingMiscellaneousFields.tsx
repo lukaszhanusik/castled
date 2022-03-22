@@ -178,7 +178,7 @@ export default function MappingMiscellaneousFields({
   );
 
   return (
-    <div className="row py-2">
+    <div className="row py-1">
       {mappingGroups && (
         <>
           <WarehouseColumn
@@ -193,7 +193,7 @@ export default function MappingMiscellaneousFields({
                 addRow();
               }}
               variant="outline-primary"
-              className="my-2 mx-2"
+              className="my-2"
             >
               Add mapping row
             </Button>

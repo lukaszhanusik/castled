@@ -1,10 +1,11 @@
-import primaryButton from "./data/primaryButton";
+import { IconChevronRight } from "@tabler/icons";
+import primaryButton from "../data/primaryButton";
 
 export default function PrimaryButtons({
   stepsToggle,
   btnType,
   doneCount,
-  showSteps
+  showSteps,
 }: {
   stepsToggle: () => void;
   btnType: string;
@@ -23,7 +24,7 @@ export default function PrimaryButtons({
               onClick={stepsToggle}
               style={{ cursor: "pointer" }}
             >
-              <div className="row text-center">
+              <div className="row">
                 <div className="col-1 align-self-center">
                   <img src={item.icon} className="card-img-top p-0" />
                 </div>
@@ -39,7 +40,11 @@ export default function PrimaryButtons({
                         } left`}
                   </span>
                 </div>
-                {!showSteps && <div className="col-1 align-self-center">{">"}</div>}
+                {!showSteps && (
+                  <div className="col-1 align-self-center">
+                    <IconChevronRight className="text-secondary" />
+                  </div>
+                )}
               </div>
             </div>
           )

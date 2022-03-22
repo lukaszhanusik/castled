@@ -118,7 +118,6 @@ public class HubspotRestClient {
         }
     }
 
-
     private <T> T executeRequest(ThrowingSupplier<T> supplier) {
         try {
             return RetryUtils.retrySupplier(supplier, 3, Lists.newArrayList(NotAuthorizedException.class,

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import { useSession } from "@/app/common/context/sessionContext";
-import WelcomePopup from "@/app/components/layout/WelcomePopup";
-import WelcomeOnboarding from "@/app/components/onboarding/Welcome";
-import PrimaryButtons from "@/app/components/onboarding/PrimaryButtons";
+import WelcomeOnboarding from "@/app/components/onboarding/WelcomeOnboarding";
+import PrimaryButtons from "@/app/components/onboarding/components/PrimaryButtons";
 import {
   demoOnboardingSteps,
   onboardingSteps,
@@ -11,6 +10,7 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
+import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
@@ -32,20 +32,21 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
-        localStorage.setItem(
-          "onboarding_count",
-          JSON.stringify(isDoneCounter(updatedPrimaryOnboarding))
-        );
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
 
     if (router.query.redirect === "banner") {
-      setBtnType("primary");
+      const onboardingStep = localStorage.getItem("onboarding_step");
+      setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
       setShowSteps(true);
     }
   }, []);
+
+  if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
+    router.push("/pipelines");
+  }
 
   function isDoneCounter(item: any) {
     return item.reduce((acc: number, curr: { isDone: boolean }) => {
@@ -59,6 +60,7 @@ const Welcome = () => {
   function stepsToggle(show: boolean, type: string) {
     setShowSteps(show);
     setBtnType(type);
+    onboardingContext(type);
   }
 
   return (
@@ -68,13 +70,14 @@ const Welcome = () => {
         <h2 className="mb-4">Get started with your first pipeline.</h2>
         {(btnType === "primary" || btnType === "demo") && (
           <button
-            className="btn btn-primary mb-3"
+            className="btn btn-outline-primary mb-3"
             onClick={() => stepsToggle(false, "default")}
           >
-            <IconChevronLeft size={20} /> Go back
+            <IconChevronLeft size={16} /> Go back
           </button>
         )}
-        <div className={showSteps ? "border border-2" : ""}>
+        {/* <div className={showSteps ? "border border-2" : ""}> */}
+        <div className={showSteps ? "bg" : ""}>
           {!isOss && (btnType === "demo" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "demo")}
@@ -83,7 +86,6 @@ const Welcome = () => {
               showSteps={showSteps}
             />
           )}
-          {/* {typeof window === "object" && isOss && <WelcomePopup />} */}
           {(btnType === "primary" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "primary")}
@@ -93,7 +95,8 @@ const Welcome = () => {
             />
           )}
           {showSteps && (
-            <div className="mb-3 px-3">
+            // <div className="mb-3 px-3">
+            <div className="mb-3">
               <WelcomeOnboarding type={btnType} />
             </div>
           )}

@@ -44,4 +44,9 @@ export default {
       }
     );
   },
+  registerEmail: (request: {
+    email: string;
+  }): Promise<AxiosResponse<UserRegistrationResponse>> => {
+    return http.post("/v1/users/register", request);
+  },
 };
