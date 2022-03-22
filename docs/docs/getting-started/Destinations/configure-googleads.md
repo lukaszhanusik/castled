@@ -8,7 +8,9 @@ Google ads is an online advertising platform, where advertisers bid to display b
 
 ## Creating an app connection
 
-Castled establishes connection to your google ads destination via oauth. Select GoogleAds as the source type and you will be redirected to the Google login screen. Login with your google account which has access to the Google Ads customer ids where you want to sync the data.
+Castled establishes connection to your GoogleAds destination via OAuth. Select GoogleAds as the source type, enter the OAuth ClientID and ClientSecret of the oauth app and also GoogleAds developer token from the GoogleAds console. Login via Google to create an app connection in Castled. 
+
+Follow the steps [here](https://support.google.com/cloud/answer/6158849?hl=en) to setup OAuth on your google cloud console. Follow the link [here](https://developers.google.com/google-ads/api/docs/first-call/dev-token) to obtain your Google Ads developer token.
 
 ## Creating a sync pipeline
 

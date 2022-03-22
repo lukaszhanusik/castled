@@ -8,8 +8,9 @@ Hubspot is a leading cloud-based CRM, which provides a set of marketing and sale
 
 ## Creating an app connection
 
-Castled establishes connection to your hubspot destination via oauth. Select Hubspot as the source type and you will be redirected to the Hubspot login screen. Login via Hubspot to create an app connection in Castled. 
+Castled establishes connection to your hubspot destination via OAuth. Select Hubspot as the source type, enter the OAuth ClientID and ClientSecret of the connected app. You will be redirected to the Hubspot login screen. Login via Hubspot to create an app connection in Castled. 
 
+Follow the steps [here](https://developers.hubspot.com/docs/api/working-with-oauth) to create an app in a developer account and accesss the oauth ClientID and Client Secret.
 
 ## Creating a sync pipeline
 

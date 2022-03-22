@@ -8,7 +8,9 @@ Mailchimp is a popular email marketing tool.
 
 ## Creating an app connection
 
-Castled establishes connection to your mailchimp destination via oauth. Select Mailchimp as the source type and you will be redirected to the Mailchimp login screen. Login via mailchimp to create an app connection in Castled. 
+Castled establishes connection to your mailchimp destination via OAuth. Select Mailchimp as the source type, enter the OAuth ClientID and ClientSecret of the connected app. You will be redirected to the Mailchimp login screen. Login via Mailchimp to create an app connection in Castled. 
+
+Follow the steps [here](https://mailchimp.com/developer/marketing/guides/access-user-data-oauth-2/) to register an app in mailchimp and accesss the oauth ClientID and Client Secret.
 
 ## Creating a sync pipeline
 

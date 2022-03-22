@@ -8,7 +8,9 @@ Salesforce is a popular cloud based CRM, which helps the sales/marketing teams o
 
 ## Creating an app connection
 
-Castled establishes connection to your salesforce destination via oauth. Select Salesforce as the source type and you will be redirected to the Salesforce login screen. Login via salesforce to create an app connection in Castled. 
+Castled establishes connection to your salesforce destination via OAuth. Select Salesforce as the source type, enter the OAuth ClientID and ClientSecret of the connected app. You will be redirected to the Salesforce login screen. Login via salesforce to create an app connection in Castled. 
+
+Follow the steps [here](https://docs.datawatch.com/swarm/desktop/Generating_a_Client_ID_and_ClientSecret_Key_for_Salesforce_Connections.htm) to create a new connected app in salesforce and accesss the oauth ClientID and Client Secret.
 
 
 ## Creating a sync pipeline
