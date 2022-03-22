@@ -1,5 +1,5 @@
 import Layout from "@/app/components/layout/Layout";
-import { onboardingContext } from "@/app/components/onboarding/utils/OnboardingContext";
+import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 import { useState, useEffect } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import MembersTab from "./members";
