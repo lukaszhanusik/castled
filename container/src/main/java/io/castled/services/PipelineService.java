@@ -401,10 +401,20 @@ public class PipelineService {
     }
 
     public ConsolidatedCountDTO getAllCountDetails(Long teamId) {
-        int pipelines = pipelineDAO.getAllPipelinesCreatedByTeam(teamId);
+        int pipelines;
+        int demoPipelines = 0;
+        QueryModel demoModel = queryModelDAO.getDemoModelForTeam(teamId);
+        if (demoModel != null) {
+            pipelines = pipelineDAO.getAllPipelinesCreatedUsingOwnWarehouse(teamId, demoModel.getId());
+            demoPipelines = pipelineDAO.getAllPipelinesCreatedUsingDemoWarehouse(teamId, demoModel.getId());
+        } else {
+            pipelines = pipelineDAO.getAllPipelinesCreatedUsingOwnWarehouse(teamId);
+        }
+
         int models = queryModelDAO.getTotalActiveModelsForTeam(teamId);
         int warehouses = warehouseService.getTotalActiveWarehousesForTeam(teamId);
         int apps = externalAppService.getTotalActiveAppsForTeam(teamId);
-        return ConsolidatedCountDTO.builder().pipelines(pipelines).apps(apps).models(models).warehouses(warehouses).build();
+
+        return ConsolidatedCountDTO.builder().pipelines(pipelines).demoPipelines(demoPipelines).apps(apps).models(models).warehouses(warehouses).build();
     }
 }
