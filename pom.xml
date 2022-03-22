@@ -63,7 +63,7 @@
         <sfwsc.version>47.0.0.</sfwsc.version>
         <jackson.version>2.10.1</jackson.version>
         <kafka.version>2.2.0</kafka.version>
-        <oss.version>0.2.76-alpha</oss.version>
+        <oss.version>0.2.77-alpha</oss.version>
 
     </properties>
 
