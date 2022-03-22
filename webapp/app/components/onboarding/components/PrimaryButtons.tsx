@@ -1,5 +1,5 @@
 import { IconChevronRight } from "@tabler/icons";
-import primaryButton from "./data/primaryButton";
+import primaryButton from "../data/primaryButton";
 
 export default function PrimaryButtons({
   stepsToggle,

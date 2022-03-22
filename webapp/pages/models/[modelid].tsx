@@ -130,9 +130,9 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
         <div className="col-8">
           <span>{model.id} | </span> <span>{model.name}</span>
         </div>
-        <div className="col-4">
+        <div className="col-4 text-center">
           <button
-            className="btn btn-outline-primary mx-2"
+            className="btn btn-outline-primary"
             onClick={() => {
               if (confirm("Are you sure you want to delete this model?")) {
                 modelService

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
 import { IconChevronRight } from "@tabler/icons";
+import { onboardingContext } from "@/app/components/onboarding/utils/OnboardingContext";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
@@ -25,6 +26,7 @@ const Models = () => {
       .catch(() => {
         setModels(null);
       });
+    onboardingContext("default");
   }, []);
   if (models === null) return <DefaultErrorPage statusCode={404} />;
   console.log(models);

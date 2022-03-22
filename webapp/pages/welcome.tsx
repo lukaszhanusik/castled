@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Layout from "@/app/components/layout/Layout";
 import { useSession } from "@/app/common/context/sessionContext";
-import WelcomeOnboarding from "@/app/components/onboarding/Welcome";
-import PrimaryButtons from "@/app/components/onboarding/PrimaryButtons";
+import WelcomeOnboarding from "@/app/components/onboarding/WelcomeOnboarding";
+import PrimaryButtons from "@/app/components/onboarding/components/PrimaryButtons";
 import {
   demoOnboardingSteps,
   onboardingSteps,
@@ -10,15 +10,13 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
-import WelcomePopup from "@/app/components/onboarding/WelcomePopup";
-import authService from "@/app/services/authService";
+import { onboardingContext } from "@/app/components/onboarding/utils/OnboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
   const [btnType, setBtnType] = useState("default");
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
-  const [userExists, setUserExists] = useState(false);
   const { isOss } = useSession();
   const router = useRouter();
 
@@ -34,30 +32,21 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
-        localStorage.setItem(
-          "onboarding_count",
-          JSON.stringify(isDoneCounter(updatedPrimaryOnboarding))
-        );
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
 
-    authService
-      .whoAmI()
-      .then(({ data }) => {
-        if (data.email) {
-          setUserExists(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
     if (router.query.redirect === "banner") {
-      setBtnType("primary");
+      const onboardingStep = localStorage.getItem("onboarding_step");
+      setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
       setShowSteps(true);
     }
   }, []);
+
+  if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
+    router.push("/pipelines");
+  }
 
   function isDoneCounter(item: any) {
     return item.reduce((acc: number, curr: { isDone: boolean }) => {
@@ -71,6 +60,7 @@ const Welcome = () => {
   function stepsToggle(show: boolean, type: string) {
     setShowSteps(show);
     setBtnType(type);
+    onboardingContext(type);
   }
 
   return (
@@ -96,9 +86,6 @@ const Welcome = () => {
               showSteps={showSteps}
             />
           )}
-          {/* {typeof window === "object" && isOss && !userExists && (
-            <WelcomePopup />
-          )} */}
           {(btnType === "primary" || btnType === "default") && (
             <PrimaryButtons
               stepsToggle={() => stepsToggle(true, "primary")}

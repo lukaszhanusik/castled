@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
-import { WelcomeOnboardingData } from "./Welcome";
+import { WelcomeOnboardingData } from "../WelcomeOnboarding";
 
 export default function ConditionalStep({
   steps,
@@ -28,15 +28,9 @@ export default function ConditionalStep({
     return 0;
   }
 
-  console.log(activeStep);
   return (
     <>
-      {type === "demo" && activeStep === 0 && activeStep !== undefined && (
-        <Accordion defaultActiveKey={`${activeStep}`}>
-          <AccordionBody steps={steps} />
-        </Accordion>
-      )}
-      {type === "demo" && activeStep !== undefined && activeStep > 0 && (
+      {type === "demo" && !!activeStep && (
         <Accordion defaultActiveKey={`${activeStep}`}>
           <AccordionBody steps={steps} />
         </Accordion>
