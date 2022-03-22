@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSession } from "@/app/common/context/sessionContext";
 import { useRouter } from "next/router";
 import authService from "@/app/services/authService";
+import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 
 const Logout = () => {
   const { setUser } = useSession();
@@ -10,6 +11,7 @@ const Logout = () => {
     authService
       .logout()
       .then(() => {
+        onboardingContext("default");
         setUser(null);
       })
       .catch(() => {})
