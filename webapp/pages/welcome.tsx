@@ -10,7 +10,7 @@ import {
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
 import { useRouter } from "next/router";
-import { onboardingContext } from "@/app/components/onboarding/utils/OnboardingContext";
+import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
