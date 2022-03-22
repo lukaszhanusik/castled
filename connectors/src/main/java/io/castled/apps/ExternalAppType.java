@@ -15,6 +15,7 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.GOOGLE_SERVICE_ACCOUNT)
             .put(ConnectorConstants.TITLE, "Google Sheets")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/gsheets.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-google-sheets")
             .build()),
     SALESFORCE(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
