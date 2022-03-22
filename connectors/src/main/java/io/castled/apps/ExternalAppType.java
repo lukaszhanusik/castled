@@ -55,7 +55,6 @@ public enum ExternalAppType {
             .put(ConnectorConstants.TITLE, "Sendgrid")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/sendgrid.png")
             .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-sendgrid")
-            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-sendgrid")
             .build()),
     MARKETO(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
@@ -68,7 +67,6 @@ public enum ExternalAppType {
             .put(ConnectorConstants.TITLE, "ActiveCampaign")
             .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-activecampaign")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/active_campaign.png")
-            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-activecampaign")
             .build()),
     KAFKA(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
