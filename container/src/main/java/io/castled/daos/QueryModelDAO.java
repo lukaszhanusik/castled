@@ -65,7 +65,6 @@ public interface QueryModelDAO {
     @SqlQuery("select * from query_models where is_deleted = 0 and demo= 1 and team_id = :teamId")
     QueryModel getDemoModelForTeam(@Bind("teamId") Long teamId);
 
-
     class QueryModelArgumentFactory extends AbstractArgumentFactory<QueryModelDetails> {
 
         public QueryModelArgumentFactory() {

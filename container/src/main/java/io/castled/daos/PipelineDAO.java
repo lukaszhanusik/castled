@@ -99,10 +99,10 @@ public interface PipelineDAO {
     int getAllPipelinesCreatedUsingOwnWarehouse(@Bind("teamId") Long teamId);
 
     @SqlQuery("select count(id) from pipelines where team_id = :teamId and model_id != :modelId and is_deleted = 0")
-    int getAllPipelinesCreatedUsingOwnWarehouse(@Bind("teamId") Long teamId,@Bind("modelId") Long modelId);
+    int getAllPipelinesCreatedUsingOwnWarehouse(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
 
     @SqlQuery("select count(id) from pipelines where team_id = :teamId and model_id = :modelId and is_deleted = 0")
-    int getAllPipelinesCreatedUsingDemoWarehouse(@Bind("teamId") Long teamId,@Bind("modelId") Long modelId);
+    int getAllPipelinesCreatedUsingDemoWarehouse(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
 
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 
