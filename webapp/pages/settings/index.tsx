@@ -1,14 +1,10 @@
 import Layout from "@/app/components/layout/Layout";
-import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import MembersTab from "./members";
 
 const Settings = () => {
   const [key, setKey] = useState("members");
-  useEffect(() => {
-    onboardingContext("default");
-  }, []);
   return (
     <Layout title={""} subTitle={undefined}>
       <Tabs

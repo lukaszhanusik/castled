@@ -13,7 +13,6 @@ import _ from "lodash";
 import { PipelineSyncStatus } from "@/app/common/enums/PipelineSyncStatus";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { IconChevronRight } from "@tabler/icons";
-import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 
 const Pipelines = () => {
   const [pipelines, setPipelines] = useState<
@@ -38,7 +37,6 @@ const Pipelines = () => {
       .catch(() => {
         setPipelines(null);
       });
-    onboardingContext("default");
   }, []);
   if (pipelines === null) return <DefaultErrorPage statusCode={404} />;
   if (pipelines && pipelines.length === 0) {
