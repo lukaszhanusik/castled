@@ -179,7 +179,9 @@ const MembersTab = () => {
               onClick={() => {
                 setEmail("");
                 handleShow()
-              }}>
+              }}
+              className="animate"
+              >
               <span>
                 <IconUserPlus size={14} className="sidebar-icon" />
                 &nbsp; Invite team member
@@ -201,7 +203,7 @@ const MembersTab = () => {
         <tbody>
           {teamMembers !== undefined &&
             teamMembers?.activeMembers.map((fieldMapping, i) => (
-              <tr key={i}>
+              <tr key={i} className="animate">
                 <td>
                   <div style={{ width: "115px" }}>{fieldMapping.name}</div>
                 </td>

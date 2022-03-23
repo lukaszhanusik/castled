@@ -21,6 +21,7 @@ import modelService from "@/app/services/modelService";
 import Select from "react-select";
 import { NextRouter, useRouter } from "next/router";
 import LoadingTable from "../pipeline/step3mapping/components/Layouts/LoadingTable";
+import LoadingInput from "../common/LoadingInput";
 
 const CreateModel = ({
   curWizardStep,
@@ -176,7 +177,7 @@ const CreateModel = ({
       isFluid={true}
       stepGroups={stepGroups}
     >
-      <div className="row">
+      <div className="row animate">
         <div className="col-6">
           <Formik
             initialValues={
@@ -212,8 +213,15 @@ const CreateModel = ({
                   placeholder="Enter Query..."
                   className="border-0 border-bottom mono-font"
                 />
-                {queryResults && queryResults.status === "SUCCEEDED" && (
+                {queryResults && queryResults.status === "PENDING" && (
                   <>
+                    <LoadingInput />
+                    <LoadingInput />
+                  </>
+
+                )}
+                {queryResults && queryResults.status === "SUCCEEDED" && (
+                  <div className="animate">
                     <label className="mt-2 form-label">
                       Model Name <span className="required-icon">*</span>
                     </label>
@@ -235,7 +243,7 @@ const CreateModel = ({
                       isMulti={true}
                       name="primaryKeys"
                     ></Select>
-                  </>
+                  </div>
                 )}
                 <div className="d-flex align-items-center">
                   <Button

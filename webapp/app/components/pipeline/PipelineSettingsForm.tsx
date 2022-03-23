@@ -73,7 +73,7 @@ function PipelineSettingsForm({
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
-        <Form>
+        <Form className="animate">
           <InputField title="Pipeline Name" type="text" name="name" />
           <InputSelect
             title="Query Mode"

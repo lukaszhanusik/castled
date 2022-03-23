@@ -8,6 +8,7 @@ import warehouseService from "@/app/services/warehouseService";
 import Loading from "@/app/components/common/Loading";
 import Layout from "@/app/components/layout/Layout";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
+import LoadingInput from "../common/LoadingInput";
 
 interface ConnectorEditProps {
   appBaseUrl: string;
@@ -47,7 +48,7 @@ const ConnectorEdit = ({
         />
       }
     >
-      {!connector && <Loading className="w-50"/>}
+      {!connector && <LoadingInput />}
       {connector && (
         <ConnectorForm
           appBaseUrl={appBaseUrl}
