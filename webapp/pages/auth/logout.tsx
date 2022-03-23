@@ -12,11 +12,11 @@ const Logout = () => {
       .logout()
       .then(() => {
         onboardingContext("default");
-        setUser(null);
       })
       .catch(() => {})
       .finally(() => {
         router?.push("/auth/login");
+        setUser(null);
       });
   });
   return <p>Redirecting...</p>;
