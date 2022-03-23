@@ -122,23 +122,25 @@ export default function transformMapping(obj: any): MappingReturnObject {
 
     // console.log(o);
     for (let [key, value] of Object.entries(o)) {
-      if (key.includes("MISCELLANEOUS_FIELDS-warehouseField")) {
-        let toReplace = "MISCELLANEOUS_FIELDS-warehouseField-";
-        let uuid = key.replace(toReplace, "");
-        let appUUID = "appField-" + uuid;
+      if (key.includes("MISCELLANEOUS_FIELDS")) {
+        if (key.includes("warehouseField")) {
+          let toReplace = "MISCELLANEOUS_FIELDS-warehouseField-";
+          let uuid = key.replace(toReplace, "");
+          let appUUID = "appField-" + uuid;
 
-        for (let [key0, value0] of Object.entries(o)) {
-          if (key0.includes(appUUID)) {
-            let arrObjVal = {
-              warehouseField: value,
-              appField: value0,
-              skipped: false,
-            };
-            arr[count] = Object.assign({}, arrObjVal);
-            memo.push(value);
+          for (let [key0, value0] of Object.entries(o)) {
+            if (key0.includes(appUUID)) {
+              let arrObjVal = {
+                warehouseField: value,
+                appField: value0,
+                skipped: false,
+              };
+              arr[count] = Object.assign({}, arrObjVal);
+              memo.push(value);
+            }
           }
+          count += 1;
         }
-        count += 1;
         // if (key.includes("appField")) {
         //   let toReplace = "MISCELLANEOUS_FIELDS-appField-";
         //   let uuid = key.replace(toReplace, "");
