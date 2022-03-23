@@ -1,5 +1,6 @@
 import React from "react";
 import { Table } from "react-bootstrap"
+import Loading from "./Loading";
 
 const LoadingTable = () => {
     return <div className="table-responsive mx-auto mt-1">
@@ -7,16 +8,16 @@ const LoadingTable = () => {
             <tbody>
                 <tr className="pt-4 pb-4">
                     <td>
-                        <div className="linear-background"></div>
+                        <Loading />
                     </td>
                     <td>
-                        <div className="linear-background"></div>
+                        <Loading />
                     </td>
                     <td>
-                        <div className="linear-background"></div>
+                        <Loading />
                     </td>
                     <td>
-                        <div className="linear-background"></div>
+                        <Loading />
                     </td>
                 </tr>
             </tbody>

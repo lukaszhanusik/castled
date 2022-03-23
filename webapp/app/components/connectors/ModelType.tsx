@@ -1,21 +1,12 @@
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
 import Layout from "@/app/components/layout/Layout";
-import { Form, Formik } from "formik";
 import formHandler from "@/app/common/utils/formHandler";
-import React, { useEffect, useState } from "react";
-import warehouseService from "@/app/services/warehouseService";
+import React, { useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import Loading from "@/app/components/common/Loading";
-import { ExecuteQueryRequestDto } from "@/app/common/dtos/ExecuteQueryRequestDto";
-import bannerNotificationService from "@/app/services/bannerNotificationService";
-import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
-import { ListGroup, Table } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import _ from "lodash";
-import InputField from "@/app/components/forminputs/InputField";
-import { Button } from "react-bootstrap";
 import { useSession } from "@/app/common/context/sessionContext";
-import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
-import * as yup from "yup";
 
 const ModelType = ({
   curWizardStep,

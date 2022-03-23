@@ -6,6 +6,7 @@ import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
+import LoadingList from "../common/LoadingList";
 
 export interface SelectConnectorTypeProps {
   category: ConnectorCategory;
@@ -51,11 +52,7 @@ const SelectConnectorType = ({
       <div className="grid-categories">
         <Row md={3}>
           {loading &&
-            <>
-              <div className="linear-background w-25 m-3"></div>
-              <div className="linear-background w-25 m-3"></div>
-              <div className="linear-background w-25 m-3"></div>
-            </>
+            <LoadingList n={category === "App" ? 14 : 4}/>
           }
           {typeList?.map((type, i) => (
             <ListGroup key={i}>

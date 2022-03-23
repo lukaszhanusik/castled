@@ -99,7 +99,7 @@ body {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-.linear-background {
+.linear-background, .loading-circle {
   animation-duration: 1s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
@@ -111,6 +111,12 @@ body {
   height: 0.35rem;
   position: relative;
   overflow: hidden;
+}
+
+.loading-circle{
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
 }
 
 .font-weight-bold {

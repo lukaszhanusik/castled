@@ -5,6 +5,8 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import { ConnectorDto } from "@/app/common/dtos/ConnectorDto";
 import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
+import LoadingList from "../common/LoadingList";
+import LoadingConnector from "../common/LoadingConnector";
 
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
@@ -39,7 +41,7 @@ const SelectExistingConnector = ({
   }, [category, typeOption.value]);
   return (
     <div className="categories">
-      {loading && <div className="linear-background"></div>}
+      {loading && <LoadingConnector />}
       <ListGroup className="animate">
         {connectors !== undefined && category !== "Model" && (
           <button

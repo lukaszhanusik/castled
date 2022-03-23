@@ -18,6 +18,7 @@ import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import _ from "lodash";
 import { ConnectorCategory } from "@/app/common/utils/types";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
+import LoadingConnector from "../../common/LoadingConnector";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;
@@ -34,11 +35,12 @@ const SelectModel = ({
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
   const router = useRouter();
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     modelService
       .get(pipelineWizContext?.values?.warehouseId)
       .then(({ data }) => {
+        setLoading(false);
         setModels(data);
       })
       .catch(() => {
@@ -67,6 +69,12 @@ const SelectModel = ({
   }
   return (
     <div>
+      {loading &&
+        <div className="categories">
+          <div className="row">
+            <LoadingConnector />
+          </div>
+        </div>}
       {models && models.length > 0 && (
         <div className="categories">
           {models.map((model, idx) => (
