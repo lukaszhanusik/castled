@@ -13,7 +13,7 @@ import lombok.Setter;
 @GroupActivator(dependencies = {"spreadSheetId"}, group = "service_account")
 public class GoogleSheetsAppConfig extends BaseAppConfig {
 
-    @FormField(type = FormFieldType.TEXT_BOX, title = "Spread Sheet Url", placeholder = "e.g. https://docs.google.com/spreadsheets/[/u/1]/d/spreadsheetId/edit.*", description = "Spread Sheet Id", schema = FormFieldSchema.STRING)
+    @FormField(type = FormFieldType.TEXT_BOX, title = "Spread Sheet Url", placeholder = "e.g. https://docs.google.com/spreadsheets/[/u/1]/d/spreadsheetId/edit.*", schema = FormFieldSchema.STRING)
     private String spreadSheetId;
 
     @FormField(type = FormFieldType.JSON_FILE, schema = FormFieldSchema.OBJECT, description = "Service Account Json File", title = "Service Account Json File", group = "service_account")
