@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { onboardingSteps, demoOnboardingSteps } from "./data/onboardingSteps";
 import { TablerIcon } from "@tabler/icons";
-import ConditionalStep from "./components/conditionalStep";
+import ConditionalStep from "./components/ConditionalStep";
 
 export interface WelcomeOnboardingData {
   title: string;
