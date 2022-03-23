@@ -9,10 +9,10 @@ export default function PrimaryButtons({
 }: {
   stepsToggle: () => void;
   btnType: string;
-  doneCount: number;
+  doneCount: number | undefined;
   showSteps: boolean;
 }) {
-  const countDone = 4 - doneCount;
+  const countDone = doneCount && 4 - doneCount;
   return (
     <>
       {primaryButton.map(
@@ -35,6 +35,8 @@ export default function PrimaryButtons({
                   <span style={{ color: "#7a73ff" }}>
                     {countDone === 0
                       ? "All Steps Completed"
+                      : countDone === undefined
+                      ? ""
                       : `${countDone} ${
                           countDone === 1 ? "step" : "steps"
                         } left`}

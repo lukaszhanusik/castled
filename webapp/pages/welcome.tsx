@@ -17,8 +17,8 @@ import {
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
   const [btnType, setBtnType] = useState("default");
-  const [demoCompletedCount, setDemoCompletedCount] = useState(0);
-  const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
+  const [demoCompletedCount, setDemoCompletedCount] = useState<number | undefined>();
+  const [primaryCompletedCount, setPrimaryCompletedCount] = useState<number | undefined>();
   const { isOss } = useSession();
 
   useEffect(() => {
