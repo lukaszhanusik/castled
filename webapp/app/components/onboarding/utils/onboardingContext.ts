@@ -1,4 +1,5 @@
 import { OnboardCountDto } from "@/app/common/dtos/OnboardCountDto";
+import pipelineService from "@/app/services/pipelineService";
 
 function onboardingContext(type: string) {
   localStorage.setItem("onboarding_step", type);
@@ -21,4 +22,19 @@ function setStepsDoneCount(data: OnboardCountDto) {
   return onboardCount;
 }
 
-export { onboardingContext, getOnboardingContext, setStepsDoneCount };
+function pipelineCountAPICall() {
+  pipelineService.onboardCount().then(({ data }) => {
+    localStorage.setItem("onboarding_count", JSON.stringify(data.pipelines));
+    localStorage.setItem(
+      "demo_onboarding_count",
+      JSON.stringify(data.demoPipelines)
+    );
+  });
+}
+
+export {
+  onboardingContext,
+  getOnboardingContext,
+  setStepsDoneCount,
+  pipelineCountAPICall,
+};
