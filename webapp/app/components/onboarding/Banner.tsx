@@ -12,7 +12,7 @@ export default function OnboardingBanner() {
   const [ownCountDone, setOwnCountDone] = useState(0);
   const [countDone, setCountDone] = useState(0);
 
-  const [pathName, setPathName] = useState("");
+  const [pathName, setPathName] = useState("welcome");
   const router = useRouter();
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function OnboardingBanner() {
       });
     }
   }, []);
-  
+
   return (
     <>
       {pathName.includes("welcome")
