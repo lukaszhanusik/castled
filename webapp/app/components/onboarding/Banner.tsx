@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Button, Container, Navbar } from "react-bootstrap";
 import pipelineService from "@/app/services/pipelineService";
+import { setStepsDoneCount } from "./utils/onboardingContext";
 
 function OnboardingBanner() {
   const [demoCountDone, setDemoCountDone] = useState(0);
@@ -53,16 +54,7 @@ function OnboardingBanner() {
       setCountDone(JSON.parse(getAllStepCount));
     } else {
       pipelineService.onboardCount().then(({ data }) => {
-        const onboardCount = Object.values(data).reduce(
-          (acc: number, curr: number) => {
-            if (curr) {
-              return acc + 1;
-            }
-            return acc;
-          }
-        );
-
-        localStorage.setItem("all_count_done", JSON.stringify(onboardCount));
+        const onboardCount = setStepsDoneCount(data);
         setCountDone(onboardCount);
       });
     }

@@ -9,7 +9,10 @@ import {
 } from "@/app/components/onboarding/data/onboardingSteps";
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
-import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
+import {
+  onboardingContext,
+  setStepsDoneCount,
+} from "@/app/components/onboarding/utils/onboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
@@ -30,6 +33,8 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
+
+        setStepsDoneCount(data);
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");

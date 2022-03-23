@@ -78,12 +78,12 @@ const PipelineSettings = ({
             console.log("Not submitting because context is not set");
             return;
           }
-          if (onboardingContextValue === "primary") {
-            localStorage.setItem("onboarding_count", JSON.stringify(1));
-          }
           if (onboardingContextValue === "demo") {
             localStorage.setItem("demo_onboarding_count", JSON.stringify(1));
+          } else {
+            localStorage.setItem("onboarding_count", JSON.stringify(1));
           }
+
           pipelineWizContext.values = {
             ...pipelineWizContext.values,
             name: name,
