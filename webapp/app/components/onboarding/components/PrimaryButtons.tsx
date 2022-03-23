@@ -13,7 +13,7 @@ export default function PrimaryButtons({
   showSteps: boolean;
 }) {
   const countDone =
-    doneCount === undefined ? undefined : doneCount === 0 ? 4 : 4 - doneCount;
+    doneCount === undefined ? undefined : 4 - doneCount;
 
   return (
     <>
