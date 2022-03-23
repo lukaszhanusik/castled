@@ -36,11 +36,6 @@ const Welcome = () => {
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
-    if (router.query.redirect === "banner") {
-      const onboardingStep = localStorage.getItem("onboarding_step");
-      setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
-      setShowSteps(true);
-    }
   }, []);
 
   useEffect(() => {

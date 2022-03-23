@@ -67,7 +67,7 @@ function OnboardingBanner() {
                       size="sm"
                       variant="warning"
                       className="btn banner-btn"
-                      onClick={() => router.push("/welcome?redirect=banner")}
+                      onClick={() => router.push("/welcome")}
                     >
                       {countDone === 0
                         ? "Setup Pipeline"
