@@ -40,7 +40,7 @@ const demoOnboardingSteps = [
     title: "Create Pipeline",
     description:
       "Create your first pipeline to enable your business teams by syncing customer or product data to their favourite apps.",
-    type: "pipelines",
+    type: "demoPipelines",
     icon: IconGitCompare,
     isDone: false,
     buttonText: "Create Pipeline",

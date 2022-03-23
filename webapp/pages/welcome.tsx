@@ -38,17 +38,6 @@ const Welcome = () => {
       });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(
-      "onboarding_count",
-      JSON.stringify(primaryCompletedCount)
-    );
-  }, [primaryCompletedCount]);
-
-  if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
-    router.push("/pipelines");
-  }
-
   function isDoneCounter(item: any) {
     return item.reduce((acc: number, curr: { isDone: boolean }) => {
       if (curr.isDone) {
