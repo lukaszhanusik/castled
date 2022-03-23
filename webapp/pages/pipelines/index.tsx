@@ -37,6 +37,13 @@ const Pipelines = () => {
       .catch(() => {
         setPipelines(null);
       });
+    pipelineService.onboardCount().then(({ data }) => {
+      localStorage.setItem("onboarding_count", JSON.stringify(data.pipelines));
+      localStorage.setItem(
+        "demo_onboarding_count",
+        JSON.stringify(data.demoPipelines)
+      );
+    });
   }, []);
   if (pipelines === null) return <DefaultErrorPage statusCode={404} />;
   if (pipelines && pipelines.length === 0) {
