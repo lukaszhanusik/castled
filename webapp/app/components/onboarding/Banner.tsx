@@ -13,9 +13,12 @@ function OnboardingBanner() {
 
   useEffect(() => {
     setPathName(router.pathname);
-    const getCount = localStorage.getItem("onboarding_count");
-    if (getCount) {
-      setOwnCountDone(JSON.parse(getCount));
+    const getOwnCount = localStorage.getItem("onboarding_count");
+    const getDemoCount = localStorage.getItem("demo_onboarding_count");
+
+    if (getOwnCount && getDemoCount) {
+      setOwnCountDone(JSON.parse(getOwnCount));
+      setDemoCountDone(JSON.parse(getDemoCount));
     } else {
       pipelineService
         .onboardCount()
@@ -28,18 +31,14 @@ function OnboardingBanner() {
               setDemoCountDone(demoCountDone + value);
             }
           }
-          const onboardCount = Object.values(data).reduce(
-            (acc: number, curr: number) => {
-              if (curr) {
-                return acc + 1;
-              }
-              return acc;
-            }
-          );
-          setCountDone(onboardCount);
+
           localStorage.setItem(
             "onboarding_count",
             JSON.stringify(data.pipelines)
+          );
+          localStorage.setItem(
+            "demo_onboarding_count",
+            JSON.stringify(data.demoPipelines)
           );
         })
         .catch(() => {
@@ -48,6 +47,26 @@ function OnboardingBanner() {
     }
   }, []);
 
+  useEffect(() => {
+    const getAllStepCount = localStorage.getItem("all_count_done");
+    if (getAllStepCount) {
+      setCountDone(JSON.parse(getAllStepCount));
+    } else {
+      pipelineService.onboardCount().then(({ data }) => {
+        const onboardCount = Object.values(data).reduce(
+          (acc: number, curr: number) => {
+            if (curr) {
+              return acc + 1;
+            }
+            return acc;
+          }
+        );
+
+        localStorage.setItem("all_count_done", JSON.stringify(onboardCount));
+        setCountDone(onboardCount);
+      });
+    }
+  }, []);
   return (
     <>
       {pathName.includes("welcome")
@@ -69,7 +88,7 @@ function OnboardingBanner() {
                       className="btn banner-btn"
                       onClick={() => router.push("/welcome")}
                     >
-                      {countDone === 0
+                      {!countDone
                         ? "Setup Pipeline"
                         : "Complete pipeline setup"}
                     </Button>

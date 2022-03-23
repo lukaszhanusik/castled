@@ -9,7 +9,6 @@ import {
 } from "@/app/components/onboarding/data/onboardingSteps";
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
-import { useRouter } from "next/router";
 import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
 
 const Welcome = () => {
@@ -18,7 +17,6 @@ const Welcome = () => {
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
   const { isOss } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     pipelineService
@@ -66,7 +64,6 @@ const Welcome = () => {
             <IconChevronLeft size={16} /> Go back
           </button>
         )}
-        {/* <div className={showSteps ? "border border-2" : ""}> */}
         <div className={showSteps ? "bg" : ""}>
           {!isOss && (btnType === "demo" || btnType === "default") && (
             <PrimaryButtons
@@ -85,7 +82,6 @@ const Welcome = () => {
             />
           )}
           {showSteps && (
-            // <div className="mb-3 px-3">
             <div className="mb-3">
               <WelcomeOnboarding type={btnType} />
             </div>

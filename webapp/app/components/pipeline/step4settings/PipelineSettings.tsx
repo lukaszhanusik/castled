@@ -81,6 +81,9 @@ const PipelineSettings = ({
           if (onboardingContextValue === "primary") {
             localStorage.setItem("onboarding_count", JSON.stringify(1));
           }
+          if (onboardingContextValue === "demo") {
+            localStorage.setItem("demo_onboarding_count", JSON.stringify(1));
+          }
           pipelineWizContext.values = {
             ...pipelineWizContext.values,
             name: name,
