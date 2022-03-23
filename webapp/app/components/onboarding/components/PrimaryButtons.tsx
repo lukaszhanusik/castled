@@ -33,10 +33,10 @@ export default function PrimaryButtons({
                 </div>
                 <div className="col-3 align-self-center">
                   <span style={{ color: "#7a73ff" }}>
-                    {countDone === 0
-                      ? "All Steps Completed"
-                      : countDone === undefined
+                    {countDone === undefined
                       ? ""
+                      : countDone === 0
+                      ? "All Steps Completed"
                       : `${countDone} ${
                           countDone === 1 ? "step" : "steps"
                         } left`}
