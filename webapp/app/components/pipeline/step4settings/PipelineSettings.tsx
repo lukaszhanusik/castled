@@ -56,7 +56,6 @@ const PipelineSettings = ({
       });
   };
   const onboardingContextValue = getOnboardingContext();
-  const onboardingCount = localStorage.getItem("onboarding_count");
 
   return (
     <Layout
@@ -79,12 +78,12 @@ const PipelineSettings = ({
             console.log("Not submitting because context is not set");
             return;
           }
-          if (onboardingContextValue === "primary" || onboardingCount === "3") {
-            localStorage.setItem("onboarding_count", JSON.stringify(4));
-          }
           if (onboardingContextValue === "demo") {
-            localStorage.setItem("onboarding_step", "default");
+            localStorage.setItem("demo_onboarding_count", JSON.stringify(1));
+          } else {
+            localStorage.setItem("onboarding_count", JSON.stringify(1));
           }
+
           pipelineWizContext.values = {
             ...pipelineWizContext.values,
             name: name,

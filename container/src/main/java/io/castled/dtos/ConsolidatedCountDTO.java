@@ -14,4 +14,5 @@ public class ConsolidatedCountDTO {
     private int apps;
     private int models;
     private int pipelines;
+    private int demoPipelines;
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import pipelineService from "@/app/services/pipelineService";
 import { onboardingSteps, demoOnboardingSteps } from "./data/onboardingSteps";
 import { TablerIcon } from "@tabler/icons";
-import ConditionalStep from "@/app/components/onboarding/components/conditionalStep";
+import ConditionalStep from "./components/ConditionalStep";
 
 export interface WelcomeOnboardingData {
   title: string;
@@ -38,7 +38,7 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
 
   return (
     <>
-      <ConditionalStep steps={type === "demo" ? demoSteps : steps} type={type}/>
+      <ConditionalStep steps={type === "demo" ? demoSteps : steps}/>
     </>
   );
 }

@@ -9,8 +9,10 @@ import {
 } from "@/app/components/onboarding/data/onboardingSteps";
 import pipelineService from "@/app/services/pipelineService";
 import { IconChevronLeft } from "@tabler/icons";
-import { useRouter } from "next/router";
-import { onboardingContext } from "@/app/components/onboarding/utils/onboardingContext";
+import {
+  onboardingContext,
+  setStepsDoneCount,
+} from "@/app/components/onboarding/utils/onboardingContext";
 
 const Welcome = () => {
   const [showSteps, setShowSteps] = useState(false);
@@ -18,7 +20,6 @@ const Welcome = () => {
   const [demoCompletedCount, setDemoCompletedCount] = useState(0);
   const [primaryCompletedCount, setPrimaryCompletedCount] = useState(0);
   const { isOss } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     pipelineService
@@ -32,27 +33,13 @@ const Welcome = () => {
         );
         setDemoCompletedCount(isDoneCounter(updatedDemoOnboarding));
         setPrimaryCompletedCount(isDoneCounter(updatedPrimaryOnboarding));
+
+        setStepsDoneCount(data);
       })
       .catch(() => {
         console.log("Error fetching pipeline count.");
       });
-    if (router.query.redirect === "banner") {
-      const onboardingStep = localStorage.getItem("onboarding_step");
-      setBtnType(onboardingStep === "demo" ? onboardingStep : "primary");
-      setShowSteps(true);
-    }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "onboarding_count",
-      JSON.stringify(primaryCompletedCount)
-    );
-  }, [primaryCompletedCount]);
-
-  if (demoCompletedCount === 4 && primaryCompletedCount === 4) {
-    router.push("/pipelines");
-  }
 
   function isDoneCounter(item: any) {
     return item.reduce((acc: number, curr: { isDone: boolean }) => {
@@ -82,7 +69,6 @@ const Welcome = () => {
             <IconChevronLeft size={16} /> Go back
           </button>
         )}
-        {/* <div className={showSteps ? "border border-2" : ""}> */}
         <div className={showSteps ? "bg" : ""}>
           {!isOss && (btnType === "demo" || btnType === "default") && (
             <PrimaryButtons
@@ -101,7 +87,6 @@ const Welcome = () => {
             />
           )}
           {showSteps && (
-            // <div className="mb-3 px-3">
             <div className="mb-3">
               <WelcomeOnboarding type={btnType} />
             </div>
