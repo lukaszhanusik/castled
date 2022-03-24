@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 public class SendgridAppConfig extends BaseAppConfig {
 
-    @FormField(description = "Sendgrid API Key", title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.TEXT_BOX)
+    @FormField(description = "API key to access endpoints for updating user contacts", title = "API Key", schema = FormFieldSchema.STRING, type = FormFieldType.PASSWORD)
     private String apiKey;
 }
