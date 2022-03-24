@@ -94,6 +94,11 @@ const Login = (props: serverSideProps) => {
                   placeholder="Enter password"
                 />
                 <ButtonSubmit className="form-control btn-lg" />
+                <h4 className="mt-3">
+                  <a href="/auth/signup">
+                    Don't have an account? <u>Signup here.</u>
+                  </a>
+                </h4>
               </Form>
             </Formik>
             <div className="mt-3 d-flex flex-row align-items-center">
