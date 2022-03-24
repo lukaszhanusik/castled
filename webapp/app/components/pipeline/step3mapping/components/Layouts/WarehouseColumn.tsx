@@ -1,4 +1,4 @@
-import { Table } from "react-bootstrap";
+import { Placeholder, Table } from "react-bootstrap";
 
 interface WarehouseColumnProps {
   title: string;
@@ -27,7 +27,11 @@ export default function WarehouseColumn({
                 <th>Warehouse Column</th>
                 <th></th>
                 <th>App Field</th>
-                {pkRequired && <th>Primary Key</th>}
+                {pkRequired && (
+                  <th>
+                    Primary Key <label className="required-icon">*</label>
+                  </th>
+                )}
                 <th></th>
               </tr>
             </thead>

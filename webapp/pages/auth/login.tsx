@@ -119,6 +119,11 @@ const Login = (props: serverSideProps) => {
                 />
                 <span className="mx-2">Login with Google</span>
               </Button>
+              <h4 className="mt-4">
+                <a href="/auth/signup" className="text-black">
+                  Don't have an account? <u>Signup here</u>
+                </a>
+              </h4>
             </div>
           </div>
         </GuestLayout>
