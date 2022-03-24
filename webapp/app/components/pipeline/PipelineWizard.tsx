@@ -69,7 +69,7 @@ const PipelineWizard = ({
     if (!pipelineWizContext) return;
     if (!wizardStepKey && demo) {
       setPipelineWizContext(demoContext);
-    } else if (wizardStepKey === "source:selectType") {
+    } else if (wizardStepKey === "source:selectModelType") {
       setPipelineWizContext({});
     }
   }, [wizardStepKey, !!pipelineWizContext, demo]);

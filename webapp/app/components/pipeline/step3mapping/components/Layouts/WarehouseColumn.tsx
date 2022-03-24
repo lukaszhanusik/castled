@@ -1,4 +1,4 @@
-import { Table } from "react-bootstrap";
+import { Placeholder, Table } from "react-bootstrap";
 
 interface WarehouseColumnProps {
   title: string;
@@ -16,9 +16,9 @@ export default function WarehouseColumn({
   return (
     <>
       <div className="flex-column align-self-center">
-        <div className="flex-column mx-4">
-          <label className="row py-1">{title}</label>
-          <label className="row description text-muted pb-3">{description}</label>
+        <div className="flex-column">
+          <label className="py-1">{title}</label>
+          <div className="description text-muted pb-3">{description}</div>
         </div>
         <div>
           <Table>
@@ -27,7 +27,11 @@ export default function WarehouseColumn({
                 <th>Warehouse Column</th>
                 <th></th>
                 <th>App Field</th>
-                {pkRequired && <th>Primary Key</th>}
+                {pkRequired && (
+                  <th>
+                    Primary Key <label className="required-icon">*</label>
+                  </th>
+                )}
                 <th></th>
               </tr>
             </thead>

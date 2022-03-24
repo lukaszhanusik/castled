@@ -48,7 +48,7 @@ const SelectExistingConnector = ({
             className="btn list-group-item rounded"
             onClick={() => onCreate()}
           >
-            <strong>Create New {category}</strong>
+            Create New {category}
           </button>
         )}
         {connectors?.map((connector, i) => (
@@ -58,7 +58,7 @@ const SelectExistingConnector = ({
             onClick={() => onSelect(connector.id)}
           >
             <img className={connector.name} src={connector.logoUrl}></img>
-            <strong>{connector.name} </strong>
+            {connector.name}
             {connector.status !== "OK" && (
               <Badge bg="danger">{connector.status}</Badge>
             )}

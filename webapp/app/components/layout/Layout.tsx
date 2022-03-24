@@ -3,6 +3,7 @@ import React from "react";
 import LeftSidebar from "@/app/components/layout/LeftSidebar";
 import HeadCommon from "@/app/components/layout/HeadCommon";
 import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
+import Banner from "../onboarding/Banner";
 
 interface LayoutProps extends HeaderProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ const Layout = ({
   return (
     <div className="layout-holder">
       <HeadCommon title={typeof title === "string" ? title : pageTitle || ""} />
+      <Banner/>
       <LeftSidebar />
       <main>
         {!hideHeader && (

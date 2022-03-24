@@ -52,7 +52,7 @@ const WarehouseModel = ({
     if (pipelineWizContext.isDemo) {
       modelService.get().then(({ data }) => {
         const demoModel = data.find((d) => d.demo);
-        
+
         if (!demoModel) {
           setCurWizardStep("source", "selectType");
         } else {
@@ -183,8 +183,27 @@ function renderQueryResults(result: ExecuteQueryResultsDto) {
   if (result.status === "PENDING") {
     return (
       <div>
-        <p>Query in progress...</p>
-        <LoadingTable />
+        <div>Query in progress...</div>
+        <div className="table-responsive mx-auto loading-table">
+          <Table>
+            <tbody>
+              <tr className="pt-4 pb-4">
+                <td>
+                  <div className="linear-background"></div>
+                </td>
+                <td>
+                  <div className="linear-background"></div>
+                </td>
+                <td>
+                  <div className="linear-background"></div>
+                </td>
+                <td>
+                  <div className="linear-background"></div>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
       </div>
     );
   } else if (result.status === "FAILED") {

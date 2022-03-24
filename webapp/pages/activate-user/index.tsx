@@ -15,8 +15,8 @@ import { AxiosResponse } from "axios";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      appBaseUrl: process.env.APP_BASE_URL
-    }
+      appBaseUrl: process.env.APP_BASE_URL,
+    },
   };
 }
 
@@ -32,8 +32,11 @@ function ActivateUser(props: serverSideProps) {
     password: Yup.string().required("This field is required"),
     confirmPassword: Yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
-      then: Yup.string().oneOf([Yup.ref("password")], "Passwords need to match")
-    })
+      then: Yup.string().oneOf(
+        [Yup.ref("password")],
+        "Passwords need to match"
+      ),
+    }),
   });
 
   useEffect(() => {
@@ -46,45 +49,59 @@ function ActivateUser(props: serverSideProps) {
 
   return (
     <GuestLayout>
-      <Formik
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          password: "",
-          confirmPassword: "",
-        }}
-        validationSchema={formSchema}
-        onSubmit={(values) => handleActivateUser(values, setUser, router!)}
-      >
-        {({ values, setFieldValue, setFieldTouched }) => (
-          <Form>
-            <InputField
-              type="string"
-              name="firstName"
-              title="First Name"
-              placeholder="Enter first name"
-            />
-            <InputField
-              type="string"
-              name="lastName"
-              title="Last Name"
-              placeholder="Enter last name"
-            />
-            <InputField
-              type="password"
-              name="password"
-              title="Password"
-              placeholder="Enter password"
-            />
-            <InputField
-              type="password"
-              name="confirmPassword"
-              title="Confirm Password"
-              placeholder="Confirm password"
-            />
-            <ButtonSubmit className="form-control" />
-          </Form>)}
-      </Formik>
+      <div className="p-4">
+        <div className="text-center">
+          <img
+            src="/images/Castled-Logo.png"
+            alt="Castled Logo"
+            className="mb-4 mt-3"
+          />
+        </div>
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={formSchema}
+          validateOnChange={false}
+          validateOnBlur={false}
+          onSubmit={(values) => handleActivateUser(values, setUser, router!)}
+        >
+          {({ values, setFieldValue, setFieldTouched }) => (
+            <Form>
+              <div className="row row-cols-2">
+                <InputField
+                  type="string"
+                  name="firstName"
+                  title="First Name"
+                  placeholder="first name"
+                />
+                <InputField
+                  type="string"
+                  name="lastName"
+                  title="Last Name"
+                  placeholder="last name"
+                />
+              </div>
+              <InputField
+                type="password"
+                name="password"
+                title="Password"
+                placeholder="password"
+              />
+              <InputField
+                type="password"
+                name="confirmPassword"
+                title="Confirm Password"
+                placeholder="confirm password"
+              />
+              <ButtonSubmit className="form-control" />
+            </Form>
+          )}
+        </Formik>
+      </div>
     </GuestLayout>
   );
 }
@@ -106,14 +123,16 @@ const handleActivateUser = async (
       bannerNotificationService.error("Something went wrong!");
       return;
     }
-    await authService.activateUser({
-      token: router.query.token as string,
-      firstName: registerForm.firstName,
-      lastName: registerForm.lastName,
-      password: registerForm.password
-    }).then((res: AxiosResponse<any>) => {
-      redirectHome(setUser, router);
-    });
+    await authService
+      .activateUser({
+        token: router.query.token as string,
+        firstName: registerForm.firstName,
+        lastName: registerForm.lastName,
+        password: registerForm.password,
+      })
+      .then((res: AxiosResponse<any>) => {
+        redirectHome(setUser, router);
+      });
   }
 };
 
@@ -121,6 +140,6 @@ const redirectHome = async (setUser: any, router: any) => {
   const res = await authService.whoAmI();
   setUser(res.data);
   await router.push("/");
-}
+};
 
 export default ActivateUser;

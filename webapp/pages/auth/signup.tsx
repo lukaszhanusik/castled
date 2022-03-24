@@ -31,50 +31,68 @@ function SignUp(props: serverSideProps) {
     email: yup.string().email("Invalid email").required("Required"),
   });
   return (
-    <GuestLayout>
-      <div className="container">
-        <div className="row py-2">
-          <div className="col">
-            <img
-              src="/images/Castled-Logo.png"
-              alt="Castled Logo"
-              className="my-3"
-            />
-            <h2 className="mb-3">Create your Castled Account</h2>
-            <Formik
-              initialValues={
-                {
-                  email: router.query.email || "",
-                } as SignUpRequestDto
-              }
-              validationSchema={formSchema}
-              onSubmit={(values) =>
-                authService
-                  .signUp(values)
-                  .then(() => handleSignUp(values, router))
-              }
-            >
-              {({ values, setFieldValue, setFieldTouched }) => (
-                <Form>
-                  <InputField
-                    type="email"
-                    name="email"
-                    title="Email"
-                    placeholder="Enter email"
-                  />
-                  <ButtonSubmit className="form-control btn-lg">
-                    Sign Up
-                  </ButtonSubmit>
-                  <h4 className="mt-3">
-                    <a href="/auth/login">Login to existing account</a>
-                  </h4>
-                </Form>
-              )}
-            </Formik>
+    <div className="bg-guest">
+      <main className="w-100">
+        <div className="p-5 card guest-card" style={{ maxWidth: "50rem" }}>
+          <div className="row py-2">
+            <div className="col-6">
+              <div className="text-center">
+                <img
+                  src="/images/Castled-Logo.png"
+                  alt="Castled Logo"
+                  className="mb-4 mt-3"
+                />
+              </div>
+              <h2 className="mb-3">Create your Account</h2>
+              <Formik
+                initialValues={
+                  {
+                    email: router.query.email || "",
+                  } as SignUpRequestDto
+                }
+                validationSchema={formSchema}
+                validateOnChange={false}
+                validateOnBlur={false}
+                onSubmit={(values) =>
+                  authService
+                    .signUp(values)
+                    .then(() => handleSignUp(values, router))
+                }
+              >
+                {({ values, setFieldValue, setFieldTouched }) => (
+                  <Form>
+                    <InputField
+                      type="email"
+                      name="email"
+                      title="Email"
+                      placeholder="name@company.com"
+                    />
+                    <ButtonSubmit className="form-control btn-lg">
+                      Sign Up
+                    </ButtonSubmit>
+                    <h4 className="mt-3">
+                      <a href="/auth/login">
+                        <span style={{ fontWeight: 400 }}>
+                          Already have an account?
+                        </span>{" "}
+                        <span style={{ fontWeight: "bold" }}>Sign In</span>
+                      </a>
+                    </h4>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            <div className="col-6">
+              <img
+                src="/images/welcome-popup.svg"
+                alt="Home Alone by Gustavo Pedrosa"
+                className="popup-image"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </GuestLayout>
+      </main>
+    </div>
   );
 }
 const handleSignUp = async (values: SignUpRequestDto, router: NextRouter) => {

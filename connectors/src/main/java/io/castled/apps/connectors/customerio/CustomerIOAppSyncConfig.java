@@ -10,54 +10,23 @@ import lombok.Setter;
 
 @GroupActivator(dependencies = {"object"}, group = MappingFormGroups.SYNC_MODE)
 @GroupActivator(dependencies = {"object"}, condition = "object.objectName == 'Event'", group = "eventTypeGroup")
-/*@GroupActivator(dependencies = {"eventType", "object"}, condition = "eventType == 'event' && object.objectName == 'Event'", group = "eventGroup")
-@GroupActivator(dependencies = {"eventType", "object"}, condition = "eventType == 'pageView' && object.objectName == 'Event'", group = "pageViewGroup")*/
 @GroupActivator(dependencies = {"object"}, condition = "object.objectName == 'Person'", group = "personGroup")
 @Getter
 @Setter
 public class CustomerIOAppSyncConfig extends BaseAppSyncConfig {
 
-    @FormField(title = "Select Object to sync", type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
+    @FormField(title = "Select Object to sync", description = "Object you want to sync to the destination",
+            type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.OBJECT, group = MappingFormGroups.OBJECT,
             optionsRef = @OptionsRef(value = OptionsReferences.OBJECT, type = OptionsRefType.DYNAMIC))
     private GenericSyncObject object;
 
-    @FormField(title = "Select Event Type for tracking", type = FormFieldType.DROP_DOWN, group = "eventTypeGroup",
+    @FormField(title = "Event Type for tracking", description = "Select the event type you want to track",
+            type = FormFieldType.DROP_DOWN, group = "eventTypeGroup",
             optionsRef = @OptionsRef(value = OptionsReferences.CIO_EVENT_TYPES, type = OptionsRefType.DYNAMIC))
     private String eventType;
 
-/*    @FormField(type = FormFieldType.DROP_DOWN, group = "eventGroup", title = "Warehouse Column identifying the Event Name", description = "Column which identifies the event name",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String eventName;
-
-    @FormField(type = FormFieldType.DROP_DOWN, group = "pageViewGroup", title = "Warehouse Column identifying the URL of the page viewed", description = "How a source record will be uniquely identified",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String pageURL;
-
-    @NotNull
-    @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column uniquely identifying the Event Record", description = "Column which identifies the event ID",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String eventId;
-
-    @NotNull
-    @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column identifying Customer.io id (customer_id) of the person", description = "How a source record will be uniquely identified",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String customerId;
-
-    @FormField(type = FormFieldType.DROP_DOWN, group = "eventTypeGroup", title = "Warehouse Column uniquely identifying the Event Timestamp", description = "Event timestamp",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String eventTimestamp;
-
-    @NotNull
-    @FormField(type = FormFieldType.DROP_DOWN, group = "personGroup", title = "Column uniquely identifying the Person Record", description = "How a source record will be uniquely identified",
-            optionsRef = @OptionsRef(value = OptionsReferences.WAREHOUSE_COLUMNS, type = OptionsRefType.DYNAMIC))
-    private String personIdentifier;*/
-
- /*   @NotNull
-    @FormField(type = FormFieldType.DROP_DOWN, group = "personGroup", title = "Matching Primary Key For Destination App Record", description = "How a source record will be uniquely identified",
-            optionsRef = @OptionsRef(value = OptionsReferences.CIO_PRIMARY_KEYS, type = OptionsRefType.DYNAMIC))
-    private String primaryKey;*/
-
-    @FormField(type = FormFieldType.RADIO_GROUP, schema = FormFieldSchema.ENUM, title = "Sync Mode", description = "Sync mode which controls whether records will be appended, updated or upserted", group = MappingFormGroups.SYNC_MODE,
+    @FormField(title = "Sync Mode", description = "How you want to sync the data to the destination",
+            type = FormFieldType.DROP_DOWN, schema = FormFieldSchema.ENUM, group = MappingFormGroups.SYNC_MODE,
             optionsRef = @OptionsRef(value = OptionsReferences.SYNC_MODE, type = OptionsRefType.DYNAMIC))
     private AppSyncMode mode;
 }

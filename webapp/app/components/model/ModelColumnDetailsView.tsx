@@ -1,7 +1,7 @@
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import { Table } from "react-bootstrap";
 import { useState, useEffect, ChangeEvent, useMemo } from "react";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 
 type ModelColumnDetailsViewProps = Partial<
   Pick<ModelResponseDto, "columnDetails" | "queryPK">
@@ -18,7 +18,7 @@ function ModelColumnDetailsView({
     if (columnDetails) {
       const warehouseResults = columnDetails.map((field, index) => (
         <tr key={`${field.name}-${index}`}>
-          <td className="col-4">{columnNameTransform(field.name)}</td>
+          <td className="col-4">{field.name}</td>
           <td className="col-6">
             <input
               type="text"

@@ -9,6 +9,7 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import warehouseService from "@/app/services/warehouseService";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import cn from "classnames";
+import _ from "lodash";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
@@ -27,7 +28,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   const router = useRouter();
 
   const path = category === "App" ? "/apps" : "/warehouses";
-  const headers = ["#", `${category} Name`, "Type", "Pipelines", "Status"];
+  const headers = ["#", "Name", "Type", "Pipelines", "Status"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -57,7 +58,8 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
   if (connectors === null) return <DefaultErrorPage statusCode={404} />;
   return (
     <Layout
-      title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      // title={`${ConnectorCategoryLabel[category]} ${category}s`}
+      title={`${category}s`}
       subTitle={undefined}
       rightBtn={{
         id: `add_${category.toLowerCase()}_button`,
@@ -100,10 +102,22 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
                     </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    {connector.type}
+                    <div className="d-flex">
+                      <img
+                        src={connector.logoUrl}
+                        alt={connector.name}
+                        height={24}
+                        className="mt-1"
+                      />
+                      <div className="ms-2">
+                        <span>{_.capitalize(connector.type)}</span>
+                      </div>
+                    </div>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
-                    {connector.pipelines}
+                    <span className="badge text-dark fs-4">
+                      {connector.pipelines}
+                    </span>
                   </td>
                   <td onClick={() => router.push(`${path}/${connector.id}`)}>
                     <Badge

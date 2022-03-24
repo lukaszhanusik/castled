@@ -23,10 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -88,7 +85,7 @@ public class GoogleSheetUtils {
     }
 
     public static Object getSheetsValue(Field field) {
-        if (field == null) {
+        if (!Optional.ofNullable(field).map(Field::getValue).isPresent()) {
             return "";
         }
         switch (field.getSchema().getType()) {

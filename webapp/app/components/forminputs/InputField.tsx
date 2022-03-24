@@ -42,19 +42,14 @@ const InputField = ({
   return (
     <div className={className ? className : cn({ "mb-3": !isHidden })}>
       {title && !isHidden && (
-        <label htmlFor={props.id || props.name} className="form-label">
+        <label htmlFor={props.id || props.name}>
           {title}
           {required && <span className="required-icon">*</span>}
         </label>
       )}
-      {description && description !== title && (
-        <p
-          className="text-muted"
-          style={{ marginBottom: ".25rem", marginTop: "-.5rem" }}
-        >
-          {description}
-        </p>
-      )}
+      <p className="text-muted" style={{ marginBottom: ".5rem" }}>
+        {description}
+      </p>
       {getInput(field, meta, onChange, props, optionsRef, required)}
       {loading && !isHidden && (
         <div className="spinner-border spinner-border-sm"></div>

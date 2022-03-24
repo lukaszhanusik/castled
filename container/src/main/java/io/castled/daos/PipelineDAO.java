@@ -83,11 +83,26 @@ public interface PipelineDAO {
     @SqlQuery("select app_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by app_id")
     List<AppAggregate> aggregateByApp(@Bind("teamId") Long teamId);
 
+    @SqlQuery("select count(id) from pipelines where model_id = :modelId and is_deleted = 0")
+    int pipelineCountUsingModel(@Bind("modelId") Long modelId);
+
     @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId and model_id in (<modelIds>) group by model_id")
     List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId, @BindList("modelIds") List<Long> modelIds);
 
     @SqlQuery("select model_id, count(*) as pipelines from pipelines where is_deleted = 0 and team_id = :teamId group by model_id")
     List<ModelAggregate> aggregateByModel(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select count(id) from pipelines where team_id = :teamId and is_deleted = 0")
+    int getAllPipelinesCreatedByTeam(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select count(id) from pipelines where team_id = :teamId and is_deleted = 0")
+    int getAllPipelinesCreatedUsingOwnWarehouse(@Bind("teamId") Long teamId);
+
+    @SqlQuery("select count(id) from pipelines where team_id = :teamId and model_id != :modelId and is_deleted = 0")
+    int getAllPipelinesCreatedUsingOwnWarehouse(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
+
+    @SqlQuery("select count(id) from pipelines where team_id = :teamId and model_id = :modelId and is_deleted = 0")
+    int getAllPipelinesCreatedUsingDemoWarehouse(@Bind("teamId") Long teamId, @Bind("modelId") Long modelId);
 
     class JobScheduleArgumentFactory extends AbstractArgumentFactory<JobSchedule> {
 

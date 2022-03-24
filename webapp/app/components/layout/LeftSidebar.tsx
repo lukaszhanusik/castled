@@ -23,9 +23,9 @@ const sidebarLinks = [
     enabledInOss: true,
   },
   {
-    icon: IconDatabase,
-    title: "Warehouses",
-    href: "/warehouses",
+    icon: IconRelationManyToMany,
+    title: "Models",
+    href: "/models",
     enabledInOss: true,
   },
   {
@@ -35,9 +35,9 @@ const sidebarLinks = [
     enabledInOss: true,
   },
   {
-    icon: IconRelationManyToMany,
-    title: "Models",
-    href: "/models",
+    icon: IconDatabase,
+    title: "Warehouses",
+    href: "/warehouses",
     enabledInOss: true,
   },
   {
@@ -56,7 +56,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         <a href="/" className="d-block logo" title="">
           <img
             src="/images/castled-icon.svg"
-            width={20}
+            width={30}
             className="rounded-circle"
           />
         </a>
@@ -91,7 +91,8 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                         data-bs-original-title="Home"
                       >
                         <div className="icons">
-                          <Icon size={24} stroke={1} className="sidebar-icon" />
+                          <Icon size={26} stroke={1} className="sidebar-icon" />
+                          <div className="text-white">{li.title}</div>
                         </div>
                         {(i & 1) === 0 && <hr className="sidebar-divider" />}
                       </a>
@@ -100,7 +101,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
                 </OverlayTrigger>
               );
             })}
-          <li className="position-absolute bottom-0 text-center">
+          <li className="position-absolute bottom-0 text-center w-75">
             {user && !isOss && (
               <Dropdown align="end">
                 <Dropdown.Toggle

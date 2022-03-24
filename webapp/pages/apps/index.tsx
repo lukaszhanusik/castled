@@ -1,4 +1,3 @@
-import React from "react";
 import ConnectorView from "@/app/components/connectors/ConnectorView";
 
 const Apps = () => {

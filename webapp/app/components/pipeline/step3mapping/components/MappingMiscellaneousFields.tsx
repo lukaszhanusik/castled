@@ -26,9 +26,10 @@ export default function MappingMiscellaneousFields({
   useEffect(() => {
     if (mappingGroups.autoMap) {
       const initialValues = {};
+      const type = "autoMap";
       for (let ele of options) {
         // Add rows for pre_populated_rows
-        addRow(ele.value, mappingGroups.pkRequired ? true : false);
+        addRow(ele.value, mappingGroups.pkRequired ? true : false, type);
 
         // Add values to formik values
         let key = ele.value;
@@ -63,7 +64,7 @@ export default function MappingMiscellaneousFields({
         ) {
           setAdditionalRow((prevState) => [
             ...prevState,
-            additionalFields(identity),
+            additionalFields(identity, mappingGroups.pkRequired ? true : false),
           ]);
         }
       }
@@ -72,11 +73,19 @@ export default function MappingMiscellaneousFields({
 
   // console.log(pkChecked);
 
-  function addRow(key?: string, pkRequired: boolean = false) {
-    const randomKey = Math.random().toString(15).substring(2, 15);
+  function randomKeyGenerator() {
+    return Math.random().toString(15).substring(2, 15);
+  }
+
+  function addRow(
+    key?: string,
+    pkRequired: boolean = false,
+    type: string = "default"
+  ) {
+    const randomKey = randomKeyGenerator();
     setAdditionalRow((prevState) => [
       ...prevState,
-      additionalFields(key || randomKey, pkRequired),
+      additionalFields(key || randomKey, pkRequired, type),
     ]);
   }
 
@@ -100,7 +109,11 @@ export default function MappingMiscellaneousFields({
     // setPkChecked((prev) => Object.assign(prev, { [key]: isChecked }));
   }
 
-  const additionalFields = (key: string, pkRequired: boolean = false) => (
+  const additionalFields = (
+    key: string,
+    pkRequired: boolean = false,
+    type: string = "default"
+  ) => (
     <AdditionalFields
       key={key}
       options={options}
@@ -158,7 +171,7 @@ export default function MappingMiscellaneousFields({
                 })
               ),
             }
-          : mappingGroups.autoMap
+          : type === "autoMap"
           ? {
               value: key,
               label: key,
@@ -166,7 +179,17 @@ export default function MappingMiscellaneousFields({
           : undefined
       }
       defaultAppValue={
-        mappingGroups.autoMap
+        defaultValue({
+          form: "misclFieldForm",
+          type: "appField",
+          index: key,
+        })
+          ? defaultValue({
+              form: "misclFieldForm",
+              type: "appField",
+              index: key,
+            })
+          : type === "autoMap"
           ? key
           : defaultValue({
               form: "misclFieldForm",
@@ -178,7 +201,7 @@ export default function MappingMiscellaneousFields({
   );
 
   return (
-    <div className="row py-2">
+    <div className="row py-1">
       {mappingGroups && (
         <>
           <WarehouseColumn
@@ -190,10 +213,13 @@ export default function MappingMiscellaneousFields({
             <Button
               onClick={(e) => {
                 e.preventDefault();
-                addRow();
+                addRow(
+                  randomKeyGenerator(),
+                  mappingGroups.pkRequired ? true : false
+                );
               }}
               variant="outline-primary"
-              className="my-2 mx-2"
+              className="my-2"
             >
               Add mapping row
             </Button>

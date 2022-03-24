@@ -15,6 +15,7 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.GOOGLE_SERVICE_ACCOUNT)
             .put(ConnectorConstants.TITLE, "Google Sheets")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/gsheets.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-google-sheets")
             .build()),
     SALESFORCE(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
@@ -34,18 +35,21 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Intercom")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/intercom.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-intercom")
             .build()),
     GOOGLEADS(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
             .put(ConnectorConstants.TITLE, "Google Ads")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/gads.png")
             .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.GADS)
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-googleads")
             .build()),
     MAILCHIMP(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
             .put(ConnectorConstants.TITLE, "Mailchimp")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/mailchimp.png")
             .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.MAILCHIMP)
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-mailchimp")
             .build()),
     SENDGRID(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
@@ -69,6 +73,7 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Kafka")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/kafka.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-kafka")
             .build()),
     CUSTOMERIO(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
@@ -80,28 +85,40 @@ public enum ExternalAppType {
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Google Pub/Sub")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/googlepubsub.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-google-pubsub")
             .build()),
     MIXPANEL(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Mixpanel")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/mixpanel_img.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-mixpanel")
+
             .build()),
     RESTAPI(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Rest API")
             .put(ConnectorConstants.MAPPING_TYPE, DataMappingType.TARGET_REST_MAPPING)
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/restapi.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-restapi")
             .build()),
     FBCUSTOMAUDIENCE(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.OAUTH)
             .put(ConnectorConstants.TITLE, "Fb Custom Audience")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
             .put(ConnectorConstants.OAUTH_SERVICE, OAuthServiceType.FBCUSTOMAUDIENCE)
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-fb-custom-audience")
             .build()),
     FBCONVERSION(ImmutableMap.<String, Object>builder()
             .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
             .put(ConnectorConstants.TITLE, "Fb Conversion Api")
             .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/fb.svg")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-fb-conversion-api")
+            .build()),
+    ITERABLE(ImmutableMap.<String, Object>builder()
+            .put(ConnectorConstants.ACCESS_TYPE, AccessType.API_KEY)
+            .put(ConnectorConstants.TITLE, "Iterable")
+            .put(ConnectorConstants.LOGO_URL, "https://cdn.castled.io/apps/iterable.png")
+            .put(ConnectorConstants.DOC_URL, "getting-started/Destinations/configure-iterable")
             .build());
 
     private final Map<String, Object> properties;

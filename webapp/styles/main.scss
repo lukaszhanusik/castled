@@ -126,8 +126,10 @@ body {
 .btn {
   text-transform: uppercase;
   font-size: $font-size-md;
-  border-radius: $border-radius-sm;
-  padding: 0.35rem 1.5rem;
+  border-radius: $border-radius;
+  padding: 0.35rem 1rem;
+  white-space: nowrap;
+
   svg {
     margin-top: -2px;
   }
@@ -293,20 +295,23 @@ label {
   }
   .model-item {
     text-align: left;
+    font-weight: 500;
     img {
       width: 45px;
       height: 50px;
       padding-top: 0.25rem;
     }
     .text-muted {
-      font-weight: 400;
-      font-size: 0.75rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;
+      text-transform: initial;
     }
   }
+}
+
+.text-muted {
+  font-size: 0.8rem;
 }
 
 .mono-font {
@@ -376,6 +381,7 @@ label {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
   padding: 0.5rem 0.7rem;
+  font-weight: 500;
 }
 
 .list-group-item:hover {
@@ -403,7 +409,43 @@ label {
 }
 
 .tr-collapse {
-  border-collapse: separate;
+  // border-collapse: separate;
+  td {
+    font-weight: 500;
+  }
+
+  th {
+    border-top: 1px solid $primary-lite-2x !important;
+    background: #fff !important;
+    font-weight: 400 !important;
+    color: #777 !important;
+  }
+
+  th,
+  td {
+    padding: 1rem;
+  }
+
+  .d-flex {
+    align-items: center;
+  }
+
+  tbody td:hover {
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    td {
+      // border-color: $table-row-hover;
+      transition: all 0.5s;
+    }
+  }
+}
+
+.loading-table {
+  td {
+    border: 0 !important;
+  }
 }
 
 .table {
@@ -417,36 +459,40 @@ label {
   thead th {
     border-bottom: 1px solid $primary-lite-2x !important;
     font-size: 0.8rem;
-    background: $primary-lite-2x;
+    background: $gray-100;
     font-weight: $font-weight-bolder;
   }
 
+  thead th {
+    &:first-child {
+      border-left: 1px solid $primary-lite-2x;
+    }
+    &:last-child {
+      border-right: 1px solid $primary-lite-2x;
+    }
+  }
+
   tbody tr td {
-    border-top: 1px solid $gray-200;
-    border-bottom: 1px solid $gray-200;
+    // border-top: 1px solid $gray-200;
+    // border-bottom: 1px solid $gray-200;
+    // background: $gray-100;
     vertical-align: middle;
 
+    img {
+      border-radius: 0.15rem;
+    }
+
     &:first-child {
-      border-left: 1px solid $gray-200;
+      border-left: 1px solid $primary-lite-2x;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
     }
 
     &:last-child {
-      border-right: 1px solid $gray-200;
+      border-right: 1px solid $primary-lite-2x;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
     }
-  }
-
-  tbody tr:hover {
-    td {
-      border-color: $table-row-hover;
-      transition: all 0.5s;
-    }
-  }
-
-  tbody td > a {
-    color: blue;
-  }
-  tbody td:hover {
-    cursor: pointer;
   }
 
   .badge {
@@ -535,6 +581,11 @@ form {
   .error {
     font-size: $font-size-sm;
   }
+}
+
+.form-width-75 {
+  width: 75%;
+  margin: auto;
 }
 
 .doc-not-found {
@@ -631,11 +682,6 @@ form {
   }
 }
 
-.delete-btn {
-  width: 20px;
-  height: 20px;
-}
-
 .search-input {
   background-image: url("/images/search-icon.svg");
   background-repeat: no-repeat, no-repeat;
@@ -673,6 +719,7 @@ form {
   border: 1px solid $gray-100;
   transition: all 0.3s;
 }
+<<<<<<< HEAD
 
 .animate{
   -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
@@ -681,3 +728,57 @@ form {
   -o-animation: fadein 1s; /* Opera < 12.1 */
   animation: fadein 1s;
 }
+=======
+.onboarding.done {
+  filter: invert(63%) sepia(71%) saturate(312%) hue-rotate(105deg)
+    brightness(89%) contrast(90%);
+}
+.onboarding.not-done {
+  filter: invert(69%) sepia(3%) saturate(587%) hue-rotate(149deg)
+    brightness(99%) contrast(87%);
+}
+
+.accordion-button:hover {
+  background-color: #e7f1ff;
+  transition: all 0.1s;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.125);
+}
+
+.banner-primary {
+  display: flex;
+  column-gap: 5rem;
+}
+
+.banner-text {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #ddd;
+  // color: #ffc107;
+}
+
+.banner-btn {
+  // background-color: white;
+  // color: #7a73ff;
+}
+
+.banner-btn:hover {
+  // background-color: #7a73ff;
+  // color: white;
+}
+
+.welcome-popup {
+  margin: 0 auto;
+  position: relative;
+  top: 20%;
+}
+
+.solid {
+  margin-bottom: 2.5rem;
+  margin-top: 2rem;
+  background-color: #999;
+}
+>>>>>>> 81681bbd525fb12fbd23980bb5373f274bc08bd2

@@ -10,7 +10,7 @@ import Loading from "@/app/components/loaders/Loading";
 import { NextRouter, useRouter } from "next/router";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";
-import { ModelPipelineView } from "@/app/components/model/ModelPipelineView";
+import ModelPipelineView from "@/app/components/model/ModelPipelineView";
 import ModelColumnDetailsView from "@/app/components/model/ModelColumnDetailsView";
 import PipelineWizardProvider, {
   usePipelineWizContext,
@@ -126,25 +126,29 @@ function renderTitle(model: ModelResponseDto | undefined, router: NextRouter) {
   if (!model) return "";
   return (
     <>
-      <span>{model.id} | </span> <span>{model.name}</span>
-      <div className="float-end">
-        <button
-          className="btn btn-outline-primary mx-2"
-          onClick={() => {
-            if (confirm("Are you sure you want to delete this model?")) {
-              modelService
-                .delete(model.id)
-                .then(({ data }) => {
-                  router.push("/models");
-                })
-                .catch(() => {
-                  alert("Error deleting model. Please try again.");
-                });
-            }
-          }}
-        >
-          Delete Model
-        </button>
+      <div className="row">
+        <div className="col-8">
+          <span>{model.id} | </span> <span>{model.name}</span>
+        </div>
+        <div className="col-4 text-center">
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => {
+              if (confirm("Are you sure you want to delete this model?")) {
+                modelService
+                  .delete(model.id)
+                  .then(({ data }) => {
+                    router.push("/models");
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  })
+              }
+            }}
+          >
+            Delete Model
+          </button>
+        </div>
       </div>
     </>
   );

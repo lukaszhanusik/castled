@@ -41,7 +41,7 @@ webapp:
     repository: castled/webapp
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.50-alpha"
+    tag: "0.2.87-alpha"
 
   ## @param webapp.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}
@@ -141,7 +141,7 @@ app:
     repository: castled/app
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.2.50-alpha"
+    tag: "0.2.87-alpha"
 
   ## @param app.podAnnotations [object] Add extra annotations to the webapp pod(s)
   podAnnotations: {}

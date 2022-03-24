@@ -17,7 +17,7 @@ const Models = () => {
   const { setPipelineWizContext } = usePipelineWizContext();
   const [loading, setLoading] = useState(true);
 
-  const headers = ["#", "Model Name", "Source", "Type", "Pipelines"];
+  const headers = ["#", "Name", "Source", "Type", "Pipelines", ""];
   useEffect(() => {
     modelService
       .get()
@@ -33,7 +33,7 @@ const Models = () => {
   console.log(models);
   return (
     <Layout
-      title="Model List"
+      title="Models"
       subTitle={undefined}
       rightBtn={{
         id: "create_model_button",
@@ -70,9 +70,8 @@ const Models = () => {
                 >
                   <td>{model.id}</td>
                   <td>
-                    <div>
+                    <div style={{ maxWidth: "225px" }}>
                       <span>{model.name}</span>
-
                       <div
                         className="text-muted w-75"
                         style={{ whiteSpace: "nowrap" }}
@@ -104,9 +103,9 @@ const Models = () => {
                       />
                       <div className="ms-2">
                         <span>{model.warehouse.name}</span>
-                        <div className="small text-muted">
+                        {/* <div className="small text-muted">
                           {_.capitalize(model.warehouse.type)}
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </td>
@@ -117,13 +116,16 @@ const Models = () => {
                         height={24}
                         className="mt-1 me-2"
                       />
-                      {model.type} Model
+                      {model.type}
                     </div>
                   </td>
                   <td>
                     <span className="badge text-dark fs-4">
                       {model.activeSyncsCount}
                     </span>
+                  </td>
+                  <td>
+                    {" "}
                     <IconChevronRight className="float-end me-2 text-secondary" />
                   </td>
                 </tr>

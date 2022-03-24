@@ -10,7 +10,7 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);
   return {
-    props: { wizardStep, appBaseUrl: process.env.APP_BASE_URL }
+    props: { wizardStep, appBaseUrl: process.env.APP_BASE_URL },
   };
 }
 
@@ -38,13 +38,13 @@ const AppsCreate = ({ wizardStep, appBaseUrl }: AppsCreateProps) => {
       steps={{
         selectType: {
           title: "Select Destination Type",
-          description: "Which app do you own?"
+          description: "Which app do you wish to connect to?",
         },
         configure: {
           title: "Configure App",
           description:
-            "Follow the guide on the right to set up your Source or invite a team member to do it for you"
-        }
+            "Follow the guide on the right to set up your Source or invite a team member to do it for you",
+        },
       }}
       onFinish={() => {
         if (process.browser) {

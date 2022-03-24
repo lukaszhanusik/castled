@@ -86,13 +86,6 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
         flyway.setLocations("migration");
         flyway.migrate();
 
-        //create test team and user if required
-        UsersService usersService = ObjectRegistry.getInstance(UsersService.class);
-        if (usersService.getUser() == null) {
-            usersService.createTestTeamAndUser();
-        }
-        createNewInstallationIfRequired();
-
     }
 
     private void runCodeLevelMigrations() {
@@ -107,18 +100,5 @@ public class CastledServerCommand extends ServerCommand<CastledConfiguration> {
             log.error("Code level data migration failed", e);
             throw new CastledRuntimeException(e.getMessage());
         }
-    }
-
-    private void createNewInstallationIfRequired() {
-        InstallationDAO installationDAO = ObjectRegistry.getInstance(Jdbi.class).onDemand(InstallationDAO.class);
-        String installId = installationDAO.getInstallation();
-        if (installId != null) {
-            CastledStateStore.installId = installId;
-            return;
-        }
-        String newInstallationId = UUID.randomUUID().toString();
-        installationDAO.createInstallation(newInstallationId);
-        CastledStateStore.installId = newInstallationId;
-        ObjectRegistry.getInstance(CastledEventsClient.class).publishCastledEvent(new NewInstallationEvent(newInstallationId));
     }
 }

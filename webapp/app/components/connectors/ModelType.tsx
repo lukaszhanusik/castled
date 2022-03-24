@@ -46,7 +46,7 @@ const ModelType = ({
             onClick={() => onModelTypeSelect(type)}
           >
             <img src={type.icon} />
-            <strong>{type.name}</strong>
+            {type.name}
           </ListGroup.Item>
         ))}
       </ListGroup>

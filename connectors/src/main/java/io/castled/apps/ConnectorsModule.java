@@ -5,6 +5,9 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.MapBinder;
 import io.castled.OptionsReferences;
+import io.castled.apps.connectors.Iterable.IterableCampaignOptionsFetcher;
+import io.castled.apps.connectors.Iterable.IterableCatalogOptionsFetcher;
+import io.castled.apps.connectors.Iterable.IterableTemplateOptionsFetcher;
 import io.castled.apps.connectors.customerio.CIOEventTypeFetcher;
 import io.castled.apps.connectors.customerio.CIOPrimaryKeyOptionsFetcher;
 import io.castled.apps.connectors.fbconversion.FbActionSourceOptionsFetcher;
@@ -81,6 +84,9 @@ public class ConnectorsModule extends AbstractModule {
         optionFetchers.addBinding(OptionsReferences.CIO_EVENT_TYPES).to(CIOEventTypeFetcher.class);
         optionFetchers.addBinding(OptionsReferences.GADS_SUB_RESOURCE).to(GoogleAdsSubResourceFetcher.class);
         optionFetchers.addBinding(OptionsReferences.FB_ADS_ACCOUNTS).to(FbAdAccountOptionsFetcher.class);
+        optionFetchers.addBinding(OptionsReferences.ITERABLE_CAMPAIGN_IDS).to(IterableCampaignOptionsFetcher.class);
+        optionFetchers.addBinding(OptionsReferences.ITERABLE_TEMPLATE_IDS).to(IterableTemplateOptionsFetcher.class);
+        optionFetchers.addBinding(OptionsReferences.ITERABLE_CATALOGS).to(IterableCatalogOptionsFetcher.class);
     }
 
     private void bindStaticOptionFetchers() {

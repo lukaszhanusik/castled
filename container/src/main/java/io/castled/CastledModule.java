@@ -10,6 +10,7 @@ import com.google.inject.multibindings.Multibinder;
 import io.castled.apps.ConnectorsModule;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
+import io.castled.apps.connectors.Iterable.IterableAppConnector;
 import io.castled.apps.connectors.activecampaign.ActiveCampaignAppConnector;
 import io.castled.apps.connectors.customerio.CustomerIOAppConnector;
 import io.castled.apps.connectors.fbconversion.FbConversionAppConnector;
@@ -135,6 +136,7 @@ public class CastledModule extends AbstractModule {
         externalAppConnectorMapping.addBinding(ExternalAppType.RESTAPI).to(RestApiAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.FBCUSTOMAUDIENCE).to(FbCustomAudAppConnector.class);
         externalAppConnectorMapping.addBinding(ExternalAppType.FBCONVERSION).to(FbConversionAppConnector.class);
+        externalAppConnectorMapping.addBinding(ExternalAppType.ITERABLE).to(IterableAppConnector.class);
     }
 
     private void bindAppSyncOptions() {

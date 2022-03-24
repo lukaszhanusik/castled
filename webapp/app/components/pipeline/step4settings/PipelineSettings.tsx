@@ -14,6 +14,7 @@ import PipelineSettingsForm, {
 } from "@/app/components/pipeline/PipelineSettingsForm";
 import { QueryMode } from "@/app/common/enums/QueryMode";
 import { ScheduleTimeUnit } from "@/app/common/enums/ScheduleType";
+import { getOnboardingContext } from "../../onboarding/utils/onboardingContext";
 
 const defaultPipelineSettings = {
   queryMode: QueryMode.INCREMENTAL,
@@ -43,7 +44,6 @@ const PipelineSettings = ({
     onFinish?: (id: number) => void,
     setSubmitting?: (isSubmitting: boolean) => void
   ) => {
-
     pipelineService
       .create(values)
       .then(({ data }) => {
@@ -55,6 +55,8 @@ const PipelineSettings = ({
         if (setSubmitting) setSubmitting(false);
       });
   };
+  const onboardingContextValue = getOnboardingContext();
+
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -76,6 +78,12 @@ const PipelineSettings = ({
             console.log("Not submitting because context is not set");
             return;
           }
+          if (onboardingContextValue === "demo") {
+            localStorage.setItem("demo_onboarding_count", JSON.stringify(1));
+          } else {
+            localStorage.setItem("onboarding_count", JSON.stringify(1));
+          }
+
           pipelineWizContext.values = {
             ...pipelineWizContext.values,
             name: name,

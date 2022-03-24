@@ -36,4 +36,10 @@ public class OptionsReferences {
     // Facebook option references
     public static final String HASHING_OPTIONS = "Hashing Required";
     public static final String ACTION_SOURCE_OPTIONS = "Action Source";
+
+    // Iterable option references
+    public static final String ITERABLE_CAMPAIGN_IDS = "Campaign Ids";
+    public static final String ITERABLE_TEMPLATE_IDS = "Template Ids";
+    public static final String ITERABLE_CATALOGS = "Catalogs";
+
 }

@@ -100,6 +100,9 @@ public class QueryModelService {
 
     public void deleteModel(Long id, Long teamId) {
         this.resourceAccessController.validateQueryModelAccess(getQueryModel(id), teamId);
+        if (this.pipelineService.pipelineCountUsingModel(id) > 0) {
+            throw new BadRequestException("Delete the pipelines using the model before deleting the model");
+        }
         this.queryModelDAO.deleteModel(id);
     }
 
@@ -139,5 +142,9 @@ public class QueryModelService {
         Set<Long> modelIdList = queryModels.stream().map(QueryModel::getId).collect(Collectors.toSet());
         List<ModelAggregate> modelAggregates = pipelineService.getModelAggregates(teamId, Lists.newArrayList(modelIdList));
         return modelAggregates.stream().collect(Collectors.toMap(ModelAggregate::getModelId, ModelAggregate::getPipelines));
+    }
+
+    public int getTotalActiveModelsForTeam(Long teamId) {
+        return this.queryModelDAO.getTotalActiveModelsForTeam(teamId);
     }
 }

@@ -1,5 +1,5 @@
 import Layout from "@/app/components/layout/Layout";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import MembersTab from "./members";
 

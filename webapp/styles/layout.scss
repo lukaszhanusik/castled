@@ -1,7 +1,7 @@
 @import "./colors";
 @import "./variables-custom";
 
-$sidebar-width: 4rem;
+$sidebar-width: 7rem;
 
 html,
 body,
@@ -61,7 +61,7 @@ body,
 .container-main {
   margin: 0 auto;
   @include media-breakpoint-up(xl) {
-    max-width: 51%;
+    max-width: 56%;
   }
 }
 
@@ -91,7 +91,7 @@ body,
   .nav-pills .show > .nav-link {
     background-color: transparent;
     border-radius: 0;
-    padding: 0.4rem 0.7rem;
+    padding: 0;
 
     &.active div {
       border-radius: $border-radius;
@@ -105,13 +105,17 @@ body,
     .sidebar-divider {
       position: relative;
       bottom: -10px;
-      margin: 5px;
-      border-bottom: 2px solid $blue-semi;
+      margin: 5px 5px 10px 5px;
+      border-bottom: 1px solid $blue-semi;
     }
   }
 
   .icons {
     padding: 0.5rem;
+  }
+
+  .text-white {
+    font-size: 0.7rem;
   }
 
   .icons:hover {
@@ -126,6 +130,9 @@ body,
   li {
     text-align: center;
     margin-bottom: 10px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   #logout-dropdown {
@@ -196,4 +203,47 @@ body,
     opacity: 0.7;
     background-color: $gray-100;
   }
+}
+
+/* popup animation */
+
+@keyframes popup {
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  1% {
+    transform: scale(0.96) translateY(10px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
+  }
+}
+.popup-content {
+  animation: popup 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+}
+
+/* popup css classes */
+
+.popup-body {
+  width: 52rem;
+  border: 1px solid $gray-200;
+  background-color: $white;
+}
+
+.popup-image {
+  width: 20rem;
+  padding-left: 3rem;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+[data-popup="tooltip"].popup-overlay {
+  background: transparent;
 }
