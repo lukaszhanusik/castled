@@ -1,6 +1,5 @@
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import Popup from "reactjs-popup";
 import ButtonSubmit from "../forminputs/ButtonSubmit";
 import InputField from "../forminputs/InputField";
 import authService from "@/app/services/authService";
@@ -16,14 +15,6 @@ export default function WelcomePopup() {
   const closeModal = () => setOpen(false);
 
   return (
-    // <Popup
-    //   open={open}
-    //   position="right center"
-    //   modal
-    //   closeOnDocumentClick
-    //   className="popup-content popup-overlay"
-    //   onClose={closeModal}
-    // >
     <div
       className="card-body welcome-popup popup-body py-5"
       data-popup="tooltip"
@@ -82,6 +73,5 @@ export default function WelcomePopup() {
         </div>
       </div>
     </div>
-    // </Popup>
   );
 }

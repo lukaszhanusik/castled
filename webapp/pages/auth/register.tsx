@@ -44,74 +44,84 @@ function Register(props: serverSideProps) {
   });
   return (
     <GuestLayout>
-      <Formik
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          password: "",
-          confirmPassword: "",
-          clusterLocation: undefined,
-        }}
-        validationSchema={formSchema}
-        onSubmit={(values) => handleRegisterUser(values, setUser, router!)}
-      >
-        {({ values, setFieldValue, setFieldTouched }) => (
-          <Form>
-            <div className="row row-cols-2">
+      <div className="p-4">
+        <div className="text-center">
+          <img
+            src="/images/Castled-Logo.png"
+            alt="Castled Logo"
+            className="mb-4 mt-3"
+          />
+        </div>
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: "",
+            clusterLocation: undefined,
+          }}
+          validationSchema={formSchema}
+          validateOnChange={false}
+          validateOnBlur={false}
+          onSubmit={(values) => handleRegisterUser(values, setUser, router!)}
+        >
+          {({ values, setFieldValue, setFieldTouched }) => (
+            <Form>
+              <div className="row row-cols-2">
+                <InputField
+                  type="string"
+                  name="firstName"
+                  title="First Name"
+                  placeholder="first name"
+                />
+                <InputField
+                  type="string"
+                  name="lastName"
+                  title="Last Name"
+                  placeholder="last name"
+                />
+              </div>
               <InputField
-                type="string"
-                name="firstName"
-                title="First Name"
-                placeholder="Enter first name"
+                type="password"
+                name="password"
+                title="Password"
+                placeholder="password"
               />
               <InputField
-                type="string"
-                name="lastName"
-                title="Last Name"
-                placeholder="Enter last name"
+                type="password"
+                name="confirmPassword"
+                title="Confirm Password"
+                placeholder="confirm password"
               />
-            </div>
-            <InputField
-              type="password"
-              name="password"
-              title="Password"
-              placeholder="Enter password"
-            />
-            <InputField
-              type="password"
-              name="confirmPassword"
-              title="Confirm Password"
-              placeholder="Confirm password"
-            />
-            <InputSelect
-              title="Cluster Region"
-              options={renderUtils.selectOptions(AppClusterLabel)}
-              values={values}
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-              name="clusterLocation"
-            />
-            <p className="text-muted mt-n3">
-              Choose a region nearest to your warehouse region
-            </p>
-            <ButtonSubmit className="form-control btn-lg">
-              Register
-            </ButtonSubmit>
-            <p className="mt-3 fs-4 text-muted">
-              By clicking on <strong className="text-muted">Register</strong>{" "}
-              you agree to the{" "}
-              <a href="https://castled.io/terms-of-service" target="_blank">
-                Terms of Service
-              </a>{" "}
-              and the{" "}
-              <a href="https://castled.io/privacy-policy" target="_blank">
-                Privacy Policy
-              </a>
-            </p>
-          </Form>
-        )}
-      </Formik>
-      {/* <div className="mt-3 text-center">
+              <InputSelect
+                title="Cluster Region"
+                options={renderUtils.selectOptions(AppClusterLabel)}
+                values={values}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                name="clusterLocation"
+              />
+              <p className="text-muted mt-n3">
+                Choose the cluster nearest to your warehouse region
+              </p>
+              <ButtonSubmit className="form-control btn-lg">
+                Register
+              </ButtonSubmit>
+              <p className="mt-3 fs-4 text-muted">
+                By clicking on <strong className="text-muted">Register</strong>{" "}
+                you agree to the{" "}
+                <a href="https://castled.io/terms-of-service" target="_blank">
+                  Terms of Service
+                </a>{" "}
+                and the{" "}
+                <a href="https://castled.io/privacy-policy" target="_blank">
+                  Privacy Policy
+                </a>
+              </p>
+            </Form>
+          )}
+        </Formik>
+        {/* <div className="mt-3 text-center">
         <Button
           href={authUtils.getExternalLoginUrl(
             props.appBaseUrl,
@@ -123,6 +133,7 @@ function Register(props: serverSideProps) {
           Sign up with Google
         </Button>
       </div> */}
+      </div>
     </GuestLayout>
   );
 }

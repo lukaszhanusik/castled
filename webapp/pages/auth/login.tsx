@@ -64,42 +64,12 @@ const Login = (props: serverSideProps) => {
       {props.isOss === "false" && (
         <GuestLayout>
           <div className="p-4">
-            <Formik
-              initialValues={{
-                email: "",
-                password: "",
-              }}
-              validationSchema={formSchema}
-              onSubmit={formHandler(
-                false,
-                {
-                  id: "login_form",
-                  pickFieldsForEvent: ["email"],
-                },
-                authService.login,
-                () => handleLogin(setUser, router)
-              )}
-            >
-              <Form>
-                <InputField
-                  type="email"
-                  name="email"
-                  title="Email"
-                  placeholder="Enter email"
-                />
-                <InputField
-                  type="password"
-                  name="password"
-                  title="Password"
-                  placeholder="Enter password"
-                />
-                <ButtonSubmit className="form-control btn-lg" />
-              </Form>
-            </Formik>
-            <div className="mt-3 d-flex flex-row align-items-center">
-              <p className="horizontal-line">
-                <span> or </span>{" "}
-              </p>
+            <div className="text-center">
+              <img
+                src="/images/Castled-Logo.png"
+                alt="Castled Logo"
+                className="mb-3"
+              />
             </div>
             <div className="mt-3 gap-2 text-center">
               <Button
@@ -117,14 +87,59 @@ const Login = (props: serverSideProps) => {
                   width={14}
                   className="rounded-circle"
                 />
-                <span className="mx-2">Login with Google</span>
+                <span className="mx-2">Sign in with Google</span>
               </Button>
-              <h4 className="mt-4">
-                <a href="/auth/signup" className="text-black">
-                  Don't have an account? <u>Signup here</u>
-                </a>
-              </h4>
             </div>
+
+            <div className="mt-3 d-flex flex-row align-items-center">
+              <p className="horizontal-line">
+                <span> or </span>{" "}
+              </p>
+            </div>
+            <Formik
+              initialValues={{
+                email: "",
+                password: "",
+              }}
+              validationSchema={formSchema}
+              validateOnChange={false}
+              validateOnBlur={false}
+              onSubmit={formHandler(
+                false,
+                {
+                  id: "login_form",
+                  pickFieldsForEvent: ["email"],
+                },
+                authService.login,
+                () => handleLogin(setUser, router)
+              )}
+            >
+              <Form>
+                <InputField
+                  type="email"
+                  name="email"
+                  title="Email"
+                  placeholder="name@company.com"
+                />
+                <InputField
+                  type="password"
+                  name="password"
+                  title="Password"
+                  placeholder="password"
+                />
+                <ButtonSubmit className="form-control btn-lg font-weight-bold">
+                  Sign in
+                </ButtonSubmit>
+              </Form>
+            </Formik>
+            <h4 className="mt-4">
+              <a href="/auth/signup">
+                <span style={{ fontWeight: "normal" }}>
+                  Don't have an account?
+                </span>{" "}
+                <span style={{ fontWeight: "bold" }}>Sign Up</span>
+              </a>
+            </h4>
           </div>
         </GuestLayout>
       )}
