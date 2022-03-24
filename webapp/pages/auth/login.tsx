@@ -64,6 +64,13 @@ const Login = (props: serverSideProps) => {
       {props.isOss === "false" && (
         <GuestLayout>
           <div className="p-4">
+            <div className="text-center">
+              <img
+                src="/images/Castled-Logo.png"
+                alt="Castled Logo"
+                className="mb-3"
+              />
+            </div>
             <div className="mt-3 gap-2 text-center">
               <Button
                 className="d-block btn-lg"
@@ -95,6 +102,8 @@ const Login = (props: serverSideProps) => {
                 password: "",
               }}
               validationSchema={formSchema}
+              validateOnChange={false}
+              validateOnBlur={false}
               onSubmit={formHandler(
                 false,
                 {
@@ -116,7 +125,7 @@ const Login = (props: serverSideProps) => {
                   type="password"
                   name="password"
                   title="Password"
-                  placeholder="a strong password"
+                  placeholder="password"
                 />
                 <ButtonSubmit className="form-control btn-lg font-weight-bold">
                   Sign in
@@ -124,11 +133,11 @@ const Login = (props: serverSideProps) => {
               </Form>
             </Formik>
             <h4 className="mt-4">
-              <a href="/auth/signup" className="text-black">
+              <a href="/auth/signup">
                 <span style={{ fontWeight: "normal" }}>
                   Don't have an account?
                 </span>{" "}
-                <u style={{ fontWeight: 'bold'}}>Signup here</u>
+                <span style={{ fontWeight: "bold" }}>Sign Up</span>
               </a>
             </h4>
           </div>
