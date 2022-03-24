@@ -94,11 +94,6 @@ const Login = (props: serverSideProps) => {
                   placeholder="Enter password"
                 />
                 <ButtonSubmit className="form-control btn-lg" />
-                <h4 className="mt-3">
-                  <a href="/auth/signup">
-                    Don't have an account? <u>Signup here.</u>
-                  </a>
-                </h4>
               </Form>
             </Formik>
             <div className="mt-3 d-flex flex-row align-items-center">
@@ -124,6 +119,11 @@ const Login = (props: serverSideProps) => {
                 />
                 <span className="mx-2">Login with Google</span>
               </Button>
+              <h4 className="mt-3">
+                <a href="/auth/signup" className="text-black">
+                  Don't have an account? <u>Signup here</u>
+                </a>
+              </h4>
             </div>
           </div>
         </GuestLayout>
