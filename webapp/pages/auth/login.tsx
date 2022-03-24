@@ -64,6 +64,31 @@ const Login = (props: serverSideProps) => {
       {props.isOss === "false" && (
         <GuestLayout>
           <div className="p-4">
+            <div className="mt-3 gap-2 text-center">
+              <Button
+                className="d-block btn-lg"
+                href={authUtils.getExternalLoginUrl(
+                  props.appBaseUrl,
+                  ExternalLoginType.GOOGLE,
+                  router.pathname
+                )}
+                onClick={buttonHandler(false, { id: "login_with_google" })}
+                variant="outline-dark"
+              >
+                <img
+                  src="/images/google.png"
+                  width={14}
+                  className="rounded-circle"
+                />
+                <span className="mx-2">Sign in with Google</span>
+              </Button>
+            </div>
+
+            <div className="mt-3 d-flex flex-row align-items-center">
+              <p className="horizontal-line">
+                <span> or </span>{" "}
+              </p>
+            </div>
             <Formik
               initialValues={{
                 email: "",
@@ -85,46 +110,27 @@ const Login = (props: serverSideProps) => {
                   type="email"
                   name="email"
                   title="Email"
-                  placeholder="Enter email"
+                  placeholder="name@company.com"
                 />
                 <InputField
                   type="password"
                   name="password"
                   title="Password"
-                  placeholder="Enter password"
+                  placeholder="a strong password"
                 />
-                <ButtonSubmit className="form-control btn-lg" />
+                <ButtonSubmit className="form-control btn-lg font-weight-bold">
+                  Sign in
+                </ButtonSubmit>
               </Form>
             </Formik>
-            <div className="mt-3 d-flex flex-row align-items-center">
-              <p className="horizontal-line">
-                <span> or </span>{" "}
-              </p>
-            </div>
-            <div className="mt-3 gap-2 text-center">
-              <Button
-                className="d-block btn-lg"
-                href={authUtils.getExternalLoginUrl(
-                  props.appBaseUrl,
-                  ExternalLoginType.GOOGLE,
-                  router.pathname
-                )}
-                onClick={buttonHandler(false, { id: "login_with_google" })}
-                variant="outline-dark"
-              >
-                <img
-                  src="/images/google.png"
-                  width={14}
-                  className="rounded-circle"
-                />
-                <span className="mx-2">Login with Google</span>
-              </Button>
-              <h4 className="mt-4">
-                <a href="/auth/signup" className="text-black">
-                  Don't have an account? <u>Signup here</u>
-                </a>
-              </h4>
-            </div>
+            <h4 className="mt-4">
+              <a href="/auth/signup" className="text-black">
+                <span style={{ fontWeight: "normal" }}>
+                  Don't have an account?
+                </span>{" "}
+                <u style={{ fontWeight: 'bold'}}>Signup here</u>
+              </a>
+            </h4>
           </div>
         </GuestLayout>
       )}
