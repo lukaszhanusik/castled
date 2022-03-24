@@ -5,7 +5,7 @@ import formHandler from "@/app/common/utils/formHandler";
 import React, { useEffect, useState } from "react";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
 import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaResponseDto";
@@ -20,8 +20,8 @@ import { SelectOptionDto } from "@/app/common/dtos/SelectOptionDto";
 import modelService from "@/app/services/modelService";
 import Select from "react-select";
 import { NextRouter, useRouter } from "next/router";
-import LoadingTable from "../pipeline/step3mapping/components/Layouts/LoadingTable";
-import LoadingInput from "../common/LoadingInput";
+import LoadingInput from "../loaders/LoadingInput";
+import LoadingTable from "../loaders/LoadingTable";
 
 const CreateModel = ({
   curWizardStep,

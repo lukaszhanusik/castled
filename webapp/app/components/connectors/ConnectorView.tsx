@@ -3,7 +3,7 @@ import Layout from "@/app/components/layout/Layout";
 import { Alert, Badge, Table } from "react-bootstrap";
 import appsService from "@/app/services/appsService";
 import { ConnectorDto } from "@/app/common/dtos/ConnectorDto";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import DefaultErrorPage from "next/error";
 import { ConnectorCategory } from "@/app/common/utils/types";
 import warehouseService from "@/app/services/warehouseService";
@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
 import { IconChevronRight } from "@tabler/icons";
-import LoadingTable from "../pipeline/step3mapping/components/Layouts/LoadingTable";
+import LoadingTable from "../loaders/LoadingTable";
 
 interface ConnectorViewProps {
   category: ConnectorCategory;
@@ -65,7 +65,7 @@ const ConnectorView = ({ category }: ConnectorViewProps) => {
         href: `${path}/create?wizardStep=selectType`,
       }}
     >
-      {!connectors && <LoadingTable />}
+      {!connectors && <LoadingTable headers={headers}/>}
       {connectors && connectors.length === 0 && (
         <Alert variant="light" className="text-center">
           No {category} connections created yet!

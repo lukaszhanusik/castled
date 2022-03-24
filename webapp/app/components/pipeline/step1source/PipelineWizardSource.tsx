@@ -5,7 +5,7 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import WarehouseModel from "@/app/components/pipeline/step1source/WarehouseModel";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 
 const CUR_WIZARD_STEP_GROUP = "source";

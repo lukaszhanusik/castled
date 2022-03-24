@@ -2,7 +2,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import Layout from "@/app/components/layout/Layout";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import React, { useEffect } from "react";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import {
   PipelineCreateRequestDto,
   PipelineSchedule,

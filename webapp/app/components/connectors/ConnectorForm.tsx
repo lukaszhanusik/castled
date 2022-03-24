@@ -22,8 +22,8 @@ import * as yup from "yup";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import { valueEventAriaMessage } from "react-select/src/accessibility";
 import { ConnectorCategoryLabel } from "@/app/common/enums/ConnectorCategory";
-import Loading from "../common/Loading";
-import LoadingInput from "../common/LoadingInput";
+import Loading from "../loaders/Loading";
+import LoadingInput from "../loaders/LoadingInput";
 
 const API_BASE = process.env.API_BASE || "";
 

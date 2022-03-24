@@ -5,7 +5,7 @@ import _ from "lodash";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import DestinationSettings from "@/app/components/pipeline/step2destination/DestinationSettings";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
 
 const CUR_WIZARD_STEP_GROUP = "destination";

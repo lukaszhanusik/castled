@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import routerUtils from "@/app/common/utils/routerUtils";
 import _ from "lodash";

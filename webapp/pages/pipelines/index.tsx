@@ -5,7 +5,7 @@ import pipelineService from "@/app/services/pipelineService";
 import { PipelineResponseDto } from "@/app/common/dtos/PipelineResponseDto";
 import Link from "next/link";
 import DefaultErrorPage from "next/error";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { useRouter } from "next/router";
 import PipelineScheduleUtils from "@/app/common/utils/pipelineScheduleUtils";
 import { SchedulTimeUnitLabel } from "@/app/common/enums/ScheduleType";
@@ -13,7 +13,7 @@ import _ from "lodash";
 import { PipelineSyncStatus } from "@/app/common/enums/PipelineSyncStatus";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { IconArrowNarrowRight, IconChevronRight } from "@tabler/icons";
-import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
+import LoadingTable from "@/app/components/loaders/LoadingTable";
 const Pipelines = () => {
   const [pipelines, setPipelines] = useState<
     PipelineResponseDto[] | undefined | null
@@ -89,7 +89,7 @@ const Pipelines = () => {
           : undefined
       }
     >
-      {!pipelines && <LoadingTable />}
+      {!pipelines && <LoadingTable headers={headers}/>}
       {pipelines && pipelines.length > 0 && (
         <div className="table-responsive">
           <Table className="tr-collapse">

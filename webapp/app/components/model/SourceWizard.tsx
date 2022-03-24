@@ -4,7 +4,7 @@ import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizar
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
 import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 
 const CUR_WIZARD_STEP_GROUP = "source";
 

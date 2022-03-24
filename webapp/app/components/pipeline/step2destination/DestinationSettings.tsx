@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import DynamicFormFields from "@/app/components/connectors/DynamicFormFields";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import _ from "lodash";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";

@@ -7,15 +7,15 @@ import { PipelineSchemaResponseDto } from "@/app/common/dtos/PipelineSchemaRespo
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import _ from "lodash";
 import { Form, Formik } from "formik";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import DynamicMappingFields from "./DynamicMappingFields";
-import LoadingTable from "./components/Layouts/LoadingTable";
 import transformMapping from "./utils/transformMapping";
 import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import mappingFieldValidations from "./utils/mappingFieldValidations";
 import misclValidation from "./utils/misclValidation";
 import ErrorMessage from "./components/Layouts/ErrorMessage";
+import LoadingTable from "../../loaders/LoadingTable";
 
 const PipelineMapping = ({
   appBaseUrl,

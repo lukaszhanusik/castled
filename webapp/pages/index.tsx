@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSession } from "@/app/common/context/sessionContext";
 import { useRouter } from "next/router";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 
 const Index = () => {
   const { user } = useSession();

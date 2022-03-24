@@ -4,12 +4,12 @@ import { Alert, Badge, OverlayTrigger, Table, Tooltip } from "react-bootstrap";
 import modelService from "@/app/services/modelService";
 import { ModelListDto } from "@/app/common/dtos/ModelListDto";
 import DefaultErrorPage from "next/error";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { useRouter } from "next/router";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import _ from "lodash";
 import { IconChevronRight } from "@tabler/icons";
-import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
+import LoadingTable from "@/app/components/loaders/LoadingTable";
 
 const Models = () => {
   const [models, setModels] = useState<ModelListDto[] | undefined | null>();
@@ -41,7 +41,7 @@ const Models = () => {
         href: "/models/create",
       }}
     >
-      {!models && <LoadingTable />}
+      {!models && <LoadingTable headers={headers}/>}
 
       {models && models.length === 0 && (
         <p className="text-center">No models created yet.</p>

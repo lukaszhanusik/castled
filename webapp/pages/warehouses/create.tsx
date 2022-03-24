@@ -4,8 +4,7 @@ import routerUtils from "@/app/common/utils/routerUtils";
 import ConnectorWizard from "@/app/components/connectors/ConnectorWizard";
 import { useRouter } from "next/router";
 import wizardUtils from "@/app/common/utils/wizardUtils";
-import Loading from "@/app/components/common/Loading";
-import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
+import Loading from "@/app/components/loaders/Loading";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const wizardStep = routerUtils.getString(query.wizardStep);

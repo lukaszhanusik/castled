@@ -6,7 +6,7 @@ import modelService from "@/app/services/modelService";
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
 import DefaultErrorPage from "next/error";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { NextRouter, useRouter } from "next/router";
 import { ModelResponseDto } from "@/app/common/dtos/ModelResponseDto";
 import ModelQueryView from "@/app/components/model/ModelQueryView";

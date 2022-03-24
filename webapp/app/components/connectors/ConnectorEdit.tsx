@@ -5,10 +5,10 @@ import appsService from "@/app/services/appsService";
 import DefaultErrorPage from "next/error";
 import { ConnectorCategory } from "@/app/common/utils/types";
 import warehouseService from "@/app/services/warehouseService";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import Layout from "@/app/components/layout/Layout";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";
-import LoadingInput from "../common/LoadingInput";
+import LoadingInput from "../loaders/LoadingInput";
 
 interface ConnectorEditProps {
   appBaseUrl: string;

@@ -5,7 +5,7 @@ import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContex
 import { PipelineSchemaResponseRestApiDto } from "@/app/common/dtos/PipelineSchemaResponseDto2";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import _ from "lodash";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import PipelineMappingRestApi from "./types/PipelineMappingRestApi";
 
 const PipelineMappingRestWizard = ({

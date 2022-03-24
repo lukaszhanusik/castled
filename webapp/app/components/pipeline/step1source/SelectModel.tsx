@@ -18,7 +18,7 @@ import { ConnectorTypeDto } from "@/app/common/dtos/ConnectorTypeDto";
 import _ from "lodash";
 import { ConnectorCategory } from "@/app/common/utils/types";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
-import LoadingConnector from "../../common/LoadingConnector";
+import LoadingConnector from "../../loaders/LoadingConnector";
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;
   onCreate: () => void;

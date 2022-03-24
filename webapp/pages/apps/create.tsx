@@ -4,7 +4,7 @@ import routerUtils from "@/app/common/utils/routerUtils";
 import ConnectorWizard from "@/app/components/connectors/ConnectorWizard";
 import wizardUtils from "@/app/common/utils/wizardUtils";
 import { useRouter } from "next/router";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {

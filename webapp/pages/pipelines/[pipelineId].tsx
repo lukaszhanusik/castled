@@ -10,7 +10,6 @@ import {
   Tab,
 } from "react-bootstrap";
 import pipelineService from "@/app/services/pipelineService";
-import cn from "classnames";
 import PipelineRunView from "@/app/components/pipeline/PipelineRunView";
 import PipelineMappingView from "@/app/components/pipeline/PipelineMappingView";
 import PipelineMappingViewRestApi from "@/app/components/pipeline/PipelineMappingViewRestApi";
@@ -19,7 +18,7 @@ import { PipelineResponseRestApiDto } from "@/app/common/dtos/PipelineResponseRe
 import { GetServerSidePropsContext } from "next";
 import routerUtils from "@/app/common/utils/routerUtils";
 import DefaultErrorPage from "next/error";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import pipelineRunsService from "@/app/services/pipelineRunsService";
 import { PipelineRunDto } from "@/app/common/dtos/PipelineRunDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
@@ -32,10 +31,8 @@ import _ from "lodash";
 import DropdownPlain from "@/app/components/bootstrap/DropdownPlain";
 import { NextRouter, useRouter } from "next/router";
 import PipelineSettingsView from "@/app/components/pipeline/PipelineSettingsView";
-import { ScheduleType } from "@/app/common/enums/ScheduleType";
 import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
 import TimeAgo from "react-timeago";
-import LoadingTable from "@/app/components/pipeline/step3mapping/components/Layouts/LoadingTable";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const pipelineId = routerUtils.getInt(query.pipelineId);

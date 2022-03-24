@@ -8,7 +8,7 @@ import InputSelect from "@/app/components/forminputs/InputSelect";
 import InputField from "@/app/components/forminputs/InputField";
 import _ from "lodash";
 import { Formik, Form } from "formik";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { PipelineMappingDto } from "@/app/common/dtos/PipelineCreateRequestDto";
 import ButtonSubmit from "@/app/components/forminputs/ButtonSubmit";
 import { useSession } from "@/app/common/context/sessionContext";

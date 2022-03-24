@@ -7,7 +7,7 @@ import SelectConnectorType from "@/app/components/connectors/SelectConnectorType
 import { ConnectorCategory } from "@/app/common/utils/types";
 import SelectExistingConnector from "@/app/components/connectors/SelectExistingConnector";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import _ from "lodash";
 import IntegratedDoc from "../layout/IntegratedDoc";
 import ConnectorHelpSubTitle from "./ConnectorHelpSubTitle";

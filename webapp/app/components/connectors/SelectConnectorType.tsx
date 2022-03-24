@@ -6,7 +6,7 @@ import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
-import LoadingList from "../common/LoadingList";
+import LoadingList from "../loaders/LoadingList";
 
 export interface SelectConnectorTypeProps {
   category: ConnectorCategory;

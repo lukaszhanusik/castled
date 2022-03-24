@@ -3,7 +3,7 @@ import { WizardSteps } from "@/app/common/dtos/internal/WizardSteps";
 import { useRouter } from "next/router";
 import PipelineWizardSource from "@/app/components/pipeline/step1source/PipelineWizardSource";
 import wizardUtils from "@/app/common/utils/wizardUtils";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import PipelineWizardDestination from "@/app/components/pipeline/step2destination/PipelineWizardDestination";
 import PipelineMapping from "@/app/components/pipeline/step3mapping/PipelineMapping";
 import PipelineSettings from "@/app/components/pipeline/step4settings/PipelineSettings";

@@ -5,8 +5,8 @@ import { ConnectorCategory } from "@/app/common/utils/types";
 import { ConnectorDto } from "@/app/common/dtos/ConnectorDto";
 import appsService from "@/app/services/appsService";
 import warehouseService from "@/app/services/warehouseService";
-import LoadingList from "../common/LoadingList";
-import LoadingConnector from "../common/LoadingConnector";
+import LoadingList from "../loaders/LoadingList";
+import LoadingConnector from "../loaders/LoadingConnector";
 
 export interface SelectExistingConnectorProps {
   category: ConnectorCategory;

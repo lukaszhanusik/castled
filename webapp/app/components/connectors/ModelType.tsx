@@ -1,9 +1,7 @@
 import { PipelineWizardStepProps } from "@/app/components/pipeline/PipelineWizard";
-import Layout from "@/app/components/layout/Layout";
-import formHandler from "@/app/common/utils/formHandler";
 import React, { useState } from "react";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { ListGroup } from "react-bootstrap";
 import _ from "lodash";
 import { useSession } from "@/app/common/context/sessionContext";

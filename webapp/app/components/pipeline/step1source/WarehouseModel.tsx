@@ -5,7 +5,7 @@ import formHandler from "@/app/common/utils/formHandler";
 import React, { useEffect, useState } from "react";
 import warehouseService from "@/app/services/warehouseService";
 import { usePipelineWizContext } from "@/app/common/context/pipelineWizardContext";
-import Loading from "@/app/components/common/Loading";
+import Loading from "@/app/components/loaders/Loading";
 import { ExecuteQueryRequestDto } from "@/app/common/dtos/ExecuteQueryRequestDto";
 import bannerNotificationService from "@/app/services/bannerNotificationService";
 import { ExecuteQueryResultsDto } from "@/app/common/dtos/ExecuteQueryResultsDto";
@@ -17,7 +17,7 @@ import { useSession } from "@/app/common/context/sessionContext";
 import { IconChevronRight, IconLoader, IconPlayerPlay } from "@tabler/icons";
 import * as yup from "yup";
 import modelService from "@/app/services/modelService";
-import LoadingTable from "../step3mapping/components/Layouts/LoadingTable";
+import LoadingTable from "../../loaders/LoadingTable";
 
 const WarehouseModel = ({
   curWizardStep,
