@@ -719,7 +719,6 @@ form {
   border: 1px solid $gray-100;
   transition: all 0.3s;
 }
-<<<<<<< HEAD
 
 .animate{
   -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
@@ -728,7 +727,7 @@ form {
   -o-animation: fadein 1s; /* Opera < 12.1 */
   animation: fadein 1s;
 }
-=======
+
 .onboarding.done {
   filter: invert(63%) sepia(71%) saturate(312%) hue-rotate(105deg)
     brightness(89%) contrast(90%);
@@ -781,4 +780,3 @@ form {
   margin-top: 2rem;
   background-color: #999;
 }
->>>>>>> 81681bbd525fb12fbd23980bb5373f274bc08bd2

@@ -1126,21 +1126,6 @@
   dependencies:
     "@babel/runtime" "^7.6.2"
 
-<<<<<<< HEAD
-=======
-"@restart/context@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.npmjs.org/@restart/context/-/context-2.1.4.tgz"
-  integrity sha512-INJYZQJP7g+IoDUh/475NlGiTeMfwTXUEr3tmRneckHIxNolGOW9CTq83S8cxq0CgJwwcMzMJFchxvlwe7Rk8Q==
-
-"@restart/hooks@^0.3.26":
-  version "0.3.27"
-  resolved "https://registry.npmjs.org/@restart/hooks/-/hooks-0.3.27.tgz"
-  integrity sha512-s984xV/EapUIfkjlf8wz9weP2O9TNKR96C68FfMEy2bE69+H4cNv3RD4Mf97lW7Htt7PjZrYTjSC8f3SB9VCXw==
-  dependencies:
-    dequal "^2.0.2"
-
->>>>>>> 81681bbd525fb12fbd23980bb5373f274bc08bd2
 "@restart/hooks@^0.4.0":
   version "0.4.0"
   resolved "https://registry.npmjs.org/@restart/hooks/-/hooks-0.4.0.tgz"
@@ -1148,7 +1133,6 @@
   dependencies:
     dequal "^2.0.2"
 
-<<<<<<< HEAD
 "@restart/hooks@^0.4.5":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@restart/hooks/-/hooks-0.4.5.tgz#e7acbea237bfc9e479970500cf87538b41a1ed02"
@@ -1160,12 +1144,6 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@restart/ui/-/ui-1.1.0.tgz#46d436225162b47ecccdf191cfbcf9ec3d1d5f47"
   integrity sha512-sYAO1LP78Suz5cT2VEkU4U/mvdjFXNg69QHanc5OAFTWyhCBG2lFJ9FITZ7hT8P8LPqcWXcwEGzHhuxPUDDDYQ==
-=======
-"@restart/ui@^0.2.1":
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/@restart/ui/-/ui-0.2.2.tgz"
-  integrity sha512-PgNkiyOaWwx8ttQ45KNABXU3780fB/UxNFxcsCpC4RRAlaByZHHbNLOKfhuFs+ZUU0uLxEH9wYQEhDAZc6ajkA==
->>>>>>> 81681bbd525fb12fbd23980bb5373f274bc08bd2
   dependencies:
     "@babel/runtime" "^7.13.16"
     "@popperjs/core" "^2.10.1"
@@ -6234,17 +6212,10 @@ rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-<<<<<<< HEAD
 react-bootstrap@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.2.1.tgz#2a6ad0931e9367882ec3fc88a70ed0b8ace90b26"
   integrity sha512-x8lpVQflsbevphuWbTnTNCatcbKyPJNrP2WyQ1MJYmFEcVjbTbai1yZhdlXr0QUxLQLxA8g5hQWb5TwJtaZoCA==
-=======
-react-bootstrap@^2.0.0-beta.5:
-  version "2.0.0-beta.6"
-  resolved "https://registry.npmjs.org/react-bootstrap/-/react-bootstrap-2.0.0-beta.6.tgz"
-  integrity sha512-eHEkmESWYYgNLjqbz31G696Eytu+6GeF8CPHQ8t9Se12dUEej8OjBakyQP0OGms9yy1ZZeLG/Fvuo7VxiwMcuQ==
->>>>>>> 81681bbd525fb12fbd23980bb5373f274bc08bd2
   dependencies:
     "@babel/runtime" "^7.17.2"
     "@restart/hooks" "^0.4.5"
