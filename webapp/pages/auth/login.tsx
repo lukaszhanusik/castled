@@ -24,7 +24,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       appBaseUrl: process.env.APP_BASE_URL,
-      isOss: process.env.IS_OSS,
     },
   };
 }
@@ -32,12 +31,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 interface serverSideProps {
   appBaseUrl: string;
   apiBase: string;
-  isOss: string;
 }
 
 const Login = (props: serverSideProps) => {
-  const { user, setUser } = useSession();
+  const { user, setUser, isOss } = useSession();
   const router = useRouter();
+
   useEffect(() => {
     if (!router.isReady) return;
     if (router.query.failure_message) {
@@ -61,7 +60,7 @@ const Login = (props: serverSideProps) => {
 
   return (
     <>
-      {props.isOss === "false" && (
+      {!isOss && (
         <GuestLayout>
           <div className="p-4">
             <div className="text-center">
@@ -143,7 +142,7 @@ const Login = (props: serverSideProps) => {
           </div>
         </GuestLayout>
       )}
-      {props.isOss === "true" && <WelcomePopup />}
+      {isOss && <WelcomePopup />}
     </>
   );
 };
