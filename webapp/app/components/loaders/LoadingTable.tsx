@@ -10,17 +10,17 @@ const LoadingTable = ({ headers }: LoadingTableProps) => {
         headers = ["", "", "", ""];
     }
     let loadingBody = ["", "", ""];
-    return <div className="table-responsive mx-auto mt-2">
+    return <div className="table-responsive loading-table mx-auto mt-2">
         <Table className="tr-collapse">
             <thead>
-                <tr className="pt-4 pb-4">
+                <tr>
                     {headers && headers.map((header, idx) => (
-                        <th key={idx} className="p-2">{header}</th>
+                        <th key={idx}>{header}</th>
                     ))}
                 </tr>
             </thead>
             <tbody>
-                {loadingBody.map((_) => <tr className="pt-4 pb-4">
+                {loadingBody.map((_) => <tr>
                     {headers && headers.map((header, idx) => (
                         <td key={idx}><Loading /></td>
                     ))}
