@@ -186,7 +186,8 @@ const CreateModel = ({
             }
             validationSchema={yup
               .object()
-              .shape({ query: yup.string().required("Enter a query") })}
+              .shape({ query: yup.string().required("Required") })}
+            validateOnBlur={false}
             onSubmit={formHandler(
               isOss,
               {
@@ -204,7 +205,7 @@ const CreateModel = ({
               <Form className="create-model">
                 <InputField
                   type="textarea"
-                  minRows={17}
+                  minRows={15}
                   title="Query"
                   name="query"
                   onChange={setQuery}
@@ -265,7 +266,11 @@ const CreateModel = ({
           {queryResults ? (
             renderQueryResults(queryResults)
           ) : (
-            <img className="ht-400" src="/images/model.png" />
+            <img
+              className="ht-400"
+              src="/images/model.png"
+              style={{ height: "335px" }}
+            />
           )}
         </div>
       </div>
