@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import { useState } from "react";
 import ButtonSubmit from "../forminputs/ButtonSubmit";
 import InputField from "../forminputs/InputField";
 import authService from "@/app/services/authService";
@@ -10,9 +9,6 @@ import { useRouter } from "next/router";
 export default function WelcomePopup() {
   const { setUser } = useSession();
   const router = useRouter();
-
-  const [open, setOpen] = useState(true);
-  const closeModal = () => setOpen(false);
 
   return (
     <div
@@ -45,7 +41,6 @@ export default function WelcomePopup() {
                   .catch((error) => {
                     console.log(error);
                   });
-                closeModal();
               }}
             >
               {({ values, setFieldValue, setFieldTouched }) => (
