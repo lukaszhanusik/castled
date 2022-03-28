@@ -55,6 +55,7 @@ const DestinationSettings = ({
         onSubmit={({ values }) => {
           setCurWizardStep(undefined, "mapping");
         }}
+        validateOnBlur={false}
         validate={(values) => {
           if (
             JSON.stringify(pipelineWizContext.values?.appSyncConfig.object) !==
