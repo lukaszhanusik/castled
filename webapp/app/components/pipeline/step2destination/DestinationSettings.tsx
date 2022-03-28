@@ -12,6 +12,7 @@ import Loading from "@/app/components/loaders/Loading";
 import _ from "lodash";
 import dynamicFormUtils from "@/app/common/utils/dynamicFormUtils";
 import { removeAllLocalStorageMapping } from "../step3mapping/utils/MappingAutoFill";
+import LoadingInput from "../../loaders/LoadingInput";
 
 const DestinationSettings = ({
   curWizardStep,
@@ -21,6 +22,7 @@ const DestinationSettings = ({
 }: PipelineWizardStepProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   const [formFields, setFormFields] = useState<FormFieldsDto | undefined>();
+  const [loading, setLoading] = useState(true);
   const type = pipelineWizContext?.appType?.value;
   useEffect(() => {
     if (!pipelineWizContext) return;
@@ -31,7 +33,10 @@ const DestinationSettings = ({
     }
     appsService
       .mappingFormFields(type)
-      .then(({ data }) => setFormFields(data))
+      .then(({ data }) => {
+        setLoading(false)
+        setFormFields(data)
+      })
       .catch(() => {
         bannerNotificationService.error("Error loading form fields");
       });
@@ -74,6 +79,7 @@ const DestinationSettings = ({
       >
         {({ setFieldValue, setFieldTouched, isSubmitting, isValid }) => (
           <div className="form-width-75">
+            {loading && <LoadingInput n={3} />}
             <Form>
               <DynamicFormFields
                 setFieldValue={setFieldValue}

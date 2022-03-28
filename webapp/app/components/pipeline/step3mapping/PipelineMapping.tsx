@@ -15,7 +15,7 @@ import { PipelineMappingType } from "@/app/common/enums/PipelineMappingType";
 import mappingFieldValidations from "./utils/mappingFieldValidations";
 import misclValidation from "./utils/misclValidation";
 import ErrorMessage from "./components/Layouts/ErrorMessage";
-import LoadingTable from "../../loaders/LoadingTable";
+import LoadingMappingTable from "../../loaders/LoadingMappingTable";
 
 const PipelineMapping = ({
   appBaseUrl,
@@ -154,7 +154,7 @@ const PipelineMapping = ({
           </Formik>
         </div>
       ) : (
-        <LoadingTable />
+        <LoadingMappingTable />
       )}
     </Layout>
   );

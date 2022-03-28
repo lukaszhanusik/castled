@@ -7,9 +7,9 @@ interface LoadingTableProps {
 }
 const LoadingTable = ({ headers }: LoadingTableProps) => {
     if (!headers) {
-        headers = ["", "", "", ""];
+        headers = ["", "", ""];
     }
-    let loadingBody = ["", "", ""];
+    let loadingBody = ["", "", "", "", ""];
     return <div className="table-responsive loading-table mx-auto mt-2">
         <Table className="tr-collapse">
             <thead>

@@ -34,7 +34,6 @@ function PipelineSettingsView({
     pipelineSchedule: PipelineSchedule,
     queryMode?: QueryMode,
   ) => {
-    console.log(queryMode);
     pipelineService.updatePipeline(pipelineId!, {
       name: name,
       schedule: pipelineSchedule,

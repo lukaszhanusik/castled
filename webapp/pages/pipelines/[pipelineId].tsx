@@ -33,6 +33,7 @@ import { NextRouter, useRouter } from "next/router";
 import PipelineSettingsView from "@/app/components/pipeline/PipelineSettingsView";
 import { PipelineRunStatus } from "@/app/common/enums/PipelineRunStatus";
 import TimeAgo from "react-timeago";
+import LoadingTable from "@/app/components/loaders/LoadingTable";
 
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
   const pipelineId = routerUtils.getInt(query.pipelineId);
@@ -170,6 +171,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       <Tabs defaultActiveKey="Runs" className="mb-3">
         <Tab eventKey="Runs" title="Runs">
+          {!pipelineRuns && <LoadingTable headers={["Run ID", "Synced", "Failed", "Skipped", "Started", "Time Taken", "Status"]} />}
           <PipelineRunView pipelineRuns={pipelineRuns}></PipelineRunView>
         </Tab>
         <Tab eventKey="Mapping" title="Query & Mapping">
