@@ -96,7 +96,9 @@ public class SchemaMappedMessageInputStream implements DataSinkMessageInputStrea
                 for (String sourceField : sourceFields) {
                     mappedSourceFields.add(sourceField);
                     Field field = message.getRecord().getField(sourceField);
-                    recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue());
+                    if (field != null) {
+                        recordBuilder.put(new FieldSchema(targetField, field.getSchema(), field.getParams()), field.getValue());
+                    }
                 }
             }
         }
