@@ -21,6 +21,7 @@ const DestinationSettings = ({
 }: PipelineWizardStepProps) => {
   const { pipelineWizContext, setPipelineWizContext } = usePipelineWizContext();
   const [formFields, setFormFields] = useState<FormFieldsDto | undefined>();
+
   const type = pipelineWizContext?.appType?.value;
   useEffect(() => {
     if (!pipelineWizContext) return;
