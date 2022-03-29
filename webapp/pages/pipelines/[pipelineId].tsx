@@ -134,7 +134,22 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
         },
       }}
     >
-      {!pipeline && <Loading className="mb-5"/>}
+      {!pipeline &&
+        <>
+          <div className="mb-5">
+            <Loading className="d-inline-block w-25 py-2" />
+          </div>
+          <div className="mb-4">
+            <Loading className="d-inline-block w-25 py-1" />
+            <IconArrowRight className="ms-2 me-2 text-secondary"/>
+            <Loading className="d-inline-block w-25 py-1" />
+          </div>
+          <div className="card p-2 mb-2 bg-light">
+            <h2><Loading className="py-3 w-25 my-2" /></h2>
+            <p><Loading className="py-2 w-50" /></p>
+          </div>
+        </>
+      }
       {pipeline && (
         <div className="mb-4">
           <span>{pipeline.warehouse.name}</span>
@@ -150,7 +165,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2> 
+          <h2>
             Data sync completed!&nbsp;
             {pipelineRuns[0].createdTs && (
               <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />

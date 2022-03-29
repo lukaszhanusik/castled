@@ -95,7 +95,18 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
           },
         }}
       >
-        {!model && <Loading />}
+        {!model &&
+          <>
+            <div className="mb-5">
+              <Loading className="d-inline-block w-25 py-2" />
+            </div>
+            <div className="d-flex align-items-center mb-4">
+              <div className="d-inline-block loading-circle"></div>
+              <Loading className="d-inline-block w-25 py-2 mx-3" />
+              <Loading className="d-inline-block w-25 py-2" />
+            </div>
+          </>
+        }
         <ModelTitle
           warehouse={model?.warehouse}
           activeSyncsCount={model?.activeSyncsCount}
