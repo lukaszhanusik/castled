@@ -68,7 +68,7 @@ function PipelineSettingsForm({
 
   return (
     <Formik
-      initialValues={Object.assign(initialValues, { name: "" })}
+      initialValues={initialValues}
       validationSchema={formSchema}
       validateOnBlur={false}
       onSubmit={handleSubmit}

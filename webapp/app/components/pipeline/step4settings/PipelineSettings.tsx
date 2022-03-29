@@ -17,6 +17,7 @@ import { ScheduleTimeUnit } from "@/app/common/enums/ScheduleType";
 import { getOnboardingContext } from "../../onboarding/utils/onboardingContext";
 
 const defaultPipelineSettings = {
+  name: "",
   queryMode: QueryMode.INCREMENTAL,
   schedule: { frequency: 60, timeUnit: ScheduleTimeUnit.MINUTES },
 } as PipelineSettingsConfig;
