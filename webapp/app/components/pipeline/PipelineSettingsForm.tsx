@@ -63,19 +63,25 @@ function PipelineSettingsForm({
   };
 
   const formSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string().required("Required"),
   });
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={Object.assign(initialValues, { name: "" })}
       validationSchema={formSchema}
+      validateOnBlur={false}
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue, setFieldTouched, isSubmitting }) => (
-        <div className="form-width-75">
-          <Form>
-            <InputField title="Pipeline Name" type="text" name="name" />
+        <Form>
+          <div className="form-width-75">
+            <InputField
+              title="Pipeline Name"
+              type="text"
+              name="name"
+              required
+            />
             <InputSelect
               title="Query Mode"
               options={renderUtils.selectOptions(QueryModeLabel)}
@@ -105,8 +111,8 @@ function PipelineSettingsForm({
               </Col>
             </Row>
             <ButtonSubmit submitting={isSubmitting}>{submitLabel}</ButtonSubmit>
-          </Form>
-        </div>
+          </div>
+        </Form>
       )}
     </Formik>
   );
