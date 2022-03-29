@@ -200,6 +200,7 @@ const ConnectorForm = ({
               },
             })
       }
+      validateOnBlur={false}
       validate={(values: any) =>
         dynamicFormUtils.getValidationErrors(formFields, "config", values, {
           name: yup.string().required("Required"),
