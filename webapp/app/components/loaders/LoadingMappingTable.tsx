@@ -11,7 +11,7 @@ const LoadingTable = ({ headers }: LoadingTableProps) => {
     if (!headers) {
         headers = ["Warehouse Column","", "App field", "Primary Key", ""];
     }
-    let loadingBody = ["", "", "", "", ""];
+    let loadingBody = ["", "", "", ""];
     return <div className="container table-responsive loading-table mx-auto mt-2">
         <Table className="tr-collapse">
             <thead>

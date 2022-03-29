@@ -9,16 +9,16 @@ const LoadingInput = ({ n }: LoadingInputProps) => {
     let InputList = [];
     if (n) {
         for (let i = 0; i < n; i++) {
-            InputList.push(<div key={i}>
+            InputList.push(<div className="my-5" key={i}>
                 <Loading className="w-25 mt-2" />
-                <input className="form-control linear-background mt-2 py-3" />
+                <input className="form-control opacity-50 border-0 linear-background mt-2 py-3" />
             </div>);
         }
     }
     else {
-        InputList.push(<div>
+        InputList.push(<div className="my-5">
             <Loading className="w-25 mt-2" />
-            <input className="form-control linear-background mt-2 py-3" />
+            <input className="form-control opacity-50 border-0 linear-background mt-2 py-3" />
         </div>)
     }
     return <>{InputList}</>;

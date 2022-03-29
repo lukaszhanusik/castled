@@ -48,7 +48,7 @@ const ConnectorEdit = ({
         />
       }
     >
-      {!connector && <LoadingInput />}
+      {/* {!connector && <LoadingInput />} */}
       {connector && (
         <ConnectorForm
           appBaseUrl={appBaseUrl}
