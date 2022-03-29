@@ -22,7 +22,7 @@ export default function MappingPrimaryKeyFields({
   setFieldTouched,
   errors,
 }: MappingPrimaryKeyFieldsProps) {
-  // On mount check if fields are there in localStorage
+  // * On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("primaryKeysForm");
     if (getLocalStorageItem) {

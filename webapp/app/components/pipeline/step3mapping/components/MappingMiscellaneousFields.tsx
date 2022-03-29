@@ -22,7 +22,7 @@ export default function MappingMiscellaneousFields({
   const [additionalRow, setAdditionalRow] = useState<JSX.Element[]>([]);
   // const [pkChecked, setPkChecked] = useState<{ [s: string]: boolean }>({});
 
-  // useEffect for pre_populated_rows
+  // * useEffect for pre_populated_rows
   useEffect(() => {
     if (mappingGroups.autoMap) {
       const initialValues = {};
@@ -50,7 +50,7 @@ export default function MappingMiscellaneousFields({
     }
   }, []);
 
-  // On mount check if fields are there in localStorage
+  // * On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("misclFieldForm");
     if (getLocalStorageItem) {

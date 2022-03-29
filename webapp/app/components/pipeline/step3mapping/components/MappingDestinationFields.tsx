@@ -24,8 +24,8 @@ export default function MappingDestinationFields({
   const [optionalFieldsElement, setOptionalFieldsElement] = useState<
     JSX.Element[]
   >([]);
-  // This is just to provide initial rerender on auto add rows in useEffect.
-  // After inital onmount returns undefined, we need to populate it on next render.
+  // * This is just to provide initial rerender on auto add rows in useEffect.
+  // * After inital onmount returns undefined, we need to populate it on next render.
   const [trackFieldsElement, setTrackFieldsElement] = useState<JSX.Element[]>(
     []
   );
@@ -36,14 +36,14 @@ export default function MappingDestinationFields({
       setTrackFieldsElement((prev) => [...prev, ...optionalFields]);
     }
   }, []);
-  // On mount check if fields are there in localStorage
+  // * On mount check if fields are there in localStorage
   useEffect(() => {
     const getLocalStorageItem = localStorage.getItem("destinationFieldForm");
     if (getLocalStorageItem) {
       const destinationFieldsForm = JSON.parse(getLocalStorageItem);
       Object.assign(values, destinationFieldsForm);
 
-      // Loop over localStorage items to auto add rows
+      // * Loop over localStorage items to auto add rows
       for (let key of Object.keys(destinationFieldsForm)) {
         const [fieldName, status, type, index] = key.split("-");
         if (key.includes("optional-warehouseField")) {
@@ -173,7 +173,7 @@ export default function MappingDestinationFields({
       if (elementToAdd) {
         // Add row to the screen
         setOptionalRow((prevState) => [...prevState, elementToAdd]);
-        // Remove row from the optionalFieldsElement giving remaining row we can add
+        // * Remove row from the optionalFieldsElement giving remaining row we can add
         setOptionalFieldsElement((prevState) =>
           prevState.filter((field) => field.key !== elementToAdd.key)
         );
