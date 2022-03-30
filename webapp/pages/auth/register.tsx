@@ -38,6 +38,7 @@ function Register(props: serverSideProps) {
       .string()
       .required("Required")
       .oneOf([yup.ref("password")], "Passwords need to match"),
+    clusterLocation: yup.string().required("Required"),
   });
   return (
     <GuestLayout>
@@ -69,6 +70,7 @@ function Register(props: serverSideProps) {
                   name="firstName"
                   title="First Name"
                   placeholder="first name"
+                  required
                 />
                 <InputField
                   type="string"
@@ -82,12 +84,14 @@ function Register(props: serverSideProps) {
                 name="password"
                 title="Password"
                 placeholder="password"
+                required
               />
               <InputField
                 type="password"
                 name="confirmPassword"
                 title="Confirm Password"
                 placeholder="confirm password"
+                required
               />
               <InputSelect
                 title="Cluster Region"
@@ -96,6 +100,7 @@ function Register(props: serverSideProps) {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
                 name="clusterLocation"
+                required
               />
               <p className="text-muted mt-n3">
                 Choose the cluster nearest to your warehouse region
