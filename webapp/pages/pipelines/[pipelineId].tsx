@@ -136,18 +136,18 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
     >
       {!pipeline &&
         <>
-          <div className="mb-5">
-            <Loading className="d-inline-block w-25 py-2" />
+          <div className="mb-4 mt-n4">
+            <Loading className="d-inline-block w-25 pt-3" />
           </div>
           <div className="mb-4">
-            <Loading className="d-inline-block w-25 py-1" />
-            <IconArrowRight className="ms-2 me-2 text-secondary"/>
-            <Loading className="d-inline-block w-25 py-1" />
+            <Loading className="d-inline-block w-25 pt-2 pb-1" />
+            <IconArrowRight className="ms-2 me-2 text-secondary" />
+            <Loading className="d-inline-block w-25 pt-2 pb-1" />
           </div>
-          <div className="card p-2 mb-2 bg-light">
-            <h2><Loading className="py-3 w-25 my-2" /></h2>
+          {!pipelineRuns && <div className="card p-2 mb-2 bg-light">
+            <h2><Loading className="py-2 w-25 my-2" /></h2>
             <p><Loading className="py-2 w-50" /></p>
-          </div>
+          </div>}
         </>
       }
       {pipeline && (

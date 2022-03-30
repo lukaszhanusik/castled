@@ -28,7 +28,7 @@ const PipelineRunView = ({ pipelineRuns }: PipelineRunViewProps) => {
     <>
       {pipelineRuns && pipelineRuns.length > 0 && (
         <div className="table-responsive">
-          <Table>
+          <Table className="tr-collapse">
             <thead>
               <tr>
                 <th>Run ID</th>

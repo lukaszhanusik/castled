@@ -97,8 +97,8 @@ const PipelineInfo = ({ modelid }: ModelInfoProps) => {
       >
         {!model &&
           <>
-            <div className="mb-5">
-              <Loading className="d-inline-block w-25 py-2" />
+            <div className="mb-4 mt-n4">
+              <Loading className="d-inline-block w-25 pt-3" />
             </div>
             <div className="d-flex align-items-center mb-4">
               <div className="d-inline-block loading-circle"></div>
