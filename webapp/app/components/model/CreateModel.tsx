@@ -49,6 +49,34 @@ const CreateModel = ({
   const { isOss } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [warehouseFields, setWarehouseFields] = useState<SelectOptionDto[]>();
+  const [primaryKeys, setValue] = useState<string[]>();
+  const [modelName, setModelName] = useState("");
+  const [submitTrack, setSubmitTrack] = useState(false);
+
+  useEffect(() => {
+    if (!pipelineWizContext) return;
+    if (pipelineWizContext.isDemo) {
+      warehouseService.get().then(({ data }) => {
+        const demoWarehouseId = data.find((d) => d.demo)?.id;
+        if (!demoWarehouseId) {
+          setCurWizardStep("source", "selectType");
+        } else {
+          getDemoQuery(demoWarehouseId);
+          setWarehouseId(demoWarehouseId);
+          _.set(pipelineWizContext, "values.warehouseId", demoWarehouseId);
+          setPipelineWizContext(pipelineWizContext);
+        }
+      });
+    } else if (!warehouseId) {
+      setCurWizardStep("source", "selectType");
+    } else {
+      setWarehouseId(pipelineWizContext.values?.warehouseId);
+    }
+  }, [
+    !!pipelineWizContext,
+    warehouseId,
+    pipelineWizContext.values?.warehouseId,
+  ]);
 
   const updateDemoQueries = (whId: number) => {
     warehouseService.demoQueries(whId).then(({ data }) => {
@@ -57,23 +85,24 @@ const CreateModel = ({
   };
 
   const createModel = () => {
+    setSubmitTrack(true);
     if (
       !modelName &&
       (!primaryKeys || (primaryKeys && primaryKeys.length === 0))
     ) {
-      bannerNotificationService.error(
-        "Please enter model name and select atleast one primary key"
-      );
+      // bannerNotificationService.error(
+      //   "Please enter model name and select atleast one primary key"
+      // );
       return;
     }
 
     if (!modelName) {
-      bannerNotificationService.error("Model name cannot be empty");
+      // bannerNotificationService.error("Model name cannot be empty");
       return;
     }
 
     if (!primaryKeys || (primaryKeys && primaryKeys.length === 0)) {
-      bannerNotificationService.error("Please select atleast one primary key");
+      // bannerNotificationService.error("Please select atleast one primary key");
       return;
     }
 
@@ -101,38 +130,12 @@ const CreateModel = ({
       });
   };
 
-  const [primaryKeys, setValue] = useState<string[]>();
-  const [modelName, setModelName] = useState("");
   const handleChange = (event: any) => {
     if (event && event[0]) {
       setValue(_.map(event, "value"));
     }
   };
 
-  useEffect(() => {
-    if (!pipelineWizContext) return;
-    if (pipelineWizContext.isDemo) {
-      warehouseService.get().then(({ data }) => {
-        const demoWarehouseId = data.find((d) => d.demo)?.id;
-        if (!demoWarehouseId) {
-          setCurWizardStep("source", "selectType");
-        } else {
-          getDemoQuery(demoWarehouseId);
-          setWarehouseId(demoWarehouseId);
-          _.set(pipelineWizContext, "values.warehouseId", demoWarehouseId);
-          setPipelineWizContext(pipelineWizContext);
-        }
-      });
-    } else if (!warehouseId) {
-      setCurWizardStep("source", "selectType");
-    } else {
-      setWarehouseId(pipelineWizContext.values?.warehouseId);
-    }
-  }, [
-    !!pipelineWizContext,
-    warehouseId,
-    pipelineWizContext.values?.warehouseId,
-  ]);
   const getDemoQuery = async (warehouseId: number) => {
     updateDemoQueries(warehouseId!);
   };
@@ -220,12 +223,15 @@ const CreateModel = ({
                     <input
                       placeholder="Model Name"
                       type="text"
+                      name="modelName"
                       className="form-control form-control-md"
                       onChange={(e) => {
                         setModelName(e.currentTarget.value);
                       }}
                     />
-
+                    {submitTrack && !modelName && (
+                      <div className="error">Required</div>
+                    )}
                     <label className="mt-2 form-label">
                       Primary Keys <span className="required-icon">*</span>
                     </label>
@@ -235,6 +241,9 @@ const CreateModel = ({
                       isMulti={true}
                       name="primaryKeys"
                     ></Select>
+                    {submitTrack && !primaryKeys && (
+                      <div className="error mb-2">Please select atleast one primary key</div>
+                    )}
                   </>
                 )}
                 <div className="d-flex align-items-center">
