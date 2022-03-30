@@ -130,6 +130,7 @@ const CreateModel = ({
       });
   };
 
+  console.log(primaryKeys);
   const handleChange = (event: any) => {
     if (event && event[0]) {
       setValue(_.map(event, "value"));
@@ -241,9 +242,13 @@ const CreateModel = ({
                       isMulti={true}
                       name="primaryKeys"
                     ></Select>
-                    {submitTrack && !primaryKeys && (
-                      <div className="error mb-2">Please select atleast one primary key</div>
-                    )}
+                    {submitTrack &&
+                      (!primaryKeys ||
+                        (primaryKeys && primaryKeys.length === 0)) && (
+                        <div className="error mb-2">
+                          Please select atleast one primary key
+                        </div>
+                      )}
                   </>
                 )}
                 <div className="d-flex align-items-center">
