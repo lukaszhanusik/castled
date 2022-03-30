@@ -49,7 +49,7 @@ const CreateModel = ({
   const { isOss } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [warehouseFields, setWarehouseFields] = useState<SelectOptionDto[]>();
-  const [primaryKeys, setValue] = useState<string[]>();
+  const [primaryKeys, setPrimaryKeys] = useState<string[]>([]);
   const [modelName, setModelName] = useState("");
   const [submitTrack, setSubmitTrack] = useState(false);
 
@@ -86,10 +86,7 @@ const CreateModel = ({
 
   const createModel = () => {
     setSubmitTrack(true);
-    if (
-      !modelName &&
-      (!primaryKeys || (primaryKeys && primaryKeys.length === 0))
-    ) {
+    if (!modelName && primaryKeys.length === 0) {
       // bannerNotificationService.error(
       //   "Please enter model name and select atleast one primary key"
       // );
@@ -101,7 +98,7 @@ const CreateModel = ({
       return;
     }
 
-    if (!primaryKeys || (primaryKeys && primaryKeys.length === 0)) {
+    if (primaryKeys.length === 0) {
       // bannerNotificationService.error("Please select atleast one primary key");
       return;
     }
@@ -130,11 +127,8 @@ const CreateModel = ({
       });
   };
 
-  console.log(primaryKeys);
   const handleChange = (event: any) => {
-    if (event && event[0]) {
-      setValue(_.map(event, "value"));
-    }
+    setPrimaryKeys(_.map(event, "value"));
   };
 
   const getDemoQuery = async (warehouseId: number) => {
@@ -242,13 +236,11 @@ const CreateModel = ({
                       isMulti={true}
                       name="primaryKeys"
                     ></Select>
-                    {submitTrack &&
-                      (!primaryKeys ||
-                        (primaryKeys && primaryKeys.length === 0)) && (
-                        <div className="error mb-2">
-                          Please select atleast one primary key
-                        </div>
-                      )}
+                    {submitTrack && primaryKeys.length === 0 && (
+                      <div className="error mb-2">
+                        Please select atleast one primary key
+                      </div>
+                    )}
                   </>
                 )}
                 <div className="d-flex align-items-center">
