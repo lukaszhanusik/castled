@@ -1,13 +1,15 @@
 export default function ErrorMessage({
   errors,
   include,
+  classNames,
 }: {
   errors: any;
   include: string;
+  classNames?: string;
 }) {
   return (
     <>
-      <ul className="mb-0">
+      <ul className={`${classNames ? classNames : "mb-0 px-4"}`}>
         {Object.keys(errors).map(
           (key) =>
             key.includes(include) && (

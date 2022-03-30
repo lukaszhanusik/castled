@@ -145,7 +145,11 @@ const PipelineMapping = ({
                   setFieldError={setFieldError}
                   errors={errors}
                 />
-                <ErrorMessage errors={errors} include={"appFieldRepeating"} />
+                <ErrorMessage
+                  errors={errors}
+                  include={"appFieldRepeating"}
+                  classNames={"mb-4 px-4"}
+                />
                 <ButtonSubmit submitting={isSubmitting}>
                   TEST & CONTINUE
                 </ButtonSubmit>
