@@ -32,11 +32,9 @@ const PipelineWizardDestination = ({
           stepGroups={stepGroups}
           setCurWizardStep={setCurWizardStep}
           onConnectorTypeSelect={(type: ConnectorTypeDto) => {
-            _.set(
-              pipelineWizContext,
-              "values.appSyncConfig.appType",
-              type.value
-            );
+            _.set(pipelineWizContext, "values.appSyncConfig", {
+              appType: type.value,
+            });
             _.set(pipelineWizContext, "appType", type);
             setPipelineWizContext(pipelineWizContext);
             removeAllLocalStorageMapping();
