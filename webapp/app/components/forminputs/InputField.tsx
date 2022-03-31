@@ -97,7 +97,9 @@ function getInput(
         className={cn(props.inputClassName, "form-control", {
           "required-field": meta.touched && meta.error,
         })}
-        editable={props.editable ? props.editable : true}
+        editable={props.editable}
+        value={props.value}
+        height={props.height}
       />
     );
   } else {

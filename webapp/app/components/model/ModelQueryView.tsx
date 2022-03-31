@@ -1,13 +1,12 @@
-import TextareaAutosize from "react-textarea-autosize";
+import CodeInput from "../forminputs/CodeInput";
 
 export default function ModelQueryView({ source }: { source?: string }) {
   return (
-    <TextareaAutosize
-      minRows={20}
-      maxRows={25}
-      value={source}
-      disabled
-      className="w-100 p-3"
+    <CodeInput
+      editable={false}
+      value={source ? source : ""}
+      height="400px"
+      className="border border-3"
     />
   );
 }

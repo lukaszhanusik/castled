@@ -99,6 +99,7 @@ const WarehouseModel = ({
     setPipelineWizContext(pipelineWizContext);
     setCurWizardStep("destination", "selectType");
   };
+
   return (
     <Layout
       title={steps[curWizardStep].title}
@@ -138,14 +139,14 @@ const WarehouseModel = ({
         {({ isSubmitting }) => (
           <Form>
             <InputField
-              type="textarea"
+              type="code"
               minRows={10}
+              height="250px"
               title="Query"
               name="query"
-              onChange={setQuery}
-              placeholder="Enter Query..."
               className="border-0 border-bottom mono-font"
-              disabled={pipelineWizContext.values?.modelId ? true : false}
+              editable={!!!pipelineWizContext.values?.modelId}
+              value={pipelineWizContext.values?.sourceQuery}
             />
             <div className="d-flex align-items-center">
               <Button

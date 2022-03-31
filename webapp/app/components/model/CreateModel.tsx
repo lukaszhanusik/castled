@@ -204,10 +204,10 @@ const CreateModel = ({
               <Form className="create-model">
                 <InputField
                   type="code"
-                  minRows={17}
                   title="Query"
                   name="query"
                   onChange={setQuery}
+                  height="345px"
                   placeholder="Enter Query..."
                   className="border-0 border-bottom mono-font"
                 />
