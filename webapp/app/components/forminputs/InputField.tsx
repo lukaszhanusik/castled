@@ -84,6 +84,21 @@ function getInput(
         defaultValue={field.value}
       />
     );
+  } else if (props.type === "code") {
+    return (
+      <TextareaAutosize
+        {...field}
+        {...props}
+        onChange={(e) => {
+          field.onChange(e);
+          onChange?.(e.currentTarget.value);
+        }}
+        className={cn(props.inputClassName, "form-control", {
+          "required-field": meta.touched && meta.error,
+        })}
+        defaultValue={field.value}
+      />
+    );
   } else {
     return (
       <input

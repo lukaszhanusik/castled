@@ -203,7 +203,7 @@ const CreateModel = ({
             {({ isSubmitting }) => (
               <Form className="create-model">
                 <InputField
-                  type="textarea"
+                  type="code"
                   minRows={17}
                   title="Query"
                   name="query"
