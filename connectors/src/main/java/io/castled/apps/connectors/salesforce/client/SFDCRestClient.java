@@ -40,7 +40,7 @@ public class SFDCRestClient {
     }
 
     public List<SFDCObject> getAllObjects() {
-        return executeRequest(() -> this.client.target(String.format("%s/sobjects/", SFDCUtils.getRestEndPoint(salesforceAccessConfig)))
+        return executeRequest(() -> this.client.target(String.format("%s/sobjects/", SalesforceHelper.getServicesUrl(salesforceAccessConfig)))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .get(SFDCObjectResult.class).getSObjects());
@@ -48,14 +48,14 @@ public class SFDCRestClient {
     }
 
     public SFDCObjectDetails getObjectDetails(String objectName) {
-        return executeRequest(() -> this.client.target(String.format("%s/sobjects/%s/describe/", SFDCUtils.getRestEndPoint(salesforceAccessConfig), objectName))
+        return executeRequest(() -> this.client.target(String.format("%s/sobjects/%s/describe/", SalesforceHelper.getServicesUrl(salesforceAccessConfig), objectName))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .get(SFDCObjectDetails.class));
     }
 
     public Job createJob(JobRequest jobRequest) {
-        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest", SFDCUtils.getRestEndPoint(salesforceAccessConfig)))
+        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest", SalesforceHelper.getServicesUrl(salesforceAccessConfig)))
                 .request()
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .post(Entity.json(jobRequest), Job.class));
@@ -64,7 +64,7 @@ public class SFDCRestClient {
 
     public void uploadCsv(String jobId, String csvContent) {
         executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s/batches",
-                        SFDCUtils.getRestEndPoint(salesforceAccessConfig), jobId))
+                        SalesforceHelper.getServicesUrl(salesforceAccessConfig), jobId))
                 .request()
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .put(Entity.entity(csvContent, "text/csv")));
@@ -72,7 +72,7 @@ public class SFDCRestClient {
 
     public Job updateJobState(String jobId, JobStateUpdateRequest jobStateUpdateRequest) {
         return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s",
-                        SFDCUtils.getRestEndPoint(salesforceAccessConfig), jobId))
+                        SalesforceHelper.getServicesUrl(salesforceAccessConfig), jobId))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .method("PATCH", Entity.json(jobStateUpdateRequest), Job.class));
@@ -80,14 +80,14 @@ public class SFDCRestClient {
     }
 
     public Job getJob(String jobId) {
-        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s", SFDCUtils.getRestEndPoint(salesforceAccessConfig), jobId))
+        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s", SalesforceHelper.getServicesUrl(salesforceAccessConfig), jobId))
                 .request(MediaType.APPLICATION_JSON)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .get(Job.class));
     }
 
     public String getFailedReport(String jobId) {
-        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s/failedResults", SFDCUtils.getRestEndPoint(salesforceAccessConfig), jobId))
+        return executeRequest(() -> this.client.target(String.format("%s/jobs/ingest/%s/failedResults", SalesforceHelper.getServicesUrl(salesforceAccessConfig), jobId))
                 .request(MediaType.TEXT_PLAIN)
                 .header(RestUtils.AUTHORIZATION_HEADER, "Bearer " + salesforceAccessConfig.getAccessToken())
                 .get(String.class));

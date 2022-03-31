@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FbConversionAppConnector implements ExternalAppConnector<FbConversionAppConfig, FbConversionDataSink, FbConversionSyncConfig> {
+public class FbConversionAppConnector implements ExternalAppConnector<FbConversionAppConfig, FbConversionDataWriter, FbConversionSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(FbConversionAppConfig config, FbConversionSyncConfig mappingConfig) {
@@ -23,8 +23,8 @@ public class FbConversionAppConnector implements ExternalAppConnector<FbConversi
     }
 
     @Override
-    public FbConversionDataSink getDataSink() {
-        return ObjectRegistry.getInstance(FbConversionDataSink.class);
+    public FbConversionDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(FbConversionDataWriter.class);
     }
 
     @Override

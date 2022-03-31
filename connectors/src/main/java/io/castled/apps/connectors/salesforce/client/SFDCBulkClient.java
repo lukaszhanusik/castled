@@ -113,7 +113,7 @@ public class SFDCBulkClient {
         ConnectorConfig connectorConfig = new ConnectorConfig();
         connectorConfig.setSessionId(oAuthDetails.getAccessConfig().getAccessToken());
         connectorConfig.setCompression(true);
-        connectorConfig.setRestEndpoint(SFDCUtils.getBulkApiEndPoint((SalesforceAccessConfig) oAuthDetails.getAccessConfig()));
+        connectorConfig.setRestEndpoint(SalesforceHelper.getBulkUrl((SalesforceAccessConfig) oAuthDetails.getAccessConfig()));
         return connectorConfig;
     }
 

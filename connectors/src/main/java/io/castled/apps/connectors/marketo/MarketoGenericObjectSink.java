@@ -5,13 +5,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.connectors.marketo.dtos.GenericObjectSyncRequest;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.schema.models.Message;
 
 import java.util.List;
 import java.util.Map;
@@ -28,11 +27,11 @@ public class MarketoGenericObjectSink extends BufferedObjectSink<DataSinkMessage
     private final List<String> primaryKeys;
     private final AppSyncStats syncStats;
 
-    MarketoGenericObjectSink(DataSinkRequest dataSinkRequest) {
-        this.marketoClient = new MarketoBulkClient((MarketoAppConfig) dataSinkRequest.getExternalApp().getConfig());
-        this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
-        this.syncConfig = (MarketoAppSyncConfig) dataSinkRequest.getAppSyncConfig();
-        this.primaryKeys = dataSinkRequest.getPrimaryKeys();
+    MarketoGenericObjectSink(DataWriteRequest dataWriteRequest) {
+        this.marketoClient = new MarketoBulkClient((MarketoAppConfig) dataWriteRequest.getExternalApp().getConfig());
+        this.errorOutputStream = dataWriteRequest.getErrorOutputStream();
+        this.syncConfig = (MarketoAppSyncConfig) dataWriteRequest.getAppSyncConfig();
+        this.primaryKeys = dataWriteRequest.getPrimaryKeys();
         this.syncStats = new AppSyncStats(0, 0, 0);
     }
 

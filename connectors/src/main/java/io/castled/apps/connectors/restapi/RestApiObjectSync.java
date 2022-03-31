@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
 import io.castled.apps.BufferedObjectSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
@@ -13,7 +13,6 @@ import io.castled.core.CastledOffsetListQueue;
 import io.castled.models.TargetRestApiMapping;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.Field;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +39,12 @@ public class RestApiObjectSync extends BufferedObjectSink<DataSinkMessage> {
     private final Integer batchSize;
     private final CastledOffsetListQueue<DataSinkMessage> requestsBuffer;
 
-    public RestApiObjectSync(DataSinkRequest dataSinkRequest) {
-        RestApiAppSyncConfig restApiAppSyncConfig = (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public RestApiObjectSync(DataWriteRequest dataWriteRequest) {
+        RestApiAppSyncConfig restApiAppSyncConfig = (RestApiAppSyncConfig) dataWriteRequest.getAppSyncConfig();
         this.batchSize = Optional.ofNullable(restApiAppSyncConfig.getBatchSize()).orElse(1);
-        this.restApiRestClient = new RestApiTemplateClient((TargetRestApiMapping) dataSinkRequest.getMapping(),
-                (RestApiAppSyncConfig) dataSinkRequest.getAppSyncConfig());
-        this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
+        this.restApiRestClient = new RestApiTemplateClient((TargetRestApiMapping) dataWriteRequest.getMapping(),
+                (RestApiAppSyncConfig) dataWriteRequest.getAppSyncConfig());
+        this.errorOutputStream = dataWriteRequest.getErrorOutputStream();
         this.restApiErrorParser = ObjectRegistry.getInstance(RestApiErrorParser.class);
 
         this.requestsBuffer = new CastledOffsetListQueue<>(new UpsertRestApiObjectConsumer(), restApiAppSyncConfig.getParallelism()

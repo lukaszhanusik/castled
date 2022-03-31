@@ -4,14 +4,12 @@ import io.castled.ObjectRegistry;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppType;
 import io.castled.apps.OAuthAppConfig;
-import io.castled.apps.connectors.hubspot.HubspotAppSyncConfig;
 import io.castled.apps.connectors.salesforce.client.SFDCRestClient;
-import io.castled.apps.connectors.salesforce.client.SFDCUtils;
-import io.castled.apps.connectors.salesforce.client.dtos.SFDCObjectField;
+import io.castled.apps.connectors.salesforce.client.SalesforceHelper;
+import io.castled.apps.connectors.salesforce.client.dtos.SalesforceField;
 import io.castled.apps.models.ExternalAppSchema;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.MappingGroupAggregator;
-import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.mapping.FixedGroupAppField;
 import io.castled.mapping.PrimaryKeyGroupField;
@@ -20,7 +18,7 @@ import io.castled.schema.mapping.MappingGroup;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SalesforceAppConnector implements ExternalAppConnector<OAuthAppConfig, SalesforceDataSink,
+public class SalesforceAppConnector implements ExternalAppConnector<OAuthAppConfig, SalesforceDataWriter,
         SalesforceAppSyncConfig> {
 
     @Override
@@ -32,16 +30,16 @@ public class SalesforceAppConnector implements ExternalAppConnector<OAuthAppConf
     }
 
     @Override
-    public SalesforceDataSink getDataSink() {
-        return ObjectRegistry.getInstance(SalesforceDataSink.class);
+    public SalesforceDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(SalesforceDataWriter.class);
     }
 
     @Override
     public ExternalAppSchema getSchema(OAuthAppConfig salesforceAppConfig, SalesforceAppSyncConfig mappingConfig) {
         SFDCRestClient sfdcRestClient = new SFDCRestClient(salesforceAppConfig.getOAuthToken(),
                 salesforceAppConfig.getClientConfig());
-        List<SFDCObjectField> fields = sfdcRestClient.getObjectDetails(mappingConfig.getObject().getObjectName()).getFields();
-        return new ExternalAppSchema(SFDCUtils.getSchema(mappingConfig.getObject().getObjectName(), fields));
+        List<SalesforceField> fields = sfdcRestClient.getObjectDetails(mappingConfig.getObject().getObjectName()).getFields();
+        return new ExternalAppSchema(SalesforceHelper.getRecordSchema(mappingConfig.getObject().getObjectName(), fields));
     }
 
     @Override
@@ -57,11 +55,11 @@ public class SalesforceAppConnector implements ExternalAppConnector<OAuthAppConf
     public List<MappingGroup> getMappingGroups(OAuthAppConfig oAuthAppConfig, SalesforceAppSyncConfig hubspotAppSyncConfig) {
         SFDCRestClient sfdcRestClient = new SFDCRestClient(oAuthAppConfig.getOAuthToken(),
                 oAuthAppConfig.getClientConfig());
-        List<SFDCObjectField> fields = sfdcRestClient.getObjectDetails(hubspotAppSyncConfig.getObject().getObjectName()).getFields();
-        List<PrimaryKeyGroupField> primaryKeyGroupFields = fields.stream().filter(SFDCUtils::isDedupKeyEligible).map(SFDCObjectField::getName)
+        List<SalesforceField> fields = sfdcRestClient.getObjectDetails(hubspotAppSyncConfig.getObject().getObjectName()).getFields();
+        List<PrimaryKeyGroupField> primaryKeyGroupFields = fields.stream().filter(SalesforceHelper::checkPkEligibility).map(SalesforceField::getName)
                 .map(field -> new PrimaryKeyGroupField(field, field, true)).collect(Collectors.toList());
 
-        List<FixedGroupAppField> fixedGroupAppFields = fields.stream().map(SFDCObjectField::getName)
+        List<FixedGroupAppField> fixedGroupAppFields = fields.stream().map(SalesforceField::getName)
                 .map(field -> new FixedGroupAppField(field, field, true)).collect(Collectors.toList());
         return MappingGroupAggregator.builder().addPrimaryKeyFields(primaryKeyGroupFields)
                 .addFixedAppFields(fixedGroupAppFields).build().getMappingGroups();

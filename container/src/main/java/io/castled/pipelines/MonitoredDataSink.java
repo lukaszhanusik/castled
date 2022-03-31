@@ -2,8 +2,8 @@ package io.castled.pipelines;
 
 import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.PipelineSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
@@ -21,42 +21,42 @@ public class MonitoredDataSink {
 
         private final Long pipelineRunId;
         private final PipelineSyncStats startingSyncStats;
-        private final DataSink dataSink;
-        private final DataSinkRequest dataSinkRequest;
+        private final DataWriter dataWriter;
+        private final DataWriteRequest dataWriteRequest;
         private PipelineSyncStats lastUpdatedStats;
 
 
-        public SyncStatsUpdateAction(Long pipelineRunId, PipelineSyncStats startingSyncStats, DataSink dataSink,
-                                     DataSinkRequest dataSinkRequest) {
+        public SyncStatsUpdateAction(Long pipelineRunId, PipelineSyncStats startingSyncStats, DataWriter dataWriter,
+                                     DataWriteRequest dataWriteRequest) {
             this.pipelineRunId = pipelineRunId;
             this.startingSyncStats = startingSyncStats;
-            this.dataSink = dataSink;
-            this.dataSinkRequest = dataSinkRequest;
+            this.dataWriter = dataWriter;
+            this.dataWriteRequest = dataWriteRequest;
             this.lastUpdatedStats = new PipelineSyncStats(startingSyncStats.getRecordsSynced(), startingSyncStats.getRecordsFailed(),
                     startingSyncStats.getRecordsSkipped(), startingSyncStats.getOffset());
         }
 
         @Override
         public void execute() {
-            PipelineSyncStats pipelineSyncStats = getPipelineSyncStats(startingSyncStats, dataSink.getSyncStats(), dataSinkRequest.getErrorOutputStream());
+            PipelineSyncStats pipelineSyncStats = getPipelineSyncStats(startingSyncStats, dataWriter.getSyncStats(), dataWriteRequest.getErrorOutputStream());
             PipelineSyncStats verifiedSyncStats = new PipelineSyncStats(Math.max(pipelineSyncStats.getRecordsSynced(), lastUpdatedStats.getRecordsSynced()),
                     Math.max(pipelineSyncStats.getRecordsFailed(), lastUpdatedStats.getRecordsFailed()),
                     Math.max(pipelineSyncStats.getRecordsSkipped(), lastUpdatedStats.getRecordsSkipped()),
                     pipelineSyncStats.getOffset());
             ObjectRegistry.getInstance(PipelineService.class).updateSyncStats(pipelineRunId, verifiedSyncStats);
-            updateFirstDataSynced(dataSinkRequest.getExternalApp().getTeamId(), verifiedSyncStats);
+            updateFirstDataSynced(dataWriteRequest.getExternalApp().getTeamId(), verifiedSyncStats);
             this.lastUpdatedStats = verifiedSyncStats;
         }
 
     }
 
-    public PipelineSyncStats syncRecords(DataSink dataSink, PipelineSyncStats startingSyncStats,
-                                         Long pipelineRunId, DataSinkRequest dataSinkRequest) throws Exception {
-        IncessantRunner incessantRunner = new IncessantRunner(new SyncStatsUpdateAction(pipelineRunId, startingSyncStats, dataSink, dataSinkRequest), TimeUtils.secondsToMillis(5));
-        dataSink.syncRecords(dataSinkRequest);
+    public PipelineSyncStats syncRecords(DataWriter dataWriter, PipelineSyncStats startingSyncStats,
+                                         Long pipelineRunId, DataWriteRequest dataWriteRequest) throws Exception {
+        IncessantRunner incessantRunner = new IncessantRunner(new SyncStatsUpdateAction(pipelineRunId, startingSyncStats, dataWriter, dataWriteRequest), TimeUtils.secondsToMillis(5));
+        dataWriter.writeRecords(dataWriteRequest);
         incessantRunner.shutdown(TimeUtils.minutesToMillis(1));
-        PipelineSyncStats pipelineSyncStats = getPipelineSyncStats(startingSyncStats, dataSink.getSyncStats(), dataSinkRequest.getErrorOutputStream());
-        updateFirstDataSynced(dataSinkRequest.getExternalApp().getTeamId(), pipelineSyncStats);
+        PipelineSyncStats pipelineSyncStats = getPipelineSyncStats(startingSyncStats, dataWriter.getSyncStats(), dataWriteRequest.getErrorOutputStream());
+        updateFirstDataSynced(dataWriteRequest.getExternalApp().getTeamId(), pipelineSyncStats);
         return pipelineSyncStats;
     }
 

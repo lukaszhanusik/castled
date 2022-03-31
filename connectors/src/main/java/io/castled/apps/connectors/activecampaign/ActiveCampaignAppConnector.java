@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCampaignAppConfig,
-        ActiveCampaignDataSink, ActiveCampaignAppSyncConfig> {
+        ActiveCampaignDataWriter, ActiveCampaignAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(ActiveCampaignAppConfig config, ActiveCampaignAppSyncConfig activeCampaignAppSyncConfig) {
@@ -31,8 +31,8 @@ public class ActiveCampaignAppConnector implements ExternalAppConnector<ActiveCa
     }
 
     @Override
-    public ActiveCampaignDataSink getDataSink() {
-        return ObjectRegistry.getInstance(ActiveCampaignDataSink.class);
+    public ActiveCampaignDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(ActiveCampaignDataWriter.class);
     }
 
     @Override

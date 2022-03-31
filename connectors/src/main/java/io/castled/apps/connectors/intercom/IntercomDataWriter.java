@@ -1,8 +1,8 @@
 package io.castled.apps.connectors.intercom;
 
 import com.google.inject.Inject;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.models.PrimaryKeyIdMapper;
 import io.castled.apps.syncconfigs.AppSyncConfig;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class IntercomDataSink implements DataSink {
+public class IntercomDataWriter implements DataWriter {
 
     private final Map<IntercomObject, IntercomObjectSink> intercomObjectSinks;
 
@@ -25,23 +25,23 @@ public class IntercomDataSink implements DataSink {
     private volatile IntercomObjectSink intercomObjectSink;
 
     @Inject
-    public IntercomDataSink(Map<IntercomObject, IntercomObjectSink> intercomObjectSinks) {
+    public IntercomDataWriter(Map<IntercomObject, IntercomObjectSink> intercomObjectSinks) {
         this.intercomObjectSinks = intercomObjectSinks;
     }
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
-        GenericSyncObject intercomSyncObject = ((IntercomAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
+        GenericSyncObject intercomSyncObject = ((IntercomAppSyncConfig) dataWriteRequest.getAppSyncConfig()).getObject();
         IntercomObject intercomObject = IntercomObject.getObjectByName(intercomSyncObject.getObjectName());
         this.intercomObjectSink =
-                this.intercomObjectSinks.get(intercomObject).initialize(intercomObject, dataSinkRequest.getAppSyncConfig(),
-                        (IntercomAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getErrorOutputStream(),
-                        dataSinkRequest.getPrimaryKeys());
+                this.intercomObjectSinks.get(intercomObject).initialize(intercomObject, dataWriteRequest.getAppSyncConfig(),
+                        (IntercomAppConfig) dataWriteRequest.getExternalApp().getConfig(), dataWriteRequest.getErrorOutputStream(),
+                        dataWriteRequest.getPrimaryKeys());
         DataSinkMessage message;
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
-            if (!this.writeRecord(message, dataSinkRequest.getAppSyncConfig(), intercomObjectSink,
-                    dataSinkRequest.getPrimaryKeys())) {
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
+            if (!this.writeRecord(message, dataWriteRequest.getAppSyncConfig(), intercomObjectSink,
+                    dataWriteRequest.getPrimaryKeys())) {
                 skippedRecords++;
             }
         }

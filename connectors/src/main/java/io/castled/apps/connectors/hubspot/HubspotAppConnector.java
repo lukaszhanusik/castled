@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig, HubspotDataSink,
+public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig, HubspotDataWriter,
         HubspotAppSyncConfig> {
 
     @Override
@@ -54,8 +54,8 @@ public class HubspotAppConnector implements ExternalAppConnector<OAuthAppConfig,
     }
 
     @Override
-    public HubspotDataSink getDataSink() {
-        return ObjectRegistry.getInstance(HubspotDataSink.class);
+    public HubspotDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(HubspotDataWriter.class);
     }
 
     public List<MappingGroup> getMappingGroups(OAuthAppConfig oAuthAppConfig, HubspotAppSyncConfig hubspotAppSyncConfig) {

@@ -1,29 +1,28 @@
 package io.castled.apps.connectors.fbcustomaudience;
 
 import io.castled.ObjectRegistry;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.oauth.OAuthDetails;
-import io.castled.schema.models.Message;
 import io.castled.services.OAuthService;
 
 import java.time.Instant;
 import java.util.Optional;
 
-public class FbCustomAudDataSink implements DataSink {
+public class FbCustomAudDataWriter implements DataWriter {
 
     private volatile FbCustomAudienceCustomerSink fbCustomAudienceCustomerSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        renewAccessToken((FbAppConfig) dataSinkRequest.getExternalApp().getConfig());
-        fbCustomAudienceCustomerSink = new FbCustomAudienceCustomerSink((FbAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                (FbCustomAudAppSyncConfig) dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
+        renewAccessToken((FbAppConfig) dataWriteRequest.getExternalApp().getConfig());
+        fbCustomAudienceCustomerSink = new FbCustomAudienceCustomerSink((FbAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                (FbCustomAudAppSyncConfig) dataWriteRequest.getAppSyncConfig(), dataWriteRequest.getErrorOutputStream());
 
         DataSinkMessage msg;
-        while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((msg = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             this.fbCustomAudienceCustomerSink.writeRecord(msg);
         }
         this.fbCustomAudienceCustomerSink.flushRecords();

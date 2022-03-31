@@ -2,7 +2,7 @@ package io.castled.warehouses;
 
 import com.google.inject.Inject;
 import io.castled.constants.CommonConstants;
-import io.castled.jarvis.taskmanager.TaskExecutor;
+import io.castled.jarvis.taskmanager.JarvisJobExecutor;
 import io.castled.jarvis.taskmanager.models.Task;
 import io.castled.models.QueryResults;
 import io.castled.models.Warehouse;
@@ -11,7 +11,7 @@ import io.castled.utils.JsonUtils;
 import java.util.Map;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class QueryPreviewExecutor implements TaskExecutor {
+public class QueryPreviewExecutor implements JarvisJobExecutor {
 
     private final Map<WarehouseType, WarehouseConnector> warehouseConnectors;
     private final WarehouseService warehouseService;
@@ -24,7 +24,7 @@ public class QueryPreviewExecutor implements TaskExecutor {
     }
 
     @Override
-    public String executeTask(Task task) throws Exception {
+    public String executeJarvisJob(Task task) throws Exception {
         Long warehouseId = ((Number) task.getParams().get(CommonConstants.WAREHOUSE_ID)).longValue();
         String query = (String) task.getParams().get(CommonConstants.QUERY);
         Warehouse warehouse = this.warehouseService.getWarehouse(warehouseId);

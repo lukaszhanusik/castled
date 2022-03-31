@@ -1,6 +1,6 @@
 package io.castled.apps.connectors.salesforce.client;
 
-public enum SFDCSoapType {
+public enum SFDCObjectType {
     STRING("string"),
     DOUBLE("double"),
     DATETIME("dateTime"),
@@ -12,14 +12,14 @@ public enum SFDCSoapType {
 
     private final String name;
 
-    SFDCSoapType(String name) {
+    SFDCObjectType(String name) {
         this.name = name;
     }
 
-    public static SFDCSoapType fromName(String name) {
-        for (SFDCSoapType sfdcSoapType : SFDCSoapType.values()) {
-            if (sfdcSoapType.name.equals(name)) {
-                return sfdcSoapType;
+    public static SFDCObjectType fromName(String name) {
+        for (SFDCObjectType sfdcObjectType : SFDCObjectType.values()) {
+            if (sfdcObjectType.name.equals(name)) {
+                return sfdcObjectType;
             }
         }
         return null;

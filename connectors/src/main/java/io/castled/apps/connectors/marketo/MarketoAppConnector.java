@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MarketoAppConnector implements ExternalAppConnector<MarketoAppConfig, MarketoDataSink,
+public class MarketoAppConnector implements ExternalAppConnector<MarketoAppConfig, MarketoDataWriter,
         MarketoAppSyncConfig> {
 
     @Override
@@ -29,8 +29,8 @@ public class MarketoAppConnector implements ExternalAppConnector<MarketoAppConfi
     }
 
     @Override
-    public MarketoDataSink getDataSink() {
-        return ObjectRegistry.getInstance(MarketoDataSink.class);
+    public MarketoDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(MarketoDataWriter.class);
     }
 
     @Override

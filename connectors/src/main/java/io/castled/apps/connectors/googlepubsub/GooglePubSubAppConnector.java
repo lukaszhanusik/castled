@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Singleton
 @Slf4j
-public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubSubAppConfig, GooglePubSubDataSink, GooglePubSubAppSyncConfig> {
+public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubSubAppConfig, GooglePubSubDataWriter, GooglePubSubAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(GooglePubSubAppConfig config, GooglePubSubAppSyncConfig mappingConfig) {
@@ -43,8 +43,8 @@ public class GooglePubSubAppConnector implements ExternalAppConnector<GooglePubS
     }
 
     @Override
-    public GooglePubSubDataSink getDataSink() {
-        return ObjectRegistry.getInstance(GooglePubSubDataSink.class);
+    public GooglePubSubDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(GooglePubSubDataWriter.class);
     }
 
     @Override

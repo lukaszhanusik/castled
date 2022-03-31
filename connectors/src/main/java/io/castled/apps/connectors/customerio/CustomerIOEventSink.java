@@ -2,9 +2,8 @@ package io.castled.apps.connectors.customerio;
 
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
-import io.castled.apps.connectors.activecampaign.constant.ActiveCampaignConstants;
 import io.castled.apps.connectors.customerio.client.CustomerIORestClient;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.commons.errors.CastledError;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
@@ -15,7 +14,6 @@ import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetQueue;
 import io.castled.schema.SchemaUtils;
 import io.castled.schema.models.Field;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -71,16 +68,16 @@ public class CustomerIOEventSink implements CustomerIOObjectSink<String> {
         }
     }
 
-    public CustomerIOEventSink(DataSinkRequest dataSinkRequest) {
-        this.customerIORestClient = new CustomerIORestClient(((CustomerIOAppConfig) dataSinkRequest.getExternalApp().getConfig()).getSiteId(),
-                ((CustomerIOAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiKey());
-        this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
+    public CustomerIOEventSink(DataWriteRequest dataWriteRequest) {
+        this.customerIORestClient = new CustomerIORestClient(((CustomerIOAppConfig) dataWriteRequest.getExternalApp().getConfig()).getSiteId(),
+                ((CustomerIOAppConfig) dataWriteRequest.getExternalApp().getConfig()).getApiKey());
+        this.errorOutputStream = dataWriteRequest.getErrorOutputStream();
         this.customerIOErrorParser = ObjectRegistry.getInstance(CustomerIOErrorParser.class);
-        this.audienceSyncObject = ((CustomerIOAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
-        this.syncConfig = (CustomerIOAppSyncConfig) dataSinkRequest.getAppSyncConfig();
-        this.primaryKeys = dataSinkRequest.getPrimaryKeys();
+        this.audienceSyncObject = ((CustomerIOAppSyncConfig) dataWriteRequest.getAppSyncConfig()).getObject();
+        this.syncConfig = (CustomerIOAppSyncConfig) dataWriteRequest.getAppSyncConfig();
+        this.primaryKeys = dataWriteRequest.getPrimaryKeys();
         this.syncStats = new AppSyncStats(0, 0, 0);
-        this.mappedFields = dataSinkRequest.getMappedFields();
+        this.mappedFields = dataWriteRequest.getMappedFields();
     }
 
     public void createOrUpdateObject(DataSinkMessage message) {

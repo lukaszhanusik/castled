@@ -119,7 +119,7 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
 Finally we have to implement the syncRecords method of the [DataSink](https://github.com/castledio/castled/blob/main/connectors/src/main/java/io/castled/apps/DataSink.java) interface, which does the actual data sync to the destination apis.
 
 ```
-void syncRecords(DataSinkRequest dataSinkRequest) throws Exception;
+void syncRecords(DataSinkRequest dataWriteRequest) throws Exception;
 ```
 
 DataSink takes a DataSinkRequest, which contains all required context about the pipeline required for the data sync and also a MessageInputStream and an ErrorOutputStream.
@@ -164,17 +164,17 @@ public class KafkaDataSink implements DataSink {
     }
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        KafkaAppConfig kafkaAppConfig = (KafkaAppConfig) dataSinkRequest.getExternalApp().getConfig();
-        KafkaAppSyncConfig kafkaAppSyncConfig = (KafkaAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public void syncRecords(DataSinkRequest dataWriteRequest) throws Exception {
+        KafkaAppConfig kafkaAppConfig = (KafkaAppConfig) dataWriteRequest.getExternalApp().getConfig();
+        KafkaAppSyncConfig kafkaAppSyncConfig = (KafkaAppSyncConfig) dataWriteRequest.getAppSyncConfig();
         Message message;
         try (CastledKafkaProducer kafkaProducer = new CastledKafkaProducer
                 (KafkaProducerConfiguration.builder().bootstrapServers(kafkaAppConfig.getBootstrapServers()).build())) {
-            while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+            while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
                 validateAndThrow();
                 pendingMessageIds.add(message.getOffset());
                 publishMessage(kafkaProducer, message, kafkaAppSyncConfig.getObject().getObjectName(),
-                        dataSinkRequest.getErrorOutputStream());
+                        dataWriteRequest.getErrorOutputStream());
                 lastBufferedOffset = message.getOffset();
             }
             kafkaProducer.flush();

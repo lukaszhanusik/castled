@@ -1,14 +1,14 @@
 package io.castled.jarvis;
 
-import io.castled.jarvis.taskmanager.TaskExecutor;
+import io.castled.jarvis.taskmanager.JarvisJobExecutor;
 import io.castled.jarvis.taskmanager.models.Task;
 import io.castled.utils.ThreadUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DummyTaskExecutor implements TaskExecutor {
+public class DummyJarvisJobExecutor implements JarvisJobExecutor {
     @Override
-    public String executeTask(Task task) {
+    public String executeJarvisJob(Task task) {
         try {
             for (int i = 0; i < 60; i++) {
                 System.out.println("printing "+i);

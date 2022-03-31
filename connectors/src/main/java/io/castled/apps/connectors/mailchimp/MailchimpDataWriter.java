@@ -1,24 +1,23 @@
 package io.castled.apps.connectors.mailchimp;
 
-import io.castled.apps.DataSink;
+import io.castled.apps.DataWriter;
 import io.castled.apps.OAuthAppConfig;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
-import io.castled.schema.models.Message;
 
 import java.util.Optional;
 
-public class MailchimpDataSink implements DataSink {
+public class MailchimpDataWriter implements DataWriter {
 
     private MailchimpAudienceSink mailchimpAudienceSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
         DataSinkMessage message;
-        this.mailchimpAudienceSink = new MailchimpAudienceSink((OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                dataSinkRequest.getErrorOutputStream(), ((MailchimpAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject());
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        this.mailchimpAudienceSink = new MailchimpAudienceSink((OAuthAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                dataWriteRequest.getErrorOutputStream(), ((MailchimpAppSyncConfig) dataWriteRequest.getAppSyncConfig()).getObject());
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             this.mailchimpAudienceSink.writeRecord(message);
         }
         this.mailchimpAudienceSink.flushRecords();

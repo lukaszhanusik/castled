@@ -13,6 +13,7 @@ public class SalesforceAccessConfig extends OAuthAccessConfig {
     private String instanceUrl;
     private String userName;
     private String displayName;
+
     @Builder
     public SalesforceAccessConfig(String instanceUrl, String userName, String displayName, String accessToken, String refreshToken) {
         super(OAuthServiceType.SALESFORCE, accessToken, refreshToken);

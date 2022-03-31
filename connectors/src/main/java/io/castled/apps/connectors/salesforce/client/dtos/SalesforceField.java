@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SFDCObjectField {
+public class SalesforceField {
     private String name;
     private String type;
     private String compoundFieldName;

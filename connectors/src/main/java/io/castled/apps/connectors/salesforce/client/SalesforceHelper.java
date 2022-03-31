@@ -2,7 +2,7 @@ package io.castled.apps.connectors.salesforce.client;
 
 import io.castled.apps.connectors.salesforce.SalesforceAccessConfig;
 import io.castled.apps.connectors.salesforce.SalesforceObjectFields;
-import io.castled.apps.connectors.salesforce.client.dtos.SFDCObjectField;
+import io.castled.apps.connectors.salesforce.client.dtos.SalesforceField;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.schema.SchemaConstants;
 import io.castled.schema.models.RecordSchema;
@@ -10,22 +10,22 @@ import io.castled.schema.models.Schema;
 
 import java.util.List;
 
-public class SFDCUtils {
+public class SalesforceHelper {
 
-    private static final String API_VERSION = "47.0";
+    private static final String SFDC_MAX_VERSION = "47.0";
 
-    public static String getRestEndPoint(SalesforceAccessConfig accessConfig) {
-        return String.format("%s/services/data/%s", accessConfig.getInstanceUrl(), "v" + API_VERSION);
+    public static String getServicesUrl(SalesforceAccessConfig accessConfig) {
+        return String.format("%s/services/data/%s", accessConfig.getInstanceUrl(), "v" + SFDC_MAX_VERSION);
     }
 
-    public static String getBulkApiEndPoint(SalesforceAccessConfig accessConfig) {
-        return String.format("%s/services/async/%s", accessConfig.getInstanceUrl(), API_VERSION);
+    public static String getBulkUrl(SalesforceAccessConfig accessConfig) {
+        return String.format("%s/services/async/%s", accessConfig.getInstanceUrl(), SFDC_MAX_VERSION);
     }
 
-    public static RecordSchema getSchema(String object, List<SFDCObjectField> sfdcObjectFields) {
+    public static RecordSchema getRecordSchema(String object, List<SalesforceField> salesforceFields) {
         RecordSchema.Builder recordBuilder = RecordSchema.builder().name(object);
-        for (SFDCObjectField objectField : sfdcObjectFields) {
-            Schema fieldSchema = getFieldSchema(objectField);
+        for (SalesforceField objectField : salesforceFields) {
+            Schema fieldSchema = getSalesforceFieldSchema(objectField);
             if (fieldSchema != null) {
                 recordBuilder.put(objectField.getName(), fieldSchema);
             }
@@ -33,14 +33,14 @@ public class SFDCUtils {
         return recordBuilder.build();
     }
 
-    public static Schema getFieldSchema(SFDCObjectField sfdcObjectField) {
-        String soapType = sfdcObjectField.getSoapType().split(":")[1];
-        SFDCSoapType sfdcSoapType = SFDCSoapType.fromName(soapType);
-        if (sfdcSoapType == null) {
+    public static Schema getSalesforceFieldSchema(SalesforceField salesforceField) {
+        String soapType = salesforceField.getSoapType().split(":")[1];
+        SFDCObjectType sfdcObjectType = SFDCObjectType.fromName(soapType);
+        if (sfdcObjectType == null) {
             return null;
         }
         Schema schema = null;
-        switch (sfdcSoapType) {
+        switch (sfdcObjectType) {
             case DATE:
                 schema = SchemaConstants.DATE_SCHEMA;
                 break;
@@ -61,24 +61,24 @@ public class SFDCUtils {
                 schema = SchemaConstants.BOOL_SCHEMA;
                 break;
             case DOUBLE:
-                if (sfdcObjectField.getScale() > 0) {
+                if (salesforceField.getScale() > 0) {
                     schema = SchemaConstants.DOUBLE_SCHEMA;
                 } else {
                     schema = SchemaConstants.LONG_SCHEMA;
                 }
                 break;
             default:
-                throw new CastledRuntimeException("Invalid soapType " + sfdcSoapType);
+                throw new CastledRuntimeException("Invalid soapType " + sfdcObjectType);
         }
         schema.setOptional(true);
         return schema;
     }
 
-    public static boolean isDedupKeyEligible(SFDCObjectField sfdcObjectField) {
-        if (sfdcObjectField.getName().equals(SalesforceObjectFields.ID)) {
+    public static boolean checkPkEligibility(SalesforceField salesforceField) {
+        if (salesforceField.getName().equals(SalesforceObjectFields.ID)) {
             return false;
         }
-        return sfdcObjectField.isExternalId() || sfdcObjectField.isIdLookup()
-                || sfdcObjectField.isUnique();
+        return salesforceField.isExternalId() || salesforceField.isIdLookup()
+                || salesforceField.isUnique();
     }
 }

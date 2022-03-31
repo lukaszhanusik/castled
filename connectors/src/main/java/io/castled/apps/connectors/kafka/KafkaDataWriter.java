@@ -2,28 +2,24 @@ package io.castled.apps.connectors.kafka;
 
 import com.google.common.collect.Sets;
 import io.castled.ObjectRegistry;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
-import io.castled.commons.errors.errorclassifications.UnclassifiedError;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
-import io.castled.exceptions.CastledRuntimeException;
 import io.castled.kafka.producer.CastledKafkaProducer;
 import io.castled.kafka.producer.CastledProducerCallback;
 import io.castled.kafka.producer.KafkaProducerConfiguration;
-import io.castled.schema.models.Message;
 import io.castled.utils.MessageUtils;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Collections;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class KafkaDataSink implements DataSink {
+public class KafkaDataWriter implements DataWriter {
 
     private final AtomicLong recordsProcessed = new AtomicLong(0);
     private final Set<Long> pendingMessageIds = Sets.newConcurrentHashSet();
@@ -51,17 +47,17 @@ public class KafkaDataSink implements DataSink {
     }
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        KafkaAppConfig kafkaAppConfig = (KafkaAppConfig) dataSinkRequest.getExternalApp().getConfig();
-        KafkaAppSyncConfig kafkaAppSyncConfig = (KafkaAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
+        KafkaAppConfig kafkaAppConfig = (KafkaAppConfig) dataWriteRequest.getExternalApp().getConfig();
+        KafkaAppSyncConfig kafkaAppSyncConfig = (KafkaAppSyncConfig) dataWriteRequest.getAppSyncConfig();
         DataSinkMessage message;
         try (CastledKafkaProducer kafkaProducer = new CastledKafkaProducer
                 (KafkaProducerConfiguration.builder().bootstrapServers(kafkaAppConfig.getBootstrapServers()).build())) {
-            while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+            while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
                 validateAndThrow();
                 pendingMessageIds.add(message.getOffset());
                 publishMessage(kafkaProducer, message, kafkaAppSyncConfig.getTopic(),
-                        dataSinkRequest.getErrorOutputStream());
+                        dataWriteRequest.getErrorOutputStream());
                 lastBufferedOffset = message.getOffset();
             }
             kafkaProducer.flush();

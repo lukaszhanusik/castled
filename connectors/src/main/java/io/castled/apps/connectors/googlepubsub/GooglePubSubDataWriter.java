@@ -10,11 +10,10 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
-import io.castled.schema.models.Message;
 import io.castled.utils.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
-public class GooglePubSubDataSink implements DataSink {
+public class GooglePubSubDataWriter implements DataWriter {
 
     public static final long REQUEST_BYTES_THRESHOLD = 10485760L;
     public static final long MESSAGE_COUNT_BATCH_SIZE = 1000L;
@@ -38,9 +37,9 @@ public class GooglePubSubDataSink implements DataSink {
     private volatile Exception exception;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        GooglePubSubAppConfig googlePubSubAppConfig = (GooglePubSubAppConfig) dataSinkRequest.getExternalApp().getConfig();
-        GooglePubSubAppSyncConfig googlePubSubAppSyncConfig = (GooglePubSubAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
+        GooglePubSubAppConfig googlePubSubAppConfig = (GooglePubSubAppConfig) dataWriteRequest.getExternalApp().getConfig();
+        GooglePubSubAppSyncConfig googlePubSubAppSyncConfig = (GooglePubSubAppSyncConfig) dataWriteRequest.getAppSyncConfig();
 
         TopicName topicName = TopicName.of(googlePubSubAppConfig.getProjectID(), googlePubSubAppSyncConfig.getObject().getTopicId());
         Publisher publisher = null;
@@ -56,7 +55,7 @@ public class GooglePubSubDataSink implements DataSink {
                     .setCredentialsProvider(new GooglePubSubCredentialsProvider(googlePubSubAppConfig.getServiceAccountDetails())).build();
 
             DataSinkMessage message;
-            while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+            while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
                 messageIdFutures.add(publishMessage(publisher, message));
                 if (messageIdFutures.size() == FLUSH_BATCH_SIZE) {
                     publishOutstanding(publisher, messageIdFutures);

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppConfig,
-        MixpanelDataSink, MixpanelAppSyncConfig> {
+        MixpanelDataWriter, MixpanelAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(MixpanelAppConfig mixpanelAppConfig, MixpanelAppSyncConfig mixpanelAppSyncConfig) {
@@ -30,8 +30,8 @@ public class MixpanelAppConnector implements ExternalAppConnector<MixpanelAppCon
     }
 
     @Override
-    public MixpanelDataSink getDataSink() {
-        return ObjectRegistry.getInstance(MixpanelDataSink.class);
+    public MixpanelDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(MixpanelDataWriter.class);
     }
 
     @Override

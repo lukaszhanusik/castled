@@ -7,7 +7,7 @@ import io.castled.apps.ExternalApp;
 import io.castled.apps.ExternalAppConnector;
 import io.castled.apps.ExternalAppService;
 import io.castled.apps.ExternalAppType;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.PipelineSyncStats;
 import io.castled.commons.streams.DefaultDataSinkMessageOutputStream;
 import io.castled.commons.streams.ErrorOutputStream;
@@ -18,7 +18,7 @@ import io.castled.errors.MysqlErrorTracker;
 import io.castled.errors.SchemaMappedErrorTracker;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.exceptions.pipeline.PipelineExecutionException;
-import io.castled.jarvis.taskmanager.TaskExecutor;
+import io.castled.jarvis.taskmanager.JarvisJobExecutor;
 import io.castled.jarvis.taskmanager.exceptions.JarvisRetriableException;
 import io.castled.jarvis.taskmanager.models.Task;
 import io.castled.models.*;
@@ -45,7 +45,7 @@ import java.util.Optional;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Slf4j
-public class PipelineExecutor implements TaskExecutor {
+public class PipelineExecutor implements JarvisJobExecutor {
 
     private final PipelineService pipelineService;
     private final Map<WarehouseType, WarehouseConnector> warehouseConnectors;
@@ -72,7 +72,7 @@ public class PipelineExecutor implements TaskExecutor {
     }
 
     @Override
-    public String executeTask(Task task) {
+    public String executeJarvisJob(Task task) {
         Long pipelineId = ((Number) task.getParams().get(CommonConstants.PIPELINE_ID)).longValue();
         Pipeline pipeline = this.pipelineService.getActivePipeline(pipelineId);
         if (pipeline == null) {
@@ -126,7 +126,7 @@ public class PipelineExecutor implements TaskExecutor {
 
             List<String> mappedAppFields = DataMappingUtils.getMappedAppFields(pipeline.getDataMapping());
 
-            DataSinkRequest dataSinkRequest = DataSinkRequest.builder().externalApp(externalApp).errorOutputStream(sinkErrorOutputStream)
+            DataWriteRequest dataWriteRequest = DataWriteRequest.builder().externalApp(externalApp).errorOutputStream(sinkErrorOutputStream)
                     .appSyncConfig(pipeline.getAppSyncConfig()).mappedFields(mappedAppFields)
                     .objectSchema(appSchema).primaryKeys(DataMappingUtils.getPrimaryKeys(pipeline.getDataMapping()))
                     .mapping(pipeline.getDataMapping()).queryMode(pipeline.getQueryMode())
@@ -134,7 +134,7 @@ public class PipelineExecutor implements TaskExecutor {
                     .build();
 
             PipelineSyncStats pipelineSyncStats = monitoredDataSink.syncRecords(externalAppConnector.getDataSink(),
-                    pipelineRun.getPipelineSyncStats(), pipelineRun.getId(), dataSinkRequest);
+                    pipelineRun.getPipelineSyncStats(), pipelineRun.getId(), dataWriteRequest);
 
             schemaMappedMessageInputStream.close();
 

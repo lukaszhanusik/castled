@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAppConfig,
-        CustomerIODataSink, CustomerIOAppSyncConfig> {
+        CustomerIODataWriter, CustomerIOAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(CustomerIOAppConfig config, CustomerIOAppSyncConfig customerIOAppSyncConfig) {
@@ -29,8 +29,8 @@ public class CustomerIOAppConnector implements ExternalAppConnector<CustomerIOAp
     }
 
     @Override
-    public CustomerIODataSink getDataSink() {
-        return ObjectRegistry.getInstance(CustomerIODataSink.class);
+    public CustomerIODataWriter getDataSink() {
+        return ObjectRegistry.getInstance(CustomerIODataWriter.class);
     }
 
     @Override

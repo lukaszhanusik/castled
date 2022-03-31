@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MailchimpAppConnector implements ExternalAppConnector<OAuthAppConfig,
-        MailchimpDataSink, MailchimpAppSyncConfig> {
+        MailchimpDataWriter, MailchimpAppSyncConfig> {
 
 
     @Override
@@ -30,8 +30,8 @@ public class MailchimpAppConnector implements ExternalAppConnector<OAuthAppConfi
     }
 
     @Override
-    public MailchimpDataSink getDataSink() {
-        return ObjectRegistry.getInstance(MailchimpDataSink.class);
+    public MailchimpDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(MailchimpDataWriter.class);
     }
 
     @Override

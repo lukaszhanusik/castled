@@ -5,7 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import io.castled.apps.BufferedObjectSink;
 import io.castled.apps.connectors.marketo.dtos.BatchLeadUpdateRequest;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.errors.errorclassifications.ExternallyCategorizedError;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
@@ -13,7 +13,6 @@ import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.functionalinterfaces.ThrowingConsumer;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -48,16 +47,16 @@ public class MarketoLeadSink extends BufferedObjectSink<DataSinkMessage> {
     private final String pkDisplayName;
     private final List<String> mappedFields;
 
-    public MarketoLeadSink(DataSinkRequest dataSinkRequest) {
-        this.marketoBulkClient = new MarketoBulkClient((MarketoAppConfig) dataSinkRequest.getExternalApp().getConfig());
-        this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
-        this.syncConfig = (MarketoAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public MarketoLeadSink(DataWriteRequest dataWriteRequest) {
+        this.marketoBulkClient = new MarketoBulkClient((MarketoAppConfig) dataWriteRequest.getExternalApp().getConfig());
+        this.errorOutputStream = dataWriteRequest.getErrorOutputStream();
+        this.syncConfig = (MarketoAppSyncConfig) dataWriteRequest.getAppSyncConfig();
         this.syncStats = new AppSyncStats(0,0,0);
-        if (CollectionUtils.size(dataSinkRequest.getPrimaryKeys()) > 1) {
-            log.error("Only 1 primary key allowed, we have more => " + dataSinkRequest.getPrimaryKeys());
+        if (CollectionUtils.size(dataWriteRequest.getPrimaryKeys()) > 1) {
+            log.error("Only 1 primary key allowed, we have more => " + dataWriteRequest.getPrimaryKeys());
         }
-        this.pkDisplayName = dataSinkRequest.getPrimaryKeys().stream().findFirst().get();
-        this.mappedFields = dataSinkRequest.getMappedFields();
+        this.pkDisplayName = dataWriteRequest.getPrimaryKeys().stream().findFirst().get();
+        this.mappedFields = dataWriteRequest.getMappedFields();
     }
 
     @Override

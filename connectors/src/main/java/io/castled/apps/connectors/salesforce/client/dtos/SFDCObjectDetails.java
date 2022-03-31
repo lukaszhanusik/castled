@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class SFDCObjectDetails {
-    private List<SFDCObjectField> fields;
+    private List<SalesforceField> fields;
     private boolean custom;
     private boolean updateable;
 }

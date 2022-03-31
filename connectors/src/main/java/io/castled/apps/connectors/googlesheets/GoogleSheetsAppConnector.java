@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Singleton
 public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleSheetsAppConfig,
-        GoogleSheetsDataSink, GoogleSheetsAppSyncConfig> {
+        GoogleSheetsDataWriter, GoogleSheetsAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(GoogleSheetsAppConfig config, GoogleSheetsAppSyncConfig mappingConfig) {
@@ -66,8 +66,8 @@ public class GoogleSheetsAppConnector implements ExternalAppConnector<GoogleShee
     }
 
     @Override
-    public GoogleSheetsDataSink getDataSink() {
-        return ObjectRegistry.getInstance(GoogleSheetsDataSink.class);
+    public GoogleSheetsDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(GoogleSheetsDataWriter.class);
     }
 
     @Override

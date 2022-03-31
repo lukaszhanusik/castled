@@ -1,24 +1,24 @@
 package io.castled.apps.connectors.fbconversion;
 
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 
 import java.util.Optional;
 
-public class FbConversionDataSink implements DataSink  {
+public class FbConversionDataWriter implements DataWriter {
 
     private FbConversionBufferedSink fbConversionBufferedSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
-        this.fbConversionBufferedSink = new FbConversionBufferedSink((FbConversionAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                (FbConversionSyncConfig) dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
+        this.fbConversionBufferedSink = new FbConversionBufferedSink((FbConversionAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                (FbConversionSyncConfig) dataWriteRequest.getAppSyncConfig(), dataWriteRequest.getErrorOutputStream());
 
         DataSinkMessage msg;
-        while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((msg = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             this.fbConversionBufferedSink.writeRecord(msg);
         }
         this.fbConversionBufferedSink.flushRecords();

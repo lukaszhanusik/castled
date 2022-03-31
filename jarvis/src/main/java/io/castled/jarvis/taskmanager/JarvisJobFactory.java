@@ -28,21 +28,21 @@ import java.util.concurrent.*;
 @Slf4j
 public class JarvisJobFactory implements JobFactory {
 
-    private final Map<String, TaskExecutor> taskExecutors;
+    private final Map<String, JarvisJobExecutor> taskExecutors;
     private final JarvisTasksDAO jarvisTasksDAO;
     private final CastledKafkaProducer kafkaProducer;
 
     private class JarvisTaskExecutor {
 
-        private final TaskExecutor taskExecutor;
+        private final JarvisJobExecutor jarvisJobExecutor;
 
-        public JarvisTaskExecutor(TaskExecutor taskExecutor) {
-            this.taskExecutor = taskExecutor;
+        public JarvisTaskExecutor(JarvisJobExecutor jarvisJobExecutor) {
+            this.jarvisJobExecutor = jarvisJobExecutor;
         }
 
         public void executeTask(Task task) {
             try {
-                String taskResult = taskExecutor.executeTask(task);
+                String taskResult = jarvisJobExecutor.executeJarvisJob(task);
                 handleTaskSuccess(task.getId(), taskResult);
             } catch (Exception e) {
                 handleTaskFailure(e, task);
@@ -111,7 +111,7 @@ public class JarvisJobFactory implements JobFactory {
         }
     }
 
-    public JarvisJobFactory(Map<String, TaskExecutor> taskExecutors, JarvisTasksDAO jarvisTasksDAO,
+    public JarvisJobFactory(Map<String, JarvisJobExecutor> taskExecutors, JarvisTasksDAO jarvisTasksDAO,
                             CastledKafkaProducer kafkaProducer) {
         this.taskExecutors = taskExecutors;
         this.jarvisTasksDAO = jarvisTasksDAO;

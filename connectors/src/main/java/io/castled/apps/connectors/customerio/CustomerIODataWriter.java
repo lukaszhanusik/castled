@@ -1,16 +1,15 @@
 package io.castled.apps.connectors.customerio;
 
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.schema.models.Message;
 
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerIODataSink implements DataSink {
+public class CustomerIODataWriter implements DataWriter {
 
 
     private volatile CustomerIOObjectSink<String> customerIOObjectSink;
@@ -18,28 +17,28 @@ public class CustomerIODataSink implements DataSink {
     private long skippedRecords = 0;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
-        this.customerIOObjectSink = getObjectSink(dataSinkRequest);
+        this.customerIOObjectSink = getObjectSink(dataWriteRequest);
         DataSinkMessage message;
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
-            if (!this.writeRecord(message,dataSinkRequest.getPrimaryKeys())) {
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
+            if (!this.writeRecord(message, dataWriteRequest.getPrimaryKeys())) {
                 skippedRecords++;
             }
         }
         this.customerIOObjectSink.flushRecords();
     }
 
-    private CustomerIOObjectSink<String> getObjectSink(DataSinkRequest dataSinkRequest) {
+    private CustomerIOObjectSink<String> getObjectSink(DataWriteRequest dataWriteRequest) {
         CustomerIOObjectSink<String> customerIOObjectSink = null;
         CustomerIOObject customerIOObject = CustomerIOObject
-                .getObjectByName(((CustomerIOAppSyncConfig)dataSinkRequest.getAppSyncConfig()).getObject().getObjectName());
+                .getObjectByName(((CustomerIOAppSyncConfig) dataWriteRequest.getAppSyncConfig()).getObject().getObjectName());
         switch (customerIOObject) {
             case EVENT:
-                customerIOObjectSink = new CustomerIOEventSink(dataSinkRequest);
+                customerIOObjectSink = new CustomerIOEventSink(dataWriteRequest);
                 break;
             case PERSON:
-                customerIOObjectSink = new CustomerIOPersonSink(dataSinkRequest);
+                customerIOObjectSink = new CustomerIOPersonSink(dataWriteRequest);
                 break;
             default:
                 throw new CastledRuntimeException(String.format("Invalid object type %s!", customerIOObject.getName()));

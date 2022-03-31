@@ -4,12 +4,11 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ClearValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.common.collect.Lists;
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.models.QueryMode;
-import io.castled.schema.models.Message;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -17,35 +16,35 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class GoogleSheetsDataSink implements DataSink {
+public class GoogleSheetsDataWriter implements DataWriter {
 
     private GoogleSheetsObjectSink googleSheetsObjectSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        GoogleSheetsAppConfig googleSheetsAppConfig = (GoogleSheetsAppConfig) dataSinkRequest.getExternalApp().getConfig();
-        GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig = (GoogleSheetsAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
+        GoogleSheetsAppConfig googleSheetsAppConfig = (GoogleSheetsAppConfig) dataWriteRequest.getExternalApp().getConfig();
+        GoogleSheetsAppSyncConfig googleSheetsAppSyncConfig = (GoogleSheetsAppSyncConfig) dataWriteRequest.getAppSyncConfig();
 
         Sheets sheetsService = GoogleSheetUtils.getSheets(googleSheetsAppConfig.getServiceAccount());
 
-        if (dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD) {
+        if (dataWriteRequest.getQueryMode() == QueryMode.FULL_LOAD) {
             sheetsService.spreadsheets().values().clear(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
                     new ClearValuesRequest()).execute();
         }
 
-        List<SheetRow> sheetRows = dataSinkRequest.getQueryMode() == QueryMode.FULL_LOAD ? Lists.newArrayList() :
+        List<SheetRow> sheetRows = dataWriteRequest.getQueryMode() == QueryMode.FULL_LOAD ? Lists.newArrayList() :
                 GoogleSheetUtils.getRows(sheetsService, GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()),
                         googleSheetsAppSyncConfig.getObject().getObjectName());
 
         this.googleSheetsObjectSink = new GoogleSheetsObjectSink(googleSheetsAppConfig, googleSheetsAppSyncConfig, sheetsService,
-                sheetRows, dataSinkRequest.getPrimaryKeys(), dataSinkRequest.getMappedFields(), dataSinkRequest.getErrorOutputStream());
+                sheetRows, dataWriteRequest.getPrimaryKeys(), dataWriteRequest.getMappedFields(), dataWriteRequest.getErrorOutputStream());
 
         DataSinkMessage message;
         int recordsCount = 0;
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             if (recordsCount == 0 && CollectionUtils.isEmpty(sheetRows)) {
                 sheetsService.spreadsheets().values().append(GoogleSheetUtils.getSpreadSheetId(googleSheetsAppConfig.getSpreadSheetId()), googleSheetsAppSyncConfig.getObject().getObjectName(),
-                                new ValueRange().setValues(Collections.singletonList(new ArrayList<>(dataSinkRequest.getMappedFields()))))
+                                new ValueRange().setValues(Collections.singletonList(new ArrayList<>(dataWriteRequest.getMappedFields()))))
                         .setValueInputOption("USER_ENTERED").execute();
             }
             this.googleSheetsObjectSink.writeRecord(message);

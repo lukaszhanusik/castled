@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig, FbCustomAudDataSink, FbCustomAudAppSyncConfig> {
+public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig, FbCustomAudDataWriter, FbCustomAudAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(FbAppConfig config, FbCustomAudAppSyncConfig mappingConfig) {
@@ -23,8 +23,8 @@ public class FbCustomAudAppConnector implements ExternalAppConnector<FbAppConfig
     }
 
     @Override
-    public FbCustomAudDataSink getDataSink() {
-        return ObjectRegistry.getInstance(FbCustomAudDataSink.class);
+    public FbCustomAudDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(FbCustomAudDataWriter.class);
     }
 
     @Override

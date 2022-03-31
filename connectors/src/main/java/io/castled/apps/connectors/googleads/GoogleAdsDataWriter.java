@@ -1,26 +1,25 @@
 package io.castled.apps.connectors.googleads;
 
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.exceptions.CastledRuntimeException;
-import io.castled.schema.models.Message;
 
 import java.util.Optional;
 
-public class GoogleAdsDataSink implements DataSink {
+public class GoogleAdsDataWriter implements DataWriter {
 
     private GadsObjectSink gadsObjectSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
         DataSinkMessage message;
-        this.gadsObjectSink = getObjectSink((GoogleAdsAppSyncConfig) dataSinkRequest.getAppSyncConfig(),
-                (GoogleAdsAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                dataSinkRequest.getErrorOutputStream());
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        this.gadsObjectSink = getObjectSink((GoogleAdsAppSyncConfig) dataWriteRequest.getAppSyncConfig(),
+                (GoogleAdsAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                dataWriteRequest.getErrorOutputStream());
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             gadsObjectSink.writeRecord(message);
         }
         gadsObjectSink.flushRecords();

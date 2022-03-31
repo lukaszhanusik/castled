@@ -12,16 +12,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        visible = true,
-        property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ShortSchema.class, name = "SHORT"),
-        @JsonSubTypes.Type(value = LongSchema.class, name = "LONG"),
-        @JsonSubTypes.Type(value = IntegerSchema.class, name = "INT"),
-})
 @AllArgsConstructor
 @Data
 @NoArgsConstructor

@@ -18,7 +18,7 @@ import io.castled.utils.JsonUtils;
 import javax.ws.rs.BadRequestException;
 import java.util.List;
 
-public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends DataSink, MAPPINGCONFIG extends AppSyncConfig> {
+public interface ExternalAppConnector<CONFIG extends AppConfig, DATASINK extends DataWriter, MAPPINGCONFIG extends AppSyncConfig> {
 
     List<FormFieldOption> getAllObjects(CONFIG config, MAPPINGCONFIG mappingConfig);
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class DataSinkRequest {
+public class DataWriteRequest {
 
     private ExternalApp externalApp;
     private DataSinkMessageInputStream messageInputStream;

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class IterableAppConnector implements ExternalAppConnector<IterableAppConfig, IterableDataSink, IterableSyncConfig> {
+public class IterableAppConnector implements ExternalAppConnector<IterableAppConfig, IterableDataWriter, IterableSyncConfig> {
     @Override
     public List<FormFieldOption> getAllObjects(IterableAppConfig config, IterableSyncConfig mappingConfig) {
         return Arrays.stream(IterableObject.values()).map(obj -> new FormFieldOption(new GenericSyncObject(obj.getName(),
@@ -37,8 +37,8 @@ public class IterableAppConnector implements ExternalAppConnector<IterableAppCon
     }
 
     @Override
-    public IterableDataSink getDataSink() {
-        return new IterableDataSink();
+    public IterableDataWriter getDataSink() {
+        return new IterableDataWriter();
     }
 
     @Override

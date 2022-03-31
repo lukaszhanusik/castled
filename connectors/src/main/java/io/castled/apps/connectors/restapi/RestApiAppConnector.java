@@ -13,7 +13,7 @@ import java.util.List;
 
 @Singleton
 public class RestApiAppConnector implements ExternalAppConnector<RestApiAppConfig,
-        RestApiDataSink, RestApiAppSyncConfig> {
+        RestApiDataWriter, RestApiAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(RestApiAppConfig restApiAppConfig, RestApiAppSyncConfig restApiAppSyncConfig) {
@@ -21,8 +21,8 @@ public class RestApiAppConnector implements ExternalAppConnector<RestApiAppConfi
     }
 
     @Override
-    public RestApiDataSink getDataSink() {
-        return ObjectRegistry.getInstance(RestApiDataSink.class);
+    public RestApiDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(RestApiDataWriter.class);
     }
 
     @Override

@@ -1,24 +1,24 @@
 package io.castled.apps.connectors.Iterable;
 
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 
 import java.util.Optional;
 
-public class IterableDataSink implements DataSink {
+public class IterableDataWriter implements DataWriter {
 
     private IterableBufferedObjectSink iterableBufferedObjectSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
-        this.iterableBufferedObjectSink = new IterableBufferedObjectSink((IterableAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                (IterableSyncConfig) dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
+        this.iterableBufferedObjectSink = new IterableBufferedObjectSink((IterableAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                (IterableSyncConfig) dataWriteRequest.getAppSyncConfig(), dataWriteRequest.getErrorOutputStream());
 
         DataSinkMessage msg;
-        while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((msg = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             this.iterableBufferedObjectSink.writeRecord(msg);
         }
         this.iterableBufferedObjectSink.flushRecords();

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
-public class IntercomAppConnector implements ExternalAppConnector<IntercomAppConfig, IntercomDataSink,
+public class IntercomAppConnector implements ExternalAppConnector<IntercomAppConfig, IntercomDataWriter,
         IntercomAppSyncConfig> {
 
     @Override
@@ -35,8 +35,8 @@ public class IntercomAppConnector implements ExternalAppConnector<IntercomAppCon
     }
 
     @Override
-    public IntercomDataSink getDataSink() {
-        return ObjectRegistry.getInstance(IntercomDataSink.class);
+    public IntercomDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(IntercomDataWriter.class);
     }
 
     @Override

@@ -36,11 +36,11 @@ import io.castled.events.pipelineevents.*;
 import io.castled.events.warehousevents.WarehouseCreateEventsHandler;
 import io.castled.interceptors.Retry;
 import io.castled.interceptors.RetryInterceptor;
-import io.castled.jarvis.DummyTaskExecutor;
+import io.castled.jarvis.DummyJarvisJobExecutor;
 import io.castled.jarvis.JarvisTaskType;
 import io.castled.jarvis.scheduler.JarvisGlobalCronJob;
 import io.castled.jarvis.scheduler.models.JarvisSchedulerConfig;
-import io.castled.jarvis.taskmanager.TaskExecutor;
+import io.castled.jarvis.taskmanager.JarvisJobExecutor;
 import io.castled.jarvis.taskmanager.models.JarvisKafkaConfig;
 import io.castled.jarvis.taskmanager.models.JarvisTaskClientConfig;
 import io.castled.jarvis.taskmanager.models.TaskGroup;
@@ -173,9 +173,9 @@ public class CastledModule extends AbstractModule {
     }
 
     private void bindTaskExecutors() {
-        MapBinder<JarvisTaskType, TaskExecutor> taskExecutorMapping = MapBinder.newMapBinder(binder(),
-                JarvisTaskType.class, TaskExecutor.class);
-        taskExecutorMapping.addBinding(JarvisTaskType.DUMMY).to(DummyTaskExecutor.class);
+        MapBinder<JarvisTaskType, JarvisJobExecutor> taskExecutorMapping = MapBinder.newMapBinder(binder(),
+                JarvisTaskType.class, JarvisJobExecutor.class);
+        taskExecutorMapping.addBinding(JarvisTaskType.DUMMY).to(DummyJarvisJobExecutor.class);
         taskExecutorMapping.addBinding(JarvisTaskType.PIPELINE_RUN).to(PipelineExecutor.class);
         taskExecutorMapping.addBinding(JarvisTaskType.PREVIEW_QUERY).to(QueryPreviewExecutor.class);
     }
@@ -217,13 +217,13 @@ public class CastledModule extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    public JarvisTaskClientConfig providesJarvisClientConfig(JedisPool jedisPool, Jdbi jdbi, Map<JarvisTaskType, TaskExecutor> taskExecutors,
+    public JarvisTaskClientConfig providesJarvisClientConfig(JedisPool jedisPool, Jdbi jdbi, Map<JarvisTaskType, JarvisJobExecutor> taskExecutors,
                                                              JarvisTaskConfiguration jarvisTaskConfiguration) {
         JarvisKafkaConfig jarvisKafkaConfig = JarvisKafkaConfig.builder()
                 .bootstrapServers(castledConfiguration.getKafkaConfig().getBootstrapServers()).consumerCount(3)
                 .build();
 
-        Map<String, TaskExecutor> jarvisTaskExecutors =
+        Map<String, JarvisJobExecutor> jarvisTaskExecutors =
                 taskExecutors.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().name(), Map.Entry::getValue));
         List<TaskGroup> taskGroups = jarvisTaskConfiguration.getGroupConfig().stream()
                 .map(groupConfig -> new TaskGroup(groupConfig.getGroup(), groupConfig.getWorkerCount(), jarvisTaskExecutors))

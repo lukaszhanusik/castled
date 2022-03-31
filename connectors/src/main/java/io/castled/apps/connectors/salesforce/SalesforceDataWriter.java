@@ -3,12 +3,12 @@ package io.castled.apps.connectors.salesforce;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import io.castled.apps.DataSink;
+import io.castled.apps.DataWriter;
 import io.castled.apps.OAuthAppConfig;
 import io.castled.apps.connectors.salesforce.client.SFDCBulkClient;
 import io.castled.apps.connectors.salesforce.client.SFDCRestClient;
 import io.castled.apps.connectors.salesforce.client.dtos.*;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.apps.models.GenericSyncObject;
 import io.castled.apps.syncconfigs.AppSyncConfig;
 import io.castled.commons.models.AppSyncMode;
@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class SalesforceDataSink implements DataSink {
+public class SalesforceDataWriter implements DataWriter {
 
     private CSVPrinter csvPrinter;
     private List<String> trackableFields;
@@ -55,39 +55,39 @@ public class SalesforceDataSink implements DataSink {
 
 
     @Inject
-    public SalesforceDataSink(SalesforceSinkConfig salesforceSinkConfig, SalesforceFailedRecordsSchemaMapper salesforceFailedRecordsSchemaMapper,
-                              SalesforceErrorParser salesforceErrorParser) {
+    public SalesforceDataWriter(SalesforceSinkConfig salesforceSinkConfig, SalesforceFailedRecordsSchemaMapper salesforceFailedRecordsSchemaMapper,
+                                SalesforceErrorParser salesforceErrorParser) {
         this.salesforceSinkConfig = salesforceSinkConfig;
         this.salesforceFailedRecordsSchemaMapper = salesforceFailedRecordsSchemaMapper;
         this.salesforceErrorParser = salesforceErrorParser;
     }
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
         StringBuilder recordsBuffer = null;
-        OAuthAppConfig salesforceAppConfig = (OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig();
+        OAuthAppConfig salesforceAppConfig = (OAuthAppConfig) dataWriteRequest.getExternalApp().getConfig();
         SFDCRestClient sfdcRestClient = new SFDCRestClient(salesforceAppConfig.getOAuthToken(),
                 salesforceAppConfig.getClientConfig());
-        computeExistingPrimaryKeysIfReqd(salesforceAppConfig, dataSinkRequest.getPrimaryKeys(), dataSinkRequest.getAppSyncConfig());
+        computePrimaryKeys(salesforceAppConfig, dataWriteRequest.getPrimaryKeys(), dataWriteRequest.getAppSyncConfig());
 
         DataSinkMessage message;
         long recordsBuffered = 0;
-        String primaryKey = dataSinkRequest.getPrimaryKeys().get(0);
+        String primaryKey = dataWriteRequest.getPrimaryKeys().get(0);
         Map<Object, DataSinkMessage> primaryKeyMessageMapper = Maps.newHashMap();
 
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             if (this.csvPrinter == null) {
                 recordsBuffer = new StringBuilder();
                 this.trackableFields = message.getRecord().getFields().stream().map(Field::getName)
-                        .filter(dataSinkRequest.getMappedFields()::contains).collect(Collectors.toList());
+                        .filter(dataWriteRequest.getMappedFields()::contains).collect(Collectors.toList());
 
                 this.csvPrinter = new CSVPrinter(recordsBuffer, CSVFormat.DEFAULT
                         .withHeader(trackableFields.toArray(new String[0])).withQuoteMode(QuoteMode.ALL));
             }
 
-            if (this.appendRecordToBuffer(message, dataSinkRequest.getAppSyncConfig(),
-                    dataSinkRequest.getPrimaryKeys())) {
+            if (this.appendRecordToBuffer(message, dataWriteRequest.getAppSyncConfig(),
+                    dataWriteRequest.getPrimaryKeys())) {
                 primaryKeyMessageMapper.putIfAbsent(message.getRecord().getValue(primaryKey), message);
                 recordsBuffered++;
             } else {
@@ -96,8 +96,8 @@ public class SalesforceDataSink implements DataSink {
             if (recordsBuffered > 0 && (recordsBuffer.length() > SizeUtils.convertMBToBytes(salesforceSinkConfig.getRequestBufferThreshold()))) {
                 this.csvPrinter.flush();
                 this.csvPrinter.close();
-                uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataSinkRequest.getAppSyncConfig(), recordsBuffer,
-                        dataSinkRequest.getObjectSchema(), dataSinkRequest.getErrorOutputStream(),
+                uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataWriteRequest.getAppSyncConfig(), recordsBuffer,
+                        dataWriteRequest.getObjectSchema(), dataWriteRequest.getErrorOutputStream(),
                         primaryKey, primaryKeyMessageMapper);
                 primaryKeyMessageMapper.clear();
                 this.csvPrinter = null;
@@ -111,8 +111,8 @@ public class SalesforceDataSink implements DataSink {
             this.csvPrinter.close();
         }
         if (recordsBuffered > 0) {
-            uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataSinkRequest.getAppSyncConfig(), recordsBuffer,
-                    dataSinkRequest.getObjectSchema(), dataSinkRequest.getErrorOutputStream(),
+            uploadBufferedRecords(recordsBuffered, sfdcRestClient, dataWriteRequest.getAppSyncConfig(), recordsBuffer,
+                    dataWriteRequest.getObjectSchema(), dataWriteRequest.getErrorOutputStream(),
                     primaryKey, primaryKeyMessageMapper);
         }
     }
@@ -122,8 +122,8 @@ public class SalesforceDataSink implements DataSink {
         return new AppSyncStats(processedRecords.get(), 0, skippedRecords.get());
     }
 
-    private void computeExistingPrimaryKeysIfReqd(OAuthAppConfig salesforceAppConfig, List<String> primaryKeys,
-                                                  AppSyncConfig appSyncConfig) throws Exception {
+    private void computePrimaryKeys(OAuthAppConfig salesforceAppConfig, List<String> primaryKeys,
+                                    AppSyncConfig appSyncConfig) throws Exception {
 
 
         SalesforceAppSyncConfig sfdcAppSyncConfig = (SalesforceAppSyncConfig) appSyncConfig;

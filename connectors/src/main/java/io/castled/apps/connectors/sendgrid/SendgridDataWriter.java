@@ -1,23 +1,22 @@
 package io.castled.apps.connectors.sendgrid;
 
-import io.castled.apps.DataSink;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.DataWriter;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
-import io.castled.schema.models.Message;
 
 import java.util.Optional;
 
-public class SendgridDataSink implements DataSink {
+public class SendgridDataWriter implements DataWriter {
 
     private volatile SendgridContactSink sendgridContactSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
-        this.sendgridContactSink = new SendgridContactSink((SendgridAppConfig) dataSinkRequest.getExternalApp().getConfig(),
-                (SendgridAppSyncConfig)dataSinkRequest.getAppSyncConfig(), dataSinkRequest.getErrorOutputStream());
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
+        this.sendgridContactSink = new SendgridContactSink((SendgridAppConfig) dataWriteRequest.getExternalApp().getConfig(),
+                (SendgridAppSyncConfig) dataWriteRequest.getAppSyncConfig(), dataWriteRequest.getErrorOutputStream());
         DataSinkMessage msg;
-        while ((msg = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
+        while ((msg = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
             this.sendgridContactSink.writeRecord(msg);
         }
         this.sendgridContactSink.flushRecords();

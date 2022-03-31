@@ -6,14 +6,13 @@ import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import io.castled.ObjectRegistry;
 import io.castled.apps.connectors.mixpanel.dto.GroupProfileAndError;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.commons.errors.errorclassifications.UnclassifiedError;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.MessageSyncStats;
 import io.castled.commons.streams.ErrorOutputStream;
 import io.castled.core.CastledOffsetListQueue;
 import io.castled.schema.models.Field;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.Tuple;
 import io.castled.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +43,13 @@ public class MixpanelGroupProfileSink extends MixpanelObjectSink<DataSinkMessage
     private final CastledOffsetListQueue<DataSinkMessage> requestsBuffer =
             new CastledOffsetListQueue<>(new UpsertGroupProfileConsumer(), 10, 10, true);
 
-    public MixpanelGroupProfileSink(DataSinkRequest dataSinkRequest) {
-        this.mixpanelRestClient = new MixpanelRestClient(((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getProjectToken(),
-                ((MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig()).getApiSecret());
-        this.errorOutputStream = dataSinkRequest.getErrorOutputStream();
+    public MixpanelGroupProfileSink(DataWriteRequest dataWriteRequest) {
+        this.mixpanelRestClient = new MixpanelRestClient(((MixpanelAppConfig) dataWriteRequest.getExternalApp().getConfig()).getProjectToken(),
+                ((MixpanelAppConfig) dataWriteRequest.getExternalApp().getConfig()).getApiSecret());
+        this.errorOutputStream = dataWriteRequest.getErrorOutputStream();
         this.mixpanelErrorParser = ObjectRegistry.getInstance(MixpanelErrorParser.class);
-        this.syncConfig = (MixpanelAppSyncConfig) dataSinkRequest.getAppSyncConfig();
-        this.mixpanelAppConfig = (MixpanelAppConfig) dataSinkRequest.getExternalApp().getConfig();
+        this.syncConfig = (MixpanelAppSyncConfig) dataWriteRequest.getAppSyncConfig();
+        this.mixpanelAppConfig = (MixpanelAppConfig) dataWriteRequest.getExternalApp().getConfig();
     }
 
     @Override

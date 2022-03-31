@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @Slf4j
-public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, KafkaDataSink, KafkaAppSyncConfig> {
+public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, KafkaDataWriter, KafkaAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(KafkaAppConfig config, KafkaAppSyncConfig mappingConfig) {
@@ -54,8 +54,8 @@ public class KafkaAppConnector implements ExternalAppConnector<KafkaAppConfig, K
     }
 
     @Override
-    public KafkaDataSink getDataSink() {
-        return ObjectRegistry.getInstance(KafkaDataSink.class);
+    public KafkaDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(KafkaDataWriter.class);
     }
 
     @Override

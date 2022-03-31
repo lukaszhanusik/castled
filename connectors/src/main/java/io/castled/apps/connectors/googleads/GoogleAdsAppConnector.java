@@ -10,7 +10,6 @@ import io.castled.dtos.PipelineConfigDTO;
 import io.castled.exceptions.CastledRuntimeException;
 import io.castled.forms.dtos.FormFieldOption;
 import io.castled.mapping.FixedGroupAppField;
-import io.castled.mapping.PrimaryKeyGroupField;
 import io.castled.models.FieldMapping;
 import io.castled.models.TargetFieldsMapping;
 import io.castled.schema.SchemaConstants;
@@ -25,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppConfig, GoogleAdsDataSink, GoogleAdsAppSyncConfig> {
+public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppConfig, GoogleAdsDataWriter, GoogleAdsAppSyncConfig> {
 
     @Override
     public List<FormFieldOption> getAllObjects(GoogleAdsAppConfig config, GoogleAdsAppSyncConfig mappingConfig) {
@@ -66,8 +65,8 @@ public class GoogleAdsAppConnector implements ExternalAppConnector<GoogleAdsAppC
     }
 
     @Override
-    public GoogleAdsDataSink getDataSink() {
-        return ObjectRegistry.getInstance(GoogleAdsDataSink.class);
+    public GoogleAdsDataWriter getDataSink() {
+        return ObjectRegistry.getInstance(GoogleAdsDataWriter.class);
     }
 
     private ExternalAppSchema getSchemaForCallConversions(GoogleAdsAppConfig googleAdsAppConfig,

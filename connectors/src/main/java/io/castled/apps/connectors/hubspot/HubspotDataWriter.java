@@ -2,22 +2,20 @@ package io.castled.apps.connectors.hubspot;
 
 import com.google.common.collect.Maps;
 import io.castled.ObjectRegistry;
-import io.castled.apps.DataSink;
+import io.castled.apps.DataWriter;
 import io.castled.apps.OAuthAppConfig;
 import io.castled.apps.connectors.hubspot.client.HubspotRestClient;
 import io.castled.apps.connectors.hubspot.client.dtos.HubspotObject;
 import io.castled.apps.connectors.hubspot.objectsinks.HubspotObjectSink;
 import io.castled.apps.connectors.hubspot.schemaMappers.HubspotPropertySchemaMapper;
-import io.castled.apps.models.DataSinkRequest;
+import io.castled.apps.models.DataWriteRequest;
 import io.castled.apps.models.PrimaryKeyIdMapper;
-import io.castled.apps.syncconfigs.GenericObjectRadioGroupConfig;
 import io.castled.commons.models.AppSyncMode;
 import io.castled.commons.models.AppSyncStats;
 import io.castled.commons.models.DataSinkMessage;
 import io.castled.commons.models.ObjectIdAndMessage;
 import io.castled.exceptions.NonThrowingFunction;
 import io.castled.schema.SchemaMapper;
-import io.castled.schema.models.Message;
 import io.castled.schema.models.RecordSchema;
 
 import java.util.List;
@@ -25,24 +23,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class HubspotDataSink implements DataSink {
+public class HubspotDataWriter implements DataWriter {
 
     private long skippedRecords = 0;
     private HubspotObjectSink hubspotObjectSink;
 
     @Override
-    public void syncRecords(DataSinkRequest dataSinkRequest) throws Exception {
+    public void writeRecords(DataWriteRequest dataWriteRequest) throws Exception {
 
         DataSinkMessage message;
-        HubspotSyncObject hubspotObject = ((HubspotAppSyncConfig) dataSinkRequest.getAppSyncConfig()).getObject();
-        this.hubspotObjectSink = new HubspotObjectSink((OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getErrorOutputStream(),
+        HubspotSyncObject hubspotObject = ((HubspotAppSyncConfig) dataWriteRequest.getAppSyncConfig()).getObject();
+        this.hubspotObjectSink = new HubspotObjectSink((OAuthAppConfig) dataWriteRequest.getExternalApp().getConfig(), dataWriteRequest.getErrorOutputStream(),
                 hubspotObject);
 
         PrimaryKeyIdMapper<String> primaryKeyObjectIdMapper = createPrimaryIdMapper(hubspotObject,
-                (OAuthAppConfig) dataSinkRequest.getExternalApp().getConfig(), dataSinkRequest.getPrimaryKeys(),
-                dataSinkRequest.getObjectSchema());
-        while ((message = dataSinkRequest.getMessageInputStream().readMessage()) != null) {
-            this.writeMessage(message, dataSinkRequest, hubspotObjectSink, primaryKeyObjectIdMapper);
+                (OAuthAppConfig) dataWriteRequest.getExternalApp().getConfig(), dataWriteRequest.getPrimaryKeys(),
+                dataWriteRequest.getObjectSchema());
+        while ((message = dataWriteRequest.getMessageInputStream().readMessage()) != null) {
+            this.writeMessage(message, dataWriteRequest, hubspotObjectSink, primaryKeyObjectIdMapper);
         }
         hubspotObjectSink.flushRecords();
     }
@@ -73,12 +71,12 @@ public class HubspotDataSink implements DataSink {
     }
 
 
-    private void writeMessage(DataSinkMessage message, DataSinkRequest dataSinkRequest,
+    private void writeMessage(DataSinkMessage message, DataWriteRequest dataWriteRequest,
                               HubspotObjectSink hubspotObjectSink, PrimaryKeyIdMapper<String> primaryKeyObjectIdMapper) throws Exception {
 
-        List<Object> primaryKeyValues = dataSinkRequest.getPrimaryKeys().stream().map(pk -> message.getRecord().getValue(pk))
+        List<Object> primaryKeyValues = dataWriteRequest.getPrimaryKeys().stream().map(pk -> message.getRecord().getValue(pk))
                 .collect(Collectors.toList());
-        HubspotAppSyncConfig hubspotAppSyncConfig = (HubspotAppSyncConfig) dataSinkRequest.getAppSyncConfig();
+        HubspotAppSyncConfig hubspotAppSyncConfig = (HubspotAppSyncConfig) dataWriteRequest.getAppSyncConfig();
         if (hubspotAppSyncConfig.getMode() == AppSyncMode.INSERT) {
             hubspotObjectSink.writeRecord(new ObjectIdAndMessage(null, message));
             return;

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
-public class SendgridAppConnector implements ExternalAppConnector<SendgridAppConfig, SendgridDataSink,
+public class SendgridAppConnector implements ExternalAppConnector<SendgridAppConfig, SendgridDataWriter,
         SendgridAppSyncConfig> {
 
     @Override
@@ -32,7 +32,7 @@ public class SendgridAppConnector implements ExternalAppConnector<SendgridAppCon
     }
 
     @Override
-    public SendgridDataSink getDataSink() { return ObjectRegistry.getInstance(SendgridDataSink.class); }
+    public SendgridDataWriter getDataSink() { return ObjectRegistry.getInstance(SendgridDataWriter.class); }
 
     @Override
     public ExternalAppSchema getSchema(SendgridAppConfig config, SendgridAppSyncConfig mappingConfig) {
