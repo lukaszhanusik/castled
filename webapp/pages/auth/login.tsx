@@ -54,8 +54,8 @@ const Login = (props: serverSideProps) => {
   }, [user]);
 
   const formSchema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().required("Password is required"),
+    email: yup.string().email("Invalid email").required("Required"),
+    password: yup.string().required("Required"),
   });
 
   return (

@@ -5,6 +5,7 @@ import authService from "@/app/services/authService";
 import { handleLogin } from "@/pages/auth/login";
 import { useSession } from "@/app/common/context/sessionContext";
 import { useRouter } from "next/router";
+import * as yup from "yup";
 
 export default function WelcomePopup() {
   const { setUser } = useSession();
@@ -31,6 +32,10 @@ export default function WelcomePopup() {
               initialValues={{
                 email: "",
               }}
+              validationSchema={yup.object().shape({
+                email: yup.string().email("Invalid email").required("Required"),
+              })}
+              validateOnBlur={false}
               onSubmit={(values) => {
                 authService
                   .registerEmail(values)
@@ -50,6 +55,7 @@ export default function WelcomePopup() {
                     name="email"
                     title=""
                     placeholder="Your email goes here"
+                    required
                   />
                   <ButtonSubmit className="form-control btn-lg py-2">
                     Get Started
