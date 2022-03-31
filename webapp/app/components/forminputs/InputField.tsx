@@ -5,6 +5,7 @@ import { InputBaseProps } from "@/app/common/dtos/InputBaseProps";
 import { AxiosResponse } from "axios";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import TextareaAutosize from "react-textarea-autosize";
+import CodeInput from "./CodeInput";
 
 export interface InputFieldProps extends InputBaseProps {
   type: string;
@@ -86,17 +87,17 @@ function getInput(
     );
   } else if (props.type === "code") {
     return (
-      <TextareaAutosize
-        {...field}
-        {...props}
-        onChange={(e) => {
-          field.onChange(e);
-          onChange?.(e.currentTarget.value);
+      <CodeInput
+        field={field}
+        props={props}
+        onChange={(value: string) => {
+          field.onChange(value);
+          onChange?.(value);
         }}
         className={cn(props.inputClassName, "form-control", {
           "required-field": meta.touched && meta.error,
         })}
-        defaultValue={field.value}
+        editable={props.editable ? props.editable : true}
       />
     );
   } else {
