@@ -377,20 +377,20 @@ label {
   }
 }
 
-.list-group-item {
+.list-group-item{
   margin-bottom: 0.75rem;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
   padding: 0.5rem 0.7rem;
   font-weight: 500;
-}
 
-.list-group-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
-  border: 1px solid $primary-color;
-  cursor: pointer;
-  transition: all 0.3s;
+  &:not(.loading-connector):hover{
+    transform: scale(1.01);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+    border: 1px solid $primary-color;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
 }
 
 .stepper {

@@ -3,6 +3,8 @@ import pipelineService from "@/app/services/pipelineService";
 import { onboardingSteps, demoOnboardingSteps } from "./data/onboardingSteps";
 import { TablerIcon } from "@tabler/icons";
 import ConditionalStep from "./components/ConditionalSteps";
+import LoadingConnector from "../loaders/LoadingConnector";
+import LoadingList from "../loaders/LoadingList";
 export interface WelcomeOnboardingData {
   title: string;
   description: string;
@@ -16,6 +18,7 @@ export interface WelcomeOnboardingData {
 export default function WelcomeOnboarding({ type }: { type: string }) {
   const [demoSteps, setDemoSteps] = useState<WelcomeOnboardingData[]>([]);
   const [steps, setSteps] = useState<WelcomeOnboardingData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     pipelineService
@@ -29,6 +32,7 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
         );
         setDemoSteps(updatedDemoOnboarding);
         setSteps(updatedOnboarding);
+        setLoading(false);
       })
       .catch(() => {
         console.log("error");
@@ -37,7 +41,8 @@ export default function WelcomeOnboarding({ type }: { type: string }) {
 
   return (
     <>
-      <ConditionalStep steps={type === "demo" ? demoSteps : steps}/>
+      {loading && <LoadingList n={4} containerClass="mb-0 shadow-none ps-4 py-1"/>}
+      <ConditionalStep steps={type === "demo" ? demoSteps : steps} />
     </>
   );
 }

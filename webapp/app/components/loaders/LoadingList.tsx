@@ -2,12 +2,13 @@ import React from "react";
 import LoadingConnector from "./LoadingConnector";
 
 interface LoadingListProps {
-    n: number
+    n: number,
+    containerClass?: string,
 }
-const LoadingList = ({ n }: LoadingListProps) => {
+const LoadingList = ({ n, containerClass }: LoadingListProps) => {
     let list = [];
     for (let i = 0; i < n; i++) {
-        list.push(<LoadingConnector key={i}/>);
+        list.push(<LoadingConnector key={i} containerClass={containerClass}/>);
     }
 
     return <>{list}</>;
