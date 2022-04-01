@@ -5,6 +5,7 @@ import { Card, Table } from "react-bootstrap";
 import { FieldMapping } from "@/app/common/dtos/PipelineCreateRequestDto";
 import { IconCheck } from "@tabler/icons";
 import classNames from "classnames";
+import CodeInput from "../forminputs/CodeInput";
 
 export interface PipelineMappingViewProps {
   sourceQuery: string | undefined;
@@ -23,13 +24,7 @@ const PipelineMappingView = ({
   return (
     <>
       <h3 className="mb-1 mt-3 font-weight-bold">SQL Query</h3>
-      <TextareaAutosize
-        minRows={3}
-        maxRows={25}
-        value={sourceQuery}
-        disabled={true}
-        className="w-100"
-      />
+      <CodeInput value={sourceQuery} editable={false} minHeight={"50px"} />
       <h3 className="mb-1 mt-4 font-weight-bold">Mapping</h3>
       <Table>
         <thead>

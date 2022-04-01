@@ -2,6 +2,7 @@ import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { FieldMapping } from "@/app/common/dtos/PipelineCreateRequestDto";
 import { Col, Row, Table } from "react-bootstrap";
+import CodeInput from "../forminputs/CodeInput";
 
 export interface PipelineMappingViewRestApiProps {
   sourceQuery: string | undefined;
@@ -30,13 +31,7 @@ const PipelineMappingViewRestApi = ({
   return (
     <>
       <h3 className="mb-1 mt-3 font-weight-bold">SQL Query</h3>
-      <TextareaAutosize
-        minRows={3}
-        maxRows={25}
-        value={sourceQuery}
-        disabled={true}
-        className="w-100"
-      />
+      <CodeInput value={sourceQuery} editable={false} minHeight={"50px"} />
 
       <label className="form-label mt-3 mb-0">URL</label>
       <input

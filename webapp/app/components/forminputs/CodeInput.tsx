@@ -13,6 +13,7 @@ interface CodeInputProps {
   extension?: Extension[];
   height?: string;
   value?: string;
+  minHeight?: string;
 }
 
 export default function CodeInput({
@@ -26,6 +27,7 @@ export default function CodeInput({
   extension,
   value,
   height,
+  minHeight,
 }: CodeInputProps) {
   return (
     <CodeMirror
@@ -33,6 +35,7 @@ export default function CodeInput({
       {...props}
       value={value ? value : ""}
       height={height ? height : "auto"}
+      minHeight={minHeight}
       extensions={extension ? extension : [sql()]}
       onChange={onChange}
       className={className}
