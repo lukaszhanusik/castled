@@ -9,6 +9,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import dynamic from 'next/dynamic'
 
 const DynamicCodeComponent = dynamic(() => import('./CodeInput'))
+
 export interface InputFieldProps extends InputBaseProps {
   type: string;
   minRows?: number;

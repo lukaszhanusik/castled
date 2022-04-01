@@ -1,6 +1,9 @@
-import CodeMirror, { Extension } from "@uiw/react-codemirror";
+// import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
 import { FieldInputProps, FieldMetaProps } from "formik";
+import dynamic from "next/dynamic";
+
+const DynamicCodeComponent = dynamic(() => import("@uiw/react-codemirror"));
 
 interface CodeInputProps {
   field?: FieldInputProps<any>;
@@ -10,7 +13,7 @@ interface CodeInputProps {
   optionsRef?: string;
   className?: string;
   editable?: boolean;
-  extension?: Extension[];
+  extension?: any[];
   height?: string;
   value?: string;
   minHeight?: string;
@@ -30,7 +33,7 @@ export default function CodeInput({
   minHeight,
 }: CodeInputProps) {
   return (
-    <CodeMirror
+    <DynamicCodeComponent
       {...field}
       {...props}
       value={value ? value : ""}
