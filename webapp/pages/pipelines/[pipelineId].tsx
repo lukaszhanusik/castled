@@ -52,6 +52,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   const MAX_RELOAD_COUNT = 100;
   const [reloadKey, setReloadKey] = useState<number>(0);
   const [reloadCount, setReloadCount] = useState<number>(0);
+  const [fetchCount, setFetchCount] = useState<number>(0);
   const [recordSyncStatus, setRecordSyncStatus] = useState<PipelineRunStatus>(
     PipelineRunStatus.PROCESSING
   );
@@ -67,6 +68,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
   const [pipelineRuns, setPipelineRuns] = useState<
     PipelineRunDto[] | undefined | null
   >();
+
   useEffect(() => {
     pipelineService
       .getById(pipelineId)
@@ -84,6 +86,14 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       .getByPipelineId(pipelineId)
       .then(({ data }) => {
         setPipelineRuns(data);
+
+        // Too early, try again after 2 secs
+        if (fetchCount < 2) {
+          setTimeout(() => {
+            setReloadKey(reloadKey + 1);
+            setFetchCount(fetchCount + 1);
+          }, 2000);
+        }
         if (data.length > 0) {
           setRecordSyncStatus(data[0].status);
         }
@@ -118,7 +128,8 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
         router,
         setPipeline,
         setReloadKey,
-        setPipelineRuns
+        setPipelineRuns,
+        setFetchCount
       )}
       subTitle={undefined}
       pageTitle={pipeline ? "Pipeline " + pipeline.name : ""}
@@ -151,7 +162,7 @@ const PipelineInfo = ({ pipelineId }: PipelineInfoProps) => {
       )}
       {pipelineRuns && recordSyncStatus === PipelineRunStatus.PROCESSED && (
         <div className="card p-2 mb-2 bg-light">
-          <h2> 
+          <h2>
             Data sync completed!&nbsp;
             {pipelineRuns[0].createdTs && (
               <TimeAgo date={pipelineRuns[0].createdTs} minPeriod={10} />
@@ -212,7 +223,8 @@ function renderTitle(
   router: NextRouter,
   setPipeline: (value: any) => void,
   setReloadKey: (value: any) => void,
-  setPipelineRuns: (value: any) => void
+  setPipelineRuns: (value: any) => void,
+  setFetchCount: (value: number) => void
 ) {
   if (!pipeline) return "";
   const isActive = pipeline.syncStatus === PipelineSyncStatus.ACTIVE;
@@ -272,6 +284,7 @@ function renderTitle(
             <Dropdown.Item
               onClick={() => {
                 pipelineService.restart(pipeline.id).then(() => {
+                  setFetchCount(0);
                   setReloadKey(Math.random());
                   bannerNotificationService.success("Pipeline Restarted");
                 });
