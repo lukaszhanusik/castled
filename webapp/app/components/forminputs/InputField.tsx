@@ -5,8 +5,10 @@ import { InputBaseProps } from "@/app/common/dtos/InputBaseProps";
 import { AxiosResponse } from "axios";
 import { DataFetcherResponseDto } from "@/app/common/dtos/DataFetcherResponseDto";
 import TextareaAutosize from "react-textarea-autosize";
-import CodeInput from "./CodeInput";
+// import CodeInput from "./CodeInput";
+import dynamic from 'next/dynamic'
 
+const DynamicCodeComponent = dynamic(() => import('./CodeInput'))
 export interface InputFieldProps extends InputBaseProps {
   type: string;
   minRows?: number;
@@ -87,7 +89,7 @@ function getInput(
     );
   } else if (props.type === "code") {
     return (
-      <CodeInput
+      <DynamicCodeComponent
         field={field}
         props={props}
         onChange={(value: string) => {
