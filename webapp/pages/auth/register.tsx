@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useState } from "react";
 import { Form, Formik } from "formik";
 import authService from "@/app/services/authService";
 import InputField from "@/app/components/forminputs/InputField";
@@ -29,11 +29,18 @@ interface serverSideProps {
 }
 
 function Register(props: serverSideProps) {
+  const [showPassword, setShowPassword] = useState(false);
   const { setUser } = useSession();
   const router = useRouter();
   const formSchema = yup.object().shape({
     firstName: yup.string().required("Required"),
-    password: yup.string().required("Required"),
+    password: yup
+      .string()
+      .required("Required")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$/,
+        "Must Contain atleast 10 Characters, One Uppercase, One Lowercase, One Number and One Special Character."
+      ),
     confirmPassword: yup
       .string()
       .required("Required")
@@ -60,6 +67,7 @@ function Register(props: serverSideProps) {
           }}
           validationSchema={formSchema}
           validateOnBlur={false}
+          // validateOnChange={false}
           onSubmit={(values) => handleRegisterUser(values, setUser, router!)}
         >
           {({ values, setFieldValue, setFieldTouched }) => (
@@ -80,12 +88,22 @@ function Register(props: serverSideProps) {
                 />
               </div>
               <InputField
-                type="password"
+                type={!showPassword ? "password" : "string"}
                 name="password"
                 title="Password"
                 placeholder="password"
                 required
               />
+              <div className="mb-3">
+                <label className="checkbox form-label">
+                  <input
+                    type="checkbox"
+                    className="me-2"
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                  />
+                  Show Password
+                </label>
+              </div>
               <InputField
                 type="password"
                 name="confirmPassword"
