@@ -4,12 +4,16 @@ import Loading from "./Loading";
 
 interface LoadingTableProps {
     headers?: string[],
+    n?: number,
+    isMapping?: Boolean,
 }
-const LoadingTable = ({ headers }: LoadingTableProps) => {
+const LoadingTable = ({ headers, n, isMapping }: LoadingTableProps) => {
     if (!headers) {
         headers = ["", "", ""];
     }
-    let loadingBody = ["", "", "", ""];
+    if(n === undefined){
+        n = 4;
+    }
     return <div className="table-responsive loading-table mx-auto mt-2">
         <Table className="tr-collapse">
             <thead>
@@ -20,9 +24,9 @@ const LoadingTable = ({ headers }: LoadingTableProps) => {
                 </tr>
             </thead>
             <tbody>
-                {loadingBody.map((_) => <tr>
+                {Array.from({length: n}, (_) => <tr>
                     {headers && headers.map((header, idx) => (
-                        <td key={idx}><Loading /></td>
+                        <td key={idx} className={`${isMapping && idx === 1 ? "text-center w-25 px-5" : ""}`}><Loading /></td>
                     ))}
                 </tr>
                 )}
